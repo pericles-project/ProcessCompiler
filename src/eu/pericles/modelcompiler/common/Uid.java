@@ -18,9 +18,14 @@ public class Uid {
 		return uid;
 	}
 	
-	public void checkAndSetUid(String uid) {
-		if (isValidStringFormat(uid))
+	public boolean checkAndSetUid(String uid) {
+		if (isValidStringFormat(uid)) {
 			this.uid = uid;
+			return true;
+		}
+		else 
+			return false;
+			
 	}
 	
 	public boolean isValid() {

@@ -18,15 +18,13 @@ public class TestUid {
 		Uid uid = new Uid();		
 		String value = "6F810F99-058E-4EAC-9B9C-2D473301CDC3";
 		
-		uid.checkAndSetUid(value);
-		assertTrue(uid.isValid());
+		assertTrue(uid.checkAndSetUid(value));
 	}
 	@Test
 	public void createUidWithWrongValue() {
 		Uid uid = new Uid();
 		String value = "F810F99-058E-4EAC-9B9C-2D473301CDC3";
 		
-		uid.checkAndSetUid(value);
-		assertTrue(uid.isValid());
+		assertFalse(uid.checkAndSetUid(value));
 	}
 }

@@ -1,5 +1,6 @@
 package eu.pericles.modelcompiler.generic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import eu.pericles.modelcompiler.common.ProcessElement;
@@ -13,6 +14,17 @@ public class Process extends ProcessElement {
 	private List<Gateway> gateways;
 	private List<Flow> flows;
 	private String source;
+	
+	public Process() {
+		initialiseVariables();
+	}
+	
+	private void initialiseVariables() {
+		activities = new ArrayList<Activity>();
+		events = new ArrayList<Event>();
+		gateways = new ArrayList<Gateway>();
+		flows = new ArrayList<Flow>();
+	}
 	
 	public String getName() {
 		return name;
@@ -29,6 +41,10 @@ public class Process extends ProcessElement {
 	public void setActivities(List<Activity> activities) {
 		this.activities = activities;
 	}
+	
+	public void addActivity(Activity activity) {
+		getActivities().add(activity);
+	}
 
 	public List<Event> getEvents() {
 		return events;
@@ -36,6 +52,10 @@ public class Process extends ProcessElement {
 
 	public void setEvents(List<Event> events) {
 		this.events = events;
+	}
+	
+	public void addEvent (Event event) {
+		getEvents().add(event);
 	}
 
 	public List<Gateway> getGateways() {
@@ -45,6 +65,10 @@ public class Process extends ProcessElement {
 	public void setGateways(List<Gateway> gateways) {
 		this.gateways = gateways;
 	}
+	
+	public void addGateway (Gateway gateway) {
+		getGateways().add(gateway);
+	}
 
 	public List<Flow> getFlows() {
 		return flows;
@@ -52,6 +76,10 @@ public class Process extends ProcessElement {
 
 	public void setFlows(List<Flow> flows) {
 		this.flows = flows;
+	}
+	
+	public void addFlow(Flow flow) {
+		getFlows().add(flow);
 	}
 
 	public String getSource() {

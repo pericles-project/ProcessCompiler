@@ -1,12 +1,11 @@
 package eu.pericles.modelcompiler.bpmn;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
-
-import eu.pericles.modelcompiler.generic.Process;
 
 @XStreamAlias("bpmn2:process")
 public class BpmnProcess {
@@ -25,6 +24,17 @@ public class BpmnProcess {
 	private List<ScriptTask> scriptTasks;
 	@XStreamImplicit
 	private List<SequenceFlow> sequenceFlows;
+	
+	public BpmnProcess() {
+		initialiseVariables();
+	}
+	
+	private void initialiseVariables() {
+		startEvents = new ArrayList<StartEvent>();
+		endEvents = new ArrayList<EndEvent>();
+		scriptTasks = new ArrayList<ScriptTask>();
+		sequenceFlows = new ArrayList<SequenceFlow>();
+	}
 
 	public String getId() {
 		return id;
@@ -81,11 +91,5 @@ public class BpmnProcess {
 	public void setSequenceFlows(List<SequenceFlow> sequenceFlows) {
 		this.sequenceFlows = sequenceFlows;
 	}
-	
-	public Process convertToGenericProcess() {
-		
-		Process process = new Process();
-		
-		return process;
-	}
+
 }

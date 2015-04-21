@@ -8,6 +8,8 @@ public class ScriptTask {
 
 	@XStreamAsAttribute
 	private String id;
+	@XStreamAsAttribute
+	private String name;
 	@XStreamAlias("bpmn2:script")
 	private String script;
 
@@ -17,6 +19,14 @@ public class ScriptTask {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getScript() {
