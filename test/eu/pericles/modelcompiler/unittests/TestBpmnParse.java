@@ -35,6 +35,27 @@ public class TestBpmnParse {
 	}
 	
 	@Test
+	public void testSubprocessParse() {
+		String nameFile = "test/SubprocessExample.bpmn2";
+		BpmnParser bpmnParser = new BpmnParser();
+		bpmnParser.parse(nameFile);
+		BpmnProcess bpmnProcess = bpmnParser.getBpmnProcess();
+		
+		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
+		assertEquals("EndEvent_2", bpmnProcess.getEndEvents().get(0).getId());
+		
+		assertEquals("SubProcess_1", bpmnProcess.getSubprocesses().get(0).getId());
+		assertEquals("StartEvent_2", bpmnProcess.getSubprocesses().get(0).getStartEvents().get(0).getId());
+		assertEquals("EndEvent_1", bpmnProcess.getSubprocesses().get(0).getEndEvents().get(0).getId());
+		assertEquals("SequenceFlow_2", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(0).getId());
+		assertEquals("StartEvent_2", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(0).getSource());
+		assertEquals("ScriptTask_1", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(0).getTarget());
+		assertEquals("SequenceFlow_3", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(1).getId());
+		assertEquals("ScriptTask_1", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(1).getSource());
+		assertEquals("EndEvent_1", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(1).getTarget());
+	}
+	
+	@Test
 	public void testconvertBpmnToGenericProcess() {		
 		String nameFile = "test/PrintHelloWorld.bpmn2";
 		BpmnParser bpmnParser = new BpmnParser();

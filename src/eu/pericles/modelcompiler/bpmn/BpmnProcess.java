@@ -24,6 +24,8 @@ public class BpmnProcess {
 	private List<ScriptTask> scriptTasks;
 	@XStreamImplicit
 	private List<SequenceFlow> sequenceFlows;
+	@XStreamImplicit
+	private List<Subprocess> subprocesses;
 	
 	public BpmnProcess() {
 		initialiseVariables();
@@ -34,6 +36,7 @@ public class BpmnProcess {
 		endEvents = new ArrayList<EndEvent>();
 		scriptTasks = new ArrayList<ScriptTask>();
 		sequenceFlows = new ArrayList<SequenceFlow>();
+		subprocesses = new ArrayList<Subprocess>();
 	}
 
 	public String getId() {
@@ -90,6 +93,14 @@ public class BpmnProcess {
 
 	public void setSequenceFlows(List<SequenceFlow> sequenceFlows) {
 		this.sequenceFlows = sequenceFlows;
+	}
+
+	public List<Subprocess> getSubprocesses() {
+		return subprocesses;
+	}
+
+	public void setSubprocesses(List<Subprocess> subprocesses) {
+		this.subprocesses = subprocesses;
 	}
 
 }
