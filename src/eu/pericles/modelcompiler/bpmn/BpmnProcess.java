@@ -39,6 +39,66 @@ public class BpmnProcess {
 		subprocesses = new ArrayList<Subprocess>();
 	}
 
+	public void copyBpmnProcess(BpmnProcess newProcess, BpmnProcess bpmnProcess) {
+		setId(bpmnProcess.getId());
+		setName(bpmnProcess.getName());
+		setType(bpmnProcess.getType());
+		
+		if (bpmnProcess.getStartEvents() == null)
+			setStartEvents(null);
+		else
+			setStartEvents(bpmnProcess.getStartEvents());
+		
+		if (bpmnProcess.getEndEvents() == null)
+			setEndEvents(null);
+		else
+			setEndEvents(bpmnProcess.getEndEvents());
+		
+		if (bpmnProcess.getScriptTasks() == null)
+			setScriptTasks(null);
+		else
+			setScriptTasks(bpmnProcess.getScriptTasks());
+		
+		if (bpmnProcess.getSequenceFlows() == null)
+			setSequenceFlows(null);
+		else
+			setSequenceFlows(bpmnProcess.getSequenceFlows());
+		
+		System.out.println("Process ID: " + bpmnProcess.getId());
+		if (bpmnProcess.getSubprocesses() == null)
+		{
+			System.out.println("bpmnProcess.getSubprocesses() == null");
+			setSubprocesses(null);
+		}
+		else
+		{
+			System.out.println("bpmnProcess.getSubprocesses() != null");
+			copyBpmnSubprocesses(newProcess, bpmnProcess);
+		}
+		
+	}
+
+	private void copyBpmnSubprocesses(BpmnProcess newProcess, BpmnProcess bpmnProcess) {
+		System.out.println("copyBpmnSubprocesses");		
+		
+		for (Subprocess subprocess : bpmnProcess.getSubprocesses()) {
+			System.out.println("Subprocess ID: " + subprocess.getId());
+			Subprocess newSubprocess = new Subprocess();
+			newSubprocess.copyBpmnProcess(newProcess, subprocess);
+			System.out.println("New Subprocess: " + newSubprocess.getId());
+			System.out.println("Add Subprocesses");
+			
+			// Porque tengo aqui el problema?????????????
+			newProcess.getSubprocesses().add(newSubprocess);
+			System.out.println("Leave copy Subprocesses");
+		}
+		
+	}
+	
+	/** 
+	 * Getters and setters 
+	 * */
+	
 	public String getId() {
 		return id;
 	}

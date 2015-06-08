@@ -15,6 +15,10 @@ import com.thoughtworks.xstream.io.xml.DomReader;
 public class BpmnParser {
 	
 	private BpmnProcess bpmnProcess;
+	
+	public BpmnParser() {
+		bpmnProcess = new BpmnProcess();
+	}
 
 	/* TODO parse every kind of document location: URL, ... */
 	public void parse(String nameFile) {
@@ -45,7 +49,10 @@ public class BpmnParser {
 	}
 
 	public void setBpmnProcess(BpmnProcess bpmnProcess) {
+		/** We cannot do that, because it would delete all the variables/lists that are not present in the file 
 		this.bpmnProcess = bpmnProcess;
+		*/
+		getBpmnProcess().copyBpmnProcess(this.bpmnProcess, bpmnProcess);
 	}
 	
 	

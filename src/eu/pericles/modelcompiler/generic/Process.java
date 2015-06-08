@@ -13,6 +13,7 @@ public class Process extends ProcessElement {
 	private List<Event> events;
 	private List<Gateway> gateways;
 	private List<Flow> flows;
+	private List<Process> subprocesses;
 	private String source;
 	
 	public Process() {
@@ -24,6 +25,7 @@ public class Process extends ProcessElement {
 		events = new ArrayList<Event>();
 		gateways = new ArrayList<Gateway>();
 		flows = new ArrayList<Flow>();
+		subprocesses = new ArrayList<Process>();
 	}
 	
 	public String getName() {
@@ -80,6 +82,18 @@ public class Process extends ProcessElement {
 	
 	public void addFlow(Flow flow) {
 		getFlows().add(flow);
+	}
+
+	public List<Process> getSubprocesses() {
+		return subprocesses;
+	}
+
+	public void setSubprocesses(List<Process> subprocesses) {
+		this.subprocesses = subprocesses;
+	}
+	
+	public void addSubprocess(Process subprocess) {
+		getSubprocesses().add(subprocess);
 	}
 
 	public String getSource() {
