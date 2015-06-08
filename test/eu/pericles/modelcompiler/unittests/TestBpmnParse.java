@@ -9,6 +9,7 @@ import eu.pericles.modelcompiler.bpmn.BpmnParser;
 import eu.pericles.modelcompiler.bpmn.BpmnProcess;
 import eu.pericles.modelcompiler.common.BpmnGenericConversor;
 import eu.pericles.modelcompiler.common.Uid;
+import eu.pericles.modelcompiler.generic.Gateway;
 import eu.pericles.modelcompiler.generic.Process;
 
 public class TestBpmnParse {
@@ -115,5 +116,43 @@ public class TestBpmnParse {
 		assertTrue(genericProcess.getSubprocesses().get(0).getFlows().get(1).getTo()==genericProcess.getSubprocesses().get(0).getEvents().get(1).getUid());
 		
 	}
-
+	
+	@Test
+	public void testGateways() {
+		String nameFile = "test/GatewayExample.bpmn2";
+		BpmnParser bpmnParser = new BpmnParser();
+		bpmnParser.parse(nameFile);
+		BpmnProcess bpmnProcess = bpmnParser.getBpmnProcess();
+		
+		BpmnGenericConversor conversor = new BpmnGenericConversor();
+		conversor.convertFromBpmnToGeneric(bpmnProcess);
+		Process genericProcess = conversor.getGenericProcess();
+		
+		assertEquals("GatewayExample", genericProcess.getName());
+		assertEquals(Gateway.Type.DIVERGING_PARALLEL, genericProcess.getGateways().get(0).getType());
+		assertEquals(Gateway.Type.CONVERGING_PARALLEL, genericProcess.getGateways().get(1).getType());
+		
+		Uid uid = new Uid();
+		assertTrue(uid.checkAndSetUid(genericProcess.getGateways().get(0).getUid())); 
+		assertTrue(uid.checkAndSetUid(genericProcess.getGateways().get(1).getUid()));
+		assertTrue(uid.checkAndSetUid(genericProcess.getFlows().get(0).getUid()));
+		assertTrue(uid.checkAndSetUid(genericProcess.getFlows().get(1).getUid()));
+		assertTrue(uid.checkAndSetUid(genericProcess.getFlows().get(2).getUid()));
+		assertTrue(uid.checkAndSetUid(genericProcess.getFlows().get(3).getUid()));
+		assertTrue(uid.checkAndSetUid(genericProcess.getFlows().get(4).getUid()));
+		assertTrue(uid.checkAndSetUid(genericProcess.getFlows().get(5).getUid()));
+		assertTrue(genericProcess.getFlows().get(0).getFrom()==genericProcess.getEvents().get(0).getUid());
+		assertTrue(genericProcess.getFlows().get(0).getTo()==genericProcess.getGateways().get(0).getUid());
+		assertTrue(genericProcess.getFlows().get(1).getFrom()==genericProcess.getGateways().get(0).getUid());
+		assertTrue(genericProcess.getFlows().get(1).getTo()==genericProcess.getActivities().get(0).getUid());
+		assertTrue(genericProcess.getFlows().get(2).getFrom()==genericProcess.getGateways().get(0).getUid());
+		assertTrue(genericProcess.getFlows().get(2).getTo()==genericProcess.getActivities().get(1).getUid());
+		assertTrue(genericProcess.getFlows().get(3).getFrom()==genericProcess.getActivities().get(0).getUid());
+		assertTrue(genericProcess.getFlows().get(3).getTo()==genericProcess.getGateways().get(1).getUid());
+		assertTrue(genericProcess.getFlows().get(4).getFrom()==genericProcess.getActivities().get(1).getUid());
+		assertTrue(genericProcess.getFlows().get(4).getTo()==genericProcess.getGateways().get(1).getUid());
+		assertTrue(genericProcess.getFlows().get(5).getFrom()==genericProcess.getGateways().get(1).getUid());
+		assertTrue(genericProcess.getFlows().get(5).getTo()==genericProcess.getEvents().get(1).getUid());
+		
+	}
 }

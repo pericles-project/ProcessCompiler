@@ -23,6 +23,8 @@ public class BpmnProcess {
 	@XStreamImplicit
 	private List<ScriptTask> scriptTasks;
 	@XStreamImplicit
+	private List<ParallelGateway> parallelGateways;
+	@XStreamImplicit
 	private List<SequenceFlow> sequenceFlows;
 	@XStreamImplicit
 	private List<Subprocess> subprocesses;
@@ -35,11 +37,13 @@ public class BpmnProcess {
 		startEvents = new ArrayList<StartEvent>();
 		endEvents = new ArrayList<EndEvent>();
 		scriptTasks = new ArrayList<ScriptTask>();
+		parallelGateways = new ArrayList<ParallelGateway>();
 		sequenceFlows = new ArrayList<SequenceFlow>();
 		subprocesses = new ArrayList<Subprocess>();
 	}
 	/** 
-	 * Check if there is any list of bpmn elements pointing to NULL, if so, create the corresponding empty list
+	 * Check if there is any list of bpmn elements pointing to null. 
+	 * If so, create the corresponding empty list.
 	 */
 	public void checkAndComplete() {
 		
@@ -51,6 +55,9 @@ public class BpmnProcess {
 		
 		if (getScriptTasks() == null)
 			setScriptTasks(new ArrayList<ScriptTask>());
+		
+		if (getParallelGateways() == null)
+			setParallelGateways(new ArrayList<ParallelGateway>());
 		
 		if (getSequenceFlows() == null)
 			setSequenceFlows(new ArrayList<SequenceFlow>());
@@ -113,6 +120,14 @@ public class BpmnProcess {
 
 	public void setScriptTasks(List<ScriptTask> scriptTasks) {
 		this.scriptTasks = scriptTasks;
+	}
+
+	public List<ParallelGateway> getParallelGateways() {
+		return parallelGateways;
+	}
+
+	public void setParallelGateways(List<ParallelGateway> parallelGateways) {
+		this.parallelGateways = parallelGateways;
 	}
 
 	public List<SequenceFlow> getSequenceFlows() {

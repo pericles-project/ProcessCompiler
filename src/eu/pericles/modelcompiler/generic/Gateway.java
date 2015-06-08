@@ -5,7 +5,7 @@ import eu.pericles.modelcompiler.common.ProcessElement;
 public class Gateway extends ProcessElement {
 	
 	public enum Type {
-		PARALLEL
+		CONVERGING_PARALLEL, DIVERGING_PARALLEL
 	}
 
 	private Type type;

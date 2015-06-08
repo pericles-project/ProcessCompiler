@@ -5,6 +5,7 @@ import java.util.Map;
 
 import eu.pericles.modelcompiler.bpmn.BpmnProcess;
 import eu.pericles.modelcompiler.bpmn.EndEvent;
+import eu.pericles.modelcompiler.bpmn.ParallelGateway;
 import eu.pericles.modelcompiler.bpmn.ScriptTask;
 import eu.pericles.modelcompiler.bpmn.SequenceFlow;
 import eu.pericles.modelcompiler.bpmn.StartEvent;
@@ -12,6 +13,7 @@ import eu.pericles.modelcompiler.bpmn.Subprocess;
 import eu.pericles.modelcompiler.generic.Activity;
 import eu.pericles.modelcompiler.generic.Event;
 import eu.pericles.modelcompiler.generic.Flow;
+import eu.pericles.modelcompiler.generic.Gateway;
 import eu.pericles.modelcompiler.generic.Process;
 
 public class BpmnGenericConversor {
@@ -76,7 +78,18 @@ public class BpmnGenericConversor {
 	}
 
 	private void convertGatewaysFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
-		// TODO Auto-generated method stub
+		for (ParallelGateway parallelGateway : bpmnProcess.getParallelGateways()) {
+			
+			Gateway gateway = new Gateway();
+			if (parallelGateway.getDirection().equals("Converging"))
+				gateway.setType(Gateway.Type.CONVERGING_PARALLEL);
+			else
+				gateway.setType(Gateway.Type.DIVERGING_PARALLEL);
+			genericProcess.addGateway(gateway);
+			
+			mapBpmnIDtoGenericUID.put(parallelGateway.getId(), gateway.getUid());
+			
+		}
 	}
 
 	private void convertFlowsFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
