@@ -33,8 +33,14 @@ public class BpmnParser {
 			xstream.processAnnotations(BpmnProcess.class);
 			
 			ObjectInputStream ois = xstream.createObjectInputStream(new DomReader(document.getDocumentElement()));
-						
-			setBpmnProcess((BpmnProcess) ois.readObject());
+			
+			BpmnProcess bpmnProcess = (BpmnProcess) ois.readObject();
+			
+			/* When reading a process from a bpmn file with DOM, those lists of elements that are not in the file remain 
+			 * pointing to NULL. With checkAndComplete(), those lists are created as empty lists.
+			 */
+			bpmnProcess.checkAndComplete();			
+			setBpmnProcess(bpmnProcess);
 			
 			ois.close();
 			
@@ -43,16 +49,15 @@ public class BpmnParser {
 		}
 
 	}
-
+	
+	//---- Getters and setters ----// 
+	
 	public BpmnProcess getBpmnProcess() {
 		return bpmnProcess;
 	}
 
 	public void setBpmnProcess(BpmnProcess bpmnProcess) {
-		/** We cannot do that, because it would delete all the variables/lists that are not present in the file 
-		this.bpmnProcess = bpmnProcess;
-		*/
-		getBpmnProcess().copyBpmnProcess(this.bpmnProcess, bpmnProcess);
+		this.bpmnProcess = bpmnProcess;		
 	}
 	
 	

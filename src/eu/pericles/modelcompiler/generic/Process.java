@@ -17,16 +17,19 @@ public class Process extends ProcessElement {
 	private String source;
 	
 	public Process() {
-		initialiseVariables();
+		init();
 	}
 	
-	private void initialiseVariables() {
+	private void init() {
 		activities = new ArrayList<Activity>();
 		events = new ArrayList<Event>();
 		gateways = new ArrayList<Gateway>();
 		flows = new ArrayList<Flow>();
 		subprocesses = new ArrayList<Process>();
 	}
+	
+	
+	//--- Getters, Setters and Add element to list methods --//
 	
 	public String getName() {
 		return name;

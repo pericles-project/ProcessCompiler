@@ -28,76 +28,44 @@ public class BpmnProcess {
 	private List<Subprocess> subprocesses;
 	
 	public BpmnProcess() {
-		initialiseVariables();
+		init();		
 	}
 	
-	private void initialiseVariables() {
+	private void init() {
 		startEvents = new ArrayList<StartEvent>();
 		endEvents = new ArrayList<EndEvent>();
 		scriptTasks = new ArrayList<ScriptTask>();
 		sequenceFlows = new ArrayList<SequenceFlow>();
 		subprocesses = new ArrayList<Subprocess>();
 	}
-
-	public void copyBpmnProcess(BpmnProcess newProcess, BpmnProcess bpmnProcess) {
-		setId(bpmnProcess.getId());
-		setName(bpmnProcess.getName());
-		setType(bpmnProcess.getType());
+	/** 
+	 * Check if there is any list of bpmn elements pointing to NULL, if so, create the corresponding empty list
+	 */
+	public void checkAndComplete() {
 		
-		if (bpmnProcess.getStartEvents() == null)
-			setStartEvents(null);
-		else
-			setStartEvents(bpmnProcess.getStartEvents());
+		if (getStartEvents() == null)
+			setStartEvents(new ArrayList<StartEvent>());
 		
-		if (bpmnProcess.getEndEvents() == null)
-			setEndEvents(null);
-		else
-			setEndEvents(bpmnProcess.getEndEvents());
+		if (getEndEvents() == null)
+			setEndEvents(new ArrayList<EndEvent>());
 		
-		if (bpmnProcess.getScriptTasks() == null)
-			setScriptTasks(null);
-		else
-			setScriptTasks(bpmnProcess.getScriptTasks());
+		if (getScriptTasks() == null)
+			setScriptTasks(new ArrayList<ScriptTask>());
 		
-		if (bpmnProcess.getSequenceFlows() == null)
-			setSequenceFlows(null);
-		else
-			setSequenceFlows(bpmnProcess.getSequenceFlows());
+		if (getSequenceFlows() == null)
+			setSequenceFlows(new ArrayList<SequenceFlow>());
 		
-		System.out.println("Process ID: " + bpmnProcess.getId());
-		if (bpmnProcess.getSubprocesses() == null)
-		{
-			System.out.println("bpmnProcess.getSubprocesses() == null");
-			setSubprocesses(null);
+		if (getSubprocesses() == null) {
+			setSubprocesses(new ArrayList<Subprocess>());
 		}
-		else
-		{
-			System.out.println("bpmnProcess.getSubprocesses() != null");
-			copyBpmnSubprocesses(newProcess, bpmnProcess);
+		else {
+			for (Subprocess subprocess : getSubprocesses()) {
+				subprocess.checkAndComplete();			
+			}
 		}
-		
-	}
-
-	private void copyBpmnSubprocesses(BpmnProcess newProcess, BpmnProcess bpmnProcess) {
-		System.out.println("copyBpmnSubprocesses");		
-		
-		for (Subprocess subprocess : bpmnProcess.getSubprocesses()) {
-			System.out.println("Subprocess ID: " + subprocess.getId());
-			Subprocess newSubprocess = new Subprocess();
-			newSubprocess.copyBpmnProcess(newProcess, subprocess);
-			System.out.println("New Subprocess: " + newSubprocess.getId());
-			System.out.println("Add Subprocesses");
-			
-			// Porque tengo aqui el problema?????????????
-			newProcess.getSubprocesses().add(newSubprocess);
-			System.out.println("Leave copy Subprocesses");
-		}
-		
 	}
 	
-	/** 
-	 * Getters and setters 
-	 * */
+	//---- Getters and setters ----// 
 	
 	public String getId() {
 		return id;

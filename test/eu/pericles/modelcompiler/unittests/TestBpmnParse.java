@@ -43,6 +43,9 @@ public class TestBpmnParse {
 		
 		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
 		assertEquals("EndEvent_2", bpmnProcess.getEndEvents().get(0).getId());
+		assertEquals("SequenceFlow_1", bpmnProcess.getSequenceFlows().get(0).getId());
+		assertEquals("StartEvent_1", bpmnProcess.getSequenceFlows().get(0).getSource());
+		assertEquals("SubProcess_1", bpmnProcess.getSequenceFlows().get(0).getTarget());
 		
 		assertEquals("SubProcess_1", bpmnProcess.getSubprocesses().get(0).getId());
 		assertEquals("StartEvent_2", bpmnProcess.getSubprocesses().get(0).getStartEvents().get(0).getId());
@@ -89,32 +92,12 @@ public class TestBpmnParse {
 		bpmnParser.parse(nameFile);
 		BpmnProcess bpmnProcess = bpmnParser.getBpmnProcess();
 		
-		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
-		assertEquals("EndEvent_2", bpmnProcess.getEndEvents().get(0).getId());
-		assertEquals("SequenceFlow_1", bpmnProcess.getSequenceFlows().get(0).getId());
-		assertEquals("StartEvent_1", bpmnProcess.getSequenceFlows().get(0).getSource());
-		assertEquals("SubProcess_1", bpmnProcess.getSequenceFlows().get(0).getTarget());
-		
-		
-		assertEquals("SubProcess_1", bpmnProcess.getSubprocesses().get(0).getId());
-		assertEquals("StartEvent_2", bpmnProcess.getSubprocesses().get(0).getStartEvents().get(0).getId());
-		assertEquals("EndEvent_1", bpmnProcess.getSubprocesses().get(0).getEndEvents().get(0).getId());
-		assertEquals("SequenceFlow_2", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(0).getId());
-		assertEquals("StartEvent_2", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(0).getSource());
-		assertEquals("ScriptTask_1", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(0).getTarget());
-		assertEquals("SequenceFlow_3", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(1).getId());
-		assertEquals("ScriptTask_1", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(1).getSource());
-		assertEquals("EndEvent_1", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(1).getTarget());
-		
 		BpmnGenericConversor conversor = new BpmnGenericConversor();
 		conversor.convertFromBpmnToGeneric(bpmnProcess);
 		Process genericProcess = conversor.getGenericProcess();		
 		
 		assertEquals("SubprocessExample", genericProcess.getName());		
 		assertEquals("Sub Process 1", genericProcess.getSubprocesses().get(0).getName());
-		
-		System.out.println("TEST: " + genericProcess.getFlows().get(0).getFrom() + " " + genericProcess.getSubprocesses().get(0).getUid());
-		System.out.println("TEST: " + genericProcess.getFlows().get(0).getTo() + " " + genericProcess.getSubprocesses().get(0).getUid());
 		
 		Uid uid = new Uid();
 		assertTrue(uid.checkAndSetUid(genericProcess.getUid()));
