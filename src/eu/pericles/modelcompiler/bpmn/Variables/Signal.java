@@ -1,10 +1,10 @@
-package eu.pericles.modelcompiler.bpmn;
+package eu.pericles.modelcompiler.bpmn.Variables;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
-@XStreamAlias("bpmn2:message")
-public class Message {
+@XStreamAlias("bpmn2:signal")
+public class Signal {
 	
 	@XStreamAsAttribute
 	private String id;
@@ -16,5 +16,4 @@ public class Message {
 	public void setId(String id) {
 		this.id = id;
 	}
-
 }

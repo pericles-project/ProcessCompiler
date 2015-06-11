@@ -4,25 +4,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.pericles.modelcompiler.bpmn.BpmnProcess;
-import eu.pericles.modelcompiler.bpmn.EndEvent;
-import eu.pericles.modelcompiler.bpmn.ParallelGateway;
-import eu.pericles.modelcompiler.bpmn.ScriptTask;
-import eu.pericles.modelcompiler.bpmn.SequenceFlow;
-import eu.pericles.modelcompiler.bpmn.StartEvent;
-import eu.pericles.modelcompiler.bpmn.Subprocess;
+import eu.pericles.modelcompiler.bpmn.Activities.ScriptTask;
+import eu.pericles.modelcompiler.bpmn.Activities.Subprocess;
+import eu.pericles.modelcompiler.bpmn.Events.EndEvent;
+import eu.pericles.modelcompiler.bpmn.Events.StartEvent;
+import eu.pericles.modelcompiler.bpmn.Flows.SequenceFlow;
+import eu.pericles.modelcompiler.bpmn.Gateways.ParallelGateway;
 import eu.pericles.modelcompiler.generic.Activity;
 import eu.pericles.modelcompiler.generic.Event;
 import eu.pericles.modelcompiler.generic.Flow;
 import eu.pericles.modelcompiler.generic.Gateway;
 import eu.pericles.modelcompiler.generic.Process;
 
-public class BpmnGenericConversor {
+public class FromBpmnToGenericConversor {
 
 	private BpmnProcess bpmnProcess;
 	private Process genericProcess;
 	private Map<String,String> mapBpmnIDtoGenericUID;
 
-	public BpmnGenericConversor() {
+	public FromBpmnToGenericConversor() {
 		bpmnProcess = new BpmnProcess();
 		genericProcess = new Process();
 		mapBpmnIDtoGenericUID = new HashMap<String,String>();

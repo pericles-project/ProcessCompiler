@@ -1,15 +1,13 @@
-package eu.pericles.modelcompiler.bpmn;
+package eu.pericles.modelcompiler.bpmn.Variables;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
-@XStreamAlias("bpmn2:endEvent")
-public class EndEvent {
+@XStreamAlias("bpmn2:message")
+public class Message {
 	
 	@XStreamAsAttribute
 	private String id;
-	@XStreamAlias("bpmn2:incoming")
-	private String incoming;
 
 	public String getId() {
 		return id;

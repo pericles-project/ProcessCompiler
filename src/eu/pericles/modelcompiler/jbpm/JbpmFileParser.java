@@ -52,7 +52,7 @@ public class JbpmFileParser {
 	}
 
 	/* Modify the input file in a way can be read by xstream as a single element. It is not a very elegant
-	 * but for now it works and keeps things simple.
+	 * solution but it is ok for now, it works and keeps things simple.
 	 */
 	private File processInputFile(String nameFile) throws Exception {
 		

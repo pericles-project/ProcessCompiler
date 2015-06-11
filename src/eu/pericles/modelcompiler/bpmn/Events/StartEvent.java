@@ -1,7 +1,9 @@
-package eu.pericles.modelcompiler.bpmn;
+package eu.pericles.modelcompiler.bpmn.Events;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+
+import eu.pericles.modelcompiler.bpmn.SignalEventDefinition;
 
 @XStreamAlias("bpmn2:startEvent")
 public class StartEvent {

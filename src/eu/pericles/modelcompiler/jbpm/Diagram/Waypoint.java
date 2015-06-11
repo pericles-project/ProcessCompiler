@@ -1,4 +1,4 @@
-package eu.pericles.modelcompiler.jbpm;
+package eu.pericles.modelcompiler.jbpm.Diagram;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
