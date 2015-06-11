@@ -13,10 +13,32 @@ import eu.pericles.modelcompiler.generic.Gateway;
 import eu.pericles.modelcompiler.generic.Process;
 
 public class TestBpmnParse {
+	
+	@Test
+	public void testSignalStartEvent() {
+		BpmnProcess bpmnProcess = parseFileAndGetBpmnProcess("test/testFiles/SignalStartEventExample.bpmn2");
+		
+		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
+		assertEquals("EndEvent_1", bpmnProcess.getEndEvents().get(0).getId());
+		assertEquals("ScriptTask_1", bpmnProcess.getScriptTasks().get(0).getId());
+		assertEquals("printf(\"Hello World\");", bpmnProcess.getScriptTasks().get(0).getScript());
+		assertEquals("SequenceFlow_1", bpmnProcess.getSequenceFlows().get(0).getId());
+		assertEquals("StartEvent_1", bpmnProcess.getSequenceFlows().get(0).getSource());
+		assertEquals("ScriptTask_1", bpmnProcess.getSequenceFlows().get(0).getTarget());
+		assertEquals("SequenceFlow_2", bpmnProcess.getSequenceFlows().get(1).getId());
+		assertEquals("ScriptTask_1", bpmnProcess.getSequenceFlows().get(1).getSource());
+		assertEquals("EndEvent_1", bpmnProcess.getSequenceFlows().get(1).getTarget());
+	}
+	
+	private BpmnProcess parseFileAndGetBpmnProcess(String nameFile) {
+		BpmnParser bpmnParser = new BpmnParser();
+		bpmnParser.parse(nameFile);
+		return bpmnParser.getBpmnProcess();
+	}
 
 	@Test
 	public void testBpmnParse() {
-		String nameFile = "test/PrintHelloWorld.bpmn2";
+		String nameFile = "test/testFiles/PrintHelloWorld.bpmn2";
 		BpmnParser bpmnParser = new BpmnParser();
 		bpmnParser.parse(nameFile);
 		BpmnProcess bpmnProcess = bpmnParser.getBpmnProcess();
@@ -37,7 +59,7 @@ public class TestBpmnParse {
 	
 	@Test
 	public void testSubprocessParse() {
-		String nameFile = "test/SubprocessExample.bpmn2";
+		String nameFile = "test/testFiles/SubprocessExample.bpmn2";
 		BpmnParser bpmnParser = new BpmnParser();
 		bpmnParser.parse(nameFile);
 		BpmnProcess bpmnProcess = bpmnParser.getBpmnProcess();
@@ -61,7 +83,7 @@ public class TestBpmnParse {
 	
 	@Test
 	public void testConvertBpmnToGenericProcess() {		
-		String nameFile = "test/PrintHelloWorld.bpmn2";
+		String nameFile = "test/testFiles/PrintHelloWorld.bpmn2";
 		BpmnParser bpmnParser = new BpmnParser();
 		bpmnParser.parse(nameFile);
 		BpmnProcess bpmnProcess = bpmnParser.getBpmnProcess();
@@ -88,7 +110,7 @@ public class TestBpmnParse {
 
 	@Test
 	public void testConvertBpmnToGenericSubprocess() {
-		String nameFile = "test/SubprocessExample.bpmn2";
+		String nameFile = "test/testFiles/SubprocessExample.bpmn2";
 		BpmnParser bpmnParser = new BpmnParser();
 		bpmnParser.parse(nameFile);
 		BpmnProcess bpmnProcess = bpmnParser.getBpmnProcess();
@@ -119,7 +141,7 @@ public class TestBpmnParse {
 	
 	@Test
 	public void testGateways() {
-		String nameFile = "test/GatewayExample.bpmn2";
+		String nameFile = "test/testFiles/GatewayExample.bpmn2";
 		BpmnParser bpmnParser = new BpmnParser();
 		bpmnParser.parse(nameFile);
 		BpmnProcess bpmnProcess = bpmnParser.getBpmnProcess();

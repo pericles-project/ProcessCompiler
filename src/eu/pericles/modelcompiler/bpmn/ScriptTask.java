@@ -10,6 +10,10 @@ public class ScriptTask {
 	private String id;
 	@XStreamAsAttribute
 	private String name;
+	@XStreamAlias("bpmn2:incoming")
+	private String incoming;
+	@XStreamAlias("bpmn2:outgoing")
+	private String outgoing;
 	@XStreamAlias("bpmn2:script")
 	private String script;
 

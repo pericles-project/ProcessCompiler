@@ -29,6 +29,10 @@ public class BpmnProcess {
 	@XStreamImplicit
 	private List<Subprocess> subprocesses;
 	
+	private List<Message> messages;
+	private List<Signal> signals;
+	private List<ItemDefinition> itemDefinitions;
+	
 	public BpmnProcess() {
 		init();		
 	}
@@ -41,6 +45,7 @@ public class BpmnProcess {
 		sequenceFlows = new ArrayList<SequenceFlow>();
 		subprocesses = new ArrayList<Subprocess>();
 	}
+	
 	/** 
 	 * Check if there is any list of bpmn elements pointing to null. 
 	 * If so, create the corresponding empty list.
@@ -144,6 +149,30 @@ public class BpmnProcess {
 
 	public void setSubprocesses(List<Subprocess> subprocesses) {
 		this.subprocesses = subprocesses;
+	}
+
+	public List<Message> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<Message> messages) {
+		this.messages = messages;
+	}
+
+	public List<Signal> getSignals() {
+		return signals;
+	}
+
+	public void setSignals(List<Signal> signals) {
+		this.signals = signals;
+	}
+
+	public List<ItemDefinition> getItemDefinitions() {
+		return itemDefinitions;
+	}
+
+	public void setItemDefinitions(List<ItemDefinition> itemDefinitions) {
+		this.itemDefinitions = itemDefinitions;
 	}
 
 }

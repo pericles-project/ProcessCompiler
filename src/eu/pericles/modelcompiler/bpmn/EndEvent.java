@@ -8,6 +8,8 @@ public class EndEvent {
 	
 	@XStreamAsAttribute
 	private String id;
+	@XStreamAlias("bpmn2:incoming")
+	private String incoming;
 
 	public String getId() {
 		return id;

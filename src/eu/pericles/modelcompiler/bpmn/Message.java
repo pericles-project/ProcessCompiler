@@ -3,15 +3,11 @@ package eu.pericles.modelcompiler.bpmn;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
-@XStreamAlias("bpmn2:startEvent")
-public class StartEvent {
-
+@XStreamAlias("bpmn2:message")
+public class Message {
+	
 	@XStreamAsAttribute
 	private String id;
-	@XStreamAlias("bpmn2:outgoing")
-	private String outgoing;
-	@XStreamAlias("bpmn2:signalEventDefinition")
-	private SignalEventDefinition signalEventDefinition;
 
 	public String getId() {
 		return id;
