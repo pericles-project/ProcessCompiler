@@ -11,7 +11,7 @@ public class TestJbpmFileParser {
 
 	@Test
 	public void testHelloWorldParse() {
-		BpmnProcess bpmnProcess = getBpmnProcess("test/testFiles/HelloWorldExample.bpmn2");
+		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/HelloWorldExample.bpmn2");
 		
 		assertEquals("eu.pericles.modelcompiler.unittests.PrintHelloWorld", bpmnProcess.getId());
 		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
@@ -28,7 +28,7 @@ public class TestJbpmFileParser {
 	
 	@Test
 	public void testSubprocessBasicParse() {
-		BpmnProcess bpmnProcess = getBpmnProcess("test/testFiles/SubprocessBasicExample.bpmn2");
+		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/SubprocessBasicExample.bpmn2");
 		
 		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
 		assertEquals("EndEvent_2", bpmnProcess.getEndEvents().get(0).getId());

@@ -16,7 +16,7 @@ public class TestFromBpmnToGenericConversor {
 
 	@Test
 	public void testHelloWorldConversion() {
-		Process genericProcess = getGenericProcess("test/testFiles/HelloWorldExample.bpmn2");
+		Process genericProcess = getGenericProcess("src/test/resources/HelloWorldExample.bpmn2");
 		
 		assertEquals("PrintHelloWorld", genericProcess.getName());		
 		assertEquals("HelloWorld", genericProcess.getActivities().get(0).getName());
@@ -36,7 +36,7 @@ public class TestFromBpmnToGenericConversor {
 	
 	@Test
 	public void testSubprocessBasicConversion() {
-		Process genericProcess = getGenericProcess("test/testFiles/SubprocessBasicExample.bpmn2");
+		Process genericProcess = getGenericProcess("src/test/resources/SubprocessBasicExample.bpmn2");
 		
 		assertEquals("SubprocessExample", genericProcess.getName());		
 		assertEquals("Sub Process 1", genericProcess.getSubprocesses().get(0).getName());
@@ -60,7 +60,7 @@ public class TestFromBpmnToGenericConversor {
 	
 	@Test
 	public void testGatewayParallelConversion() {
-		Process genericProcess = getGenericProcess("test/testFiles/GatewayParallelExample.bpmn2");
+		Process genericProcess = getGenericProcess("src/test/resources/GatewayParallelExample.bpmn2");
 		
 		assertEquals("GatewayExample", genericProcess.getName());
 		assertEquals(Gateway.Type.DIVERGING_PARALLEL, genericProcess.getGateways().get(0).getType());
