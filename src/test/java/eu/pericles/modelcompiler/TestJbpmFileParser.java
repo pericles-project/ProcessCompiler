@@ -74,7 +74,8 @@ public class TestJbpmFileParser {
 	public void testTimerStartEvent() {
 		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/TimerStartEventExample.bpmn2");
 		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
-		assertEquals("500ms", bpmnProcess.getStartEvents().get(0).getTimerEventDefinition().getTimeCycle());
+		assertEquals("500ms", bpmnProcess.getStartEvents().get(0).getTimerEventDefinition().getTimeCycle().getTime());
+		assertEquals("tFormalExpression", bpmnProcess.getStartEvents().get(0).getTimerEventDefinition().getTimeCycle().getType());
 	}
 	
 

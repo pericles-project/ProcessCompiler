@@ -1,18 +1,30 @@
 package eu.pericles.modelcompiler.bpmn.Events;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 
-@XStreamAlias("timeCycle")
+@XStreamAlias("bpmn2:timeCycle")
+@XStreamConverter(value = ToAttributedValueConverter.class, strings = {"time"})
 public class TimeCycle {
 	
-	String cycle;
-
-	public String getCycle() {
-		return cycle;
+	String time;
+	@XStreamAlias("xsi:type")
+	String type;
+	
+	public String getTime() {
+		return time;
 	}
-
-	public void setCycle(String cycle) {
-		this.cycle = cycle;
+	public void setTime(String time) {
+		this.time = time;
 	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+	
 
 }

@@ -6,13 +6,13 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 public class TimerEventDefinition {
 	
 	@XStreamAlias("bpmn2:timeCycle")
-	private String timeCycle;
+	private TimeCycle timeCycle;
 
-	public String getTimeCycle() {
+	public TimeCycle getTimeCycle() {
 		return timeCycle;
 	}
 
-	public void setTimeCycle(String timeCycle) {
+	public void setTimeCycle(TimeCycle timeCycle) {
 		this.timeCycle = timeCycle;
 	}
 
