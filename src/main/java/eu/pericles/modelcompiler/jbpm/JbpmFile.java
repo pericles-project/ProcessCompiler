@@ -3,6 +3,7 @@ package eu.pericles.modelcompiler.jbpm;
 import java.util.List;
 
 import eu.pericles.modelcompiler.bpmn.*;
+import eu.pericles.modelcompiler.bpmn.Variables.ItemDefinition;
 import eu.pericles.modelcompiler.bpmn.Variables.Message;
 import eu.pericles.modelcompiler.bpmn.Variables.Signal;
 import eu.pericles.modelcompiler.jbpm.Diagram.Diagram;

@@ -13,7 +13,6 @@ public class TestJbpmFileParser {
 	public void testHelloWorldParse() {
 		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/HelloWorldExample.bpmn2");
 		
-		assertEquals("eu.pericles.modelcompiler.unittests.PrintHelloWorld", bpmnProcess.getId());
 		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
 		assertEquals("EndEvent_1", bpmnProcess.getEndEvents().get(0).getId());
 		assertEquals("ScriptTask_1", bpmnProcess.getScriptTasks().get(0).getId());
@@ -46,6 +45,38 @@ public class TestJbpmFileParser {
 		assertEquals("ScriptTask_1", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(1).getSource());
 		assertEquals("EndEvent_1", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(1).getTarget());
 	}
+	
+	@Test
+	public void testSignalStartEvent() {
+		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/SignalStartEventExample.bpmn2");
+		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
+		assertEquals(bpmnProcess.getSignals().get(0).getId(), bpmnProcess.getStartEvents().get(0).getSignalEventDefinition().getSignalRef());
+	}	
+	@Test
+	public void testSignalEndEvent() {
+		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/SignalEndEventExample.bpmn2");
+		assertEquals("EndEvent_1", bpmnProcess.getEndEvents().get(0).getId());
+		assertEquals(bpmnProcess.getSignals().get(0).getId(), bpmnProcess.getEndEvents().get(0).getSignalEventDefinition().getSignalRef());
+	}	
+	@Test
+	public void testMessageStartEvent() {
+		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/MessageStartEventExample.bpmn2");
+		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
+		assertEquals(bpmnProcess.getMessages().get(0).getId(), bpmnProcess.getStartEvents().get(0).getMessageEventDefinition().getMessageRef());
+	}
+	@Test
+	public void testMessageEndEvent() {
+		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/MessageEndEventExample.bpmn2");
+		assertEquals("EndEvent_1", bpmnProcess.getEndEvents().get(0).getId());
+		assertEquals(bpmnProcess.getMessages().get(0).getId(), bpmnProcess.getEndEvents().get(0).getMessageEventDefinition().getMessageRef());
+	}	
+	@Test
+	public void testTimerStartEvent() {
+		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/TimerStartEventExample.bpmn2");
+		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
+		assertEquals("500ms", bpmnProcess.getStartEvents().get(0).getTimerEventDefinition().getTimeCycle());
+	}
+	
 
 	private BpmnProcess getBpmnProcess(String file) {		
 		JbpmFileParser jbpmFileParser = parseJbpmFile(file);

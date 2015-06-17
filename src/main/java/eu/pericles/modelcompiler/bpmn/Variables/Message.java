@@ -8,6 +8,8 @@ public class Message {
 	
 	@XStreamAsAttribute
 	private String id;
+	@XStreamAsAttribute
+	private String itemRef;
 
 	public String getId() {
 		return id;
@@ -15,6 +17,14 @@ public class Message {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getItemRef() {
+		return itemRef;
+	}
+
+	public void setItemRef(String itemRef) {
+		this.itemRef = itemRef;
 	}
 
 }

@@ -13,6 +13,7 @@ import eu.pericles.modelcompiler.bpmn.Events.EndEvent;
 import eu.pericles.modelcompiler.bpmn.Events.StartEvent;
 import eu.pericles.modelcompiler.bpmn.Flows.SequenceFlow;
 import eu.pericles.modelcompiler.bpmn.Gateways.ParallelGateway;
+import eu.pericles.modelcompiler.bpmn.Variables.ItemDefinition;
 import eu.pericles.modelcompiler.bpmn.Variables.Message;
 import eu.pericles.modelcompiler.bpmn.Variables.Signal;
 

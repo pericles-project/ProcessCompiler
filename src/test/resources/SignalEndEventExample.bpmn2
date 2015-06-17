@@ -5,12 +5,11 @@
   <bpmn2:signal id="Signal_1" name="Signal 1"/>
   
   <!-- process -->
-  <bpmn2:process id="Process_1" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="EventStartSignalExample" isExecutable="true" processType="Public">
+  <bpmn2:process id="Process_1" drools:version="1" drools:packageName="defaultPackage" drools:adHoc="false" name="EventEndSignalExample" isExecutable="true" processType="Public">
     
     <!-- nodes -->
     <bpmn2:startEvent id="StartEvent_1" name="">
       <bpmn2:outgoing>SequenceFlow_1</bpmn2:outgoing>
-      <bpmn2:signalEventDefinition id="SignalEventDefinition_1" signalRef="Signal_1"/>
     </bpmn2:startEvent>
     <bpmn2:scriptTask id="ScriptTask_1" name="Script Task 1">
       <bpmn2:incoming>SequenceFlow_1</bpmn2:incoming>
@@ -19,6 +18,7 @@
     </bpmn2:scriptTask>
     <bpmn2:endEvent id="EndEvent_1" name="">
       <bpmn2:incoming>SequenceFlow_2</bpmn2:incoming>
+      <bpmn2:signalEventDefinition id="SignalEventDefinition_1" signalRef="Signal_1"/>
     </bpmn2:endEvent>
     
     <!-- connections -->
