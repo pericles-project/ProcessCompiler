@@ -28,6 +28,8 @@ public class JbpmFileParser {
 			
 			File processedFile = processInputFile(inputFile);
 			
+			try {
+			
 			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			Document document = documentBuilder.parse(processedFile);	
@@ -43,12 +45,16 @@ public class JbpmFileParser {
 			setJbpmFile(jbpmFile);
 			
 			ois.close();
-			Files.delete(processedFile.toPath());
 			
+			} catch (Exception exception) {
+				exception.printStackTrace();
+				
+			} finally {
+				Files.delete(processedFile.toPath());
+			}
 		} catch (Exception exception) {
 			exception.printStackTrace();
 		}
-
 	}
 
 	/* Modify the input file in a way can be read by xstream as a single element. It is not a very elegant
