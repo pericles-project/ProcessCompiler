@@ -10,6 +10,7 @@ import eu.pericles.modelcompiler.common.FromBpmnToGenericConversor;
 import eu.pericles.modelcompiler.common.Uid;
 import eu.pericles.modelcompiler.generic.Gateway;
 import eu.pericles.modelcompiler.generic.Process;
+import eu.pericles.modelcompiler.generic.Timer;
 import eu.pericles.modelcompiler.jbpm.JbpmFileParser;
 
 public class TestFromBpmnToGenericConversor {
@@ -96,7 +97,29 @@ public class TestFromBpmnToGenericConversor {
 		
 		Uid uid = new Uid();
 		assertTrue(uid.checkAndSetUid(genericProcess.getEvents().get(0).getUid()));		
-		assertTrue(genericProcess.getEvents().get(0).getRef() == genericProcess.getExternalItems().get(0).getUid());
+		assertTrue(genericProcess.getEvents().get(0).getReference() == genericProcess.getExternalItems().get(0).getUid());
+	}	
+	
+	@Test
+	public void testMessageStartEventConversion() {
+		Process genericProcess = getGenericProcess("src/test/resources/MessageStartEventExample.bpmn2");
+		
+		Uid uid = new Uid();
+		assertTrue(uid.checkAndSetUid(genericProcess.getEvents().get(0).getUid()));		
+		assertTrue(genericProcess.getEvents().get(0).getReference() == genericProcess.getExternalItems().get(1).getUid());
+		assertTrue(genericProcess.getExternalItems().get(1).getReference() == genericProcess.getExternalItems().get(0).getUid());
+	}	
+	
+	@Test
+	public void testTimerStartEventConversion() {
+		Process genericProcess = getGenericProcess("src/test/resources/TimerStartEventExample.bpmn2");
+		
+		Uid uid = new Uid();
+		assertTrue(uid.checkAndSetUid(genericProcess.getEvents().get(0).getUid()));
+		assertTrue(uid.checkAndSetUid(genericProcess.getEvents().get(0).getTimer().getUid()));
+		assertEquals(Timer.Type.CYCLE, genericProcess.getEvents().get(0).getTimer().getType());
+		assertEquals("500ms",genericProcess.getEvents().get(0).getTimer().getTime());
+		assertEquals("tFormalExpression",genericProcess.getEvents().get(0).getTimer().getTimeType());
 	}	
 
 	private Process getGenericProcess(String file) {

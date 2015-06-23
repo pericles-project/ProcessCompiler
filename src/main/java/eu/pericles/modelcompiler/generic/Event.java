@@ -10,8 +10,10 @@ public class Event extends ProcessElement {
 	}
 
 	private Type type;
-	private String ref;
-	
+	private String reference;
+	private Timer timer;
+	private Data dataInput;
+	private Data dataOutput;
 	
 	//---- Getters and setters ----// 
 
@@ -23,12 +25,36 @@ public class Event extends ProcessElement {
 		this.type = type;
 	}
 
-	public String getRef() {
-		return ref;
+	public String getReference() {
+		return reference;
 	}
 
-	public void setRef(String ref) {
-		this.ref = ref;
+	public void setReference(String ref) {
+		this.reference = ref;
+	}
+
+	public Timer getTimer() {
+		return timer;
+	}
+
+	public void setTimer(Timer timer) {
+		this.timer = timer;
+	}
+
+	public Data getDataInput() {
+		return dataInput;
+	}
+
+	public void setDataInput(Data dataInput) {
+		this.dataInput = dataInput;
+	}
+
+	public Data getDataOutput() {
+		return dataOutput;
+	}
+
+	public void setDataOutput(Data dataOutput) {
+		this.dataOutput = dataOutput;
 	}
 
 }

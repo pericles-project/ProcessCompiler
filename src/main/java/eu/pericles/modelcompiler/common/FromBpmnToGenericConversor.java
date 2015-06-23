@@ -8,6 +8,7 @@ import eu.pericles.modelcompiler.bpmn.Activities.ScriptTask;
 import eu.pericles.modelcompiler.bpmn.Activities.Subprocess;
 import eu.pericles.modelcompiler.bpmn.Events.EndEvent;
 import eu.pericles.modelcompiler.bpmn.Events.StartEvent;
+import eu.pericles.modelcompiler.bpmn.Events.TimerEventDefinition;
 import eu.pericles.modelcompiler.bpmn.ExternalItems.ItemDefinition;
 import eu.pericles.modelcompiler.bpmn.ExternalItems.Message;
 import eu.pericles.modelcompiler.bpmn.ExternalItems.Signal;
@@ -19,6 +20,8 @@ import eu.pericles.modelcompiler.generic.ExternalItem;
 import eu.pericles.modelcompiler.generic.Flow;
 import eu.pericles.modelcompiler.generic.Gateway;
 import eu.pericles.modelcompiler.generic.Process;
+import eu.pericles.modelcompiler.generic.Timer;
+import eu.pericles.modelcompiler.generic.Timer.Type;
 
 public class FromBpmnToGenericConversor {
 
@@ -116,14 +119,15 @@ public class FromBpmnToGenericConversor {
 			}
 			if (startEvent.getType() == StartEvent.Type.SIGNAL) {
 				event.setType(Event.Type.SIGNAL_START);
-				event.setRef(mapBpmnIDtoGenericUID.get(startEvent.getSignalEventDefinition().getSignalRef()));
+				event.setReference(mapBpmnIDtoGenericUID.get(startEvent.getSignalEventDefinition().getSignalRef()));
 			}
 			if (startEvent.getType() == StartEvent.Type.MESSAGE) {
 				event.setType(Event.Type.MESSAGE_START);
-				event.setRef(mapBpmnIDtoGenericUID.get(startEvent.getMessageEventDefinition().getMessageRef()));
+				event.setReference(mapBpmnIDtoGenericUID.get(startEvent.getMessageEventDefinition().getMessageRef()));
 			}
 			if (startEvent.getType() == StartEvent.Type.TIMER) {
 				event.setType(Event.Type.TIMER_START);
+				event.setTimer(createGenericTimerFromBpmn(startEvent.getTimerEventDefinition()));
 			}
 			genericProcess.addEvent(event);
 			
@@ -175,6 +179,31 @@ public class FromBpmnToGenericConversor {
 			
 			mapBpmnIDtoGenericUID.put(bpmnSubprocess.getId(), genericSubprocess.getUid());
 		}
+	}
+	
+	private Timer createGenericTimerFromBpmn(TimerEventDefinition timerEventDefinition) {
+		Timer timer = new Timer();
+		
+		if (timerEventDefinition.getTimeCycle() != null) {
+			timer.setType(Type.CYCLE);
+			timer.setTime(timerEventDefinition.getTimeCycle().getTime());
+			timer.setTimeType(timerEventDefinition.getTimeCycle().getType());
+			timer.setLanguage(timerEventDefinition.getTimeCycle().getLanguage());
+		}
+		if (timerEventDefinition.getTimeDate() != null) {
+			timer.setType(Type.DATE);
+			timer.setTime(timerEventDefinition.getTimeDate().getTime());
+			timer.setTimeType(timerEventDefinition.getTimeDate().getType());
+			timer.setLanguage(timerEventDefinition.getTimeDate().getLanguage());
+		}
+		if (timerEventDefinition.getTimeDuration() != null) {
+			timer.setType(Type.DURATION);
+			timer.setTime(timerEventDefinition.getTimeDuration().getTime());
+			timer.setTimeType(timerEventDefinition.getTimeDuration().getType());
+			timer.setLanguage(timerEventDefinition.getTimeDuration().getLanguage());
+		}
+		
+		return timer;
 	}
 	
 	//---- Getters and setters ----// 
