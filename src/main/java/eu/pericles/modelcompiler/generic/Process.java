@@ -14,6 +14,7 @@ public class Process extends ProcessElement {
 	private List<Gateway> gateways;
 	private List<Flow> flows;
 	private List<Process> subprocesses;
+	private List<ExternalItem> externalItems;
 	private String source;
 	
 	public Process() {
@@ -26,6 +27,7 @@ public class Process extends ProcessElement {
 		gateways = new ArrayList<Gateway>();
 		flows = new ArrayList<Flow>();
 		subprocesses = new ArrayList<Process>();
+		setExternalItems(new ArrayList<ExternalItem>());
 	}
 	
 	
@@ -97,6 +99,18 @@ public class Process extends ProcessElement {
 	
 	public void addSubprocess(Process subprocess) {
 		getSubprocesses().add(subprocess);
+	}
+
+	public List<ExternalItem> getExternalItems() {
+		return externalItems;
+	}
+
+	public void setExternalItems(List<ExternalItem> externalItems) {
+		this.externalItems = externalItems;
+	}
+	
+	public void addExternalItem(ExternalItem externalItem) {
+		getExternalItems().add(externalItem);
 	}
 
 	public String getSource() {

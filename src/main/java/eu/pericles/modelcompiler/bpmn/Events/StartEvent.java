@@ -5,6 +5,10 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
 @XStreamAlias("bpmn2:startEvent")
 public class StartEvent {
+	
+	public enum Type {
+		NONE, SIGNAL, MESSAGE, TIMER
+	}
 
 	@XStreamAsAttribute
 	private String id;
@@ -47,6 +51,19 @@ public class StartEvent {
 
 	public void setTimerEventDefinition(TimerEventDefinition timerEventDefinition) {
 		this.timerEventDefinition = timerEventDefinition;
+	}
+	
+	public Type getType() {
+		Type type = Type.NONE;
+		
+		if (getSignalEventDefinition() != null)
+			type = Type.SIGNAL;
+		if (getMessageEventDefinition() != null)
+			type = Type.MESSAGE;
+		if (getTimerEventDefinition() != null)
+			type = Type.TIMER;
+		
+		return type;
 	}
 
 }

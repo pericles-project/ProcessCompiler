@@ -1,4 +1,4 @@
-package eu.pericles.modelcompiler.bpmn.Variables;
+package eu.pericles.modelcompiler.bpmn.ExternalItems;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;

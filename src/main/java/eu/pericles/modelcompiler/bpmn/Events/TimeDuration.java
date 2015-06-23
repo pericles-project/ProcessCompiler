@@ -5,9 +5,9 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 
-@XStreamAlias("bpmn2:timeCycle")
+@XStreamAlias("bpmn2:timeDuration")
 @XStreamConverter(value = ToAttributedValueConverter.class, strings = {"time"})
-public class TimeCycle {
+public class TimeDuration {
 	
 	String time;
 	@XStreamAlias("xsi:type")
@@ -33,4 +33,5 @@ public class TimeCycle {
 	public void setLanguage(String language) {
 		this.language = language;
 	}
+
 }

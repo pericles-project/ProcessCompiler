@@ -1,4 +1,4 @@
-package eu.pericles.modelcompiler;
+package eu.pericles.modelcompiler.unittests;
 
 import static org.junit.Assert.*;
 

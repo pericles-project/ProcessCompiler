@@ -8,10 +8,14 @@ import eu.pericles.modelcompiler.bpmn.Activities.ScriptTask;
 import eu.pericles.modelcompiler.bpmn.Activities.Subprocess;
 import eu.pericles.modelcompiler.bpmn.Events.EndEvent;
 import eu.pericles.modelcompiler.bpmn.Events.StartEvent;
+import eu.pericles.modelcompiler.bpmn.ExternalItems.ItemDefinition;
+import eu.pericles.modelcompiler.bpmn.ExternalItems.Message;
+import eu.pericles.modelcompiler.bpmn.ExternalItems.Signal;
 import eu.pericles.modelcompiler.bpmn.Flows.SequenceFlow;
 import eu.pericles.modelcompiler.bpmn.Gateways.ParallelGateway;
 import eu.pericles.modelcompiler.generic.Activity;
 import eu.pericles.modelcompiler.generic.Event;
+import eu.pericles.modelcompiler.generic.ExternalItem;
 import eu.pericles.modelcompiler.generic.Flow;
 import eu.pericles.modelcompiler.generic.Gateway;
 import eu.pericles.modelcompiler.generic.Process;
@@ -30,8 +34,53 @@ public class FromBpmnToGenericConversor {
 
 	public void convertFromBpmnToGeneric(BpmnProcess bpmnProcess) {
 		
-		setBpmnProcess(bpmnProcess);		
+		setBpmnProcess(bpmnProcess);
+		convertExternalItems(getBpmnProcess(), getGenericProcess());
 		convertProcessFromBpmnToGeneric(getBpmnProcess(), getGenericProcess());
+	}
+
+	private void convertExternalItems(BpmnProcess bpmnProcess, Process genericProcess) {
+		convertItemsFromBpmnToGeneric(bpmnProcess, genericProcess);
+		convertSignalsFromBpmnToGeneric(bpmnProcess, genericProcess);
+		convertMessagesFromBpmnToGeneric(bpmnProcess, genericProcess);
+		
+	}
+
+	private void convertItemsFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
+		for (ItemDefinition itemDefinition : bpmnProcess.getItemDefinitions()) {
+			
+			ExternalItem item = new ExternalItem();
+			item.setType(ExternalItem.Type.ITEM);
+			genericProcess.addExternalItem(item);
+			
+			mapBpmnIDtoGenericUID.put(itemDefinition.getId(), item.getUid());
+		}
+		
+	}
+
+	private void convertSignalsFromBpmnToGeneric(BpmnProcess bpmnProcess2, Process genericProcess2) {
+		for (Signal signal : bpmnProcess.getSignals()) {
+
+			ExternalItem item = new ExternalItem();
+			item.setType(ExternalItem.Type.SIGNAL);
+			genericProcess.addExternalItem(item);
+
+			mapBpmnIDtoGenericUID.put(signal.getId(), item.getUid());
+		}
+
+	}
+
+	private void convertMessagesFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
+		for (Message message : bpmnProcess.getMessages()) {
+			
+			ExternalItem item = new ExternalItem();
+			item.setType(ExternalItem.Type.MESSAGE);
+			item.setReference(mapBpmnIDtoGenericUID.get(message.getItemRef()));
+			genericProcess.addExternalItem(item);
+			
+			mapBpmnIDtoGenericUID.put(message.getId(), item.getUid());
+		}
+		
 	}
 
 	private void convertProcessFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
@@ -62,7 +111,20 @@ public class FromBpmnToGenericConversor {
 		for (StartEvent startEvent : bpmnProcess.getStartEvents()) {	
 			
 			Event event = new Event();
-			event.setType(Event.Type.START);
+			if (startEvent.getType() == StartEvent.Type.NONE) {
+				event.setType(Event.Type.NONE_START);
+			}
+			if (startEvent.getType() == StartEvent.Type.SIGNAL) {
+				event.setType(Event.Type.SIGNAL_START);
+				event.setRef(mapBpmnIDtoGenericUID.get(startEvent.getSignalEventDefinition().getSignalRef()));
+			}
+			if (startEvent.getType() == StartEvent.Type.MESSAGE) {
+				event.setType(Event.Type.MESSAGE_START);
+				event.setRef(mapBpmnIDtoGenericUID.get(startEvent.getMessageEventDefinition().getMessageRef()));
+			}
+			if (startEvent.getType() == StartEvent.Type.TIMER) {
+				event.setType(Event.Type.TIMER_START);
+			}
 			genericProcess.addEvent(event);
 			
 			mapBpmnIDtoGenericUID.put(startEvent.getId(), event.getUid());
@@ -70,7 +132,7 @@ public class FromBpmnToGenericConversor {
 		for (EndEvent endEvent : bpmnProcess.getEndEvents()) {
 			
 			Event event = new Event();
-			event.setType(Event.Type.END);
+			event.setType(Event.Type.NONE_END);
 			genericProcess.addEvent(event);
 			
 			mapBpmnIDtoGenericUID.put(endEvent.getId(), event.getUid());

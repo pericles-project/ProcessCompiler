@@ -11,11 +11,11 @@ import eu.pericles.modelcompiler.bpmn.Activities.ScriptTask;
 import eu.pericles.modelcompiler.bpmn.Activities.Subprocess;
 import eu.pericles.modelcompiler.bpmn.Events.EndEvent;
 import eu.pericles.modelcompiler.bpmn.Events.StartEvent;
+import eu.pericles.modelcompiler.bpmn.ExternalItems.ItemDefinition;
+import eu.pericles.modelcompiler.bpmn.ExternalItems.Message;
+import eu.pericles.modelcompiler.bpmn.ExternalItems.Signal;
 import eu.pericles.modelcompiler.bpmn.Flows.SequenceFlow;
 import eu.pericles.modelcompiler.bpmn.Gateways.ParallelGateway;
-import eu.pericles.modelcompiler.bpmn.Variables.ItemDefinition;
-import eu.pericles.modelcompiler.bpmn.Variables.Message;
-import eu.pericles.modelcompiler.bpmn.Variables.Signal;
 
 @XStreamAlias("bpmn2:process")
 public class BpmnProcess {

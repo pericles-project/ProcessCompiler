@@ -1,4 +1,4 @@
-package eu.pericles.modelcompiler;
+package eu.pericles.modelcompiler.unittests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -89,6 +89,15 @@ public class TestFromBpmnToGenericConversor {
 		assertTrue(genericProcess.getFlows().get(5).getTo()==genericProcess.getEvents().get(1).getUid());
 		
 	}
+	
+	@Test
+	public void testSignalStartEventConversion() {
+		Process genericProcess = getGenericProcess("src/test/resources/SignalStartEventExample.bpmn2");
+		
+		Uid uid = new Uid();
+		assertTrue(uid.checkAndSetUid(genericProcess.getEvents().get(0).getUid()));		
+		assertTrue(genericProcess.getEvents().get(0).getRef() == genericProcess.getExternalItems().get(0).getUid());
+	}	
 
 	private Process getGenericProcess(String file) {
 		FromBpmnToGenericConversor conversor = new FromBpmnToGenericConversor();

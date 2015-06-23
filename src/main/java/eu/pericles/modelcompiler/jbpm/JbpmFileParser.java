@@ -87,6 +87,8 @@ public class JbpmFileParser {
 		
 		return processedFile;
 	}
+	
+	//---- Getters and setters ----// 
 
 	public JbpmFile getJbpmFile() {
 		return jbpmFile;
