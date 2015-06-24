@@ -3,17 +3,16 @@ package eu.pericles.modelcompiler.jbpm;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.pericles.modelcompiler.bpmn.*;
-import eu.pericles.modelcompiler.bpmn.ExternalItems.ItemDefinition;
-import eu.pericles.modelcompiler.bpmn.ExternalItems.Message;
-import eu.pericles.modelcompiler.bpmn.ExternalItems.Signal;
-import eu.pericles.modelcompiler.jbpm.Diagram.Diagram;
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
-@XStreamAlias("jbpm")
+import eu.pericles.modelcompiler.bpmn.BpmnProcess;
+import eu.pericles.modelcompiler.bpmn.ExternalItems.ItemDefinition;
+import eu.pericles.modelcompiler.bpmn.ExternalItems.Message;
+import eu.pericles.modelcompiler.jbpm.Diagram.Diagram;
+
+@XStreamAlias("bpmn2:definitions")
 public class JbpmFile {
 
 	@XStreamAsAttribute
@@ -26,8 +25,6 @@ public class JbpmFile {
 	private List<Message> messages;
 	@XStreamImplicit
 	private List<ItemDefinition> itemDefinitions;
-	@XStreamImplicit
-	private List<Signal> signals;
 
 	public JbpmFile() {
 		init();
@@ -36,7 +33,6 @@ public class JbpmFile {
 	private void init() {
 		itemDefinitions = new ArrayList<ItemDefinition>();
 		messages = new ArrayList<Message>();
-		signals = new ArrayList<Signal>();
 	}
 
 
@@ -59,46 +55,35 @@ public class JbpmFile {
 			getBpmnProcess().setMessages(new ArrayList<Message>());
 		else
 			getBpmnProcess().setMessages(getMessages());
-		if (getSignals() == null)
-			getBpmnProcess().setSignals(new ArrayList<Signal>());
-		else
-			getBpmnProcess().setSignals(getSignals());
 	}
 
 
 
-//---- Getters and Setters ----//
+	//---- Getters and Setters ----//
 
-public BpmnProcess getBpmnProcess() {
-	return bpmnProcess;
-}
-public void setBpmnProcess(BpmnProcess bpmnProcess) {
-	this.bpmnProcess = bpmnProcess;
-}
-public Diagram getDiagram() {
-	return diagram;
-}
-public void setDiagram(Diagram diagram) {
-	this.diagram = diagram;
-}
-public List<Message> getMessages() {
-	return messages;
-}
-public void setMessages(List<Message> messages) {
-	this.messages = messages;
-}
-public List<ItemDefinition> getItemDefinitions() {
-	return itemDefinitions;
-}
-public void setItemDefinitions(List<ItemDefinition> itemDefinitions) {
-	this.itemDefinitions = itemDefinitions;
-}
-public List<Signal> getSignals() {
-	return signals;
-}
-public void setSignals(List<Signal> signals) {
-	this.signals = signals;
-}
-
+	public BpmnProcess getBpmnProcess() {
+		return bpmnProcess;
+	}
+	public void setBpmnProcess(BpmnProcess bpmnProcess) {
+		this.bpmnProcess = bpmnProcess;
+	}
+	public Diagram getDiagram() {
+		return diagram;
+	}
+	public void setDiagram(Diagram diagram) {
+		this.diagram = diagram;
+	}
+	public List<Message> getMessages() {
+		return messages;
+	}
+	public void setMessages(List<Message> messages) {
+		this.messages = messages;
+	}
+	public List<ItemDefinition> getItemDefinitions() {
+		return itemDefinitions;
+	}
+	public void setItemDefinitions(List<ItemDefinition> itemDefinitions) {
+		this.itemDefinitions = itemDefinitions;
+	}
 
 }

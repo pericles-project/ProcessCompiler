@@ -12,8 +12,7 @@ public class Event extends ProcessElement {
 	private Type type;
 	private String reference;
 	private Timer timer;
-	private Data dataInput;
-	private Data dataOutput;
+	private Data data;
 	
 	//---- Getters and setters ----// 
 
@@ -41,20 +40,12 @@ public class Event extends ProcessElement {
 		this.timer = timer;
 	}
 
-	public Data getDataInput() {
-		return dataInput;
+	public Data getData() {
+		return data;
 	}
 
-	public void setDataInput(Data dataInput) {
-		this.dataInput = dataInput;
-	}
-
-	public Data getDataOutput() {
-		return dataOutput;
-	}
-
-	public void setDataOutput(Data dataOutput) {
-		this.dataOutput = dataOutput;
+	public void setData(Data data) {
+		this.data = data;
 	}
 
 }

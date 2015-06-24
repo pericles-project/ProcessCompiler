@@ -11,10 +11,10 @@ import eu.pericles.modelcompiler.bpmn.Events.StartEvent;
 import eu.pericles.modelcompiler.bpmn.Events.TimerEventDefinition;
 import eu.pericles.modelcompiler.bpmn.ExternalItems.ItemDefinition;
 import eu.pericles.modelcompiler.bpmn.ExternalItems.Message;
-import eu.pericles.modelcompiler.bpmn.ExternalItems.Signal;
 import eu.pericles.modelcompiler.bpmn.Flows.SequenceFlow;
 import eu.pericles.modelcompiler.bpmn.Gateways.ParallelGateway;
 import eu.pericles.modelcompiler.generic.Activity;
+import eu.pericles.modelcompiler.generic.Data;
 import eu.pericles.modelcompiler.generic.Event;
 import eu.pericles.modelcompiler.generic.ExternalItem;
 import eu.pericles.modelcompiler.generic.Flow;
@@ -44,7 +44,6 @@ public class FromBpmnToGenericConversor {
 
 	private void convertExternalItems(BpmnProcess bpmnProcess, Process genericProcess) {
 		convertItemsFromBpmnToGeneric(bpmnProcess, genericProcess);
-		convertSignalsFromBpmnToGeneric(bpmnProcess, genericProcess);
 		convertMessagesFromBpmnToGeneric(bpmnProcess, genericProcess);
 		
 	}
@@ -59,18 +58,6 @@ public class FromBpmnToGenericConversor {
 			mapBpmnIDtoGenericUID.put(itemDefinition.getId(), item.getUid());
 		}
 		
-	}
-
-	private void convertSignalsFromBpmnToGeneric(BpmnProcess bpmnProcess2, Process genericProcess2) {
-		for (Signal signal : bpmnProcess.getSignals()) {
-
-			ExternalItem item = new ExternalItem();
-			item.setType(ExternalItem.Type.SIGNAL);
-			genericProcess.addExternalItem(item);
-
-			mapBpmnIDtoGenericUID.put(signal.getId(), item.getUid());
-		}
-
 	}
 
 	private void convertMessagesFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
@@ -120,10 +107,20 @@ public class FromBpmnToGenericConversor {
 			if (startEvent.getType() == StartEvent.Type.SIGNAL) {
 				event.setType(Event.Type.SIGNAL_START);
 				event.setReference(mapBpmnIDtoGenericUID.get(startEvent.getSignalEventDefinition().getSignalRef()));
+				if (startEvent.hasDataAssociated()) {
+					Data data = new Data();
+					data.setAssociation(mapBpmnIDtoGenericUID.get(startEvent.getDataAssociation().getTarget()));
+					event.setData(data);
+				}
 			}
 			if (startEvent.getType() == StartEvent.Type.MESSAGE) {
 				event.setType(Event.Type.MESSAGE_START);
 				event.setReference(mapBpmnIDtoGenericUID.get(startEvent.getMessageEventDefinition().getMessageRef()));
+				if (startEvent.hasDataAssociated()) {
+					Data data = new Data();
+					data.setAssociation(mapBpmnIDtoGenericUID.get(startEvent.getDataAssociation().getTarget()));
+					event.setData(data);
+				}
 			}
 			if (startEvent.getType() == StartEvent.Type.TIMER) {
 				event.setType(Event.Type.TIMER_START);

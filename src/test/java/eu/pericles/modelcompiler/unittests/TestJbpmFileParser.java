@@ -12,7 +12,7 @@ public class TestJbpmFileParser {
 	@Test
 	public void testHelloWorldParse() {
 		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/HelloWorldExample.bpmn2");
-		
+
 		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
 		assertEquals("EndEvent_1", bpmnProcess.getEndEvents().get(0).getId());
 		assertEquals("ScriptTask_1", bpmnProcess.getScriptTasks().get(0).getId());
@@ -24,17 +24,17 @@ public class TestJbpmFileParser {
 		assertEquals("ScriptTask_1", bpmnProcess.getSequenceFlows().get(1).getSource());
 		assertEquals("EndEvent_1", bpmnProcess.getSequenceFlows().get(1).getTarget());
 	}
-	
+
 	@Test
 	public void testSubprocessBasicParse() {
 		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/SubprocessBasicExample.bpmn2");
-		
+
 		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
 		assertEquals("EndEvent_2", bpmnProcess.getEndEvents().get(0).getId());
 		assertEquals("SequenceFlow_1", bpmnProcess.getSequenceFlows().get(0).getId());
 		assertEquals("StartEvent_1", bpmnProcess.getSequenceFlows().get(0).getSource());
 		assertEquals("SubProcess_1", bpmnProcess.getSequenceFlows().get(0).getTarget());
-		
+
 		assertEquals("SubProcess_1", bpmnProcess.getSubprocesses().get(0).getId());
 		assertEquals("StartEvent_2", bpmnProcess.getSubprocesses().get(0).getStartEvents().get(0).getId());
 		assertEquals("EndEvent_1", bpmnProcess.getSubprocesses().get(0).getEndEvents().get(0).getId());
@@ -45,18 +45,16 @@ public class TestJbpmFileParser {
 		assertEquals("ScriptTask_1", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(1).getSource());
 		assertEquals("EndEvent_1", bpmnProcess.getSubprocesses().get(0).getSequenceFlows().get(1).getTarget());
 	}
-	
+
 	@Test
 	public void testSignalStartEvent() {
 		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/SignalStartEventExample.bpmn2");
 		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
-		assertEquals(bpmnProcess.getSignals().get(0).getId(), bpmnProcess.getStartEvents().get(0).getSignalEventDefinition().getSignalRef());
 	}	
 	@Test
 	public void testSignalEndEvent() {
 		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/SignalEndEventExample.bpmn2");
 		assertEquals("EndEvent_1", bpmnProcess.getEndEvents().get(0).getId());
-		assertEquals(bpmnProcess.getSignals().get(0).getId(), bpmnProcess.getEndEvents().get(0).getSignalEventDefinition().getSignalRef());
 	}	
 	@Test
 	public void testMessageStartEvent() {
@@ -77,7 +75,7 @@ public class TestJbpmFileParser {
 		assertEquals("500ms", bpmnProcess.getStartEvents().get(0).getTimerEventDefinition().getTimeCycle().getTime());
 		assertEquals("tFormalExpression", bpmnProcess.getStartEvents().get(0).getTimerEventDefinition().getTimeCycle().getType());
 	}
-	
+
 
 	private BpmnProcess getBpmnProcess(String file) {		
 		JbpmFileParser jbpmFileParser = parseJbpmFile(file);
@@ -88,7 +86,7 @@ public class TestJbpmFileParser {
 	private JbpmFileParser parseJbpmFile(String file) {
 		JbpmFileParser jbpmFileParser = new JbpmFileParser();
 		jbpmFileParser.parse(file);
-		
+
 		return jbpmFileParser;
 	}
 

@@ -70,13 +70,13 @@ public class JbpmFileParser {
 		String line = null;
 		while ((line = in.readLine()) != null) {
 			if (line.startsWith("<bpmn2:definitions")) {
-				out.write(line);
+				out.write("<jbpm>");
 				out.newLine();
-				line = "<jbpm>";
 			}
 			if (line.startsWith("</bpmn2:definitions")){
-					out.write("</jbpm>");
+					out.write(line);
 					out.newLine();
+					line = "</jbpm>";
 			}
 			out.write(line);
 			out.newLine();

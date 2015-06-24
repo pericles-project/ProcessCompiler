@@ -13,9 +13,9 @@ import eu.pericles.modelcompiler.bpmn.Events.EndEvent;
 import eu.pericles.modelcompiler.bpmn.Events.StartEvent;
 import eu.pericles.modelcompiler.bpmn.ExternalItems.ItemDefinition;
 import eu.pericles.modelcompiler.bpmn.ExternalItems.Message;
-import eu.pericles.modelcompiler.bpmn.ExternalItems.Signal;
 import eu.pericles.modelcompiler.bpmn.Flows.SequenceFlow;
 import eu.pericles.modelcompiler.bpmn.Gateways.ParallelGateway;
+import eu.pericles.modelcompiler.bpmn.Variables.Property;
 
 @XStreamAlias("bpmn2:process")
 public class BpmnProcess {
@@ -26,6 +26,8 @@ public class BpmnProcess {
 	@XStreamAsAttribute
 	@XStreamAlias("processType")
 	private String type;
+	@XStreamImplicit
+	private List<Property> properties;
 	@XStreamImplicit
 	private List<StartEvent> startEvents;
 	@XStreamImplicit
@@ -40,7 +42,6 @@ public class BpmnProcess {
 	private List<Subprocess> subprocesses;
 	
 	private List<Message> messages;
-	private List<Signal> signals;
 	private List<ItemDefinition> itemDefinitions;
 	
 	public BpmnProcess() {
@@ -48,6 +49,7 @@ public class BpmnProcess {
 	}
 	
 	private void init() {
+		properties = new ArrayList<Property>();
 		startEvents = new ArrayList<StartEvent>();
 		endEvents = new ArrayList<EndEvent>();
 		scriptTasks = new ArrayList<ScriptTask>();
@@ -61,6 +63,9 @@ public class BpmnProcess {
 	 * If so, create the corresponding empty list.
 	 */
 	public void checkAndComplete() {
+		
+		if (getProperties() == null)
+			setProperties(new ArrayList<Property>());
 		
 		if (getStartEvents() == null)
 			setStartEvents(new ArrayList<StartEvent>());
@@ -113,6 +118,14 @@ public class BpmnProcess {
 		this.type = type;
 	}
 	
+	public List<Property> getProperties() {
+		return properties;
+	}
+
+	public void setProperties(List<Property> properties) {
+		this.properties = properties;
+	}
+
 	public List<StartEvent> getStartEvents() {
 		return startEvents;
 	}
@@ -167,14 +180,6 @@ public class BpmnProcess {
 
 	public void setMessages(List<Message> messages) {
 		this.messages = messages;
-	}
-
-	public List<Signal> getSignals() {
-		return signals;
-	}
-
-	public void setSignals(List<Signal> signals) {
-		this.signals = signals;
 	}
 
 	public List<ItemDefinition> getItemDefinitions() {
