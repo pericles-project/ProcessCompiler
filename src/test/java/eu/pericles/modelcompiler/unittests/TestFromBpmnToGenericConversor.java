@@ -105,8 +105,10 @@ public class TestFromBpmnToGenericConversor {
 		
 		Uid uid = new Uid();
 		assertTrue(uid.checkAndSetUid(genericProcess.getEvents().get(0).getUid()));		
-		assertTrue(genericProcess.getEvents().get(0).getReference() == genericProcess.getExternalItems().get(1).getUid());
-		assertTrue(genericProcess.getExternalItems().get(1).getReference() == genericProcess.getExternalItems().get(0).getUid());
+		assertTrue(genericProcess.getEvents().get(0).getReference() == genericProcess.getExternalItems().get(3).getUid());
+		assertTrue(genericProcess.getExternalItems().get(3).getReference() == genericProcess.getExternalItems().get(2).getUid());
+		assertTrue(genericProcess.getEvents().get(0).getData().getAssociation() == genericProcess.getVariables().get(0).getUid());
+		assertTrue(genericProcess.getVariables().get(0).getReference() == genericProcess.getExternalItems().get(0).getUid());
 	}	
 	
 	@Test

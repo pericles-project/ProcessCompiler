@@ -13,6 +13,7 @@ import eu.pericles.modelcompiler.bpmn.ExternalItems.ItemDefinition;
 import eu.pericles.modelcompiler.bpmn.ExternalItems.Message;
 import eu.pericles.modelcompiler.bpmn.Flows.SequenceFlow;
 import eu.pericles.modelcompiler.bpmn.Gateways.ParallelGateway;
+import eu.pericles.modelcompiler.bpmn.Variables.Property;
 import eu.pericles.modelcompiler.generic.Activity;
 import eu.pericles.modelcompiler.generic.Data;
 import eu.pericles.modelcompiler.generic.Event;
@@ -22,6 +23,7 @@ import eu.pericles.modelcompiler.generic.Gateway;
 import eu.pericles.modelcompiler.generic.Process;
 import eu.pericles.modelcompiler.generic.Timer;
 import eu.pericles.modelcompiler.generic.Timer.Type;
+import eu.pericles.modelcompiler.generic.Variable;
 
 public class FromBpmnToGenericConversor {
 
@@ -78,11 +80,25 @@ public class FromBpmnToGenericConversor {
 		genericProcess.setName(bpmnProcess.getName());
 		genericProcess.setSource(bpmnProcess.getId());	
 		
+		convertVariablesFromBpmnToGeneric(bpmnProcess, genericProcess);
 		convertActivitiesFromBpmnToGeneric(bpmnProcess, genericProcess);
 		convertEventsFromBpmnToGeneric(bpmnProcess, genericProcess);
 		convertGatewaysFromBpmnToGeneric(bpmnProcess, genericProcess);
 		convertSubprocessesFromBpmnToGeneric(bpmnProcess, genericProcess);
 		convertFlowsFromBpmnToGeneric(bpmnProcess, genericProcess);
+	}
+
+	private void convertVariablesFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
+		for (Property property : bpmnProcess.getProperties()) {
+			
+			Variable variable = new Variable();
+			variable.setType(Variable.Type.PROPERTY);
+			variable.setReference(mapBpmnIDtoGenericUID.get(property.getItemSubjectRef()));
+			genericProcess.addVariable(variable);
+			
+			mapBpmnIDtoGenericUID.put(property.getId(), variable.getUid());
+		}
+		
 	}
 
 	private void convertActivitiesFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {		

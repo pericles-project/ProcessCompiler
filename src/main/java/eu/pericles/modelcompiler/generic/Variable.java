@@ -2,17 +2,15 @@ package eu.pericles.modelcompiler.generic;
 
 import eu.pericles.modelcompiler.common.ProcessElement;
 
-
-public class ExternalItem extends ProcessElement{
+public class Variable extends ProcessElement{
 	
 	public enum Type {
-		ITEM, MESSAGE, OPERATION
+		PROPERTY
 	}
 
 	private Type type;
 	private String reference;
-	private String structure;
-
+	
 	public Type getType() {
 		return type;
 	}
@@ -27,14 +25,6 @@ public class ExternalItem extends ProcessElement{
 
 	public void setReference(String reference) {
 		this.reference = reference;
-	}
-
-	public String getStructure() {
-		return structure;
-	}
-
-	public void setStructure(String structure) {
-		this.structure = structure;
 	}
 
 }

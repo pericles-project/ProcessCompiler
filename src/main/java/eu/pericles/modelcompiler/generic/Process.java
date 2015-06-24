@@ -15,6 +15,7 @@ public class Process extends ProcessElement {
 	private List<Flow> flows;
 	private List<Process> subprocesses;
 	private List<ExternalItem> externalItems;
+	private List<Variable> variables;
 	private String source;
 	
 	public Process() {
@@ -27,7 +28,8 @@ public class Process extends ProcessElement {
 		gateways = new ArrayList<Gateway>();
 		flows = new ArrayList<Flow>();
 		subprocesses = new ArrayList<Process>();
-		setExternalItems(new ArrayList<ExternalItem>());
+		externalItems = new ArrayList<ExternalItem>();
+		variables = new ArrayList<Variable>();
 	}
 	
 	
@@ -39,6 +41,18 @@ public class Process extends ProcessElement {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<Variable> getVariables() {
+		return variables;
+	}
+
+	public void setVariables(List<Variable> variables) {
+		this.variables = variables;
+	}
+	
+	public void addVariable(Variable variable) {
+		getVariables().add(variable);
 	}
 
 	public List<Activity> getActivities() {
