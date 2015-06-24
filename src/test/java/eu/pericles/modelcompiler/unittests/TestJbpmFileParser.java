@@ -59,8 +59,15 @@ public class TestJbpmFileParser {
 	@Test
 	public void testMessageStartEvent() {
 		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/MessageStartEventExample.bpmn2");
+		assertEquals("_x", bpmnProcess.getProperties().get(0).getId());
 		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
-		assertEquals(bpmnProcess.getMessages().get(0).getId(), bpmnProcess.getStartEvents().get(0).getMessageEventDefinition().getMessageRef());
+		assertEquals("_1_Output", bpmnProcess.getStartEvents().get(0).getData().getId());
+		assertEquals("_1_Output", bpmnProcess.getStartEvents().get(0).getDataAssociation().getSource());
+		assertEquals("_x", bpmnProcess.getStartEvents().get(0).getDataAssociation().getTarget());
+		assertEquals("_1_Output", bpmnProcess.getStartEvents().get(0).getDataSet().getReference());
+		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
+		assertEquals("MessageEventDefinition_1", bpmnProcess.getStartEvents().get(0).getMessageEventDefinition().getId());
+		assertEquals("Message_1", bpmnProcess.getStartEvents().get(0).getMessageEventDefinition().getMessageRef());
 	}
 	@Test
 	public void testMessageEndEvent() {
