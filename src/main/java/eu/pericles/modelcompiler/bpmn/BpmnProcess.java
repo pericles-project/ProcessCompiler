@@ -10,6 +10,8 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import eu.pericles.modelcompiler.bpmn.Activities.ScriptTask;
 import eu.pericles.modelcompiler.bpmn.Activities.Subprocess;
 import eu.pericles.modelcompiler.bpmn.Events.EndEvent;
+import eu.pericles.modelcompiler.bpmn.Events.IntermediateCatchEvent;
+import eu.pericles.modelcompiler.bpmn.Events.IntermediateThrowEvent;
 import eu.pericles.modelcompiler.bpmn.Events.StartEvent;
 import eu.pericles.modelcompiler.bpmn.ExternalItems.ItemDefinition;
 import eu.pericles.modelcompiler.bpmn.ExternalItems.Message;
@@ -32,6 +34,26 @@ public class BpmnProcess {
 	private List<StartEvent> startEvents;
 	@XStreamImplicit
 	private List<EndEvent> endEvents;
+	public List<IntermediateCatchEvent> getIntermediateCatchEvents() {
+		return intermediateCatchEvents;
+	}
+
+	public void setIntermediateCatchEvents(List<IntermediateCatchEvent> intermediateCatchEvents) {
+		this.intermediateCatchEvents = intermediateCatchEvents;
+	}
+
+	public List<IntermediateThrowEvent> getIntermediateThrowEvents() {
+		return intermediateThrowEvents;
+	}
+
+	public void setIntermediateThrowEvents(List<IntermediateThrowEvent> intermediateThrowEvents) {
+		this.intermediateThrowEvents = intermediateThrowEvents;
+	}
+
+	@XStreamImplicit
+	private List<IntermediateCatchEvent> intermediateCatchEvents;
+	@XStreamImplicit
+	private List<IntermediateThrowEvent> intermediateThrowEvents;
 	@XStreamImplicit
 	private List<ScriptTask> scriptTasks;
 	@XStreamImplicit
@@ -52,6 +74,8 @@ public class BpmnProcess {
 		properties = new ArrayList<Property>();
 		startEvents = new ArrayList<StartEvent>();
 		endEvents = new ArrayList<EndEvent>();
+		intermediateCatchEvents = new ArrayList<IntermediateCatchEvent>();
+		intermediateThrowEvents = new ArrayList<IntermediateThrowEvent>();
 		scriptTasks = new ArrayList<ScriptTask>();
 		parallelGateways = new ArrayList<ParallelGateway>();
 		sequenceFlows = new ArrayList<SequenceFlow>();
@@ -72,6 +96,12 @@ public class BpmnProcess {
 		
 		if (getEndEvents() == null)
 			setEndEvents(new ArrayList<EndEvent>());
+		
+		if (getIntermediateCatchEvents() == null)
+			setIntermediateCatchEvents(new ArrayList<IntermediateCatchEvent>());
+		
+		if (getIntermediateThrowEvents() == null)
+			setIntermediateThrowEvents(new ArrayList<IntermediateThrowEvent>());
 		
 		if (getScriptTasks() == null)
 			setScriptTasks(new ArrayList<ScriptTask>());

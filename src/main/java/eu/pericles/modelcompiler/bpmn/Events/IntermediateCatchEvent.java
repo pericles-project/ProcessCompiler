@@ -3,33 +3,32 @@ package eu.pericles.modelcompiler.bpmn.Events;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
-import eu.pericles.modelcompiler.bpmn.Data.DataInput;
-import eu.pericles.modelcompiler.bpmn.Data.DataInputAssociation;
-import eu.pericles.modelcompiler.bpmn.Data.InputSet;
+import eu.pericles.modelcompiler.bpmn.Data.DataOutput;
+import eu.pericles.modelcompiler.bpmn.Data.DataOutputAssociation;
+import eu.pericles.modelcompiler.bpmn.Data.OutputSet;
 
-@XStreamAlias("bpmn2:endEvent")
-public class EndEvent {
-	
+@XStreamAlias("bpmn2:intermediateCatchEvent")
+public class IntermediateCatchEvent {
 	public enum Type {
-		NONE, SIGNAL, MESSAGE
+		NONE, SIGNAL, MESSAGE, TIMER
 	}
-	
+
 	@XStreamAsAttribute
 	private String id;
-	@XStreamAlias("bpmn2:incoming")
-	private String incoming;
-	@XStreamAlias("bpmn2:terminateEventDefinition")
-	private String terminateEventDefinition;
+	@XStreamAlias("bpmn2:outgoing")
+	private String outgoing;
 	@XStreamAlias("bpmn2:signalEventDefinition")
 	private SignalEventDefinition signalEventDefinition;
 	@XStreamAlias("bpmn2:messageEventDefinition")
 	private MessageEventDefinition messageEventDefinition;
-	@XStreamAlias("bpmn2:dataInput")
-	private DataInput data;
-	@XStreamAlias("bpmn2:dataInputAssociation")
-	private DataInputAssociation dataAssociation;
-	@XStreamAlias("bpmn2:inputSet")
-	private InputSet dataSet;
+	@XStreamAlias("bpmn2:timerEventDefinition")
+	private TimerEventDefinition timerEventDefinition;
+	@XStreamAlias("bpmn2:dataOutput")
+	private DataOutput data;
+	@XStreamAlias("bpmn2:dataOutputAssociation")
+	private DataOutputAssociation dataAssociation;
+	@XStreamAlias("bpmn2:outputSet")
+	private OutputSet dataSet;
 	
 	public Type getType() {
 		Type type = Type.NONE;
@@ -38,6 +37,8 @@ public class EndEvent {
 			type = Type.SIGNAL;
 		if (getMessageEventDefinition() != null)
 			type = Type.MESSAGE;
+		if (getTimerEventDefinition() != null)
+			type = Type.TIMER;
 		
 		return type;
 	}
@@ -50,7 +51,7 @@ public class EndEvent {
 	}
 
 	//---- Getters and setters ----// 
-
+	
 	public String getId() {
 		return id;
 	}
@@ -75,28 +76,37 @@ public class EndEvent {
 		this.messageEventDefinition = messageEventDefinition;
 	}
 
-	public DataInput getData() {
+	public TimerEventDefinition getTimerEventDefinition() {
+		return timerEventDefinition;
+	}
+
+	public void setTimerEventDefinition(TimerEventDefinition timerEventDefinition) {
+		this.timerEventDefinition = timerEventDefinition;
+	}
+	
+	public DataOutput getData() {
 		return data;
 	}
 
-	public void setData(DataInput data) {
+	public void setData(DataOutput data) {
 		this.data = data;
 	}
 
-	public DataInputAssociation getDataAssociation() {
+	public DataOutputAssociation getDataAssociation() {
 		return dataAssociation;
 	}
 
-	public void setDataAssociation(DataInputAssociation dataAssociation) {
+	public void setDataAssociation(DataOutputAssociation dataAssociation) {
 		this.dataAssociation = dataAssociation;
 	}
 
-	public InputSet getDataSet() {
+	public OutputSet getDataSet() {
 		return dataSet;
 	}
 
-	public void setDataSet(InputSet dataSet) {
+	public void setDataSet(OutputSet dataSet) {
 		this.dataSet = dataSet;
 	}
+	
 
 }
