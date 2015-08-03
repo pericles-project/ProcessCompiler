@@ -42,11 +42,11 @@ public class FromBpmnToGenericConversor {
 	public void convertFromBpmnToGeneric(BpmnProcess bpmnProcess) {
 
 		setBpmnProcess(bpmnProcess);
-		convertExternalItems(getBpmnProcess(), getGenericProcess());
+		convertExternalItemsFromBpmnToGeneric(getBpmnProcess(), getGenericProcess());
 		convertProcessFromBpmnToGeneric(getBpmnProcess(), getGenericProcess());
 	}
 
-	private void convertExternalItems(BpmnProcess bpmnProcess, Process genericProcess) {
+	private void convertExternalItemsFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
 		convertItemsFromBpmnToGeneric(bpmnProcess, genericProcess);
 		convertMessagesFromBpmnToGeneric(bpmnProcess, genericProcess);
 

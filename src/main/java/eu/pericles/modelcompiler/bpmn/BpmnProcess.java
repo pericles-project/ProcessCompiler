@@ -34,22 +34,6 @@ public class BpmnProcess {
 	private List<StartEvent> startEvents;
 	@XStreamImplicit
 	private List<EndEvent> endEvents;
-	public List<IntermediateCatchEvent> getIntermediateCatchEvents() {
-		return intermediateCatchEvents;
-	}
-
-	public void setIntermediateCatchEvents(List<IntermediateCatchEvent> intermediateCatchEvents) {
-		this.intermediateCatchEvents = intermediateCatchEvents;
-	}
-
-	public List<IntermediateThrowEvent> getIntermediateThrowEvents() {
-		return intermediateThrowEvents;
-	}
-
-	public void setIntermediateThrowEvents(List<IntermediateThrowEvent> intermediateThrowEvents) {
-		this.intermediateThrowEvents = intermediateThrowEvents;
-	}
-
 	@XStreamImplicit
 	private List<IntermediateCatchEvent> intermediateCatchEvents;
 	@XStreamImplicit
@@ -170,6 +154,23 @@ public class BpmnProcess {
 
 	public void setEndEvents(List<EndEvent> endEvents) {
 		this.endEvents = endEvents;
+	}
+	
+	
+	public List<IntermediateCatchEvent> getIntermediateCatchEvents() {
+		return intermediateCatchEvents;
+	}
+
+	public void setIntermediateCatchEvents(List<IntermediateCatchEvent> intermediateCatchEvents) {
+		this.intermediateCatchEvents = intermediateCatchEvents;
+	}
+
+	public List<IntermediateThrowEvent> getIntermediateThrowEvents() {
+		return intermediateThrowEvents;
+	}
+
+	public void setIntermediateThrowEvents(List<IntermediateThrowEvent> intermediateThrowEvents) {
+		this.intermediateThrowEvents = intermediateThrowEvents;
 	}
 
 	public List<ScriptTask> getScriptTasks() {
