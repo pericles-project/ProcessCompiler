@@ -16,9 +16,41 @@ import eu.pericles.modelcompiler.jbpm.Diagram.Diagram;
 public class JbpmFile {
 
 	@XStreamAsAttribute
+	@XStreamAlias("xmlns:xsi")
+	private String xmlns_xsi;
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:bpmn2")
+	private String xmlns_bpmn2;
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:bpmndi")
+	private String xmlns_bpmndi;
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:dc")
+	private String xmlns_dc;
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:di")
+	private String xmlns_di;
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns:tns")
+	private String xmlns_tns;
+	@XStreamAsAttribute
+	@XStreamAlias("xmlns")
+	private String xmlns;
+	@XStreamAsAttribute
+	@XStreamAlias("xsi:schemaLocation")
+	private String xsi_schemaLocation;
+
+	@XStreamAsAttribute
+	private String id;
+	@XStreamAsAttribute
+	private String expressionLanguage;
+	@XStreamAsAttribute
+	private String typeLanguage;
+	@XStreamAsAttribute
+	private String targetNamespace;
+	
 	@XStreamAlias("bpmn2:process")
 	private BpmnProcess bpmnProcess;
-	@XStreamAsAttribute
 	@XStreamAlias("bpmndi:BPMNDiagram")
 	private Diagram diagram;
 	@XStreamImplicit

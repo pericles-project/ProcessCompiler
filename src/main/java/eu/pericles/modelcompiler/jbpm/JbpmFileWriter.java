@@ -19,6 +19,7 @@ public class JbpmFileWriter {
 		try{  
 	        FileOutputStream fos = new FileOutputStream(getOutputFile());
 			XStream xstream = new XStream();
+			xstream.processAnnotations(JbpmFile.class);
 	        String xml = xstream.toXML(getJbmpFile());
 	        
 	        fos.write(xml.getBytes());
