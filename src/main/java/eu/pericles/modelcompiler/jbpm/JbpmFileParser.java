@@ -41,7 +41,6 @@ public class JbpmFileParser {
 			ObjectInputStream ois = xstream.createObjectInputStream(new DomReader(document.getDocumentElement()));
 			
 			JbpmFile jbpmFile = (JbpmFile) ois.readObject();
-			jbpmFile.organiseInfo();
 			setJbpmFile(jbpmFile);
 			
 			ois.close();

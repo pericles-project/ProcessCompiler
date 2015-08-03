@@ -132,6 +132,7 @@ public class TestFromBpmnToGenericConversor {
 
 	private BpmnProcess getBpmnProcess(String file) {		
 		JbpmFileParser jbpmFileParser = parseJbpmFile(file);
+		jbpmFileParser.getJbpmFile().organiseInfo();
 
 		return jbpmFileParser.getJbpmFile().getBpmnProcess();
 	}
