@@ -7,6 +7,7 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 public class Diagram {
 	
 	@XStreamAsAttribute
+	private String id;
 	@XStreamAlias("bpmndi:BPMNPlane")
 	private Plane plane;
 
