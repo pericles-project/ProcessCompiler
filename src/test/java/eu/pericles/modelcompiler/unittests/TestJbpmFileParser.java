@@ -12,7 +12,7 @@ public class TestJbpmFileParser {
 
 	@Test
 	public void testHelloWorldParse() {
-		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/HelloWorldExample.bpmn2");
+		BpmnProcess bpmnProcess = getBpmnProcess("src/test/resources/HelloWorldInput.bpmn2");
 
 		assertEquals("StartEvent_1", bpmnProcess.getStartEvents().get(0).getId());
 		assertEquals("EndEvent_1", bpmnProcess.getEndEvents().get(0).getId());

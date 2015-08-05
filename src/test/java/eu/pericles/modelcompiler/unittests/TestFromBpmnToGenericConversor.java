@@ -18,7 +18,7 @@ public class TestFromBpmnToGenericConversor {
 
 	@Test
 	public void testHelloWorldConversion() {
-		Process genericProcess = getGenericProcess("src/test/resources/HelloWorldExample.bpmn2");
+		Process genericProcess = getGenericProcess("src/test/resources/HelloWorldInput.bpmn2");
 		
 		assertEquals("PrintHelloWorld", genericProcess.getName());		
 		assertEquals("HelloWorld", genericProcess.getActivities().get(0).getName());

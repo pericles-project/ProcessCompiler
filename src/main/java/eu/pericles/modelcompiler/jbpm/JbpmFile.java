@@ -1,6 +1,5 @@
 package eu.pericles.modelcompiler.jbpm;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -60,34 +59,9 @@ public class JbpmFile {
 	private List<ItemDefinition> itemDefinitions;
 
 	public JbpmFile() {
-		init();
+		
 	}
 	
-	public JbpmFile(BpmnProcess process) {
-		fillDefinitionsDataByDefault();
-	}
-
-	private void init() {
-		itemDefinitions = new ArrayList<ItemDefinition>();
-		messages = new ArrayList<Message>();
-	}
-	
-
-	private void fillDefinitionsDataByDefault() {
-		setXmlns_xsi("http://www.w3.org/2001/XMLSchema-instance");
-		setXmlns_bpmn2("http://www.omg.org/spec/BPMN/20100524/MODEL");
-		setXmlns_bpmndi("http://www.omg.org/spec/BPMN/20100524/DI");
-		setXmlns_dc("http://www.omg.org/spec/DD/20100524/DC");
-		setXmlns_di("http://www.omg.org/spec/DD/20100524/DI");
-		setXmlns_tns("http://www.jboss.org/drools");
-		setXmlns("http://www.jboss.org/drools");
-		setXsi_schemaLocation("http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd");
-		setHeaderId(headerId);
-		setExpressionLanguage("http://www.mvel.org/2.0");
-		setTargetNamespace("http://www.jboss.org/drools");
-		setTypeLanguage("http://www.java.com/javaTypes");
-	}
-
 	//---- Getters and Setters ----//
 
 	public BpmnProcess getBpmnProcess() {

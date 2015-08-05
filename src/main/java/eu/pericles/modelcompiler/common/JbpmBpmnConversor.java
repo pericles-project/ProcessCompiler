@@ -17,8 +17,7 @@ public class JbpmBpmnConversor {
 		jbpmFile = new JbpmFile();
 	}
 	
-	public void convertFromJbpmToBpmn(JbpmFile jbpmFile) {
-		
+	public void convertFromJbpmToBpmn(JbpmFile jbpmFile) {		
 		setJbpmFile(jbpmFile);
 		setBpmnProcess(jbpmFile.getBpmnProcess());
 		
@@ -43,6 +42,8 @@ public class JbpmBpmnConversor {
 		else
 			bpmnProcess.setMessages(jbpmFile.getMessages());
 	}
+	
+	//---- Getters and setters ----// 
 
 	public BpmnProcess getBpmnProcess() {
 		return bpmnProcess;
