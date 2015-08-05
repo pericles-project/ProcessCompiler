@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 import eu.pericles.modelcompiler.bpmn.BpmnProcess;
+import eu.pericles.modelcompiler.common.JbpmBpmnConversor;
 import eu.pericles.modelcompiler.jbpm.JbpmFileParser;
 
 public class TestJbpmFileParser {
@@ -86,9 +87,11 @@ public class TestJbpmFileParser {
 
 	private BpmnProcess getBpmnProcess(String file) {		
 		JbpmFileParser jbpmFileParser = parseJbpmFile(file);
-		jbpmFileParser.getJbpmFile().organiseInfo();
+		
+		JbpmBpmnConversor conversor = new JbpmBpmnConversor();
+		conversor.convertFromJbpmToBpmn(jbpmFileParser.getJbpmFile());		
 
-		return jbpmFileParser.getJbpmFile().getBpmnProcess();
+		return conversor.getBpmnProcess();
 	}
 
 	private JbpmFileParser parseJbpmFile(String file) {

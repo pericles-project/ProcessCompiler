@@ -27,13 +27,13 @@ import eu.pericles.modelcompiler.generic.Timer;
 import eu.pericles.modelcompiler.generic.Timer.Type;
 import eu.pericles.modelcompiler.generic.Variable;
 
-public class FromBpmnToGenericConversor {
+public class BpmnGenericConversor {
 
 	private BpmnProcess bpmnProcess;
 	private Process genericProcess;
 	private Map<String,String> mapBpmnIDtoGenericUID;
 
-	public FromBpmnToGenericConversor() {
+	public BpmnGenericConversor() {
 		bpmnProcess = new BpmnProcess();
 		genericProcess = new Process();
 		mapBpmnIDtoGenericUID = new HashMap<String,String>();

@@ -40,8 +40,9 @@ public class JbpmFile {
 	@XStreamAlias("xsi:schemaLocation")
 	private String xsi_schemaLocation;
 
+	@XStreamAlias("id")
 	@XStreamAsAttribute
-	private String id;
+	private String headerId;
 	@XStreamAsAttribute
 	private String expressionLanguage;
 	@XStreamAsAttribute
@@ -61,35 +62,31 @@ public class JbpmFile {
 	public JbpmFile() {
 		init();
 	}
+	
+	public JbpmFile(BpmnProcess process) {
+		fillDefinitionsDataByDefault();
+	}
 
 	private void init() {
 		itemDefinitions = new ArrayList<ItemDefinition>();
 		messages = new ArrayList<Message>();
 	}
+	
 
-
-	public void organiseInfo() {
-		/* When reading a process from a bpmn file with DOM, those lists of elements that are not in the file remain 
-		 * pointing to NULL. With checkAndComplete(), those lists are created as empty lists.
-		 */
-		getBpmnProcess().checkAndComplete();
-
-		/* Add lists of external variables */
-		addExternalVariablesToBpmnProcess();
+	private void fillDefinitionsDataByDefault() {
+		setXmlns_xsi("http://www.w3.org/2001/XMLSchema-instance");
+		setXmlns_bpmn2("http://www.omg.org/spec/BPMN/20100524/MODEL");
+		setXmlns_bpmndi("http://www.omg.org/spec/BPMN/20100524/DI");
+		setXmlns_dc("http://www.omg.org/spec/DD/20100524/DC");
+		setXmlns_di("http://www.omg.org/spec/DD/20100524/DI");
+		setXmlns_tns("http://www.jboss.org/drools");
+		setXmlns("http://www.jboss.org/drools");
+		setXsi_schemaLocation("http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd");
+		setHeaderId(headerId);
+		setExpressionLanguage("http://www.mvel.org/2.0");
+		setTargetNamespace("http://www.jboss.org/drools");
+		setTypeLanguage("http://www.java.com/javaTypes");
 	}
-
-	private void addExternalVariablesToBpmnProcess() {
-		if (getItemDefinitions() == null) 
-			getBpmnProcess().setItemDefinitions(new ArrayList<ItemDefinition>());
-		else 
-			getBpmnProcess().setItemDefinitions(getItemDefinitions());
-		if (getMessages() == null)
-			getBpmnProcess().setMessages(new ArrayList<Message>());
-		else
-			getBpmnProcess().setMessages(getMessages());
-	}
-
-
 
 	//---- Getters and Setters ----//
 
@@ -118,4 +115,101 @@ public class JbpmFile {
 		this.itemDefinitions = itemDefinitions;
 	}
 
+	public String getXmlns_xsi() {
+		return xmlns_xsi;
+	}
+
+	public void setXmlns_xsi(String xmlns_xsi) {
+		this.xmlns_xsi = xmlns_xsi;
+	}
+
+	public String getXmlns_bpmn2() {
+		return xmlns_bpmn2;
+	}
+
+	public void setXmlns_bpmn2(String xmlns_bpmn2) {
+		this.xmlns_bpmn2 = xmlns_bpmn2;
+	}
+
+	public String getXmlns_bpmndi() {
+		return xmlns_bpmndi;
+	}
+
+	public void setXmlns_bpmndi(String xmlns_bpmndi) {
+		this.xmlns_bpmndi = xmlns_bpmndi;
+	}
+
+	public String getXmlns_dc() {
+		return xmlns_dc;
+	}
+
+	public void setXmlns_dc(String xmlns_dc) {
+		this.xmlns_dc = xmlns_dc;
+	}
+
+	public String getXmlns_di() {
+		return xmlns_di;
+	}
+
+	public void setXmlns_di(String xmlns_di) {
+		this.xmlns_di = xmlns_di;
+	}
+
+	public String getXmlns_tns() {
+		return xmlns_tns;
+	}
+
+	public void setXmlns_tns(String xmlns_tns) {
+		this.xmlns_tns = xmlns_tns;
+	}
+
+	public String getXmlns() {
+		return xmlns;
+	}
+
+	public void setXmlns(String xmlns) {
+		this.xmlns = xmlns;
+	}
+
+	public String getXsi_schemaLocation() {
+		return xsi_schemaLocation;
+	}
+
+	public void setXsi_schemaLocation(String xsi_schemaLocation) {
+		this.xsi_schemaLocation = xsi_schemaLocation;
+	}
+
+	public String getHeaderId() {
+		return headerId;
+	}
+
+	public void setHeaderId(String id) {
+		this.headerId = id;
+	}
+
+	public String getExpressionLanguage() {
+		return expressionLanguage;
+	}
+
+	public void setExpressionLanguage(String expressionLanguage) {
+		this.expressionLanguage = expressionLanguage;
+	}
+
+	public String getTypeLanguage() {
+		return typeLanguage;
+	}
+
+	public void setTypeLanguage(String typeLanguage) {
+		this.typeLanguage = typeLanguage;
+	}
+
+	public String getTargetNamespace() {
+		return targetNamespace;
+	}
+
+	public void setTargetNamespace(String targetNamespace) {
+		this.targetNamespace = targetNamespace;
+	}
+
+	
 }

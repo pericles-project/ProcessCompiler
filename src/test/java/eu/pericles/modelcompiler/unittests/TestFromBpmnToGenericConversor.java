@@ -6,7 +6,8 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import eu.pericles.modelcompiler.bpmn.BpmnProcess;
-import eu.pericles.modelcompiler.common.FromBpmnToGenericConversor;
+import eu.pericles.modelcompiler.common.BpmnGenericConversor;
+import eu.pericles.modelcompiler.common.JbpmBpmnConversor;
 import eu.pericles.modelcompiler.common.Uid;
 import eu.pericles.modelcompiler.generic.Gateway;
 import eu.pericles.modelcompiler.generic.Process;
@@ -124,7 +125,7 @@ public class TestFromBpmnToGenericConversor {
 	}	
 
 	private Process getGenericProcess(String file) {
-		FromBpmnToGenericConversor conversor = new FromBpmnToGenericConversor();
+		BpmnGenericConversor conversor = new BpmnGenericConversor();
 		conversor.convertFromBpmnToGeneric(getBpmnProcess(file));
 		
 		return conversor.getGenericProcess();
@@ -132,9 +133,11 @@ public class TestFromBpmnToGenericConversor {
 
 	private BpmnProcess getBpmnProcess(String file) {		
 		JbpmFileParser jbpmFileParser = parseJbpmFile(file);
-		jbpmFileParser.getJbpmFile().organiseInfo();
+		
+		JbpmBpmnConversor conversor = new JbpmBpmnConversor();
+		conversor.convertFromJbpmToBpmn(jbpmFileParser.getJbpmFile());		
 
-		return jbpmFileParser.getJbpmFile().getBpmnProcess();
+		return conversor.getBpmnProcess();
 	}
 
 	private JbpmFileParser parseJbpmFile(String file) {
