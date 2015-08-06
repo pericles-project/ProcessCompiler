@@ -1,8 +1,8 @@
 package eu.pericles.modelcompiler.generic;
 
-import eu.pericles.modelcompiler.common.ProcessElement;
+import eu.pericles.modelcompiler.common.BaseElement;
 
-public class Event extends ProcessElement {
+public class Event extends BaseElement {
 	
 	public enum Type {
 		NONE_START, SIGNAL_START, MESSAGE_START, TIMER_START, NONE_END, SIGNAL_END, MESSAGE_END, 

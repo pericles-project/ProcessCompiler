@@ -1,8 +1,8 @@
 package eu.pericles.modelcompiler.generic;
 
-import eu.pericles.modelcompiler.common.ProcessElement;
+import eu.pericles.modelcompiler.common.BaseElement;
 
-public class Data extends ProcessElement {
+public class Data extends BaseElement {
 
 	private String association;
 

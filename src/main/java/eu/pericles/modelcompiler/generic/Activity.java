@@ -1,8 +1,8 @@
 package eu.pericles.modelcompiler.generic;
 
-import eu.pericles.modelcompiler.common.ProcessElement;
+import eu.pericles.modelcompiler.common.BaseElement;
 
-public class Activity extends ProcessElement {
+public class Activity extends BaseElement {
 	
 	public enum Type {
 		SCRIPT, USER_TASK, SERVICE_TASK

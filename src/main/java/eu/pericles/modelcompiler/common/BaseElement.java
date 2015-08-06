@@ -1,10 +1,10 @@
 package eu.pericles.modelcompiler.common;
 
-public abstract class ProcessElement {
+public abstract class BaseElement {
 	
 	private Uid uid;
 	
-	public ProcessElement() {
+	public BaseElement() {
 		uid = new Uid();
 	}
 

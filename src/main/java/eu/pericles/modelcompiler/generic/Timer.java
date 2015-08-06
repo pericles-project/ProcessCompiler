@@ -1,8 +1,8 @@
 package eu.pericles.modelcompiler.generic;
 
-import eu.pericles.modelcompiler.common.ProcessElement;
+import eu.pericles.modelcompiler.common.BaseElement;
 
-public class Timer extends ProcessElement {
+public class Timer extends BaseElement {
 	
 	public enum Type { CYCLE, DURATION, DATE }
 	

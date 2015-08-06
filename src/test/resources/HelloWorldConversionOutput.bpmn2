@@ -8,4 +8,7 @@
     <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="ScriptTask_1" targetRef="EndEvent_1"/>
   </bpmn2:process>
+  <bpmndi:BPMNDiagram id="diagram">
+    <bpmndi:BPMNPlane id="plane" bpmnElement="eu.pericles.modelcompiler.unittests.PrintHelloWorld"/>
+  </bpmndi:BPMNDiagram>
 </bpmn2:definitions>

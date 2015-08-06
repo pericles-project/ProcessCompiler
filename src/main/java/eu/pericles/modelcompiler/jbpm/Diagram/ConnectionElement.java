@@ -1,33 +1,15 @@
 package eu.pericles.modelcompiler.jbpm.Diagram;
 
-import java.util.List;
+import eu.pericles.modelcompiler.common.BaseElement;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
-import com.thoughtworks.xstream.annotations.XStreamImplicit;
-
-@XStreamAlias("bpmndi:BPMNEdge")
-public class Edge {
+public class ConnectionElement extends BaseElement {
 	
-	@XStreamAsAttribute
-	private String id;
-	@XStreamAsAttribute
 	private String bpmnElement;
-	@XStreamAsAttribute
 	private String sourceElement;
-	@XStreamAsAttribute
 	private String targetElement;
-	@XStreamImplicit
-	private List<Waypoint> points;
-
+	
 	//---- Getters and setters ----// 
 	
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
 	public String getBpmnElement() {
 		return bpmnElement;
 	}
@@ -46,10 +28,7 @@ public class Edge {
 	public void setTargetElement(String targetElement) {
 		this.targetElement = targetElement;
 	}
-	public List<Waypoint> getPoints() {
-		return points;
-	}
-	public void setPoints(List<Waypoint> points) {
-		this.points = points;
-	}
+	
+	
+
 }

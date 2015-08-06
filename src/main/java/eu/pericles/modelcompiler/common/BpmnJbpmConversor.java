@@ -1,16 +1,33 @@
 package eu.pericles.modelcompiler.common;
 
-import eu.pericles.modelcompiler.bpmn.BpmnProcess;
+import java.util.ArrayList;
+import java.util.List;
+
+import eu.pericles.modelcompiler.bpmn.*;
+import eu.pericles.modelcompiler.bpmn.Activities.ScriptTask;
+import eu.pericles.modelcompiler.bpmn.Activities.Subprocess;
+import eu.pericles.modelcompiler.bpmn.Events.EndEvent;
+import eu.pericles.modelcompiler.bpmn.Events.IntermediateCatchEvent;
+import eu.pericles.modelcompiler.bpmn.Events.IntermediateThrowEvent;
+import eu.pericles.modelcompiler.bpmn.Events.StartEvent;
+import eu.pericles.modelcompiler.bpmn.Flows.SequenceFlow;
+import eu.pericles.modelcompiler.bpmn.Gateways.ParallelGateway;
 import eu.pericles.modelcompiler.jbpm.JbpmFile;
+import eu.pericles.modelcompiler.jbpm.Diagram.ConnectionElement;
+import eu.pericles.modelcompiler.jbpm.Diagram.Diagram;
+import eu.pericles.modelcompiler.jbpm.Diagram.NodeElement;
+import eu.pericles.modelcompiler.jbpm.Diagram.Plane;
 
 public class BpmnJbpmConversor {
 	
 	private BpmnProcess bpmnProcess;
 	private JbpmFile jbpmFile;
+	private List<NodeElement> nodeElements;
+	private List<ConnectionElement> connectionElements;
 	
 	public BpmnJbpmConversor() {
-		bpmnProcess = new BpmnProcess();
-		jbpmFile = new JbpmFile();
+		setBpmnProcess(new BpmnProcess());
+		setJbpmFile(new JbpmFile());
 	}
 	
 	public void convertFromBpmnToJbpm(BpmnProcess bpmnProcess) {
@@ -20,40 +37,117 @@ public class BpmnJbpmConversor {
 		fillDefinitionsDataByDefault();
 		addExternalVariablesToJbpmFile();
 		convertProcessFromBpmnToJbpm();
-		
+		createDiagram();
 	}
 	
 	private void addExternalVariablesToJbpmFile() {
-		if (bpmnProcess.getItemDefinitions() != null)
-			jbpmFile.setItemDefinitions(bpmnProcess.getItemDefinitions());
-		if (bpmnProcess.getMessages() != null)
-			jbpmFile.setMessages(bpmnProcess.getMessages());		
+		if (getBpmnProcess().getItemDefinitions() != null)
+			getJbpmFile().setItemDefinitions(getBpmnProcess().getItemDefinitions());
+		if (getBpmnProcess().getMessages() != null)
+			getJbpmFile().setMessages(getBpmnProcess().getMessages());		
 	}
 
 	private void fillDefinitionsDataByDefault() {
-		jbpmFile.setXmlns_xsi("http://www.w3.org/2001/XMLSchema-instance");
-		jbpmFile.setXmlns_bpmn2("http://www.omg.org/spec/BPMN/20100524/MODEL");
-		jbpmFile.setXmlns_bpmndi("http://www.omg.org/spec/BPMN/20100524/DI");
-		jbpmFile.setXmlns_dc("http://www.omg.org/spec/DD/20100524/DC");
-		jbpmFile.setXmlns_di("http://www.omg.org/spec/DD/20100524/DI");
-		jbpmFile.setXmlns_tns("http://www.jboss.org/drools");
-		jbpmFile.setXmlns("http://www.jboss.org/drools");
-		jbpmFile.setXsi_schemaLocation("http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd");
-		jbpmFile.setHeaderId("Definition");
-		jbpmFile.setExpressionLanguage("http://www.mvel.org/2.0");
-		jbpmFile.setTargetNamespace("http://www.jboss.org/drools");
-		jbpmFile.setTypeLanguage("http://www.java.com/javaTypes");
+		getJbpmFile().setXmlns_xsi("http://www.w3.org/2001/XMLSchema-instance");
+		getJbpmFile().setXmlns_bpmn2("http://www.omg.org/spec/BPMN/20100524/MODEL");
+		getJbpmFile().setXmlns_bpmndi("http://www.omg.org/spec/BPMN/20100524/DI");
+		getJbpmFile().setXmlns_dc("http://www.omg.org/spec/DD/20100524/DC");
+		getJbpmFile().setXmlns_di("http://www.omg.org/spec/DD/20100524/DI");
+		getJbpmFile().setXmlns_tns("http://www.jboss.org/drools");
+		getJbpmFile().setXmlns("http://www.jboss.org/drools");
+		getJbpmFile().setXsi_schemaLocation("http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd");
+		getJbpmFile().setHeaderId("Definition");
+		getJbpmFile().setExpressionLanguage("http://www.mvel.org/2.0");
+		getJbpmFile().setTargetNamespace("http://www.jboss.org/drools");
+		getJbpmFile().setTypeLanguage("http://www.java.com/javaTypes");
 	}
 	
 	private void convertProcessFromBpmnToJbpm() {
-		jbpmFile.setBpmnProcess(bpmnProcess);
+		getJbpmFile().setBpmnProcess(getBpmnProcess());
 		deleteExternalVariablesFromProcess();
 	}
 	
 	private void deleteExternalVariablesFromProcess() {
-		jbpmFile.getBpmnProcess().setItemDefinitions(null);//.getItemDefinitions().removeAll(jbpmFile.getBpmnProcess().getItemDefinitions());
-		jbpmFile.getBpmnProcess().setMessages(null);//.getMessages().removeAll(jbpmFile.getBpmnProcess().getMessages());		
+		getJbpmFile().getBpmnProcess().setItemDefinitions(null);
+		getJbpmFile().getBpmnProcess().setMessages(null);
 	}	
+	
+	private void createDiagram() {
+		getJbpmFile().setDiagram(new Diagram());
+		getJbpmFile().getDiagram().setId("diagram");
+		getJbpmFile().getDiagram().setPlane(new Plane());
+		getJbpmFile().getDiagram().getPlane().setId("plane");
+		getJbpmFile().getDiagram().getPlane().setBpmnElement(getBpmnProcess().getId());
+		addNodeElementsToDiagram();
+		addConnectionElementsToDiagram();
+	}
+	
+	private void addNodeElementsToDiagram() {
+		createListOfNodeElements();
+	}
+	
+	private void addConnectionElementsToDiagram() {
+		createListOfConnectionElements();
+	}
+
+	private void createListOfNodeElements() {
+		setNodeElements(new ArrayList<NodeElement>());
+		iterateOverNodeElementLists(getBpmnProcess());		
+	}	
+	
+	private void iterateOverNodeElementLists(BpmnProcess bpmnProcess) {
+		for (StartEvent element : bpmnProcess.getStartEvents()) {
+			addNodeElement(element.getId());
+		}
+		for (IntermediateCatchEvent element : bpmnProcess.getIntermediateCatchEvents()) {
+			addNodeElement(element.getId());
+		}
+		for (IntermediateThrowEvent element : bpmnProcess.getIntermediateThrowEvents()) {
+			addNodeElement(element.getId());
+		}
+		for (EndEvent element : bpmnProcess.getEndEvents()) {
+			addNodeElement(element.getId());
+		}
+		for (ScriptTask element : bpmnProcess.getScriptTasks()) {
+			addNodeElement(element.getId());
+		}
+		for (ParallelGateway element : bpmnProcess.getParallelGateways()) {
+			addNodeElement(element.getId());
+		}
+		for (Subprocess element : bpmnProcess.getSubprocesses()) {
+			addNodeElement(element.getId());
+			iterateOverNodeElementLists(element);
+		}
+	}
+	
+	private void addNodeElement(String id) {
+		NodeElement node = new NodeElement();
+		node.setBpmnElement(id);
+		getNodeElements().add(node);
+	}
+	
+	private void createListOfConnectionElements() {
+		setConnectionElements(new ArrayList<ConnectionElement>());
+		iterateOverConnectionElementLists(getBpmnProcess());		
+	}	
+	
+	private void iterateOverConnectionElementLists(BpmnProcess bpmnProcess) {
+		for (SequenceFlow element : bpmnProcess.getSequenceFlows()) {
+			addConnectionElement(element.getId(), element.getSource(), element.getTarget());
+		}
+		
+		for (Subprocess element : bpmnProcess.getSubprocesses()) {
+			iterateOverConnectionElementLists(element);
+		}
+	}
+	
+	private void addConnectionElement(String id, String source, String target) {
+		ConnectionElement connection = new ConnectionElement();
+		connection.setBpmnElement(id);
+		connection.setSourceElement(source);
+		connection.setTargetElement(target);
+		getConnectionElements().add(connection);
+	}
 	
 	//---- Getters and setters ----// 
 
@@ -72,5 +166,20 @@ public class BpmnJbpmConversor {
 	public void setJbpmFile(JbpmFile jbpmFile) {
 		this.jbpmFile = jbpmFile;
 	}
-	
+
+	public List<NodeElement> getNodeElements() {
+		return nodeElements;
+	}
+
+	public void setNodeElements(List<NodeElement> nodeElements) {
+		this.nodeElements = nodeElements;
+	}
+
+	public List<ConnectionElement> getConnectionElements() {
+		return connectionElements;
+	}
+
+	public void setConnectionElements(List<ConnectionElement> connectionElements) {
+		this.connectionElements = connectionElements;
+	}
 }

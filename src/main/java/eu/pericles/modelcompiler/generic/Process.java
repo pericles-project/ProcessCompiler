@@ -3,10 +3,10 @@ package eu.pericles.modelcompiler.generic;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.pericles.modelcompiler.common.ProcessElement;
+import eu.pericles.modelcompiler.common.BaseElement;
 
 
-public class Process extends ProcessElement {
+public class Process extends BaseElement {
 
 	private String name;
 	private List<Activity> activities;

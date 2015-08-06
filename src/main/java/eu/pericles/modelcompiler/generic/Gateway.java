@@ -1,8 +1,8 @@
 package eu.pericles.modelcompiler.generic;
 
-import eu.pericles.modelcompiler.common.ProcessElement;
+import eu.pericles.modelcompiler.common.BaseElement;
 
-public class Gateway extends ProcessElement {
+public class Gateway extends BaseElement {
 	
 	public enum Type {
 		CONVERGING_PARALLEL, DIVERGING_PARALLEL

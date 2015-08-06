@@ -1,9 +1,9 @@
 package eu.pericles.modelcompiler.generic;
 
-import eu.pericles.modelcompiler.common.ProcessElement;
+import eu.pericles.modelcompiler.common.BaseElement;
 
 
-public class ExternalItem extends ProcessElement{
+public class ExternalItem extends BaseElement{
 	
 	public enum Type {
 		ITEM, MESSAGE, OPERATION

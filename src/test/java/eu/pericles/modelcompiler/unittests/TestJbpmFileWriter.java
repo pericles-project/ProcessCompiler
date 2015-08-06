@@ -78,7 +78,6 @@ public class TestJbpmFileWriter {
 		File testFile = new File(testFileName);
 		try {
 			result = FileUtils.contentEquals(outputFile, testFile);
-			//Files.delete(outputFile.toPath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

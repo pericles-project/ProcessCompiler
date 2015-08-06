@@ -18,4 +18,30 @@ public class Plane {
 	@XStreamImplicit
 	private List<Edge> edges;
 
+	//---- Getters and setters ----// 
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getBpmnElement() {
+		return bpmnElement;
+	}
+	public void setBpmnElement(String bpmnElement) {
+		this.bpmnElement = bpmnElement;
+	}
+	public List<Shape> getShapes() {
+		return shapes;
+	}
+	public void setShapes(List<Shape> shapes) {
+		this.shapes = shapes;
+	}
+	public List<Edge> getEdges() {
+		return edges;
+	}
+	public void setEdges(List<Edge> edges) {
+		this.edges = edges;
+	}
 }

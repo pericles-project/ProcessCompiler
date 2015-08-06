@@ -1,8 +1,8 @@
 package eu.pericles.modelcompiler.generic;
 
-import eu.pericles.modelcompiler.common.ProcessElement;
+import eu.pericles.modelcompiler.common.BaseElement;
 
-public class Flow extends ProcessElement{
+public class Flow extends BaseElement{
 	
 	private String from;
 	private String to;

@@ -1,8 +1,8 @@
 package eu.pericles.modelcompiler.generic;
 
-import eu.pericles.modelcompiler.common.ProcessElement;
+import eu.pericles.modelcompiler.common.BaseElement;
 
-public class Variable extends ProcessElement{
+public class Variable extends BaseElement{
 	
 	public enum Type {
 		PROPERTY

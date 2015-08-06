@@ -107,7 +107,7 @@ public class BpmnProcess {
 	}
 	
 	//---- Getters and setters ----// 
-	
+
 	public String getId() {
 		return id;
 	}

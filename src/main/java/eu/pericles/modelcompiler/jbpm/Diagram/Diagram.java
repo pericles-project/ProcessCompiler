@@ -10,5 +10,19 @@ public class Diagram {
 	private String id;
 	@XStreamAlias("bpmndi:BPMNPlane")
 	private Plane plane;
-
+	
+	//---- Getters and setters ----// 
+	
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public Plane getPlane() {
+		return plane;
+	}
+	public void setPlane(Plane plane) {
+		this.plane = plane;
+	}
 }

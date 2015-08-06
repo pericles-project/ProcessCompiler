@@ -57,10 +57,6 @@ public class JbpmFile {
 	private List<Message> messages;
 	@XStreamImplicit
 	private List<ItemDefinition> itemDefinitions;
-
-	public JbpmFile() {
-		
-	}
 	
 	//---- Getters and Setters ----//
 
