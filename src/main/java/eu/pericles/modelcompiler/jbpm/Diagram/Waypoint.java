@@ -7,11 +7,11 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 public class Waypoint {
 	@XStreamAlias("xsi:type")
 	@XStreamAsAttribute
-	private String type;
+	private String type = "dc:Point";
 	@XStreamAsAttribute
-	private String x;
+	private String x = "0.0";
 	@XStreamAsAttribute
-	private String y;
+	private String y = "0.0";
 
 	//---- Getters and setters ----// 
 	

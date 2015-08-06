@@ -6,13 +6,13 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 @XStreamAlias("dc:Bounds")
 public class Bounds {
 	@XStreamAsAttribute
-	private String height;
+	private String height = "0.0";
 	@XStreamAsAttribute
-	private String width;
+	private String width = "0.0";
 	@XStreamAsAttribute
-	private String x;
+	private String x = "0.0";
 	@XStreamAsAttribute
-	private String y;
+	private String y = "0.0";
 
 	//---- Getters and setters ----// 
 	

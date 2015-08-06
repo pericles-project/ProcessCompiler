@@ -10,7 +10,7 @@ import com.thoughtworks.xstream.annotations.XStreamImplicit;
 public class Plane {
 	
 	@XStreamAsAttribute
-	private String id;
+	private String id = "Plane";
 	@XStreamAsAttribute
 	private String bpmnElement;
 	@XStreamImplicit
