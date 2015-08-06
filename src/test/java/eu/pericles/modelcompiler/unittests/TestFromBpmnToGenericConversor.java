@@ -126,7 +126,7 @@ public class TestFromBpmnToGenericConversor {
 
 	private Process getGenericProcess(String file) {
 		BpmnGenericConversor conversor = new BpmnGenericConversor();
-		conversor.convertFromBpmnToGeneric(getBpmnProcess(file));
+		conversor.convert(getBpmnProcess(file));
 		
 		return conversor.getGenericProcess();
 	}
@@ -135,7 +135,7 @@ public class TestFromBpmnToGenericConversor {
 		JbpmFileParser jbpmFileParser = parseJbpmFile(file);
 		
 		JbpmBpmnConversor conversor = new JbpmBpmnConversor();
-		conversor.convertFromJbpmToBpmn(jbpmFileParser.getJbpmFile());
+		conversor.convert(jbpmFileParser.getJbpmFile());
 
 		return conversor.getBpmnProcess();
 	}

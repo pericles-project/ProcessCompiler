@@ -39,20 +39,20 @@ public class BpmnGenericConversor {
 		mapBpmnIDtoGenericUID = new HashMap<String,String>();
 	}
 
-	public void convertFromBpmnToGeneric(BpmnProcess bpmnProcess) {
+	public void convert(BpmnProcess bpmnProcess) {
 
 		setBpmnProcess(bpmnProcess);
-		convertExternalItemsFromBpmnToGeneric(getBpmnProcess(), getGenericProcess());
-		convertProcessFromBpmnToGeneric(getBpmnProcess(), getGenericProcess());
+		convertExternalItems(getBpmnProcess(), getGenericProcess());
+		convertProcess(getBpmnProcess(), getGenericProcess());
 	}
 
-	private void convertExternalItemsFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
-		convertItemsFromBpmnToGeneric(bpmnProcess, genericProcess);
-		convertMessagesFromBpmnToGeneric(bpmnProcess, genericProcess);
+	private void convertExternalItems(BpmnProcess bpmnProcess, Process genericProcess) {
+		convertItems(bpmnProcess, genericProcess);
+		convertMessages(bpmnProcess, genericProcess);
 
 	}
 
-	private void convertItemsFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
+	private void convertItems(BpmnProcess bpmnProcess, Process genericProcess) {
 		for (ItemDefinition itemDefinition : bpmnProcess.getItemDefinitions()) {
 
 			ExternalItem item = new ExternalItem();
@@ -64,7 +64,7 @@ public class BpmnGenericConversor {
 
 	}
 
-	private void convertMessagesFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
+	private void convertMessages(BpmnProcess bpmnProcess, Process genericProcess) {
 		for (Message message : bpmnProcess.getMessages()) {
 
 			ExternalItem item = new ExternalItem();
@@ -77,20 +77,20 @@ public class BpmnGenericConversor {
 
 	}
 
-	private void convertProcessFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
+	private void convertProcess(BpmnProcess bpmnProcess, Process genericProcess) {
 
 		genericProcess.setName(bpmnProcess.getName());
 		genericProcess.setSource(bpmnProcess.getId());	
 
-		convertVariablesFromBpmnToGeneric(bpmnProcess, genericProcess);
-		convertActivitiesFromBpmnToGeneric(bpmnProcess, genericProcess);
-		convertEventsFromBpmnToGeneric(bpmnProcess, genericProcess);
-		convertGatewaysFromBpmnToGeneric(bpmnProcess, genericProcess);
-		convertSubprocessesFromBpmnToGeneric(bpmnProcess, genericProcess);
-		convertFlowsFromBpmnToGeneric(bpmnProcess, genericProcess);
+		convertVariables(bpmnProcess, genericProcess);
+		convertActivities(bpmnProcess, genericProcess);
+		convertEvents(bpmnProcess, genericProcess);
+		convertGateways(bpmnProcess, genericProcess);
+		convertSubprocesses(bpmnProcess, genericProcess);
+		convertFlows(bpmnProcess, genericProcess);
 	}
 
-	private void convertVariablesFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
+	private void convertVariables(BpmnProcess bpmnProcess, Process genericProcess) {
 		for (Property property : bpmnProcess.getProperties()) {
 
 			Variable variable = new Variable();
@@ -103,7 +103,7 @@ public class BpmnGenericConversor {
 
 	}
 
-	private void convertActivitiesFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {		
+	private void convertActivities(BpmnProcess bpmnProcess, Process genericProcess) {		
 		for (ScriptTask scriptTask : bpmnProcess.getScriptTasks()) {
 
 			Activity activity = new Activity();
@@ -115,7 +115,7 @@ public class BpmnGenericConversor {
 		}
 	}
 
-	private void convertEventsFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
+	private void convertEvents(BpmnProcess bpmnProcess, Process genericProcess) {
 		for (StartEvent startEvent : bpmnProcess.getStartEvents()) {	
 
 			Event event = new Event();
@@ -142,7 +142,7 @@ public class BpmnGenericConversor {
 			}
 			if (startEvent.getType() == StartEvent.Type.TIMER) {
 				event.setType(Event.Type.TIMER_START);
-				event.setTimer(createGenericTimerFromBpmn(startEvent.getTimerEventDefinition()));
+				event.setTimer(createGenericTimer(startEvent.getTimerEventDefinition()));
 			}
 			genericProcess.addEvent(event);
 
@@ -202,7 +202,7 @@ public class BpmnGenericConversor {
 			}
 			if (catchEvent.getType() == IntermediateCatchEvent.Type.TIMER) {
 				event.setType(Event.Type.TIMER_CATCH);
-				event.setTimer(createGenericTimerFromBpmn(catchEvent.getTimerEventDefinition()));
+				event.setTimer(createGenericTimer(catchEvent.getTimerEventDefinition()));
 			}
 			genericProcess.addEvent(event);
 
@@ -238,7 +238,7 @@ public class BpmnGenericConversor {
 		}
 	}
 
-	private void convertGatewaysFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
+	private void convertGateways(BpmnProcess bpmnProcess, Process genericProcess) {
 		for (ParallelGateway parallelGateway : bpmnProcess.getParallelGateways()) {
 
 			Gateway gateway = new Gateway();
@@ -253,7 +253,7 @@ public class BpmnGenericConversor {
 		}
 	}
 
-	private void convertFlowsFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
+	private void convertFlows(BpmnProcess bpmnProcess, Process genericProcess) {
 		for (SequenceFlow sequenceFlow : bpmnProcess.getSequenceFlows()) {
 
 			Flow flow = new Flow();
@@ -265,18 +265,18 @@ public class BpmnGenericConversor {
 		}
 	}
 
-	private void convertSubprocessesFromBpmnToGeneric(BpmnProcess bpmnProcess, Process genericProcess) {
+	private void convertSubprocesses(BpmnProcess bpmnProcess, Process genericProcess) {
 		for (Subprocess bpmnSubprocess : bpmnProcess.getSubprocesses()) {
 
 			Process genericSubprocess = new Process();			
-			convertProcessFromBpmnToGeneric(bpmnSubprocess, genericSubprocess);			
+			convertProcess(bpmnSubprocess, genericSubprocess);			
 			genericProcess.addSubprocess(genericSubprocess);
 
 			mapBpmnIDtoGenericUID.put(bpmnSubprocess.getId(), genericSubprocess.getUid());
 		}
 	}
 
-	private Timer createGenericTimerFromBpmn(TimerEventDefinition timerEventDefinition) {
+	private Timer createGenericTimer(TimerEventDefinition timerEventDefinition) {
 		Timer timer = new Timer();
 
 		if (timerEventDefinition.getTimeCycle() != null) {

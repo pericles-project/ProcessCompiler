@@ -27,12 +27,12 @@ public class TestJbpmFileWriter {
 	}
 	
 	@Test
-	public void testParseConvertAndWriteHelloWorldExample() {
+	public void testParseConvertToBpmnAndWriteHelloWorldExample() {
 		String inputFileName = "src/test/resources/HelloWorldInput.bpmn2";
 		String testFileName = "src/test/resources/HelloWorldConversionTest.bpmn2";
 		String outputFileName = "src/test/resources/HelloWorldConversionOutput.bpmn2";
 
-		assertTrue(checkParseConvertAndWrite(inputFileName, testFileName, outputFileName));
+		assertTrue(checkParseConvertToBpmnAndWrite(inputFileName, testFileName, outputFileName));
 
 	}
 
@@ -42,7 +42,7 @@ public class TestJbpmFileWriter {
 		return fileContentEquals(outputFileName, testFileName);
 	}
 
-	private boolean checkParseConvertAndWrite(String inputFileName, String testFileName, String outputFileName) {
+	private boolean checkParseConvertToBpmnAndWrite(String inputFileName, String testFileName, String outputFileName) {
 		write(convertJbpmBpmnJbpm(parse(inputFileName)), outputFileName);
 		
 		return fileContentEquals(outputFileName, testFileName);
@@ -58,11 +58,11 @@ public class TestJbpmFileWriter {
 	private JbpmFile convertJbpmBpmnJbpm(JbpmFile jbpmFile) {
 		// Jbpm - Bpmn conversion
 		JbpmBpmnConversor jbpmBpmnConversor = new JbpmBpmnConversor();
-		jbpmBpmnConversor.convertFromJbpmToBpmn(jbpmFile);
+		jbpmBpmnConversor.convert(jbpmFile);
 		
 		// Bpmn - Jbpm conversion
 		BpmnJbpmConversor bpmnJbpmConversor = new BpmnJbpmConversor();
-		bpmnJbpmConversor.convertFromBpmnToJbpm(jbpmBpmnConversor.getBpmnProcess());
+		bpmnJbpmConversor.convert(jbpmBpmnConversor.getBpmnProcess());
 		
 		return bpmnJbpmConversor.getJbpmFile();
 	}

@@ -29,29 +29,17 @@ public class BpmnJbpmConversor {
 	private List<NodeElement> nodeElements;
 	private List<ConnectionElement> connectionElements;
 
-	public BpmnJbpmConversor() {
-		setBpmnProcess(new BpmnProcess());
-		setJbpmFile(new JbpmFile());
-	}
-
-	public void convertFromBpmnToJbpm(BpmnProcess bpmnProcess) {
+	public void convert(BpmnProcess bpmnProcess) {
 		setBpmnProcess(bpmnProcess);
 		setJbpmFile(new JbpmFile());
 
-		fillDefinitionsDataByDefault();
-		addExternalVariablesToJbpmFile();
-		convertProcessFromBpmnToJbpm();
-		createDiagram();
+		setDefinitions();
+		setProcess();
+		setAndOrganiseExternalVariables();
+		setDiagram();
 	}
-
-	private void addExternalVariablesToJbpmFile() {
-		if (getBpmnProcess().getItemDefinitions() != null)
-			getJbpmFile().setItemDefinitions(getBpmnProcess().getItemDefinitions());
-		if (getBpmnProcess().getMessages() != null)
-			getJbpmFile().setMessages(getBpmnProcess().getMessages());		
-	}
-
-	private void fillDefinitionsDataByDefault() {
+	
+	private void setDefinitions() {
 		getJbpmFile().setXmlns_xsi("http://www.w3.org/2001/XMLSchema-instance");
 		getJbpmFile().setXmlns_bpmn2("http://www.omg.org/spec/BPMN/20100524/MODEL");
 		getJbpmFile().setXmlns_bpmndi("http://www.omg.org/spec/BPMN/20100524/DI");
@@ -66,9 +54,25 @@ public class BpmnJbpmConversor {
 		getJbpmFile().setTypeLanguage("http://www.java.com/javaTypes");
 	}
 
-	private void convertProcessFromBpmnToJbpm() {
+	private void setProcess() {
 		getJbpmFile().setBpmnProcess(getBpmnProcess());
+	}
+	
+	private void setAndOrganiseExternalVariables() {
+		/**
+		 * The jBPM file has the external variables defined outside the process. To avoid
+		 * duplication, delete the external variables from the process in the JbpmFile object.
 		deleteExternalVariablesFromProcess();
+		 */
+		copyExternalVariablesToJbpmFile();
+		deleteExternalVariablesFromProcess();
+	}
+
+	private void copyExternalVariablesToJbpmFile() {
+		if (getBpmnProcess().getItemDefinitions() != null)
+			getJbpmFile().setItemDefinitions(getBpmnProcess().getItemDefinitions());
+		if (getBpmnProcess().getMessages() != null)
+			getJbpmFile().setMessages(getBpmnProcess().getMessages());
 	}
 
 	private void deleteExternalVariablesFromProcess() {
@@ -76,60 +80,25 @@ public class BpmnJbpmConversor {
 		getJbpmFile().getBpmnProcess().setMessages(null);
 	}	
 
-	private void createDiagram() {
+	private void setDiagram() {
 		getJbpmFile().setDiagram(new Diagram());
 		getJbpmFile().getDiagram().setPlane(new Plane());
 		getJbpmFile().getDiagram().getPlane().setBpmnElement(getBpmnProcess().getId());
-		addNodeElementsToDiagram();
-		addConnectionElementsToDiagram();
+		setShapesToDiagram();
+		setEdgesToDiagram();
 	}
 
-	private void addNodeElementsToDiagram() {
-		createListOfNodeElements();
+	private void setShapesToDiagram() {
+		createNodeElementList();
 		addShapesToDiagram();
 	}
 
-	private void addConnectionElementsToDiagram() {
-		createListOfConnectionElements();
-		addEdgesToDiagram();
-	}
-
-	private void createListOfNodeElements() {
+	private void createNodeElementList() {
 		setNodeElements(new ArrayList<NodeElement>());
-		iterateOverNodeElementLists(getBpmnProcess());		
+		getNodeElementsFromProcess(getBpmnProcess());		
 	}	
-
-	private void createListOfConnectionElements() {
-		setConnectionElements(new ArrayList<ConnectionElement>());
-		iterateOverConnectionElementLists(getBpmnProcess());		
-	}	
-
-	private void addShapesToDiagram() {
-		getJbpmFile().getDiagram().getPlane().setShapes(new ArrayList<Shape>());
-		for (NodeElement node : getNodeElements()) {
-			Shape shape = new Shape();
-			shape.setBpmnElement(node.getBpmnElement());
-			shape.setBounds(new Bounds());
-			getJbpmFile().getDiagram().getPlane().getShapes().add(shape);
-		}
-	}
 	
-	private void addEdgesToDiagram() {
-		getJbpmFile().getDiagram().getPlane().setEdges(new ArrayList<Edge>());
-		for (ConnectionElement connection : getConnectionElements()) {
-			Edge edge = new Edge();
-			edge.setBpmnElement(connection.getBpmnElement());
-			edge.setSourceElement(connection.getSourceElement());
-			edge.setTargetElement(connection.getTargetElement());
-			edge.setPoints(new ArrayList<Waypoint>());
-			for (int i=0; i<4; i++) {
-				edge.getPoints().add(new Waypoint());
-			}
-			getJbpmFile().getDiagram().getPlane().getEdges().add(edge);
-		}
-	}
-
-	private void iterateOverNodeElementLists(BpmnProcess bpmnProcess) {
+	private void getNodeElementsFromProcess(BpmnProcess bpmnProcess) {
 		for (StartEvent element : bpmnProcess.getStartEvents()) {
 			addNodeElement(element.getId());
 		}
@@ -150,17 +119,7 @@ public class BpmnJbpmConversor {
 		}
 		for (Subprocess element : bpmnProcess.getSubprocesses()) {
 			addNodeElement(element.getId());
-			iterateOverNodeElementLists(element);
-		}
-	}
-
-	private void iterateOverConnectionElementLists(BpmnProcess bpmnProcess) {
-		for (SequenceFlow element : bpmnProcess.getSequenceFlows()) {
-			addConnectionElement(element.getId(), element.getSource(), element.getTarget());
-		}
-
-		for (Subprocess element : bpmnProcess.getSubprocesses()) {
-			iterateOverConnectionElementLists(element);
+			getNodeElementsFromProcess(element);
 		}
 	}
 
@@ -170,12 +129,66 @@ public class BpmnJbpmConversor {
 		getNodeElements().add(node);
 	}
 
+	private void addShapesToDiagram() {
+		getJbpmFile().getDiagram().getPlane().setShapes(new ArrayList<Shape>());
+		for (NodeElement node : getNodeElements()) {
+			addShape(node, getJbpmFile().getDiagram().getPlane().getShapes());
+		}
+	}
+
+	private void addShape(NodeElement node, List<Shape> shapes) {
+		Shape shape = new Shape();
+		shape.setBpmnElement(node.getBpmnElement());
+		shape.setBounds(new Bounds());
+		shapes.add(shape);
+	}
+	
+
+	private void createConnectionElementList() {
+		setConnectionElements(new ArrayList<ConnectionElement>());
+		getConnectionElementsFromProcess(getBpmnProcess());		
+	}
+
+	private void getConnectionElementsFromProcess(BpmnProcess bpmnProcess) {
+		for (SequenceFlow element : bpmnProcess.getSequenceFlows()) {
+			addConnectionElement(element.getId(), element.getSource(), element.getTarget());
+		}
+
+		for (Subprocess element : bpmnProcess.getSubprocesses()) {
+			getConnectionElementsFromProcess(element);
+		}
+	}
+
 	private void addConnectionElement(String id, String source, String target) {
 		ConnectionElement connection = new ConnectionElement();
 		connection.setBpmnElement(id);
 		connection.setSourceElement(source);
 		connection.setTargetElement(target);
 		getConnectionElements().add(connection);
+	}
+
+	private void setEdgesToDiagram() {
+		createConnectionElementList();
+		addEdgesToDiagram();
+	}
+
+	private void addEdgesToDiagram() {
+		getJbpmFile().getDiagram().getPlane().setEdges(new ArrayList<Edge>());
+		for (ConnectionElement connection : getConnectionElements()) {
+			addEdge(connection, getJbpmFile().getDiagram().getPlane().getEdges());
+		}
+	}
+
+	private void addEdge(ConnectionElement connection, List<Edge> edges) {
+		Edge edge = new Edge();
+		edge.setBpmnElement(connection.getBpmnElement());
+		edge.setSourceElement(connection.getSourceElement());
+		edge.setTargetElement(connection.getTargetElement());
+		edge.setPoints(new ArrayList<Waypoint>(4));
+		for (int i=0; i<4; i++) {
+			edge.getPoints().add(new Waypoint());
+		}
+		edges.add(edge);
 	}
 
 	//---- Getters and setters ----// 

@@ -89,7 +89,7 @@ public class TestJbpmFileParser {
 		JbpmFileParser jbpmFileParser = parseJbpmFile(file);
 		
 		JbpmBpmnConversor conversor = new JbpmBpmnConversor();
-		conversor.convertFromJbpmToBpmn(jbpmFileParser.getJbpmFile());		
+		conversor.convert(jbpmFileParser.getJbpmFile());		
 
 		return conversor.getBpmnProcess();
 	}
