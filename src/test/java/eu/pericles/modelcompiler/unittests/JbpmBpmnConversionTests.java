@@ -14,20 +14,25 @@ public class JbpmBpmnConversionTests {
 	public void testBpmnConversionHelloWorldExample() {
 		parseConvertAndWrite("HelloWorld");
 	}
-	
+
 	@Test
 	public void testBpmnConversionSubprocessExample() {
 		parseConvertAndWrite("Subprocess");
 	}
-	
+
 	@Test
 	public void testBpmnConversionSignalEventsExample() {
 		parseConvertAndWrite("SignalEvents");
 	}
-	
+
 	@Test
 	public void testBpmnConversionMessagesEventsExample() {
 		parseConvertAndWrite("MessageEvents");
+	}
+	
+	@Test
+	public void testBpmnConversionTimerEventsExample() {
+		parseConvertAndWrite("TimerEvents");
 	}
 
 	private void parseConvertAndWrite(String scenario) {

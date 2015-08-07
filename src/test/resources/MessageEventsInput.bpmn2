@@ -96,7 +96,7 @@
   </bpmn2:process>
   
   
-    <!-- diagram -->
+  <!-- diagram -->
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
       <bpmndi:BPMNShape id="BPMNShape_StartEvent_1" bpmnElement="StartEvent_1">

@@ -10,7 +10,7 @@ public class SignalEventDefinition {
 	private String id;
 	@XStreamAsAttribute
 	private String signalRef;
-	
+
 	public String getId() {
 		return id;
 	}

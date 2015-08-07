@@ -23,10 +23,15 @@ public class ParseAndWriteJbpmFileTests {
 	public void testParseAndWriteSignalEventsExample() {
 		parseAndWrite("SignalEvents");
 	}
-	
+
 	@Test
 	public void testParseAndWriteMessageEventsExample() {
 		parseAndWrite("MessageEvents");
+	}
+	
+	@Test
+	public void testParseAndWriteTimerEventsExample() {
+		parseAndWrite("TimerEvents");
 	}
 
 	private void parseAndWrite(String scenario) {
