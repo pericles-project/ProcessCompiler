@@ -47,16 +47,16 @@ public class JbpmFile {
 	@XStreamAsAttribute
 	private String typeLanguage;
 	@XStreamAsAttribute
-	private String targetNamespace;
-	
+	private String targetNamespace;	
+
+	@XStreamImplicit
+	private List<ItemDefinition> itemDefinitions;
+	@XStreamImplicit
+	private List<Message> messages;
 	@XStreamAlias("bpmn2:process")
 	private BpmnProcess bpmnProcess;
 	@XStreamAlias("bpmndi:BPMNDiagram")
 	private Diagram diagram;
-	@XStreamImplicit
-	private List<Message> messages;
-	@XStreamImplicit
-	private List<ItemDefinition> itemDefinitions;
 	
 	//---- Getters and Setters ----//
 

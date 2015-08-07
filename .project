@@ -26,4 +26,11 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.bpmn2.modeler.core.bpmn2Nature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>src/test/resources/SubprocessOutput.bpmn2</name>
+			<type>1</type>
+			<location>/home/noa/Pericles/ModelCompiler/Software/model-compiler/src/test/resources/SubprocessOutput.bpmn2</location>
+		</link>
+	</linkedResources>
 </projectDescription>
