@@ -17,7 +17,7 @@ public class JbpmBpmnConversionTests {
 
 	@Test
 	public void testBpmnConversionSubprocess() {
-		parseConvertAndWrite("src/test/resources/subprocess/");
+		parseConvertAndWrite("src/test/resources/subprocesses/");
 	}
 
 	@Test

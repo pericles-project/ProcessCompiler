@@ -16,7 +16,7 @@ public class ParseAndWriteJbpmFileTests {
 
 	@Test
 	public void testParseAndWriteSubprocess() {
-		parseAndWrite("src/test/resources/subprocess/");
+		parseAndWrite("src/test/resources/subprocesses/");
 	}
 
 	@Test
