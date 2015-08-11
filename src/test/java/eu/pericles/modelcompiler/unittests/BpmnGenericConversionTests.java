@@ -18,6 +18,31 @@ public class BpmnGenericConversionTests {
 		baseElement = new BaseElement(new PredefinedUUIDGenerator());
 		parseConvertAndWrite("src/test/resources/helloworld/");
 	}
+	
+	@Test
+	public void testGenericConversionSubprocess() {
+		baseElement = new BaseElement(new PredefinedUUIDGenerator());
+		parseConvertAndWrite("src/test/resources/subprocesses/");
+	}
+
+	@Test
+	public void testGenericConversionSignalEvents() {
+		baseElement = new BaseElement(new PredefinedUUIDGenerator());
+		parseConvertAndWrite("src/test/resources/signalevents/");
+	}
+
+	@Test
+	public void testGenericConversionMessageEvents() {
+		baseElement = new BaseElement(new PredefinedUUIDGenerator());
+		parseConvertAndWrite("src/test/resources/messageevents/");
+	}
+	
+	@Test
+	public void testGenericConversionTimerEvents() {
+		baseElement = new BaseElement(new PredefinedUUIDGenerator());
+		parseConvertAndWrite("src/test/resources/timerevents/");
+	}
+
 
 	private void parseConvertAndWrite(String path) {
 		String inputFileName = path + "Input.bpmn2";
