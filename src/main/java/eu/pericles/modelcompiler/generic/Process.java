@@ -9,27 +9,27 @@ import eu.pericles.modelcompiler.common.BaseElement;
 public class Process extends BaseElement {
 
 	private String name;
+	private String source;
+	private List<ExternalItem> externalItems;
+	private List<Variable> variables;
 	private List<Activity> activities;
 	private List<Event> events;
 	private List<Gateway> gateways;
-	private List<Flow> flows;
 	private List<Process> subprocesses;
-	private List<ExternalItem> externalItems;
-	private List<Variable> variables;
-	private String source;
+	private List<Flow> flows;
 	
 	public Process() {
 		init();
 	}
 	
 	private void init() {
+		externalItems = new ArrayList<ExternalItem>();
+		variables = new ArrayList<Variable>();
 		activities = new ArrayList<Activity>();
 		events = new ArrayList<Event>();
 		gateways = new ArrayList<Gateway>();
-		flows = new ArrayList<Flow>();
 		subprocesses = new ArrayList<Process>();
-		externalItems = new ArrayList<ExternalItem>();
-		variables = new ArrayList<Variable>();
+		flows = new ArrayList<Flow>();
 	}
 	
 	

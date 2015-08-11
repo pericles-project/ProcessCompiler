@@ -12,6 +12,8 @@ public class ExternalItem extends BaseElement{
 	private Type type;
 	private String reference;
 	private String structure;
+	
+	//---- Getters and setters ----// 
 
 	public Type getType() {
 		return type;

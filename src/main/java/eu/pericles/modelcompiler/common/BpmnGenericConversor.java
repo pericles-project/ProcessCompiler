@@ -34,6 +34,10 @@ public class BpmnGenericConversor {
 	private Map<String,String> mapBpmnIDtoGenericUID;
 
 	public BpmnGenericConversor() {
+		init();
+	}
+
+	private void init() {
 		bpmnProcess = new BpmnProcess();
 		genericProcess = new Process();
 		mapBpmnIDtoGenericUID = new HashMap<String,String>();
@@ -109,7 +113,8 @@ public class BpmnGenericConversor {
 			Activity activity = new Activity();
 			activity.setName(scriptTask.getName());
 			activity.setType(Activity.Type.SCRIPT);
-			genericProcess.addActivity(activity);	
+			activity.setScript(scriptTask.getScript());
+			genericProcess.addActivity(activity);
 
 			mapBpmnIDtoGenericUID.put(scriptTask.getId(), activity.getUid());
 		}

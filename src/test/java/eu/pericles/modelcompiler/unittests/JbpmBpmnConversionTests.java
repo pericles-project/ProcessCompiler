@@ -4,41 +4,41 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import eu.pericles.modelcompiler.unittests.Utils;
+import eu.pericles.modelcompiler.testutils.Utils;
 
 public class JbpmBpmnConversionTests {
 	
 	Utils util = new Utils();
 
 	@Test
-	public void testBpmnConversionHelloWorldExample() {
-		parseConvertAndWrite("HelloWorld");
+	public void testBpmnConversionHelloWorld() {
+		parseConvertAndWrite("src/test/resources/helloworld/");
 	}
 
 	@Test
-	public void testBpmnConversionSubprocessExample() {
-		parseConvertAndWrite("Subprocess");
+	public void testBpmnConversionSubprocess() {
+		parseConvertAndWrite("src/test/resources/subprocess/");
 	}
 
 	@Test
-	public void testBpmnConversionSignalEventsExample() {
-		parseConvertAndWrite("SignalEvents");
+	public void testBpmnConversionSignalEvents() {
+		parseConvertAndWrite("src/test/resources/signalevents/");
 	}
 
 	@Test
-	public void testBpmnConversionMessagesEventsExample() {
-		parseConvertAndWrite("MessageEvents");
+	public void testBpmnConversionMessageEvents() {
+		parseConvertAndWrite("src/test/resources/messageevents/");
 	}
 	
 	@Test
-	public void testBpmnConversionTimerEventsExample() {
-		parseConvertAndWrite("TimerEvents");
+	public void testBpmnConversionTimerEvents() {
+		parseConvertAndWrite("src/test/resources/timerevents/");
 	}
 
-	private void parseConvertAndWrite(String scenario) {
-		String inputFileName = "src/test/resources/" + scenario + "Input.bpmn2";
-		String testFileName = "src/test/resources/" + scenario + "ConversionTest.bpmn2";
-		String outputFileName = "src/test/resources/" + scenario + "ConversionOutput.bpmn2";
+	private void parseConvertAndWrite(String path) {
+		String inputFileName = path + "Input.bpmn2";
+		String testFileName = path + "BpmnConversionTest.bpmn2";
+		String outputFileName = path + "BpmnConversionOutput.bpmn2";
 
 		assertTrue(util.checkParseBpmnConvertAndWrite(inputFileName, testFileName, outputFileName));
 	}

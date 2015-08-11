@@ -10,6 +10,9 @@ public class Activity extends BaseElement {
 	
 	private String name;
 	private Type type;
+	private String script;
+	
+	//---- Getters and setters ----// 
 
 	public String getName() {
 		return name;
@@ -25,6 +28,14 @@ public class Activity extends BaseElement {
 
 	public void setType(Type type) {
 		this.type = type;
+	}
+
+	public String getScript() {
+		return script;
+	}
+
+	public void setScript(String script) {
+		this.script = script;
 	}
 
 }

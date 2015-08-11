@@ -1,19 +1,28 @@
 package eu.pericles.modelcompiler.common;
 
-public abstract class BaseElement {
-	
-	private Uid uid;
-	
+public class BaseElement {
+	private String uid;
+	private static UUIDGeneration uniqueIdentifier = new RandomUUIDGenerator();
+
 	public BaseElement() {
-		uid = new Uid();
+		System.out.println("BaseElement()");
+		init();
+	}
+
+	public BaseElement(UUIDGeneration uniqueIdentifier) {
+		System.out.println("BaseElement(UUIDGeneration uniqueIdentifier)");
+		BaseElement.uniqueIdentifier = uniqueIdentifier;
+		init();
+	}
+
+	private void init() {
+		System.out.println("init(): " + uniqueIdentifier.getClass());
+		uid = uniqueIdentifier.requestUniqueIdentifier();
+		System.out.println(uid);
 	}
 
 	public String getUid() {
-		return uid.getUid();
-	}
-	
-	public void setUid(String uid) {
-		this.uid.checkAndSetUid(uid);
+		return uid;
 	}
 
 }
