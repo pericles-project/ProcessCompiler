@@ -2,27 +2,27 @@ package eu.pericles.modelcompiler.common;
 
 public class BaseElement {
 	private String uid;
-	private static UUIDGeneration uniqueIdentifier = new RandomUUIDGenerator();
+	private static UUIDGeneration generator = new RandomUUIDGenerator();
 
 	public BaseElement() {
-		System.out.println("BaseElement()");
 		init();
 	}
 
-	public BaseElement(UUIDGeneration uniqueIdentifier) {
-		System.out.println("BaseElement(UUIDGeneration uniqueIdentifier)");
-		BaseElement.uniqueIdentifier = uniqueIdentifier;
+	public BaseElement(UUIDGeneration generator) {
+		BaseElement.generator = generator;
 		init();
 	}
 
 	private void init() {
-		System.out.println("init(): " + uniqueIdentifier.getClass());
-		uid = uniqueIdentifier.requestUniqueIdentifier();
-		System.out.println(uid);
+		uid = generator.requestUUID();
 	}
 
 	public String getUid() {
 		return uid;
+	}
+	
+	public void setUUIDGenerator (UUIDGeneration generator) {
+		BaseElement.generator = generator;
 	}
 
 }

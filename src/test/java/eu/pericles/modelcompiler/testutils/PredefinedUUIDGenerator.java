@@ -41,7 +41,7 @@ public class PredefinedUUIDGenerator implements UUIDGeneration {
 			"83920271-3872-4abd-bfa9-52d22e10352a", "faac35e6-fa4e-4c13-ad02-e40932ac9a39" };
 
 	@Override
-	public String requestUniqueIdentifier() {
+	public String requestUUID() {
 		String uniqueIdentifier = identifiersList[identifier];
 		identifier++;
 

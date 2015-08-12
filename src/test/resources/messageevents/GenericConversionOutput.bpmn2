@@ -1,5 +1,49 @@
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" expressionLanguage="http://www.mvel.org/2.0" typeLanguage="http://www.java.com/javaTypes" targetNamespace="http://www.jboss.org/drools">
   <bpmn2:process id="Process_1" name="EventStartSignalExample" processType="Public">
+    <bpmn2:startEvent id="6e7335dd-1b4e-4a95-ac0a-06293b4ea116">
+      <bpmn2:messageEventDefinition id="550111eb-9a07-4a0f-b1a5-b5d49e220861" messageRef="ab29b653-115c-4922-8f6c-5ff7979d212b"/>
+      <bpmn2:dataOutput id="4927dc09-bfa8-43cd-83fb-cc56ced37ee5"/>
+      <bpmn2:dataOutputAssociation id="be9f2ac4-a6bf-495c-9172-15fd961dfcc6">
+        <bpmn2:sourceRef>4927dc09-bfa8-43cd-83fb-cc56ced37ee5</bpmn2:sourceRef>
+        <bpmn2:targetRef>9adc846d-a443-4dc5-8f67-dfbd4ca864cb</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:outputSet id="4f261ab5-89c6-4f98-b629-ef12fba6feef">
+        <bpmn2:dataOutputRefs>4927dc09-bfa8-43cd-83fb-cc56ced37ee5</bpmn2:dataOutputRefs>
+      </bpmn2:outputSet>
+    </bpmn2:startEvent>
+    <bpmn2:endEvent id="f383fb27-361f-4ef9-b6a6-906e483edcd8">
+      <bpmn2:messageEventDefinition id="75f6f68f-d826-4b0e-a9e5-c646653eee19" messageRef="e56069b6-b25b-4f6a-bb07-05cfe5c48261"/>
+      <bpmn2:dataInput id="f78b099a-9b59-4d1a-a63f-bd70467fae12"/>
+      <bpmn2:dataInputAssociation id="3893e8ab-f3bb-4baa-b259-f1deb222d73b">
+        <bpmn2:sourceRef>f78b099a-9b59-4d1a-a63f-bd70467fae12</bpmn2:sourceRef>
+        <bpmn2:targetRef>7e650cc3-6bae-44c5-82b5-d6db4166b46f</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:inputSet id="a132a023-48ba-4822-8518-2b277e596567">
+        <bpmn2:dataInputRefs>f78b099a-9b59-4d1a-a63f-bd70467fae12</bpmn2:dataInputRefs>
+      </bpmn2:inputSet>
+    </bpmn2:endEvent>
+    <bpmn2:intermediateCatchEvent id="c1628502-d47e-49d1-9753-f55841f18b6d">
+      <bpmn2:messageEventDefinition id="0d84a857-7727-4912-a6e2-002c0e699880" messageRef="1ae4f07c-5919-46f9-9dfa-0be989976b07"/>
+      <bpmn2:dataOutput id="4352ed23-76fa-48c0-bec4-720063159031"/>
+      <bpmn2:dataOutputAssociation id="8e5c89e6-4adc-4659-9f04-e462524d7937">
+        <bpmn2:sourceRef>4352ed23-76fa-48c0-bec4-720063159031</bpmn2:sourceRef>
+        <bpmn2:targetRef>8a4781f3-0e39-4bfd-b86d-635202b91c54</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:outputSet id="02f05c32-f7c7-40b6-b475-eb719f478f05">
+        <bpmn2:dataOutputRefs>4352ed23-76fa-48c0-bec4-720063159031</bpmn2:dataOutputRefs>
+      </bpmn2:outputSet>
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:intermediateThrowEvent id="81cffa4c-2edb-4799-b406-e7d841587faf">
+      <bpmn2:messageEventDefinition id="d6e2245b-9f30-49db-99aa-e3b7df7d89cc" messageRef="13d89fc6-9f63-41d0-b606-f74e7cd8d39d"/>
+      <bpmn2:dataInput id="5febf5b7-b4fe-481a-9b97-cbc3ce62f112"/>
+      <bpmn2:dataInputAssociation id="2f039826-4da9-4726-bc3c-3ebdedebf450">
+        <bpmn2:sourceRef>5febf5b7-b4fe-481a-9b97-cbc3ce62f112</bpmn2:sourceRef>
+        <bpmn2:targetRef>6865662f-9835-4561-8c9f-f692337ad8a8</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:inputSet id="3f13bb48-9fe5-42b0-b506-79c0e035c7b2">
+        <bpmn2:dataInputRefs>5febf5b7-b4fe-481a-9b97-cbc3ce62f112</bpmn2:dataInputRefs>
+      </bpmn2:inputSet>
+    </bpmn2:intermediateThrowEvent>
     <bpmn2:scriptTask id="bc696593-5d07-4cb6-8819-ac6b28c9aa51" name="Script Task 1">
       <bpmn2:script>printf(&quot;Hello World&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
@@ -15,6 +59,18 @@
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="Diagram">
     <bpmndi:BPMNPlane id="Plane" bpmnElement="Process_1">
+      <bpmndi:BPMNShape bpmnElement="6e7335dd-1b4e-4a95-ac0a-06293b4ea116">
+        <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="c1628502-d47e-49d1-9753-f55841f18b6d">
+        <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="81cffa4c-2edb-4799-b406-e7d841587faf">
+        <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="f383fb27-361f-4ef9-b6a6-906e483edcd8">
+        <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="bc696593-5d07-4cb6-8819-ac6b28c9aa51">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>

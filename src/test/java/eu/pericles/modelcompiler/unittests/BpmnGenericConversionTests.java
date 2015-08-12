@@ -11,35 +11,35 @@ import eu.pericles.modelcompiler.testutils.Utils;
 public class BpmnGenericConversionTests {
 
 	Utils util = new Utils();
-	BaseElement baseElement;
+	//BaseElement baseElement = new BaseElement(new PredefinedUUIDGenerator());;
 	
 	@Test
 	public void testGenericConversionHelloWorld() {
-		baseElement = new BaseElement(new PredefinedUUIDGenerator());
+		BaseElement baseElement = new BaseElement(new PredefinedUUIDGenerator());
 		parseConvertAndWrite("src/test/resources/helloworld/");
 	}
 	
 	@Test
 	public void testGenericConversionSubprocess() {
-		baseElement = new BaseElement(new PredefinedUUIDGenerator());
+		BaseElement baseElement = new BaseElement(new PredefinedUUIDGenerator());
 		parseConvertAndWrite("src/test/resources/subprocesses/");
 	}
 
 	@Test
 	public void testGenericConversionSignalEvents() {
-		baseElement = new BaseElement(new PredefinedUUIDGenerator());
+		BaseElement baseElement = new BaseElement(new PredefinedUUIDGenerator());
 		parseConvertAndWrite("src/test/resources/signalevents/");
 	}
 
 	@Test
 	public void testGenericConversionMessageEvents() {
-		baseElement = new BaseElement(new PredefinedUUIDGenerator());
+		BaseElement baseElement = new BaseElement(new PredefinedUUIDGenerator());
 		parseConvertAndWrite("src/test/resources/messageevents/");
 	}
 	
 	@Test
 	public void testGenericConversionTimerEvents() {
-		baseElement = new BaseElement(new PredefinedUUIDGenerator());
+		BaseElement baseElement = new BaseElement(new PredefinedUUIDGenerator());
 		parseConvertAndWrite("src/test/resources/timerevents/");
 	}
 

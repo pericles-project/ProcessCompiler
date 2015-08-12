@@ -1,6 +1,20 @@
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" expressionLanguage="http://www.mvel.org/2.0" typeLanguage="http://www.java.com/javaTypes" targetNamespace="http://www.jboss.org/drools">
   <bpmn2:process id="Process_1" name="TimerStartExample" processType="Public">
+    <bpmn2:startEvent id="e99688e2-6215-4d15-bbc4-efe9acfe5907">
+      <bpmn2:timerEventDefinition id="03cc540b-628e-4540-9135-0bbf5c2e0939">
+        <bpmn2:timeCycle id="623d4cd0-aebd-470a-855a-13b2752061aa" xsi:type="bpmn2:tFormalExpression">500ms</bpmn2:timeCycle>
+        <bpmn2:timeDate id="6c39e7e8-89ac-4568-a6c8-01e7407610d4" xsi:type="bpmn2:tFormalExpression">500ms</bpmn2:timeDate>
+      </bpmn2:timerEventDefinition>
+    </bpmn2:startEvent>
     <bpmn2:endEvent id="f4f37ed5-8a4f-4a4e-a400-122ecd179e12"/>
+    <bpmn2:intermediateCatchEvent id="1703e740-93d7-499c-8906-478dfc7be5fa">
+      <bpmn2:timerEventDefinition id="85d3caed-a306-4c26-aa29-986e6132994c">
+        <bpmn2:timeDuration id="0d89709a-ecc5-474a-93c6-289e355a41aa" xsi:type="bpmn2:tFormalExpression">500ms</bpmn2:timeDuration>
+      </bpmn2:timerEventDefinition>
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:intermediateCatchEvent id="ab29b653-115c-4922-8f6c-5ff7979d212b">
+      <bpmn2:timerEventDefinition id="6364da1a-6078-4a2a-970e-25a6b60a8980"/>
+    </bpmn2:intermediateCatchEvent>
     <bpmn2:scriptTask id="44812f64-491a-4c03-b35b-579b90ebb452" name="Script Task 2">
       <bpmn2:script>printf(&quot;Hello World&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
@@ -20,6 +34,15 @@
   </bpmn2:process>
   <bpmndi:BPMNDiagram id="Diagram">
     <bpmndi:BPMNPlane id="Plane" bpmnElement="Process_1">
+      <bpmndi:BPMNShape bpmnElement="e99688e2-6215-4d15-bbc4-efe9acfe5907">
+        <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="1703e740-93d7-499c-8906-478dfc7be5fa">
+        <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ab29b653-115c-4922-8f6c-5ff7979d212b">
+        <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="f4f37ed5-8a4f-4a4e-a400-122ecd179e12">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
