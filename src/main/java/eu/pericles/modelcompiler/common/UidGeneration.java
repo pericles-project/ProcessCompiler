@@ -1,6 +1,6 @@
 package eu.pericles.modelcompiler.common;
 
-public interface UUIDGeneration {
+public interface UidGeneration {
 	
 	public String requestUUID();
 

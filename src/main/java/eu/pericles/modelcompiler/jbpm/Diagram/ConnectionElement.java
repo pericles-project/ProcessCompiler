@@ -1,14 +1,23 @@
 package eu.pericles.modelcompiler.jbpm.Diagram;
 
-import eu.pericles.modelcompiler.common.BaseElement;
+import eu.pericles.modelcompiler.common.Element;
 
-public class ConnectionElement extends BaseElement {
+public class ConnectionElement implements Element {
 	
+	private String uid;
 	private String bpmnElement;
 	private String sourceElement;
 	private String targetElement;
 	
 	//---- Getters and setters ----// 
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
 	
 	public String getBpmnElement() {
 		return bpmnElement;

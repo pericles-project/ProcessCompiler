@@ -2,7 +2,7 @@ package eu.pericles.modelcompiler.common;
 
 import java.util.UUID;
 
-public class RandomUUIDGenerator implements UUIDGeneration {
+public class RandomUidGenerator implements UidGeneration {
 
 	@Override
 	public String requestUUID() {

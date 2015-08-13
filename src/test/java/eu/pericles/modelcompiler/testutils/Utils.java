@@ -10,6 +10,7 @@ import eu.pericles.modelcompiler.common.BpmnGenericConversor;
 import eu.pericles.modelcompiler.common.BpmnJbpmConversor;
 import eu.pericles.modelcompiler.common.GenericBpmnConversor;
 import eu.pericles.modelcompiler.common.JbpmBpmnConversor;
+import eu.pericles.modelcompiler.common.RandomUidGenerator;
 import eu.pericles.modelcompiler.jbpm.JbpmFile;
 import eu.pericles.modelcompiler.jbpm.JbpmFileParser;
 import eu.pericles.modelcompiler.jbpm.JbpmFileWriter;
@@ -49,7 +50,7 @@ public class Utils {
 	public static JbpmFile convertJbpmBpmnJbpm(JbpmFile jbpmFile) {
 		JbpmBpmnConversor jbpmBpmnConversor = new JbpmBpmnConversor();
 		jbpmBpmnConversor.convert(jbpmFile);
-		BpmnJbpmConversor bpmnJbpmConversor = new BpmnJbpmConversor();
+		BpmnJbpmConversor bpmnJbpmConversor = new BpmnJbpmConversor(new RandomUidGenerator());
 		bpmnJbpmConversor.convert(jbpmBpmnConversor.getBpmnProcess());
 		
 		return bpmnJbpmConversor.getJbpmFile();
@@ -59,7 +60,7 @@ public class Utils {
 		JbpmBpmnConversor jbpmBpmnConversor = new JbpmBpmnConversor();
 		BpmnGenericConversor bpmnGenericConversor = new BpmnGenericConversor();
 		GenericBpmnConversor genericBpmnConversor = new GenericBpmnConversor();
-		BpmnJbpmConversor bpmnJbpmConversor = new BpmnJbpmConversor();
+		BpmnJbpmConversor bpmnJbpmConversor = new BpmnJbpmConversor(new RandomUidGenerator());
 		jbpmBpmnConversor.convert(jbpmFile); // from jBPM to BPMN
 		bpmnGenericConversor.convert(jbpmBpmnConversor.getBpmnProcess()); // from BPMN to generic
 		//System.out.println("Generic Process: " + bpmnGenericConversor.getGenericProcess().getUid() + " " + bpmnGenericConversor.getGenericProcess().getActivities().get(0).getScript());

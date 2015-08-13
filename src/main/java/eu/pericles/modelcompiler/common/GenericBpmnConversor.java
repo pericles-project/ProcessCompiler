@@ -28,7 +28,7 @@ import eu.pericles.modelcompiler.generic.Timer;
 public class GenericBpmnConversor {
 	private Process genericProcess;
 	private BpmnProcess bpmnProcess;
-	private UUIDGeneration uuidGenerator = new RandomUUIDGenerator();
+	private UidGeneration uuidGenerator = new RandomUidGenerator();
 	
 	public GenericBpmnConversor() {
 		init();

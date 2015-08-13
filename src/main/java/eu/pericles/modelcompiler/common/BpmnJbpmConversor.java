@@ -12,6 +12,7 @@ import eu.pericles.modelcompiler.bpmn.Events.IntermediateThrowEvent;
 import eu.pericles.modelcompiler.bpmn.Events.StartEvent;
 import eu.pericles.modelcompiler.bpmn.Flows.SequenceFlow;
 import eu.pericles.modelcompiler.bpmn.Gateways.ParallelGateway;
+import eu.pericles.modelcompiler.common.ElementFactory.Type;
 import eu.pericles.modelcompiler.jbpm.JbpmFile;
 import eu.pericles.modelcompiler.jbpm.Diagram.Bounds;
 import eu.pericles.modelcompiler.jbpm.Diagram.ConnectionElement;
@@ -28,6 +29,11 @@ public class BpmnJbpmConversor {
 	private JbpmFile jbpmFile;
 	private List<NodeElement> nodeElements;
 	private List<ConnectionElement> connectionElements;
+	private static UidGeneration uidGenerator;
+	
+	public BpmnJbpmConversor(UidGeneration uidGenerator) {
+		setUidGenerator(uidGenerator);
+	}
 
 	public void convert(BpmnProcess bpmnProcess) {
 		setBpmnProcess(bpmnProcess);
@@ -38,7 +44,7 @@ public class BpmnJbpmConversor {
 		setAndOrganiseExternalVariables();
 		setDiagram();
 	}
-	
+
 	private void setDefinitions() {
 		getJbpmFile().setXmlns_xsi("http://www.w3.org/2001/XMLSchema-instance");
 		getJbpmFile().setXmlns_bpmn2("http://www.omg.org/spec/BPMN/20100524/MODEL");
@@ -57,12 +63,12 @@ public class BpmnJbpmConversor {
 	private void setProcess() {
 		getJbpmFile().setBpmnProcess(getBpmnProcess());
 	}
-	
+
 	private void setAndOrganiseExternalVariables() {
 		/**
-		 * The jBPM file has the external variables defined outside the process. To avoid
-		 * duplication, delete the external variables from the process in the JbpmFile object.
-		deleteExternalVariablesFromProcess();
+		 * The jBPM file has the external variables defined outside the process.
+		 * To avoid duplication, delete the external variables from the process
+		 * in the JbpmFile object. deleteExternalVariablesFromProcess();
 		 */
 		copyExternalVariablesToJbpmFile();
 		deleteExternalVariablesFromProcess();
@@ -78,11 +84,11 @@ public class BpmnJbpmConversor {
 	private void deleteExternalVariablesFromProcess() {
 		getJbpmFile().getBpmnProcess().setItemDefinitions(null);
 		getJbpmFile().getBpmnProcess().setMessages(null);
-	}	
+	}
 
 	private void setDiagram() {
-		getJbpmFile().setDiagram(new Diagram());
-		getJbpmFile().getDiagram().setPlane(new Plane());
+		getJbpmFile().setDiagram((Diagram) ElementFactory.createElement(uidGenerator.requestUUID(), Type.DIAGRAM));
+		getJbpmFile().getDiagram().setPlane((Plane) ElementFactory.createElement(uidGenerator.requestUUID(), Type.PLANE));
 		getJbpmFile().getDiagram().getPlane().setBpmnElement(getBpmnProcess().getId());
 		setShapesToDiagram();
 		setEdgesToDiagram();
@@ -95,9 +101,9 @@ public class BpmnJbpmConversor {
 
 	private void createNodeElementList() {
 		setNodeElements(new ArrayList<NodeElement>());
-		getNodeElementsFromProcess(getBpmnProcess());		
-	}	
-	
+		getNodeElementsFromProcess(getBpmnProcess());
+	}
+
 	private void getNodeElementsFromProcess(BpmnProcess bpmnProcess) {
 		for (StartEvent element : bpmnProcess.getStartEvents()) {
 			addNodeElement(element.getId());
@@ -124,7 +130,7 @@ public class BpmnJbpmConversor {
 	}
 
 	private void addNodeElement(String id) {
-		NodeElement node = new NodeElement();
+		NodeElement node = (NodeElement) ElementFactory.createElement(uidGenerator.requestUUID(), Type.NODE_ELEMENT);
 		node.setBpmnElement(id);
 		getNodeElements().add(node);
 	}
@@ -137,16 +143,15 @@ public class BpmnJbpmConversor {
 	}
 
 	private void addShape(NodeElement node, List<Shape> shapes) {
-		Shape shape = new Shape();
+		Shape shape = (Shape) ElementFactory.createElement(uidGenerator.requestUUID(), Type.SHAPE);
 		shape.setBpmnElement(node.getBpmnElement());
 		shape.setBounds(new Bounds());
 		shapes.add(shape);
 	}
-	
 
 	private void createConnectionElementList() {
 		setConnectionElements(new ArrayList<ConnectionElement>());
-		getConnectionElementsFromProcess(getBpmnProcess());		
+		getConnectionElementsFromProcess(getBpmnProcess());
 	}
 
 	private void getConnectionElementsFromProcess(BpmnProcess bpmnProcess) {
@@ -160,7 +165,7 @@ public class BpmnJbpmConversor {
 	}
 
 	private void addConnectionElement(String id, String source, String target) {
-		ConnectionElement connection = new ConnectionElement();
+		ConnectionElement connection = (ConnectionElement) ElementFactory.createElement(uidGenerator.requestUUID(), Type.CONNECTION_ELEMENT);
 		connection.setBpmnElement(id);
 		connection.setSourceElement(source);
 		connection.setTargetElement(target);
@@ -180,18 +185,18 @@ public class BpmnJbpmConversor {
 	}
 
 	private void addEdge(ConnectionElement connection, List<Edge> edges) {
-		Edge edge = new Edge();
+		Edge edge = (Edge) ElementFactory.createElement(uidGenerator.requestUUID(), Type.EDGE);
 		edge.setBpmnElement(connection.getBpmnElement());
 		edge.setSourceElement(connection.getSourceElement());
 		edge.setTargetElement(connection.getTargetElement());
 		edge.setPoints(new ArrayList<Waypoint>(4));
-		for (int i=0; i<4; i++) {
+		for (int i = 0; i < 4; i++) {
 			edge.getPoints().add(new Waypoint());
 		}
 		edges.add(edge);
 	}
 
-	//---- Getters and setters ----// 
+	// ---- Getters and setters ----//
 
 	public BpmnProcess getBpmnProcess() {
 		return bpmnProcess;
@@ -223,5 +228,13 @@ public class BpmnJbpmConversor {
 
 	public void setConnectionElements(List<ConnectionElement> connectionElements) {
 		this.connectionElements = connectionElements;
+	}
+
+	public static UidGeneration getUidGenerator() {
+		return uidGenerator;
+	}
+
+	public static void setUidGenerator(UidGeneration uidGenerator) {
+		BpmnJbpmConversor.uidGenerator = uidGenerator;
 	}
 }

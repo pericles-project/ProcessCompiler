@@ -1,8 +1,8 @@
 package eu.pericles.modelcompiler.testutils;
 
-import eu.pericles.modelcompiler.common.UUIDGeneration;
+import eu.pericles.modelcompiler.common.UidGeneration;
 
-public class PredefinedUUIDGenerator implements UUIDGeneration {
+public class PredefinedUUIDGenerator implements UidGeneration {
 
 	private int identifier = 0;
 	private static final String[] identifiersList = { "eddcf455-65e9-4a00-9261-76b857a129cc", "46de0f8e-3a31-4714-969d-bf64667da87a",

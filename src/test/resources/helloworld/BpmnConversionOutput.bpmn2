@@ -8,24 +8,24 @@
     <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="ScriptTask_1" targetRef="EndEvent_1"/>
   </bpmn2:process>
-  <bpmndi:BPMNDiagram id="Diagram">
-    <bpmndi:BPMNPlane id="Plane" bpmnElement="eu.pericles.modelcompiler.unittests.PrintHelloWorld">
-      <bpmndi:BPMNShape bpmnElement="StartEvent_1">
+  <bpmndi:BPMNDiagram id="5b5e5596-4f0b-4350-8895-2157a9fb5e27">
+    <bpmndi:BPMNPlane id="c58bf5d4-6b15-481d-ab42-b74e77280e09" bpmnElement="eu.pericles.modelcompiler.unittests.PrintHelloWorld">
+      <bpmndi:BPMNShape id="8007c011-68bf-4891-a79a-960b58e36577" bpmnElement="StartEvent_1">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="EndEvent_1">
+      <bpmndi:BPMNShape id="abcc6086-7d8e-4e09-92c5-85f5e0a7e379" bpmnElement="EndEvent_1">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="ScriptTask_1">
+      <bpmndi:BPMNShape id="329d5324-d771-4496-993e-1adb5508d5d7" bpmnElement="ScriptTask_1">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_1" sourceElement="StartEvent_1" targetElement="ScriptTask_1">
+      <bpmndi:BPMNEdge id="949a1c97-9958-4959-8951-7e07b7263611" bpmnElement="SequenceFlow_1" sourceElement="StartEvent_1" targetElement="ScriptTask_1">
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="SequenceFlow_2" sourceElement="ScriptTask_1" targetElement="EndEvent_1">
+      <bpmndi:BPMNEdge id="12fe1756-4449-4d54-9655-abc4ffac831a" bpmnElement="SequenceFlow_2" sourceElement="ScriptTask_1" targetElement="EndEvent_1">
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>

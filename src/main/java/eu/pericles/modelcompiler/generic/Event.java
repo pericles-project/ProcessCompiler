@@ -1,20 +1,29 @@
 package eu.pericles.modelcompiler.generic;
 
-import eu.pericles.modelcompiler.common.BaseElement;
+import eu.pericles.modelcompiler.common.Element;
 
-public class Event extends BaseElement {
+public class Event implements Element {
 	
 	public enum Type {
 		NONE_START, SIGNAL_START, MESSAGE_START, TIMER_START, NONE_END, SIGNAL_END, MESSAGE_END, 
 		NONE_CATCH, SIGNAL_CATCH, MESSAGE_CATCH, TIMER_CATCH, NONE_THROW, SIGNAL_THROW, MESSAGE_THROW
 	}
 
+	private String uid;
 	private Type type;
 	private String reference;
 	private Timer timer;
 	private Data data;
 	
 	//---- Getters and setters ----// 
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
 
 	public Type getType() {
 		return type;

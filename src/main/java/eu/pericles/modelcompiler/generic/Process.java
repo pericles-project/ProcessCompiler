@@ -3,11 +3,12 @@ package eu.pericles.modelcompiler.generic;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.pericles.modelcompiler.common.BaseElement;
+import eu.pericles.modelcompiler.common.Element;
 
 
-public class Process extends BaseElement {
+public class Process implements Element {
 
+	private String uid;
 	private String name;
 	private String source;
 	private List<ExternalItem> externalItems;
@@ -34,6 +35,14 @@ public class Process extends BaseElement {
 	
 	
 	//--- Getters, Setters and Add element to list methods --//
+	
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
 	
 	public String getName() {
 		return name;

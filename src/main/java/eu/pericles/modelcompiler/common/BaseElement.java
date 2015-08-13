@@ -2,13 +2,13 @@ package eu.pericles.modelcompiler.common;
 
 public class BaseElement {
 	private String uid;
-	private static UUIDGeneration generator = new RandomUUIDGenerator();
+	private static UidGeneration generator = new RandomUidGenerator();
 
 	public BaseElement() {
 		init();
 	}
 
-	public BaseElement(UUIDGeneration generator) {
+	public BaseElement(UidGeneration generator) {
 		BaseElement.generator = generator;
 		init();
 	}
@@ -21,7 +21,7 @@ public class BaseElement {
 		return uid;
 	}
 	
-	public void setUUIDGenerator (UUIDGeneration generator) {
+	public void setUUIDGenerator (UidGeneration generator) {
 		BaseElement.generator = generator;
 	}
 

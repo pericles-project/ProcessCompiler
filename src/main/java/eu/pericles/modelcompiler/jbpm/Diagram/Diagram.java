@@ -3,25 +3,31 @@ package eu.pericles.modelcompiler.jbpm.Diagram;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
+import eu.pericles.modelcompiler.common.Element;
+
 @XStreamAlias("bpmndi:BPMNDiagram")
-public class Diagram {
-	
+public class Diagram implements Element {
+
 	@XStreamAsAttribute
-	private String id = "Diagram";
+	@XStreamAlias("id")
+	private String uid;
 	@XStreamAlias("bpmndi:BPMNPlane")
 	private Plane plane;
-	
-	//---- Getters and setters ----// 
-	
-	public String getId() {
-		return id;
+
+	// ---- Getters and setters ----//
+
+	public String getUid() {
+		return uid;
 	}
-	public void setId(String id) {
-		this.id = id;
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
+
 	public Plane getPlane() {
 		return plane;
 	}
+
 	public void setPlane(Plane plane) {
 		this.plane = plane;
 	}
