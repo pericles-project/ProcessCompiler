@@ -91,7 +91,6 @@ public class Utils {
 		try {
 			String a = FileUtils.readFileToString(new File(outputFileName));
 			String b = FileUtils.readFileToString(new File(testFileName));
-			Assert.assertEquals(a, b);
 			XMLCompare.assertEquals(a, b);
 		} catch (IOException e) {
 			Assert.fail(e.getMessage());
