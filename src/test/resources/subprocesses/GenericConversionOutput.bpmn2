@@ -1,38 +1,38 @@
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" expressionLanguage="http://www.mvel.org/2.0" typeLanguage="http://www.java.com/javaTypes" targetNamespace="http://www.jboss.org/drools">
   <bpmn2:process id="Process_1" name="SubprocessExample" processType="Public">
-    <bpmn2:startEvent/>
-    <bpmn2:endEvent/>
-    <bpmn2:scriptTask name="Script Task 2">
+    <bpmn2:startEvent id="bb00713b-fb02-4748-97b3-809010125827"/>
+    <bpmn2:endEvent id="ddd23cac-732e-42ed-9897-c6c8ca86b6e5"/>
+    <bpmn2:scriptTask id="c1d7fa4d-571e-42fb-9856-8401e3ba4ec3" name="Script Task 2">
       <bpmn2:script>System.out.println(&quot;Running script outside the subprocess&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow/>
-    <bpmn2:sequenceFlow/>
-    <bpmn2:sequenceFlow/>
+    <bpmn2:sequenceFlow id="e18cf182-0e10-4dc8-97bf-f4e6f900c1b3" sourceRef="bb00713b-fb02-4748-97b3-809010125827" targetRef="e281136a-5fa4-49f1-9d05-3072cd0815b1"/>
+    <bpmn2:sequenceFlow id="c55ad1b7-b8fc-49dc-b7c2-9457d434c50f" sourceRef="e281136a-5fa4-49f1-9d05-3072cd0815b1" targetRef="c1d7fa4d-571e-42fb-9856-8401e3ba4ec3"/>
+    <bpmn2:sequenceFlow id="093daf9f-dd3a-443c-a17c-66304081f3c9" sourceRef="c1d7fa4d-571e-42fb-9856-8401e3ba4ec3" targetRef="ddd23cac-732e-42ed-9897-c6c8ca86b6e5"/>
   </bpmn2:process>
-  <bpmndi:BPMNDiagram id="950b9be9-9c13-4be6-907f-e5c2a57f8726">
-    <bpmndi:BPMNPlane id="66c4f61f-8e46-48c6-b569-67210f4391a9" bpmnElement="Process_1">
-      <bpmndi:BPMNShape id="ea56cc40-94fd-4084-a0d4-9212fa127c87">
+  <bpmndi:BPMNDiagram id="a76b048b-867b-4d47-8785-03a64e54f37b">
+    <bpmndi:BPMNPlane id="37d4271f-a167-4ce0-962f-19e63065b464" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="8527beb3-2909-4626-9936-3db95b1b0477" bpmnElement="bb00713b-fb02-4748-97b3-809010125827">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="3d3edbf4-b7c4-4e67-b6d1-6f31b6732f8c">
+      <bpmndi:BPMNShape id="58eef0c2-2f5c-424f-9812-f21fac7436b8" bpmnElement="ddd23cac-732e-42ed-9897-c6c8ca86b6e5">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="7d5c60f6-fe59-49c9-97ba-00012df39ea7">
+      <bpmndi:BPMNShape id="f8dfd5e6-d63e-41f7-89d7-9a09469bb88d" bpmnElement="c1d7fa4d-571e-42fb-9856-8401e3ba4ec3">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="095d2753-4cbd-4713-9a3e-e3291fd46f00">
+      <bpmndi:BPMNEdge id="2e2c46a7-48c6-401d-aae7-1ba1b9d15a78" bpmnElement="e18cf182-0e10-4dc8-97bf-f4e6f900c1b3" sourceElement="bb00713b-fb02-4748-97b3-809010125827" targetElement="e281136a-5fa4-49f1-9d05-3072cd0815b1">
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="8ec3e1bb-48fb-45c6-a7ac-0981c92aa35f">
+      <bpmndi:BPMNEdge id="82f6cd6a-4c1a-43cd-b986-4376d2bde327" bpmnElement="c55ad1b7-b8fc-49dc-b7c2-9457d434c50f" sourceElement="e281136a-5fa4-49f1-9d05-3072cd0815b1" targetElement="c1d7fa4d-571e-42fb-9856-8401e3ba4ec3">
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="feac61ae-a7f6-401c-9442-c50dec6ff859">
+      <bpmndi:BPMNEdge id="a0fe8d3d-70a5-4381-ae61-af382adb2180" bpmnElement="093daf9f-dd3a-443c-a17c-66304081f3c9" sourceElement="c1d7fa4d-571e-42fb-9856-8401e3ba4ec3" targetElement="ddd23cac-732e-42ed-9897-c6c8ca86b6e5">
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>

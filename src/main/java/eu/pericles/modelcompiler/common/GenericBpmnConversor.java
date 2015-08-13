@@ -28,14 +28,15 @@ import eu.pericles.modelcompiler.generic.Timer;
 public class GenericBpmnConversor {
 	private Process genericProcess;
 	private BpmnProcess bpmnProcess;
-	private UidGeneration uuidGenerator = new RandomUidGenerator();
+	private UidGeneration uidGenerator;
 	
-	public GenericBpmnConversor() {
-		init();
+	public GenericBpmnConversor(UidGeneration uidGenerator) {
+		init(uidGenerator);
 	}
-
-	private void init() {
-		genericProcess = new Process();
+	
+	private void init(UidGeneration uidGenerator) {
+		setUidGenerator(uidGenerator);
+		genericProcess = (Process) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.PROCESS);
 		bpmnProcess = new BpmnProcess();
 	}
 	
@@ -138,11 +139,11 @@ public class GenericBpmnConversor {
 		DataOutput dataOutput = new DataOutput();
 		dataOutput.setId(event.getData().getUid());
 		DataOutputAssociation dataOutputAssociation = new DataOutputAssociation();
-		dataOutputAssociation.setId(uuidGenerator.requestUUID());
+		dataOutputAssociation.setId(uidGenerator.requestUUID());
 		dataOutputAssociation.setSource(dataOutput.getId());
 		dataOutputAssociation.setTarget(event.getData().getAssociation());
 		OutputSet outputSet = new OutputSet();
-		outputSet.setId(uuidGenerator.requestUUID());
+		outputSet.setId(uidGenerator.requestUUID());
 		outputSet.setReference(dataOutput.getId());
 		
 		startEvent.setData(dataOutput);
@@ -161,11 +162,11 @@ public class GenericBpmnConversor {
 		DataOutput dataOutput = new DataOutput();
 		dataOutput.setId(event.getData().getUid());
 		DataOutputAssociation dataOutputAssociation = new DataOutputAssociation();
-		dataOutputAssociation.setId(uuidGenerator.requestUUID());
+		dataOutputAssociation.setId(uidGenerator.requestUUID());
 		dataOutputAssociation.setSource(dataOutput.getId());
 		dataOutputAssociation.setTarget(event.getData().getAssociation());
 		OutputSet outputSet = new OutputSet();
-		outputSet.setId(uuidGenerator.requestUUID());
+		outputSet.setId(uidGenerator.requestUUID());
 		outputSet.setReference(dataOutput.getId());
 		
 		intermediateCatchEvent.setData(dataOutput);
@@ -184,11 +185,11 @@ public class GenericBpmnConversor {
 		DataInput dataInput = new DataInput();
 		dataInput.setId(event.getData().getUid());
 		DataInputAssociation dataInputAssociation = new DataInputAssociation();
-		dataInputAssociation.setId(uuidGenerator.requestUUID());
+		dataInputAssociation.setId(uidGenerator.requestUUID());
 		dataInputAssociation.setSource(dataInput.getId());
 		dataInputAssociation.setTarget(event.getData().getAssociation());
 		InputSet inputSet = new InputSet();
-		inputSet.setId(uuidGenerator.requestUUID());
+		inputSet.setId(uidGenerator.requestUUID());
 		inputSet.setReference(dataInput.getId());
 		
 		intermediateThrowEvent.setData(dataInput);
@@ -207,11 +208,11 @@ public class GenericBpmnConversor {
 		DataInput dataInput = new DataInput();
 		dataInput.setId(event.getData().getUid());
 		DataInputAssociation dataInputAssociation = new DataInputAssociation();
-		dataInputAssociation.setId(uuidGenerator.requestUUID());
+		dataInputAssociation.setId(uidGenerator.requestUUID());
 		dataInputAssociation.setSource(dataInput.getId());
 		dataInputAssociation.setTarget(event.getData().getAssociation());
 		InputSet inputSet = new InputSet();
-		inputSet.setId(uuidGenerator.requestUUID());
+		inputSet.setId(uidGenerator.requestUUID());
 		inputSet.setReference(dataInput.getId());
 		
 		endEvent.setData(dataInput);
@@ -225,7 +226,7 @@ public class GenericBpmnConversor {
 
 	private MessageEventDefinition createMessageEventDefinition(Event event) {
 		MessageEventDefinition messageEventDefinition = new MessageEventDefinition();
-		messageEventDefinition.setId(uuidGenerator.requestUUID());
+		messageEventDefinition.setId(uidGenerator.requestUUID());
 		messageEventDefinition.setMessageRef(event.getReference());
 		
 		return messageEventDefinition;
@@ -265,7 +266,7 @@ public class GenericBpmnConversor {
 
 	private SignalEventDefinition createSignalEventDefinition(Event event) {
 		SignalEventDefinition signalEventDefinition = new SignalEventDefinition();
-		signalEventDefinition.setId(uuidGenerator.requestUUID());
+		signalEventDefinition.setId(uidGenerator.requestUUID());
 		signalEventDefinition.setSignalRef(event.getReference());
 		
 		return signalEventDefinition;
@@ -289,24 +290,24 @@ public class GenericBpmnConversor {
 	
 	private TimerEventDefinition createTimerEventDefinition(Event event) {
 		TimerEventDefinition timerEventDefinition = new TimerEventDefinition();
-		timerEventDefinition.setId(uuidGenerator.requestUUID());
+		timerEventDefinition.setId(uidGenerator.requestUUID());
 		if (event.getTimer().getType() == Timer.Type.CYCLE) {
 			TimeCycle timeCycle = new TimeCycle();
-			timeCycle.setId(uuidGenerator.requestUUID());
+			timeCycle.setId(uidGenerator.requestUUID());
 			timeCycle.setType(event.getTimer().getTimeType());
 			timeCycle.setTime(event.getTimer().getTime());
 			timerEventDefinition.setTimeCycle(timeCycle);
 		}
 		if (event.getTimer().getType() == Timer.Type.DURATION) {
 			TimeDuration timeDuration = new TimeDuration();
-			timeDuration.setId(uuidGenerator.requestUUID());
+			timeDuration.setId(uidGenerator.requestUUID());
 			timeDuration.setType(event.getTimer().getTimeType());
 			timeDuration.setTime(event.getTimer().getTime());
 			timerEventDefinition.setTimeDuration(timeDuration);
 		}
 		if (event.getTimer().getType() == Timer.Type.CYCLE) {
 			TimeDate timeDate = new TimeDate();
-			timeDate.setId(uuidGenerator.requestUUID());
+			timeDate.setId(uidGenerator.requestUUID());
 			timeDate.setType(event.getTimer().getTimeType());
 			timeDate.setTime(event.getTimer().getTime());
 			timerEventDefinition.setTimeDate(timeDate);
@@ -360,6 +361,15 @@ public class GenericBpmnConversor {
 
 	public void setBpmnProcess(BpmnProcess bpmnProcess) {
 		this.bpmnProcess = bpmnProcess;
+	}
+	
+
+	public UidGeneration getUidGenerator() {
+		return uidGenerator;
+	}
+
+	public void setUidGenerator(UidGeneration uidGenerator) {
+		this.uidGenerator = uidGenerator;
 	}
 
 }

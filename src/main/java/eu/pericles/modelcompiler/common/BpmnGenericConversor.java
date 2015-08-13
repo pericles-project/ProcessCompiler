@@ -32,14 +32,16 @@ public class BpmnGenericConversor {
 	private BpmnProcess bpmnProcess;
 	private Process genericProcess;
 	private Map<String,String> mapBpmnIDtoGenericUID;
+	private static UidGeneration uidGenerator;
 
-	public BpmnGenericConversor() {
-		init();
+	public BpmnGenericConversor(UidGeneration uidGenerator) {
+		init(uidGenerator);
 	}
 
-	private void init() {
+	private void init(UidGeneration uidGenerator) {
+		setUidGenerator(uidGenerator);
 		bpmnProcess = new BpmnProcess();
-		genericProcess = new Process();
+		genericProcess = (Process) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.PROCESS);
 		mapBpmnIDtoGenericUID = new HashMap<String,String>();
 	}
 
@@ -59,7 +61,7 @@ public class BpmnGenericConversor {
 	private void convertItems(BpmnProcess bpmnProcess, Process genericProcess) {
 		for (ItemDefinition itemDefinition : bpmnProcess.getItemDefinitions()) {
 
-			ExternalItem item = new ExternalItem();
+			ExternalItem item = (ExternalItem) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EXTERNAL_ITEM);
 			item.setType(ExternalItem.Type.ITEM);
 			genericProcess.addExternalItem(item);
 
@@ -71,7 +73,7 @@ public class BpmnGenericConversor {
 	private void convertMessages(BpmnProcess bpmnProcess, Process genericProcess) {
 		for (Message message : bpmnProcess.getMessages()) {
 
-			ExternalItem item = new ExternalItem();
+			ExternalItem item = (ExternalItem) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EXTERNAL_ITEM);
 			item.setType(ExternalItem.Type.MESSAGE);
 			item.setReference(mapBpmnIDtoGenericUID.get(message.getItemRef()));
 			genericProcess.addExternalItem(item);
@@ -97,7 +99,7 @@ public class BpmnGenericConversor {
 	private void convertVariables(BpmnProcess bpmnProcess, Process genericProcess) {
 		for (Property property : bpmnProcess.getProperties()) {
 
-			Variable variable = new Variable();
+			Variable variable = (Variable) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.VARIABLE);
 			variable.setType(Variable.Type.PROPERTY);
 			variable.setReference(mapBpmnIDtoGenericUID.get(property.getItemSubjectRef()));
 			genericProcess.addVariable(variable);
@@ -110,7 +112,7 @@ public class BpmnGenericConversor {
 	private void convertActivities(BpmnProcess bpmnProcess, Process genericProcess) {		
 		for (ScriptTask scriptTask : bpmnProcess.getScriptTasks()) {
 
-			Activity activity = new Activity();
+			Activity activity = (Activity) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.ACTIVITY);
 			activity.setName(scriptTask.getName());
 			activity.setType(Activity.Type.SCRIPT);
 			activity.setScript(scriptTask.getScript());
@@ -123,7 +125,7 @@ public class BpmnGenericConversor {
 	private void convertEvents(BpmnProcess bpmnProcess, Process genericProcess) {
 		for (StartEvent startEvent : bpmnProcess.getStartEvents()) {	
 
-			Event event = new Event();
+			Event event = (Event) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EVENT);
 			if (startEvent.getType() == StartEvent.Type.NONE) {
 				event.setType(Event.Type.NONE_START);
 			}
@@ -131,7 +133,7 @@ public class BpmnGenericConversor {
 				event.setType(Event.Type.SIGNAL_START);
 				event.setReference(mapBpmnIDtoGenericUID.get(startEvent.getSignalEventDefinition().getSignalRef()));
 				if (startEvent.hasDataAssociated()) {
-					Data data = new Data();
+					Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
 					data.setAssociation(mapBpmnIDtoGenericUID.get(startEvent.getDataAssociation().getTarget()));
 					event.setData(data);
 				}
@@ -140,7 +142,7 @@ public class BpmnGenericConversor {
 				event.setType(Event.Type.MESSAGE_START);
 				event.setReference(mapBpmnIDtoGenericUID.get(startEvent.getMessageEventDefinition().getMessageRef()));
 				if (startEvent.hasDataAssociated()) {
-					Data data = new Data();
+					Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
 					data.setAssociation(mapBpmnIDtoGenericUID.get(startEvent.getDataAssociation().getTarget()));
 					event.setData(data);
 				}
@@ -155,7 +157,7 @@ public class BpmnGenericConversor {
 		}
 		for (EndEvent endEvent : bpmnProcess.getEndEvents()) {
 
-			Event event = new Event();
+			Event event = (Event) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EVENT);
 			if (endEvent.getType() == EndEvent.Type.NONE) {
 				event.setType(Event.Type.NONE_END);
 			}
@@ -163,7 +165,7 @@ public class BpmnGenericConversor {
 				event.setType(Event.Type.SIGNAL_END);
 				event.setReference(mapBpmnIDtoGenericUID.get(endEvent.getSignalEventDefinition().getSignalRef()));
 				if (endEvent.hasDataAssociated()) {
-					Data data = new Data();
+					Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
 					data.setAssociation(mapBpmnIDtoGenericUID.get(endEvent.getDataAssociation().getTarget()));
 					event.setData(data);
 				}
@@ -172,7 +174,7 @@ public class BpmnGenericConversor {
 				event.setType(Event.Type.MESSAGE_END);
 				event.setReference(mapBpmnIDtoGenericUID.get(endEvent.getMessageEventDefinition().getMessageRef()));
 				if (endEvent.hasDataAssociated()) {
-					Data data = new Data();
+					Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
 					data.setAssociation(mapBpmnIDtoGenericUID.get(endEvent.getDataAssociation().getTarget()));
 					event.setData(data);
 				}
@@ -183,7 +185,7 @@ public class BpmnGenericConversor {
 		}
 		for (IntermediateCatchEvent catchEvent : bpmnProcess.getIntermediateCatchEvents()) {	
 
-			Event event = new Event();
+			Event event = (Event) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EVENT);
 			if (catchEvent.getType() == IntermediateCatchEvent.Type.NONE) {
 				event.setType(Event.Type.NONE_CATCH);
 			}
@@ -191,7 +193,7 @@ public class BpmnGenericConversor {
 				event.setType(Event.Type.SIGNAL_CATCH);
 				event.setReference(mapBpmnIDtoGenericUID.get(catchEvent.getSignalEventDefinition().getSignalRef()));
 				if (catchEvent.hasDataAssociated()) {
-					Data data = new Data();
+					Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
 					data.setAssociation(mapBpmnIDtoGenericUID.get(catchEvent.getDataAssociation().getTarget()));
 					event.setData(data);
 				}
@@ -200,7 +202,7 @@ public class BpmnGenericConversor {
 				event.setType(Event.Type.MESSAGE_CATCH);
 				event.setReference(mapBpmnIDtoGenericUID.get(catchEvent.getMessageEventDefinition().getMessageRef()));
 				if (catchEvent.hasDataAssociated()) {
-					Data data = new Data();
+					Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
 					data.setAssociation(mapBpmnIDtoGenericUID.get(catchEvent.getDataAssociation().getTarget()));
 					event.setData(data);
 				}
@@ -215,7 +217,7 @@ public class BpmnGenericConversor {
 		}
 		for (IntermediateThrowEvent throwEvent : bpmnProcess.getIntermediateThrowEvents()) {	
 
-			Event event = new Event();
+			Event event = (Event) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EVENT);
 			if (throwEvent.getType() == IntermediateThrowEvent.Type.NONE) {
 				event.setType(Event.Type.NONE_THROW);
 			}
@@ -223,7 +225,7 @@ public class BpmnGenericConversor {
 				event.setType(Event.Type.SIGNAL_THROW);
 				event.setReference(mapBpmnIDtoGenericUID.get(throwEvent.getSignalEventDefinition().getSignalRef()));
 				if (throwEvent.hasDataAssociated()) {
-					Data data = new Data();
+					Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
 					data.setAssociation(mapBpmnIDtoGenericUID.get(throwEvent.getDataAssociation().getTarget()));
 					event.setData(data);
 				}
@@ -232,7 +234,7 @@ public class BpmnGenericConversor {
 				event.setType(Event.Type.MESSAGE_THROW);
 				event.setReference(mapBpmnIDtoGenericUID.get(throwEvent.getMessageEventDefinition().getMessageRef()));
 				if (throwEvent.hasDataAssociated()) {
-					Data data = new Data();
+					Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
 					data.setAssociation(mapBpmnIDtoGenericUID.get(throwEvent.getDataAssociation().getTarget()));
 					event.setData(data);
 				}
@@ -246,7 +248,7 @@ public class BpmnGenericConversor {
 	private void convertGateways(BpmnProcess bpmnProcess, Process genericProcess) {
 		for (ParallelGateway parallelGateway : bpmnProcess.getParallelGateways()) {
 
-			Gateway gateway = new Gateway();
+			Gateway gateway = (Gateway) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.GATEWAY);
 			if (parallelGateway.getDirection().equals("Converging"))
 				gateway.setType(Gateway.Type.CONVERGING_PARALLEL);
 			else
@@ -261,7 +263,7 @@ public class BpmnGenericConversor {
 	private void convertFlows(BpmnProcess bpmnProcess, Process genericProcess) {
 		for (SequenceFlow sequenceFlow : bpmnProcess.getSequenceFlows()) {
 
-			Flow flow = new Flow();
+			Flow flow = (Flow) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.FLOW);
 			flow.setFrom(mapBpmnIDtoGenericUID.get(sequenceFlow.getSource()));
 			flow.setTo(mapBpmnIDtoGenericUID.get(sequenceFlow.getTarget()));
 			genericProcess.addFlow(flow);
@@ -273,7 +275,7 @@ public class BpmnGenericConversor {
 	private void convertSubprocesses(BpmnProcess bpmnProcess, Process genericProcess) {
 		for (Subprocess bpmnSubprocess : bpmnProcess.getSubprocesses()) {
 
-			Process genericSubprocess = new Process();			
+			Process genericSubprocess = (Process) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.PROCESS);
 			convertProcess(bpmnSubprocess, genericSubprocess);			
 			genericProcess.addSubprocess(genericSubprocess);
 
@@ -282,7 +284,7 @@ public class BpmnGenericConversor {
 	}
 
 	private Timer createGenericTimer(TimerEventDefinition timerEventDefinition) {
-		Timer timer = new Timer();
+		Timer timer = (Timer) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.TIMER);
 
 		if (timerEventDefinition.getTimeCycle() != null) {
 			timer.setType(Type.CYCLE);
@@ -326,6 +328,14 @@ public class BpmnGenericConversor {
 
 	public Map<String, String> getMapBpmnIDtoGenericUID() {
 		return mapBpmnIDtoGenericUID;
+	}
+
+	public static UidGeneration getUidGenerator() {
+		return uidGenerator;
+	}
+
+	public static void setUidGenerator(UidGeneration uidGenerator) {
+		BpmnGenericConversor.uidGenerator = uidGenerator;
 	}
 
 }
