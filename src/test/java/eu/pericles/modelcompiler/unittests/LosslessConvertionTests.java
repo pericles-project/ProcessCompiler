@@ -31,7 +31,7 @@ public class LosslessConvertionTests {
 		String inputFileName = path + "Input.bpmn2";
 		String testFileName = path + "GenericConversionTest.bpmn2";
 		String outputFileName = path + "GenericConversionOutput.bpmn2";
-		assertTrue(Utils.checkParseGenericConvertAndWrite(inputFileName, testFileName, outputFileName));
+		Utils.checkParseGenericConvertAndWrite(inputFileName, testFileName, outputFileName);
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class LosslessConvertionTests {
 		String inputFileName = path + "Input.bpmn2";
 		String testFileName = path + "BpmnConversionTest.bpmn2";
 		String outputFileName = path + "BpmnConversionOutput.bpmn2";
-		assertTrue(Utils.checkParseBpmnConvertAndWrite(inputFileName, testFileName, outputFileName));
+		Utils.checkParseBpmnConvertAndWrite(inputFileName, testFileName, outputFileName);
 	}
 
 	@Test
@@ -47,7 +47,7 @@ public class LosslessConvertionTests {
 		String inputFileName = path + "Input.bpmn2";
 		String testFileName = path + "JbpmParseTest.bpmn2";
 		String outputFileName = path + "JbpmParseOutput.bpmn2";
-		assertTrue(Utils.checkParseAndWrite(inputFileName, testFileName, outputFileName));
+		Utils.checkParseAndWrite(inputFileName, testFileName, outputFileName);
 	}
 
 }
