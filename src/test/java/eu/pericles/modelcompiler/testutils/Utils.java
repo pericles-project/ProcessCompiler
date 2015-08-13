@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
 
 import eu.pericles.modelcompiler.common.BpmnGenericConversor;
 import eu.pericles.modelcompiler.common.BpmnJbpmConversor;
@@ -15,37 +16,37 @@ import eu.pericles.modelcompiler.jbpm.JbpmFileWriter;
 
 public class Utils {
 	
-	public boolean checkParseAndWrite(String inputFileName, String testFileName, String outputFileName) {
+	public static boolean checkParseAndWrite(String inputFileName, String testFileName, String outputFileName) {
 		write(parse(inputFileName), outputFileName);
 
 		return fileContentEquals(outputFileName, testFileName);
 	}
 	
-	public boolean checkParseBpmnConvertAndWrite(String inputFileName, String testFileName, String outputFileName) {
+	public static boolean checkParseBpmnConvertAndWrite(String inputFileName, String testFileName, String outputFileName) {
 		write(convertJbpmBpmnJbpm(parse(inputFileName)), outputFileName);
 		
 		return fileContentEquals(outputFileName, testFileName);
 	}
 	
-	public boolean checkParseGenericConvertAndWrite(String inputFileName, String testFileName, String outputFileName) {
+	public static boolean checkParseGenericConvertAndWrite(String inputFileName, String testFileName, String outputFileName) {
 		write(convertJbpmBpmnGenericBpmnJbpm(parse(inputFileName)), outputFileName);
 		
 		return fileContentEquals(outputFileName, testFileName);
 	}
 	
-	private void write(JbpmFile jbpmFile, String outputFileName) {
+	public static void write(JbpmFile jbpmFile, String outputFileName) {
 		JbpmFileWriter jbpmFileWriter = new JbpmFileWriter();
 		jbpmFileWriter.write(jbpmFile, outputFileName);	
 	}
 	
-	private JbpmFile parse(String inputFileName) {
+	public static JbpmFile parse(String inputFileName) {
 		JbpmFileParser jbpmFileParser = new JbpmFileParser();
 		jbpmFileParser.parse(inputFileName);
 
 		return jbpmFileParser.getJbpmFile();
 	}
 	
-	private JbpmFile convertJbpmBpmnJbpm(JbpmFile jbpmFile) {
+	public static JbpmFile convertJbpmBpmnJbpm(JbpmFile jbpmFile) {
 		JbpmBpmnConversor jbpmBpmnConversor = new JbpmBpmnConversor();
 		jbpmBpmnConversor.convert(jbpmFile);
 		BpmnJbpmConversor bpmnJbpmConversor = new BpmnJbpmConversor();
@@ -54,7 +55,7 @@ public class Utils {
 		return bpmnJbpmConversor.getJbpmFile();
 	}
 	
-	private JbpmFile convertJbpmBpmnGenericBpmnJbpm(JbpmFile jbpmFile) {
+	public static JbpmFile convertJbpmBpmnGenericBpmnJbpm(JbpmFile jbpmFile) {
 		JbpmBpmnConversor jbpmBpmnConversor = new JbpmBpmnConversor();
 		BpmnGenericConversor bpmnGenericConversor = new BpmnGenericConversor();
 		GenericBpmnConversor genericBpmnConversor = new GenericBpmnConversor();
@@ -68,17 +69,16 @@ public class Utils {
 		return bpmnJbpmConversor.getJbpmFile(); // return jBPM
 	}
 	
-	private boolean fileContentEquals(String outputFileName, String testFileName) {
-		boolean result = false;
-		File outputFile = new File(outputFileName);
-		File testFile = new File(testFileName);
+	public static boolean fileContentEquals(String outputFileName, String testFileName) {
 		try {
-			result = FileUtils.contentEquals(outputFile, testFile);
+			String a = FileUtils.readFileToString(new File(outputFileName));
+			String b = FileUtils.readFileToString(new File(testFileName));
+			Assert.assertEquals(a,b);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Assert.fail(e.getMessage());
 		}
-		
-		return result;
+
+		return true;
 	}
 	
 }

@@ -43,13 +43,12 @@ public class BpmnGenericConversionTests {
 		parseConvertAndWrite("src/test/resources/timerevents/");
 	}
 
-
 	private void parseConvertAndWrite(String path) {
 		String inputFileName = path + "Input.bpmn2";
 		String testFileName = path + "GenericConversionTest.bpmn2";
 		String outputFileName = path + "GenericConversionOutput.bpmn2";
 
-		assertTrue(util.checkParseGenericConvertAndWrite(inputFileName, testFileName, outputFileName));
+		assertTrue(Utils.checkParseGenericConvertAndWrite(inputFileName, testFileName, outputFileName));
 	}
 
 }
