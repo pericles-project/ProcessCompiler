@@ -3,8 +3,13 @@ package eu.pericles.modelcompiler.testutils;
 import java.io.File;
 import java.io.IOException;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.TransformerException;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
+import org.xml.sax.SAXException;
 
 import eu.pericles.modelcompiler.common.BpmnGenericConversor;
 import eu.pericles.modelcompiler.common.BpmnJbpmConversor;
@@ -87,6 +92,7 @@ public class Utils {
 			String a = FileUtils.readFileToString(new File(outputFileName));
 			String b = FileUtils.readFileToString(new File(testFileName));
 			Assert.assertEquals(a, b);
+			XMLCompare.assertEquals(a, b);
 		} catch (IOException e) {
 			Assert.fail(e.getMessage());
 		}
