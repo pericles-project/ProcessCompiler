@@ -3,20 +3,14 @@ package eu.pericles.modelcompiler.testutils;
 import java.io.File;
 import java.io.IOException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.TransformerException;
-
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
-import org.xml.sax.SAXException;
 
 import eu.pericles.modelcompiler.common.BpmnGenericConversor;
 import eu.pericles.modelcompiler.common.BpmnJbpmConversor;
 import eu.pericles.modelcompiler.common.GenericBpmnConversor;
 import eu.pericles.modelcompiler.common.JbpmBpmnConversor;
 import eu.pericles.modelcompiler.common.RandomUidGenerator;
-import eu.pericles.modelcompiler.common.UidGeneration;
 import eu.pericles.modelcompiler.jbpm.JbpmFile;
 import eu.pericles.modelcompiler.jbpm.JbpmFileParser;
 import eu.pericles.modelcompiler.jbpm.JbpmFileWriter;
@@ -67,24 +61,11 @@ public class Utils {
 		BpmnGenericConversor bpmnGenericConversor = new BpmnGenericConversor(new RandomUidGenerator());
 		GenericBpmnConversor genericBpmnConversor = new GenericBpmnConversor(new RandomUidGenerator());
 		BpmnJbpmConversor bpmnJbpmConversor = new BpmnJbpmConversor(new RandomUidGenerator());
-		jbpmBpmnConversor.convert(jbpmFile); // from jBPM to BPMN
-		bpmnGenericConversor.convert(jbpmBpmnConversor.getBpmnProcess()); // from
-																			// BPMN
-																			// to
-																			// generic
-		// System.out.println("Generic Process: " +
-		// bpmnGenericConversor.getGenericProcess().getUid() + " " +
-		// bpmnGenericConversor.getGenericProcess().getActivities().get(0).getScript());
-		genericBpmnConversor.convert(bpmnGenericConversor.getGenericProcess()); // from
-																				// generic
-																				// to
-																				// BPMN
-		bpmnJbpmConversor.convert(genericBpmnConversor.getBpmnProcess()); // from
-																			// BPMN
-																			// to
-																			// jBPM
-
-		return bpmnJbpmConversor.getJbpmFile(); // return jBPM
+		jbpmBpmnConversor.convert(jbpmFile);
+		bpmnGenericConversor.convert(jbpmBpmnConversor.getBpmnProcess());
+		genericBpmnConversor.convert(bpmnGenericConversor.getGenericProcess()); 
+		bpmnJbpmConversor.convert(genericBpmnConversor.getBpmnProcess());
+		return bpmnJbpmConversor.getJbpmFile();
 	}
 
 	public static boolean fileContentEquals(String outputFileName, String testFileName) {
