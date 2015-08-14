@@ -8,5 +8,9 @@ public class RandomUidGenerator implements UidGeneration {
 	public String requestUUID() {
 		return UUID.randomUUID().toString();
 	}
+	
+	public boolean isValidStringFormat(String uid) {
+		return uid.matches("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[34][0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}");
+	}
 
 }
