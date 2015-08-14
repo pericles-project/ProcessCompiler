@@ -2,6 +2,7 @@ package eu.pericles.modelcompiler.common;
 
 import eu.pericles.modelcompiler.bpmn.BpmnProcess;
 import eu.pericles.modelcompiler.bpmn.Activities.ScriptTask;
+import eu.pericles.modelcompiler.bpmn.Activities.Subprocess;
 import eu.pericles.modelcompiler.bpmn.Data.DataInput;
 import eu.pericles.modelcompiler.bpmn.Data.DataInputAssociation;
 import eu.pericles.modelcompiler.bpmn.Data.DataOutput;
@@ -29,20 +30,20 @@ public class GenericBpmnConversor {
 	private Process genericProcess;
 	private BpmnProcess bpmnProcess;
 	private UidGeneration uidGenerator;
-	
+
 	public GenericBpmnConversor(UidGeneration uidGenerator) {
 		init(uidGenerator);
 	}
-	
+
 	private void init(UidGeneration uidGenerator) {
 		setUidGenerator(uidGenerator);
 		genericProcess = (Process) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.PROCESS);
 		bpmnProcess = new BpmnProcess();
 	}
-	
+
 	public void convert(Process genericProcess) {
 		setGenericProcess(genericProcess);
-		convertProcess(getGenericProcess(),getBpmnProcess());
+		convertProcess(getGenericProcess(), getBpmnProcess());
 	}
 
 	private void convertProcess(Process genericProcess, BpmnProcess bpmnProcess) {
@@ -56,41 +57,41 @@ public class GenericBpmnConversor {
 		convertGateways(genericProcess, bpmnProcess);
 		convertSubprocesses(genericProcess, bpmnProcess);
 		convertFlows(genericProcess, bpmnProcess);
-		
+
 	}
 
-	//---- Convert External Items ----// 
-	
+	// ---- Convert External Items ----//
+
 	private void convertExternalItems(Process genericProcess, BpmnProcess bpmnProcess) {
-		
-	}
-	
-	//---- Convert Variables ----// 
-	
-	private void convertVariables(Process genericProcess, BpmnProcess bpmnProcess) {
-		
+
 	}
 
-	//---- Convert Activities ----// 
-	
+	// ---- Convert Variables ----//
+
+	private void convertVariables(Process genericProcess, BpmnProcess bpmnProcess) {
+
+	}
+
+	// ---- Convert Activities ----//
+
 	private void convertActivities(Process genericProcess, BpmnProcess bpmnProcess) {
 		for (Activity activity : genericProcess.getActivities()) {
-			if (activity.getType() == Activity.Type.SCRIPT) 
+			if (activity.getType() == Activity.Type.SCRIPT)
 				bpmnProcess.getScriptTasks().add(createScriptTask(activity));
 		}
 	}
-	
+
 	private ScriptTask createScriptTask(Activity activity) {
 		ScriptTask scriptTask = new ScriptTask();
 		scriptTask.setId(activity.getUid());
 		scriptTask.setName(activity.getName());
 		scriptTask.setScript(activity.getScript());
-		
+
 		return scriptTask;
 	}
 
-	//---- Convert Events ----// 
-	
+	// ---- Convert Events ----//
+
 	private void convertEvents(Process genericProcess, BpmnProcess bpmnProcess) {
 		for (Event event : genericProcess.getEvents()) {
 			if (event.getType() == Event.Type.NONE_START)
@@ -119,23 +120,23 @@ public class GenericBpmnConversor {
 				bpmnProcess.getIntermediateCatchEvents().add(createTimerCatchEvent(event));
 		}
 	}
-	
+
 	private StartEvent createNoneStartEvent(Event event) {
 		StartEvent startEvent = new StartEvent();
 		startEvent.setId(event.getUid());
 		return startEvent;
 	}
-	
+
 	private EndEvent createNoneEndEvent(Event event) {
 		EndEvent endEvent = new EndEvent();
 		endEvent.setId(event.getUid());
 		return endEvent;
 	}
-	
+
 	private StartEvent createMessageStartEvent(Event event) {
 		StartEvent startEvent = new StartEvent();
 		startEvent.setId(event.getUid());
-		
+
 		DataOutput dataOutput = new DataOutput();
 		dataOutput.setId(event.getData().getUid());
 		DataOutputAssociation dataOutputAssociation = new DataOutputAssociation();
@@ -145,20 +146,20 @@ public class GenericBpmnConversor {
 		OutputSet outputSet = new OutputSet();
 		outputSet.setId(uidGenerator.requestUUID());
 		outputSet.setReference(dataOutput.getId());
-		
+
 		startEvent.setData(dataOutput);
 		startEvent.setDataAssociation(dataOutputAssociation);
 		startEvent.setDataSet(outputSet);
-		
+
 		startEvent.setMessageEventDefinition(createMessageEventDefinition(event));
-		
+
 		return startEvent;
 	}
 
 	private IntermediateCatchEvent createMessageCatchEvent(Event event) {
 		IntermediateCatchEvent intermediateCatchEvent = new IntermediateCatchEvent();
 		intermediateCatchEvent.setId(event.getUid());
-		
+
 		DataOutput dataOutput = new DataOutput();
 		dataOutput.setId(event.getData().getUid());
 		DataOutputAssociation dataOutputAssociation = new DataOutputAssociation();
@@ -168,20 +169,20 @@ public class GenericBpmnConversor {
 		OutputSet outputSet = new OutputSet();
 		outputSet.setId(uidGenerator.requestUUID());
 		outputSet.setReference(dataOutput.getId());
-		
+
 		intermediateCatchEvent.setData(dataOutput);
 		intermediateCatchEvent.setDataAssociation(dataOutputAssociation);
 		intermediateCatchEvent.setDataSet(outputSet);
-		
+
 		intermediateCatchEvent.setMessageEventDefinition(createMessageEventDefinition(event));
-		
+
 		return intermediateCatchEvent;
 	}
 
 	private IntermediateThrowEvent createMessageThrowEvent(Event event) {
 		IntermediateThrowEvent intermediateThrowEvent = new IntermediateThrowEvent();
 		intermediateThrowEvent.setId(event.getUid());
-		
+
 		DataInput dataInput = new DataInput();
 		dataInput.setId(event.getData().getUid());
 		DataInputAssociation dataInputAssociation = new DataInputAssociation();
@@ -191,20 +192,20 @@ public class GenericBpmnConversor {
 		InputSet inputSet = new InputSet();
 		inputSet.setId(uidGenerator.requestUUID());
 		inputSet.setReference(dataInput.getId());
-		
+
 		intermediateThrowEvent.setData(dataInput);
 		intermediateThrowEvent.setDataAssociation(dataInputAssociation);
 		intermediateThrowEvent.setDataSet(inputSet);
-		
+
 		intermediateThrowEvent.setMessageEventDefinition(createMessageEventDefinition(event));
-		
+
 		return intermediateThrowEvent;
 	}
 
 	private EndEvent createMessageEndEvent(Event event) {
 		EndEvent endEvent = new EndEvent();
 		endEvent.setId(event.getUid());
-		
+
 		DataInput dataInput = new DataInput();
 		dataInput.setId(event.getData().getUid());
 		DataInputAssociation dataInputAssociation = new DataInputAssociation();
@@ -214,13 +215,13 @@ public class GenericBpmnConversor {
 		InputSet inputSet = new InputSet();
 		inputSet.setId(uidGenerator.requestUUID());
 		inputSet.setReference(dataInput.getId());
-		
+
 		endEvent.setData(dataInput);
 		endEvent.setDataAssociation(dataInputAssociation);
 		endEvent.setDataSet(inputSet);
-		
+
 		endEvent.setMessageEventDefinition(createMessageEventDefinition(event));
-		
+
 		return endEvent;
 	}
 
@@ -228,7 +229,7 @@ public class GenericBpmnConversor {
 		MessageEventDefinition messageEventDefinition = new MessageEventDefinition();
 		messageEventDefinition.setId(uidGenerator.requestUUID());
 		messageEventDefinition.setMessageRef(event.getReference());
-		
+
 		return messageEventDefinition;
 	}
 
@@ -236,7 +237,7 @@ public class GenericBpmnConversor {
 		StartEvent startEvent = new StartEvent();
 		startEvent.setId(event.getUid());
 		startEvent.setSignalEventDefinition(createSignalEventDefinition(event));
-		
+
 		return startEvent;
 	}
 
@@ -244,7 +245,7 @@ public class GenericBpmnConversor {
 		IntermediateCatchEvent intermediateCatchEvent = new IntermediateCatchEvent();
 		intermediateCatchEvent.setId(event.getUid());
 		intermediateCatchEvent.setSignalEventDefinition(createSignalEventDefinition(event));
-		
+
 		return intermediateCatchEvent;
 	}
 
@@ -252,7 +253,7 @@ public class GenericBpmnConversor {
 		IntermediateThrowEvent intermediateThrowEvent = new IntermediateThrowEvent();
 		intermediateThrowEvent.setId(event.getUid());
 		intermediateThrowEvent.setSignalEventDefinition(createSignalEventDefinition(event));
-		
+
 		return intermediateThrowEvent;
 	}
 
@@ -260,7 +261,7 @@ public class GenericBpmnConversor {
 		EndEvent endEvent = new EndEvent();
 		endEvent.setId(event.getUid());
 		endEvent.setSignalEventDefinition(createSignalEventDefinition(event));
-		
+
 		return endEvent;
 	}
 
@@ -268,7 +269,7 @@ public class GenericBpmnConversor {
 		SignalEventDefinition signalEventDefinition = new SignalEventDefinition();
 		signalEventDefinition.setId(uidGenerator.requestUUID());
 		signalEventDefinition.setSignalRef(event.getReference());
-		
+
 		return signalEventDefinition;
 	}
 
@@ -276,7 +277,7 @@ public class GenericBpmnConversor {
 		StartEvent startEvent = new StartEvent();
 		startEvent.setId(event.getUid());
 		startEvent.setTimerEventDefinition(createTimerEventDefinition(event));
-		
+
 		return startEvent;
 	}
 
@@ -284,10 +285,10 @@ public class GenericBpmnConversor {
 		IntermediateCatchEvent intermediateCatchEvent = new IntermediateCatchEvent();
 		intermediateCatchEvent.setId(event.getUid());
 		intermediateCatchEvent.setTimerEventDefinition(createTimerEventDefinition(event));
-		
+
 		return intermediateCatchEvent;
 	}
-	
+
 	private TimerEventDefinition createTimerEventDefinition(Event event) {
 		TimerEventDefinition timerEventDefinition = new TimerEventDefinition();
 		timerEventDefinition.setId(uidGenerator.requestUUID());
@@ -315,21 +316,48 @@ public class GenericBpmnConversor {
 
 		return timerEventDefinition;
 	}
-	
-	//---- Convert Gateways ----// 
-	
+
+	// ---- Convert Gateways ----//
+
 	private void convertGateways(Process genericProcess, BpmnProcess bpmnProcess) {
-		
+
 	}
 
-	//---- Convert Subprocesses ----// 
-	
+	// ---- Convert Subprocesses ----//
+
 	private void convertSubprocesses(Process genericProcess, BpmnProcess bpmnProcess) {
-		
+		for (Process subprocess : genericProcess.getSubprocesses()) {
+			bpmnProcess.getSubprocesses().add(createSubprocess(subprocess));
+			convertSubprocess(genericProcess, bpmnProcess);
+		}
 	}
 
-	//---- Convert Flows ----// 
-	
+	private Subprocess createSubprocess(Process genericSubprocess) {
+		Subprocess bpmnSubprocess = new Subprocess();
+		bpmnSubprocess.setId(genericSubprocess.getUid());
+		bpmnSubprocess.setName(genericSubprocess.getName());
+		
+		convertActivities(genericSubprocess, bpmnSubprocess);
+		convertEvents(genericSubprocess, bpmnSubprocess);
+		convertGateways(genericSubprocess, bpmnSubprocess);
+		convertSubprocesses(genericSubprocess, bpmnSubprocess);
+		convertFlows(genericSubprocess, bpmnSubprocess);
+		
+		return bpmnSubprocess;
+	}
+
+	private void convertSubprocess(Process genericProcess, BpmnProcess bpmnProcess) {
+		bpmnProcess.setId(genericProcess.getSource());
+		bpmnProcess.setName(genericProcess.getName());
+		bpmnProcess.setType("Public");
+		convertExternalItems(genericProcess, bpmnProcess);
+		convertVariables(genericProcess, bpmnProcess);
+		
+
+	}
+
+	// ---- Convert Flows ----//
+
 	private void convertFlows(Process genericProcess, BpmnProcess bpmnProcess) {
 		for (Flow flow : genericProcess.getFlows()) {
 			bpmnProcess.getSequenceFlows().add(createSequenceFlow(flow));
@@ -341,11 +369,11 @@ public class GenericBpmnConversor {
 		sequenceFlow.setId(flow.getUid());
 		sequenceFlow.setSource(flow.getFrom());
 		sequenceFlow.setTarget(flow.getTo());
-		
+
 		return sequenceFlow;
 	}
 
-	//---- Getters and setters ----// 
+	// ---- Getters and setters ----//
 
 	public Process getGenericProcess() {
 		return genericProcess;
@@ -362,7 +390,6 @@ public class GenericBpmnConversor {
 	public void setBpmnProcess(BpmnProcess bpmnProcess) {
 		this.bpmnProcess = bpmnProcess;
 	}
-	
 
 	public UidGeneration getUidGenerator() {
 		return uidGenerator;

@@ -27,7 +27,7 @@ public class LosslessConvertionTests {
 	@Test
 	public void parseGenericConvertAndWrite() {
 		String inputFileName = path + "Input.bpmn2";
-		String testFileName = path + "GenericConversionTest.bpmn2";
+		String testFileName = path + "Test.bpmn2";
 		String outputFileName = path + "GenericConversionOutput.bpmn2";
 		Utils.checkParseGenericConvertAndWrite(inputFileName, testFileName, outputFileName);
 	}
@@ -35,7 +35,7 @@ public class LosslessConvertionTests {
 	@Test
 	public void parseBpmnConvertAndWrite() {
 		String inputFileName = path + "Input.bpmn2";
-		String testFileName = path + "BpmnConversionTest.bpmn2";
+		String testFileName = path + "Test.bpmn2";
 		String outputFileName = path + "BpmnConversionOutput.bpmn2";
 		Utils.checkParseBpmnConvertAndWrite(inputFileName, testFileName, outputFileName);
 	}
@@ -43,7 +43,7 @@ public class LosslessConvertionTests {
 	@Test
 	public void parseAndWrite() {
 		String inputFileName = path + "Input.bpmn2";
-		String testFileName = path + "JbpmParseTest.bpmn2";
+		String testFileName = path + "Test.bpmn2";
 		String outputFileName = path + "JbpmParseOutput.bpmn2";
 		Utils.checkParseAndWrite(inputFileName, testFileName, outputFileName);
 	}
