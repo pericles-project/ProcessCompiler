@@ -1,7 +1,5 @@
 package eu.pericles.modelcompiler.unittests;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.Arrays;
 import java.util.Collection;
 
