@@ -20,11 +20,6 @@ public class JbpmBpmnConversor {
 	public void convert(JbpmFile jbpmFile) {		
 		setJbpmFile(jbpmFile);
 		setBpmnProcess(jbpmFile.getBpmnProcess());
-		
-		/* When reading a process from a bpmn file with DOM, those lists of elements that are not in the file remain 
-		 * pointing to NULL. With checkAndComplete(), those lists are created as empty lists.
-		 */
-		getBpmnProcess().checkAndComplete();
 
 		/* Add lists of external variables: item definitions, messages, etc. */
 		addExternalVariablesToBpmnProcess();

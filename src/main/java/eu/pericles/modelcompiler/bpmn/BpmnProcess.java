@@ -28,82 +28,30 @@ public class BpmnProcess {
 	@XStreamAsAttribute
 	@XStreamAlias("processType")
 	private String type;
+
 	@XStreamImplicit
-	private List<Property> properties;
+	private List<Property> properties = new ArrayList<>();
 	@XStreamImplicit
-	private List<StartEvent> startEvents;
+	private List<StartEvent> startEvents = new ArrayList<>();
 	@XStreamImplicit
-	private List<EndEvent> endEvents;
+	private List<EndEvent> endEvents = new ArrayList<>();
 	@XStreamImplicit
-	private List<IntermediateCatchEvent> intermediateCatchEvents;
+	private List<IntermediateCatchEvent> intermediateCatchEvents = new ArrayList<>();
 	@XStreamImplicit
-	private List<IntermediateThrowEvent> intermediateThrowEvents;
+	private List<IntermediateThrowEvent> intermediateThrowEvents = new ArrayList<>();
 	@XStreamImplicit
-	private List<ScriptTask> scriptTasks;
+	private List<ScriptTask> scriptTasks = new ArrayList<ScriptTask>();
 	@XStreamImplicit
-	private List<ParallelGateway> parallelGateways;
+	private List<ParallelGateway> parallelGateways = new ArrayList<>();
 	@XStreamImplicit
-	private List<SequenceFlow> sequenceFlows;
+	private List<SequenceFlow> sequenceFlows = new ArrayList<>();
 	@XStreamImplicit
-	private List<Subprocess> subprocesses;
+	private List<Subprocess> subprocesses = new ArrayList<>();
 	
 	private List<Message> messages;
 	private List<ItemDefinition> itemDefinitions;
 	
 	public BpmnProcess() {
-		init();		
-	}
-	
-	private void init() {
-		properties = new ArrayList<Property>();
-		startEvents = new ArrayList<StartEvent>();
-		endEvents = new ArrayList<EndEvent>();
-		intermediateCatchEvents = new ArrayList<IntermediateCatchEvent>();
-		intermediateThrowEvents = new ArrayList<IntermediateThrowEvent>();
-		scriptTasks = new ArrayList<ScriptTask>();
-		parallelGateways = new ArrayList<ParallelGateway>();
-		sequenceFlows = new ArrayList<SequenceFlow>();
-		subprocesses = new ArrayList<Subprocess>();
-	}
-	
-	/** 
-	 * Check if there is any list of bpmn elements pointing to null. 
-	 * If so, create the corresponding empty list.
-	 */
-	public void checkAndComplete() {
-		
-		if (getProperties() == null)
-			setProperties(new ArrayList<Property>());
-		
-		if (getStartEvents() == null)
-			setStartEvents(new ArrayList<StartEvent>());
-		
-		if (getEndEvents() == null)
-			setEndEvents(new ArrayList<EndEvent>());
-		
-		if (getIntermediateCatchEvents() == null)
-			setIntermediateCatchEvents(new ArrayList<IntermediateCatchEvent>());
-		
-		if (getIntermediateThrowEvents() == null)
-			setIntermediateThrowEvents(new ArrayList<IntermediateThrowEvent>());
-		
-		if (getScriptTasks() == null)
-			setScriptTasks(new ArrayList<ScriptTask>());
-		
-		if (getParallelGateways() == null)
-			setParallelGateways(new ArrayList<ParallelGateway>());
-		
-		if (getSequenceFlows() == null)
-			setSequenceFlows(new ArrayList<SequenceFlow>());
-		
-		if (getSubprocesses() == null) {
-			setSubprocesses(new ArrayList<Subprocess>());
-		}
-		else {
-			for (Subprocess subprocess : getSubprocesses()) {
-				subprocess.checkAndComplete();			
-			}
-		}
 	}
 	
 	//---- Getters and setters ----// 
