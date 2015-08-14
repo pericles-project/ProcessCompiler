@@ -13,6 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import org.junit.Assert;
+import org.w3c.dom.CharacterData;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -67,9 +68,9 @@ public class XMLCompare {
 		try {
 			while (left != null) {
 				Assert.assertNotNull(msg("Missing node"), right);
+				Assert.assertEquals(msg("Different element"), left.getNodeName(), right.getNodeName());
 
 				if (left instanceof Element) {
-					Assert.assertEquals(msg("Different element"), left.getNodeName(), right.getNodeName());
 					Node aa, bb;
 					for (int i = 0; i < left.getAttributes().getLength(); i++) {
 						aa = left.getAttributes().item(i);
@@ -78,8 +79,9 @@ public class XMLCompare {
 						compareAttribute(aa.getNodeName(), aa.getNodeValue(),
 								bb.getNodeValue());
 					}
+				} else if (left instanceof CharacterData) {
+					Assert.assertEquals(msg("Value difference"), left.getNodeValue().trim(), right.getNodeValue().trim());
 				} else {
-					Assert.assertEquals(msg("Different element"), left.getNodeName(), right.getNodeName());
 					Assert.assertEquals(msg("Value difference"), left.getNodeValue(), right.getNodeValue());
 				}
 
