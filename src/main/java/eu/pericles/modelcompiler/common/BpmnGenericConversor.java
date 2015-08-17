@@ -167,143 +167,150 @@ public class BpmnGenericConversor {
 	private void convertEvents(BpmnProcess bpmnProcess, Process genericProcess) {
 		if (bpmnProcess.hasStartEvents()) {
 			for (StartEvent startEvent : bpmnProcess.getStartEvents()) {
-				
-
-				Event event = (Event) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EVENT);
-				if (startEvent.getType() == StartEvent.Type.NONE) {
-					event.setType(Event.Type.NONE_START);
-				}
-				if (startEvent.getType() == StartEvent.Type.SIGNAL) {
-					event.setType(Event.Type.SIGNAL_START);
-					event.setReference(idUidMap.get(startEvent.getSignalEventDefinition().getSignalRef()));
-					if (startEvent.hasDataAssociated()) {
-						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(idUidMap.get(startEvent.getData().getItemSubjectRef()));
-						data.setAssociation(idUidMap.get(startEvent.getDataAssociation().getTarget()));
-						event.setData(data);
-					}
-				}
-				if (startEvent.getType() == StartEvent.Type.MESSAGE) {
-					event.setType(Event.Type.MESSAGE_START);
-					event.setReference(idUidMap.get(startEvent.getMessageEventDefinition().getMessageRef()));
-					if (startEvent.hasDataAssociated()) {
-						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(idUidMap.get(startEvent.getData().getItemSubjectRef()));
-						data.setAssociation(idUidMap.get(startEvent.getDataAssociation().getTarget()));
-						event.setData(data);
-					}
-				}
-				if (startEvent.getType() == StartEvent.Type.TIMER) {
-					event.setType(Event.Type.TIMER_START);
-					event.setTimer(createGenericTimer(startEvent.getTimerEventDefinition()));
-				}
-				genericProcess.addEvent(event);
-
-				addPairIdUidToMap(startEvent.getId(), event.getUid());
+				genericProcess.addEvent(createStartEvent(startEvent));
 			}
 		}
 		if (bpmnProcess.hasEndEvents()) {
 			for (EndEvent endEvent : bpmnProcess.getEndEvents()) {
-
-				Event event = (Event) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EVENT);
-				if (endEvent.getType() == EndEvent.Type.NONE) {
-					event.setType(Event.Type.NONE_END);
-				}
-				if (endEvent.getType() == EndEvent.Type.SIGNAL) {
-					event.setType(Event.Type.SIGNAL_END);
-					event.setReference(idUidMap.get(endEvent.getSignalEventDefinition().getSignalRef()));
-					if (endEvent.hasDataAssociated()) {
-						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(idUidMap.get(endEvent.getData().getItemSubjectRef()));
-						data.setAssociation(idUidMap.get(endEvent.getDataAssociation().getTarget()));
-						event.setData(data);
-					}
-				}
-				if (endEvent.getType() == EndEvent.Type.MESSAGE) {
-					event.setType(Event.Type.MESSAGE_END);
-					event.setReference(idUidMap.get(endEvent.getMessageEventDefinition().getMessageRef()));
-					if (endEvent.hasDataAssociated()) {
-						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(idUidMap.get(endEvent.getData().getItemSubjectRef()));
-						data.setAssociation(idUidMap.get(endEvent.getDataAssociation().getTarget()));
-						event.setData(data);
-					}
-				}
-				genericProcess.addEvent(event);
-
-				addPairIdUidToMap(endEvent.getId(), event.getUid());
+				genericProcess.addEvent(createEndEvent(endEvent));
 			}
 		}
 		if (bpmnProcess.hasIntermediateCatchEvents()) {
 			for (IntermediateCatchEvent catchEvent : bpmnProcess.getIntermediateCatchEvents()) {
-
-				Event event = (Event) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EVENT);
-				if (catchEvent.getType() == IntermediateCatchEvent.Type.NONE) {
-					event.setType(Event.Type.NONE_CATCH);
-				}
-				if (catchEvent.getType() == IntermediateCatchEvent.Type.SIGNAL) {
-					event.setType(Event.Type.SIGNAL_CATCH);
-					event.setReference(idUidMap.get(catchEvent.getSignalEventDefinition().getSignalRef()));
-					if (catchEvent.hasDataAssociated()) {
-						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(idUidMap.get(catchEvent.getData().getItemSubjectRef()));
-						data.setAssociation(idUidMap.get(catchEvent.getDataAssociation().getTarget()));
-						event.setData(data);
-					}
-				}
-				if (catchEvent.getType() == IntermediateCatchEvent.Type.MESSAGE) {
-					event.setType(Event.Type.MESSAGE_CATCH);
-					event.setReference(idUidMap.get(catchEvent.getMessageEventDefinition().getMessageRef()));
-					if (catchEvent.hasDataAssociated()) {
-						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(idUidMap.get(catchEvent.getData().getItemSubjectRef()));
-						data.setAssociation(idUidMap.get(catchEvent.getDataAssociation().getTarget()));
-						event.setData(data);
-					}
-				}
-				if (catchEvent.getType() == IntermediateCatchEvent.Type.TIMER) {
-					event.setType(Event.Type.TIMER_CATCH);
-					event.setTimer(createGenericTimer(catchEvent.getTimerEventDefinition()));
-				}
-				genericProcess.addEvent(event);
-
-				addPairIdUidToMap(catchEvent.getId(), event.getUid());
+				genericProcess.addEvent(createCatchEvent(catchEvent));
 			}
 		}
 		if (bpmnProcess.hasIntermediateThrowEvents()) {
 			for (IntermediateThrowEvent throwEvent : bpmnProcess.getIntermediateThrowEvents()) {
-
-				Event event = (Event) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EVENT);
-				if (throwEvent.getType() == IntermediateThrowEvent.Type.NONE) {
-					event.setType(Event.Type.NONE_THROW);
-				}
-				if (throwEvent.getType() == IntermediateThrowEvent.Type.SIGNAL) {
-					event.setType(Event.Type.SIGNAL_THROW);
-					event.setReference(idUidMap.get(throwEvent.getSignalEventDefinition().getSignalRef()));
-					if (throwEvent.hasDataAssociated()) {
-						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(idUidMap.get(throwEvent.getData().getItemSubjectRef()));
-						data.setAssociation(idUidMap.get(throwEvent.getDataAssociation().getTarget()));
-						event.setData(data);
-					}
-				}
-				if (throwEvent.getType() == IntermediateThrowEvent.Type.MESSAGE) {
-					event.setType(Event.Type.MESSAGE_THROW);
-					event.setReference(idUidMap.get(throwEvent.getMessageEventDefinition().getMessageRef()));
-					if (throwEvent.hasDataAssociated()) {
-						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(idUidMap.get(throwEvent.getData().getItemSubjectRef()));
-						data.setAssociation(idUidMap.get(throwEvent.getDataAssociation().getTarget()));
-						event.setData(data);
-					}
-				}
-				genericProcess.addEvent(event);
-
-				addPairIdUidToMap(throwEvent.getId(), event.getUid());
+				genericProcess.addEvent(createThrowEvent(throwEvent));
 			}
 		}
 	}
 	
+
+	private Event createStartEvent(StartEvent startEvent) {
+		Event event = (Event) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EVENT);
+		switch (startEvent.getType()) {
+		case NONE:
+			event.setType(Event.Type.NONE_START);
+			break;
+		case SIGNAL:
+			event.setType(Event.Type.SIGNAL_START);
+			event.setReference(getIdUidMap().get(startEvent.getSignalEventDefinition().getSignalRef()));
+			break;
+		case MESSAGE:
+			event.setType(Event.Type.MESSAGE_START);
+			event.setReference(getIdUidMap().get(startEvent.getMessageEventDefinition().getMessageRef()));
+			break;
+		case TIMER:
+			event.setType(Event.Type.TIMER_START);
+			event.setTimer(createGenericTimer(startEvent.getTimerEventDefinition()));
+			break;
+		default:
+			//TODO throw here an exception
+			break;
+		}
+			
+		if (startEvent.hasDataAssociated()) 
+			event.setData(createEventData(getIdUidMap().get(startEvent.getData().getItemSubjectRef()), getIdUidMap().get(startEvent.getDataAssociation().getTarget())));
+		
+		addPairIdUidToMap(startEvent.getId(), event.getUid());
+		
+		return event;
+	}
+	
+	private Event createCatchEvent(IntermediateCatchEvent catchEvent) {
+		Event event = (Event) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EVENT);
+		switch (catchEvent.getType()) {
+		case NONE:
+			event.setType(Event.Type.NONE_CATCH);
+			break;
+		case SIGNAL:
+			event.setType(Event.Type.SIGNAL_CATCH);
+			event.setReference(getIdUidMap().get(catchEvent.getSignalEventDefinition().getSignalRef()));
+			break;
+		case MESSAGE:
+			event.setType(Event.Type.MESSAGE_CATCH);
+			event.setReference(getIdUidMap().get(catchEvent.getMessageEventDefinition().getMessageRef()));
+			break;
+		case TIMER:
+			event.setType(Event.Type.TIMER_CATCH);
+			event.setTimer(createGenericTimer(catchEvent.getTimerEventDefinition()));
+			break;
+		default:
+			//TODO throw here an exception
+			break;
+		}
+			
+		if (catchEvent.hasDataAssociated()) 
+			event.setData(createEventData(getIdUidMap().get(catchEvent.getData().getItemSubjectRef()), getIdUidMap().get(catchEvent.getDataAssociation().getTarget())));
+		
+		addPairIdUidToMap(catchEvent.getId(), event.getUid());
+		
+		return event;
+	}
+	
+	private Event createThrowEvent(IntermediateThrowEvent throwEvent) {
+		Event event = (Event) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EVENT);
+		switch (throwEvent.getType()) {
+		case NONE:
+			event.setType(Event.Type.NONE_THROW);
+			break;
+		case SIGNAL:
+			event.setType(Event.Type.SIGNAL_THROW);
+			event.setReference(getIdUidMap().get(throwEvent.getSignalEventDefinition().getSignalRef()));
+			break;
+		case MESSAGE:
+			event.setType(Event.Type.MESSAGE_THROW);
+			event.setReference(getIdUidMap().get(throwEvent.getMessageEventDefinition().getMessageRef()));
+			break;
+		default:
+			//TODO throw here an exception
+			break;
+		}
+			
+		if (throwEvent.hasDataAssociated()) 
+			event.setData(createEventData(getIdUidMap().get(throwEvent.getData().getItemSubjectRef()), getIdUidMap().get(throwEvent.getDataAssociation().getTarget())));
+		
+		addPairIdUidToMap(throwEvent.getId(), event.getUid());
+		
+		return event;
+	}
+
+	private Event createEndEvent(EndEvent endEvent) {
+		Event event = (Event) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EVENT);
+		switch (endEvent.getType()) {
+		case NONE:
+			event.setType(Event.Type.NONE_END);
+			break;
+		case SIGNAL:
+			event.setType(Event.Type.SIGNAL_END);
+			event.setReference(getIdUidMap().get(endEvent.getSignalEventDefinition().getSignalRef()));
+			break;
+		case MESSAGE:
+			event.setType(Event.Type.MESSAGE_END);
+			event.setReference(getIdUidMap().get(endEvent.getMessageEventDefinition().getMessageRef()));
+			break;
+		default:
+			//TODO throw here an exception
+			break;
+		}
+			
+		if (endEvent.hasDataAssociated()) 
+			event.setData(createEventData(getIdUidMap().get(endEvent.getData().getItemSubjectRef()), getIdUidMap().get(endEvent.getDataAssociation().getTarget())));
+		
+		addPairIdUidToMap(endEvent.getId(), event.getUid());
+		
+		return event;
+	}
+	
+	private Data createEventData(String dataReference, String dataAssociation) {
+		Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
+		data.setReference(dataReference);
+		data.setAssociation(dataAssociation);
+		
+		return data;
+	}
 
 	private Timer createGenericTimer(TimerEventDefinition timerEventDefinition) {
 		Timer timer = (Timer) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.TIMER);
