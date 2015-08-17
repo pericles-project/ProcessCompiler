@@ -31,7 +31,7 @@ public class BpmnGenericConversor {
 
 	private BpmnProcess bpmnProcess;
 	private Process genericProcess;
-	private Map<String, String> mapBpmnIDtoGenericUID;
+	private Map<String, String> idUidMap;
 	private static UidGeneration uidGenerator;
 
 	public BpmnGenericConversor(UidGeneration uidGenerator) {
@@ -42,11 +42,10 @@ public class BpmnGenericConversor {
 		setUidGenerator(uidGenerator);
 		bpmnProcess = new BpmnProcess();
 		genericProcess = (Process) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.PROCESS);
-		mapBpmnIDtoGenericUID = new HashMap<String, String>();
+		idUidMap = new HashMap<String, String>();
 	}
 
 	public void convert(BpmnProcess bpmnProcess) {
-
 		setBpmnProcess(bpmnProcess);
 		convertExternalItems(getBpmnProcess(), getGenericProcess());
 		convertProcess(getBpmnProcess(), getGenericProcess());
@@ -55,23 +54,20 @@ public class BpmnGenericConversor {
 	private void convertExternalItems(BpmnProcess bpmnProcess, Process genericProcess) {
 		convertItems(bpmnProcess, genericProcess);
 		convertMessages(bpmnProcess, genericProcess);
-
 	}
 
 	private void convertItems(BpmnProcess bpmnProcess, Process genericProcess) {
 		if (bpmnProcess.hasItemDefinitions()) {
 			for (ItemDefinition itemDefinition : bpmnProcess.getItemDefinitions()) {
-
 				ExternalItem item = (ExternalItem) ElementFactory.createElement(getUidGenerator().requestUUID(),
 						ElementFactory.Type.EXTERNAL_ITEM);
 				item.setType(ExternalItem.Type.ITEM);
 				item.setStructure(itemDefinition.getStructureRef());
 				genericProcess.addExternalItem(item);
 
-				mapBpmnIDtoGenericUID.put(itemDefinition.getId(), item.getUid());
+				addPairIdUidToMap(itemDefinition.getId(), item.getUid());
 			}
 		}
-
 	}
 
 	private void convertMessages(BpmnProcess bpmnProcess, Process genericProcess) {
@@ -81,10 +77,10 @@ public class BpmnGenericConversor {
 				ExternalItem item = (ExternalItem) ElementFactory.createElement(getUidGenerator().requestUUID(),
 						ElementFactory.Type.EXTERNAL_ITEM);
 				item.setType(ExternalItem.Type.MESSAGE);
-				item.setReference(mapBpmnIDtoGenericUID.get(message.getItemRef()));
+				item.setReference(idUidMap.get(message.getItemRef()));
 				genericProcess.addExternalItem(item);
 
-				mapBpmnIDtoGenericUID.put(message.getId(), item.getUid());
+				addPairIdUidToMap(message.getId(), item.getUid());
 			}
 		}
 
@@ -109,10 +105,10 @@ public class BpmnGenericConversor {
 
 				Variable variable = (Variable) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.VARIABLE);
 				variable.setType(Variable.Type.PROPERTY);
-				variable.setReference(mapBpmnIDtoGenericUID.get(property.getItemSubjectRef()));
+				variable.setReference(idUidMap.get(property.getItemSubjectRef()));
 				genericProcess.addVariable(variable);
 
-				mapBpmnIDtoGenericUID.put(property.getId(), variable.getUid());
+				addPairIdUidToMap(property.getId(), variable.getUid());
 			}
 		}
 	}
@@ -127,7 +123,7 @@ public class BpmnGenericConversor {
 				activity.setScript(scriptTask.getScript());
 				genericProcess.addActivity(activity);
 
-				mapBpmnIDtoGenericUID.put(scriptTask.getId(), activity.getUid());
+				addPairIdUidToMap(scriptTask.getId(), activity.getUid());
 			}
 		}
 	}
@@ -142,21 +138,21 @@ public class BpmnGenericConversor {
 				}
 				if (startEvent.getType() == StartEvent.Type.SIGNAL) {
 					event.setType(Event.Type.SIGNAL_START);
-					event.setReference(mapBpmnIDtoGenericUID.get(startEvent.getSignalEventDefinition().getSignalRef()));
+					event.setReference(idUidMap.get(startEvent.getSignalEventDefinition().getSignalRef()));
 					if (startEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(mapBpmnIDtoGenericUID.get(startEvent.getData().getItemSubjectRef()));
-						data.setAssociation(mapBpmnIDtoGenericUID.get(startEvent.getDataAssociation().getTarget()));
+						data.setReference(idUidMap.get(startEvent.getData().getItemSubjectRef()));
+						data.setAssociation(idUidMap.get(startEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
 				}
 				if (startEvent.getType() == StartEvent.Type.MESSAGE) {
 					event.setType(Event.Type.MESSAGE_START);
-					event.setReference(mapBpmnIDtoGenericUID.get(startEvent.getMessageEventDefinition().getMessageRef()));
+					event.setReference(idUidMap.get(startEvent.getMessageEventDefinition().getMessageRef()));
 					if (startEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(mapBpmnIDtoGenericUID.get(startEvent.getData().getItemSubjectRef()));
-						data.setAssociation(mapBpmnIDtoGenericUID.get(startEvent.getDataAssociation().getTarget()));
+						data.setReference(idUidMap.get(startEvent.getData().getItemSubjectRef()));
+						data.setAssociation(idUidMap.get(startEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
 				}
@@ -166,7 +162,7 @@ public class BpmnGenericConversor {
 				}
 				genericProcess.addEvent(event);
 
-				mapBpmnIDtoGenericUID.put(startEvent.getId(), event.getUid());
+				addPairIdUidToMap(startEvent.getId(), event.getUid());
 			}
 		}
 		if (bpmnProcess.hasEndEvents()) {
@@ -178,27 +174,27 @@ public class BpmnGenericConversor {
 				}
 				if (endEvent.getType() == EndEvent.Type.SIGNAL) {
 					event.setType(Event.Type.SIGNAL_END);
-					event.setReference(mapBpmnIDtoGenericUID.get(endEvent.getSignalEventDefinition().getSignalRef()));
+					event.setReference(idUidMap.get(endEvent.getSignalEventDefinition().getSignalRef()));
 					if (endEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(mapBpmnIDtoGenericUID.get(endEvent.getData().getItemSubjectRef()));
-						data.setAssociation(mapBpmnIDtoGenericUID.get(endEvent.getDataAssociation().getTarget()));
+						data.setReference(idUidMap.get(endEvent.getData().getItemSubjectRef()));
+						data.setAssociation(idUidMap.get(endEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
 				}
 				if (endEvent.getType() == EndEvent.Type.MESSAGE) {
 					event.setType(Event.Type.MESSAGE_END);
-					event.setReference(mapBpmnIDtoGenericUID.get(endEvent.getMessageEventDefinition().getMessageRef()));
+					event.setReference(idUidMap.get(endEvent.getMessageEventDefinition().getMessageRef()));
 					if (endEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(mapBpmnIDtoGenericUID.get(endEvent.getData().getItemSubjectRef()));
-						data.setAssociation(mapBpmnIDtoGenericUID.get(endEvent.getDataAssociation().getTarget()));
+						data.setReference(idUidMap.get(endEvent.getData().getItemSubjectRef()));
+						data.setAssociation(idUidMap.get(endEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
 				}
 				genericProcess.addEvent(event);
 
-				mapBpmnIDtoGenericUID.put(endEvent.getId(), event.getUid());
+				addPairIdUidToMap(endEvent.getId(), event.getUid());
 			}
 		}
 		if (bpmnProcess.hasIntermediateCatchEvents()) {
@@ -210,21 +206,21 @@ public class BpmnGenericConversor {
 				}
 				if (catchEvent.getType() == IntermediateCatchEvent.Type.SIGNAL) {
 					event.setType(Event.Type.SIGNAL_CATCH);
-					event.setReference(mapBpmnIDtoGenericUID.get(catchEvent.getSignalEventDefinition().getSignalRef()));
+					event.setReference(idUidMap.get(catchEvent.getSignalEventDefinition().getSignalRef()));
 					if (catchEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(mapBpmnIDtoGenericUID.get(catchEvent.getData().getItemSubjectRef()));
-						data.setAssociation(mapBpmnIDtoGenericUID.get(catchEvent.getDataAssociation().getTarget()));
+						data.setReference(idUidMap.get(catchEvent.getData().getItemSubjectRef()));
+						data.setAssociation(idUidMap.get(catchEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
 				}
 				if (catchEvent.getType() == IntermediateCatchEvent.Type.MESSAGE) {
 					event.setType(Event.Type.MESSAGE_CATCH);
-					event.setReference(mapBpmnIDtoGenericUID.get(catchEvent.getMessageEventDefinition().getMessageRef()));
+					event.setReference(idUidMap.get(catchEvent.getMessageEventDefinition().getMessageRef()));
 					if (catchEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(mapBpmnIDtoGenericUID.get(catchEvent.getData().getItemSubjectRef()));
-						data.setAssociation(mapBpmnIDtoGenericUID.get(catchEvent.getDataAssociation().getTarget()));
+						data.setReference(idUidMap.get(catchEvent.getData().getItemSubjectRef()));
+						data.setAssociation(idUidMap.get(catchEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
 				}
@@ -234,7 +230,7 @@ public class BpmnGenericConversor {
 				}
 				genericProcess.addEvent(event);
 
-				mapBpmnIDtoGenericUID.put(catchEvent.getId(), event.getUid());
+				addPairIdUidToMap(catchEvent.getId(), event.getUid());
 			}
 		}
 		if (bpmnProcess.hasIntermediateThrowEvents()) {
@@ -246,27 +242,27 @@ public class BpmnGenericConversor {
 				}
 				if (throwEvent.getType() == IntermediateThrowEvent.Type.SIGNAL) {
 					event.setType(Event.Type.SIGNAL_THROW);
-					event.setReference(mapBpmnIDtoGenericUID.get(throwEvent.getSignalEventDefinition().getSignalRef()));
+					event.setReference(idUidMap.get(throwEvent.getSignalEventDefinition().getSignalRef()));
 					if (throwEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(mapBpmnIDtoGenericUID.get(throwEvent.getData().getItemSubjectRef()));
-						data.setAssociation(mapBpmnIDtoGenericUID.get(throwEvent.getDataAssociation().getTarget()));
+						data.setReference(idUidMap.get(throwEvent.getData().getItemSubjectRef()));
+						data.setAssociation(idUidMap.get(throwEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
 				}
 				if (throwEvent.getType() == IntermediateThrowEvent.Type.MESSAGE) {
 					event.setType(Event.Type.MESSAGE_THROW);
-					event.setReference(mapBpmnIDtoGenericUID.get(throwEvent.getMessageEventDefinition().getMessageRef()));
+					event.setReference(idUidMap.get(throwEvent.getMessageEventDefinition().getMessageRef()));
 					if (throwEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
-						data.setReference(mapBpmnIDtoGenericUID.get(throwEvent.getData().getItemSubjectRef()));
-						data.setAssociation(mapBpmnIDtoGenericUID.get(throwEvent.getDataAssociation().getTarget()));
+						data.setReference(idUidMap.get(throwEvent.getData().getItemSubjectRef()));
+						data.setAssociation(idUidMap.get(throwEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
 				}
 				genericProcess.addEvent(event);
 
-				mapBpmnIDtoGenericUID.put(throwEvent.getId(), event.getUid());
+				addPairIdUidToMap(throwEvent.getId(), event.getUid());
 			}
 		}
 	}
@@ -276,22 +272,19 @@ public class BpmnGenericConversor {
 		Timer timer = (Timer) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.TIMER);
 
 		if (timerEventDefinition.getTimeCycle() != null) {
-			timer.setType(Type.CYCLE);
-			timer.setTime(timerEventDefinition.getTimeCycle().getTime());
-			timer.setTimeType(timerEventDefinition.getTimeCycle().getType());
-			timer.setLanguage(timerEventDefinition.getTimeCycle().getLanguage());
+			timer.setValues(Type.CYCLE, timerEventDefinition.getTimeCycle().getTime(),
+					timerEventDefinition.getTimeCycle().getType(), timerEventDefinition.getTimeCycle().getLanguage());
 		}
-		if (timerEventDefinition.getTimeDate() != null) {
-			timer.setType(Type.DATE);
-			timer.setTime(timerEventDefinition.getTimeDate().getTime());
-			timer.setTimeType(timerEventDefinition.getTimeDate().getType());
-			timer.setLanguage(timerEventDefinition.getTimeDate().getLanguage());
+		else if (timerEventDefinition.getTimeDate() != null) {
+			timer.setValues(Type.DATE, timerEventDefinition.getTimeDate().getTime(),
+					timerEventDefinition.getTimeDate().getType(), timerEventDefinition.getTimeDate().getLanguage());
 		}
-		if (timerEventDefinition.getTimeDuration() != null) {
-			timer.setType(Type.DURATION);
-			timer.setTime(timerEventDefinition.getTimeDuration().getTime());
-			timer.setTimeType(timerEventDefinition.getTimeDuration().getType());
-			timer.setLanguage(timerEventDefinition.getTimeDuration().getLanguage());
+		else if (timerEventDefinition.getTimeDuration() != null) {
+			timer.setValues(Type.DURATION, timerEventDefinition.getTimeDuration().getTime(),
+					timerEventDefinition.getTimeDuration().getType(), timerEventDefinition.getTimeDuration().getLanguage());
+		}
+		else {
+			//TODO throw here an exception
 		}
 
 		return timer;
@@ -308,7 +301,7 @@ public class BpmnGenericConversor {
 					gateway.setType(Gateway.Type.DIVERGING_PARALLEL);
 				genericProcess.addGateway(gateway);
 
-				mapBpmnIDtoGenericUID.put(parallelGateway.getId(), gateway.getUid());
+				addPairIdUidToMap(parallelGateway.getId(), gateway.getUid());
 
 			}
 		}
@@ -319,11 +312,11 @@ public class BpmnGenericConversor {
 			for (SequenceFlow sequenceFlow : bpmnProcess.getSequenceFlows()) {
 
 				Flow flow = (Flow) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.FLOW);
-				flow.setFrom(mapBpmnIDtoGenericUID.get(sequenceFlow.getSource()));
-				flow.setTo(mapBpmnIDtoGenericUID.get(sequenceFlow.getTarget()));
+				flow.setFrom(idUidMap.get(sequenceFlow.getSource()));
+				flow.setTo(idUidMap.get(sequenceFlow.getTarget()));
 				genericProcess.addFlow(flow);
 
-				mapBpmnIDtoGenericUID.put(sequenceFlow.getId(), flow.getUid());
+				addPairIdUidToMap(sequenceFlow.getId(), flow.getUid());
 			}
 		}
 	}
@@ -337,7 +330,7 @@ public class BpmnGenericConversor {
 				convertProcess(bpmnSubprocess, genericSubprocess);
 				genericProcess.addSubprocess(genericSubprocess);
 
-				mapBpmnIDtoGenericUID.put(bpmnSubprocess.getId(), genericSubprocess.getUid());
+				addPairIdUidToMap(bpmnSubprocess.getId(), genericSubprocess.getUid());
 			}
 		}
 	}
@@ -360,8 +353,12 @@ public class BpmnGenericConversor {
 		this.genericProcess = genericProcess;
 	}
 
-	public Map<String, String> getMapBpmnIDtoGenericUID() {
-		return mapBpmnIDtoGenericUID;
+	public Map<String, String> getIdUidMap() {
+		return idUidMap;
+	}
+	
+	public void addPairIdUidToMap(String id, String uid) {
+		getIdUidMap().put(id, uid);
 	}
 
 	public static UidGeneration getUidGenerator() {

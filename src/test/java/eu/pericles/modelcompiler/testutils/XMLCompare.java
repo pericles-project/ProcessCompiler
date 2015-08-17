@@ -81,7 +81,6 @@ public class XMLCompare {
 					}
 				} else if (left instanceof CharacterData) {
 					compareAttribute(left.getNodeName(), left.getNodeValue().trim(), right.getNodeValue().trim());
-					//Assert.assertEquals(msg("Value difference"), left.getNodeValue().trim(), right.getNodeValue().trim());
 				} else {
 					Assert.assertEquals(msg("Value difference"), left.getNodeValue(), right.getNodeValue());
 				}
@@ -113,7 +112,6 @@ public class XMLCompare {
 	}
 
 	private void compareAttribute(String name, String aValue, String bValue) throws TransformerException {
-		System.out.println(name + ':' + aValue + ':' + bValue);
 		if (mapping.containsKey(name + ':' + aValue)) {
 			Assert.assertEquals(msg("Mismatch in mapped value"), mapping.get(name + ':' + aValue), bValue);
 		} else {
