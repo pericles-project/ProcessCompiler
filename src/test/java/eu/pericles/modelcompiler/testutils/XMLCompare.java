@@ -80,7 +80,8 @@ public class XMLCompare {
 								bb.getNodeValue());
 					}
 				} else if (left instanceof CharacterData) {
-					Assert.assertEquals(msg("Value difference"), left.getNodeValue().trim(), right.getNodeValue().trim());
+					compareAttribute(left.getNodeName(), left.getNodeValue().trim(), right.getNodeValue().trim());
+					//Assert.assertEquals(msg("Value difference"), left.getNodeValue().trim(), right.getNodeValue().trim());
 				} else {
 					Assert.assertEquals(msg("Value difference"), left.getNodeValue(), right.getNodeValue());
 				}
