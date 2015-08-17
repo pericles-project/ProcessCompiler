@@ -6,6 +6,7 @@ public class Data implements Element {
 
 	private String uid;
 	private String association;
+	private String reference;
 	
 	//---- Getters and setters ----// 
 
@@ -23,6 +24,14 @@ public class Data implements Element {
 
 	public void setAssociation(String association) {
 		this.association = association;
+	}
+
+	public String getReference() {
+		return reference;
+	}
+
+	public void setReference(String reference) {
+		this.reference = reference;
 	}
 	
 	

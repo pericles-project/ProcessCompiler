@@ -145,6 +145,7 @@ public class BpmnGenericConversor {
 					event.setReference(mapBpmnIDtoGenericUID.get(startEvent.getSignalEventDefinition().getSignalRef()));
 					if (startEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
+						data.setReference(mapBpmnIDtoGenericUID.get(startEvent.getData().getItemSubjectRef()));
 						data.setAssociation(mapBpmnIDtoGenericUID.get(startEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
@@ -154,6 +155,7 @@ public class BpmnGenericConversor {
 					event.setReference(mapBpmnIDtoGenericUID.get(startEvent.getMessageEventDefinition().getMessageRef()));
 					if (startEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
+						data.setReference(mapBpmnIDtoGenericUID.get(startEvent.getData().getItemSubjectRef()));
 						data.setAssociation(mapBpmnIDtoGenericUID.get(startEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
@@ -179,6 +181,7 @@ public class BpmnGenericConversor {
 					event.setReference(mapBpmnIDtoGenericUID.get(endEvent.getSignalEventDefinition().getSignalRef()));
 					if (endEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
+						data.setReference(mapBpmnIDtoGenericUID.get(endEvent.getData().getItemSubjectRef()));
 						data.setAssociation(mapBpmnIDtoGenericUID.get(endEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
@@ -188,6 +191,7 @@ public class BpmnGenericConversor {
 					event.setReference(mapBpmnIDtoGenericUID.get(endEvent.getMessageEventDefinition().getMessageRef()));
 					if (endEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
+						data.setReference(mapBpmnIDtoGenericUID.get(endEvent.getData().getItemSubjectRef()));
 						data.setAssociation(mapBpmnIDtoGenericUID.get(endEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
@@ -209,6 +213,7 @@ public class BpmnGenericConversor {
 					event.setReference(mapBpmnIDtoGenericUID.get(catchEvent.getSignalEventDefinition().getSignalRef()));
 					if (catchEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
+						data.setReference(mapBpmnIDtoGenericUID.get(catchEvent.getData().getItemSubjectRef()));
 						data.setAssociation(mapBpmnIDtoGenericUID.get(catchEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
@@ -218,6 +223,7 @@ public class BpmnGenericConversor {
 					event.setReference(mapBpmnIDtoGenericUID.get(catchEvent.getMessageEventDefinition().getMessageRef()));
 					if (catchEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
+						data.setReference(mapBpmnIDtoGenericUID.get(catchEvent.getData().getItemSubjectRef()));
 						data.setAssociation(mapBpmnIDtoGenericUID.get(catchEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
@@ -243,6 +249,7 @@ public class BpmnGenericConversor {
 					event.setReference(mapBpmnIDtoGenericUID.get(throwEvent.getSignalEventDefinition().getSignalRef()));
 					if (throwEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
+						data.setReference(mapBpmnIDtoGenericUID.get(throwEvent.getData().getItemSubjectRef()));
 						data.setAssociation(mapBpmnIDtoGenericUID.get(throwEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}
@@ -252,6 +259,7 @@ public class BpmnGenericConversor {
 					event.setReference(mapBpmnIDtoGenericUID.get(throwEvent.getMessageEventDefinition().getMessageRef()));
 					if (throwEvent.hasDataAssociated()) {
 						Data data = (Data) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.DATA);
+						data.setReference(mapBpmnIDtoGenericUID.get(throwEvent.getData().getItemSubjectRef()));
 						data.setAssociation(mapBpmnIDtoGenericUID.get(throwEvent.getDataAssociation().getTarget()));
 						event.setData(data);
 					}

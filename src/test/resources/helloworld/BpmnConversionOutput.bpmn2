@@ -8,24 +8,24 @@
     <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
     <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="ScriptTask_1" targetRef="EndEvent_1"/>
   </bpmn2:process>
-  <bpmndi:BPMNDiagram id="fede6601-f15d-49e7-bbda-ae43a16b1cb7">
-    <bpmndi:BPMNPlane id="c12f1593-a206-419b-b57d-0ed8f7bf4341" bpmnElement="eu.pericles.modelcompiler.unittests.PrintHelloWorld">
-      <bpmndi:BPMNShape id="d203dd9c-e902-4050-b138-f4c01b08502f" bpmnElement="StartEvent_1">
+  <bpmndi:BPMNDiagram id="13929b4c-a416-42f7-8833-649d5b980799">
+    <bpmndi:BPMNPlane id="6886770d-4f33-4414-9a6e-502714f2e24e" bpmnElement="eu.pericles.modelcompiler.unittests.PrintHelloWorld">
+      <bpmndi:BPMNShape id="95279fba-13e9-4e05-b3d6-0cb1c2369ec8" bpmnElement="StartEvent_1">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="e71f23f0-e38d-4524-baa6-5dedfd4d6d6f" bpmnElement="EndEvent_1">
+      <bpmndi:BPMNShape id="8c479e1e-bad2-4002-b0e1-4e35d806818a" bpmnElement="EndEvent_1">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="a25ad0b5-9616-4f2b-b10c-0188760c3eb4" bpmnElement="ScriptTask_1">
+      <bpmndi:BPMNShape id="bb0c7b8c-bc82-4f38-b923-e17be18caa20" bpmnElement="ScriptTask_1">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="f8b79eab-f18b-4fad-8303-31204c24e7ab" bpmnElement="SequenceFlow_1" sourceElement="StartEvent_1" targetElement="ScriptTask_1">
+      <bpmndi:BPMNEdge id="f0115b95-d5a1-4d3b-915c-568695a02475" bpmnElement="SequenceFlow_1" sourceElement="StartEvent_1" targetElement="ScriptTask_1">
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="f753960a-50a5-49c9-b46a-ee5db12576de" bpmnElement="SequenceFlow_2" sourceElement="ScriptTask_1" targetElement="EndEvent_1">
+      <bpmndi:BPMNEdge id="f9313772-cbb2-4f8f-bb88-c550c3fe6dc2" bpmnElement="SequenceFlow_2" sourceElement="ScriptTask_1" targetElement="EndEvent_1">
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>

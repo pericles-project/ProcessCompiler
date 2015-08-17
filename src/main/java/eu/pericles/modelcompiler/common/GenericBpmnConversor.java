@@ -176,7 +176,7 @@ public class GenericBpmnConversor {
 
 		DataOutput dataOutput = new DataOutput();
 		dataOutput.setId(event.getData().getUid());
-		dataOutput.setItemSubjectRef(event.getReference());
+		dataOutput.setItemSubjectRef(event.getData().getReference());
 		DataOutputAssociation dataOutputAssociation = new DataOutputAssociation();
 		dataOutputAssociation.setId(uidGenerator.requestUUID());
 		dataOutputAssociation.setSource(dataOutput.getId());
@@ -200,7 +200,7 @@ public class GenericBpmnConversor {
 
 		DataOutput dataOutput = new DataOutput();
 		dataOutput.setId(event.getData().getUid());
-		dataOutput.setItemSubjectRef(event.getReference());
+		dataOutput.setItemSubjectRef(event.getData().getReference());
 		DataOutputAssociation dataOutputAssociation = new DataOutputAssociation();
 		dataOutputAssociation.setId(uidGenerator.requestUUID());
 		dataOutputAssociation.setSource(dataOutput.getId());
@@ -224,7 +224,7 @@ public class GenericBpmnConversor {
 
 		DataInput dataInput = new DataInput();
 		dataInput.setId(event.getData().getUid());
-		dataInput.setItemSubjectRef(event.getReference());
+		dataInput.setItemSubjectRef(event.getData().getReference());
 		DataInputAssociation dataInputAssociation = new DataInputAssociation();
 		dataInputAssociation.setId(uidGenerator.requestUUID());
 		dataInputAssociation.setSource(dataInput.getId());
@@ -248,7 +248,7 @@ public class GenericBpmnConversor {
 
 		DataInput dataInput = new DataInput();
 		dataInput.setId(event.getData().getUid());
-		dataInput.setItemSubjectRef(event.getReference());
+		dataInput.setItemSubjectRef(event.getData().getReference());
 		DataInputAssociation dataInputAssociation = new DataInputAssociation();
 		dataInputAssociation.setId(uidGenerator.requestUUID());
 		dataInputAssociation.setSource(dataInput.getId());
