@@ -65,6 +65,7 @@ public class BpmnGenericConversor {
 				ExternalItem item = (ExternalItem) ElementFactory.createElement(getUidGenerator().requestUUID(),
 						ElementFactory.Type.EXTERNAL_ITEM);
 				item.setType(ExternalItem.Type.ITEM);
+				item.setStructure(itemDefinition.getStructureRef());
 				genericProcess.addExternalItem(item);
 
 				mapBpmnIDtoGenericUID.put(itemDefinition.getId(), item.getUid());

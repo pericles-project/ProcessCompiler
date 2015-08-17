@@ -1,71 +1,73 @@
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" expressionLanguage="http://www.mvel.org/2.0" typeLanguage="http://www.java.com/javaTypes" targetNamespace="http://www.jboss.org/drools">
   <bpmn2:process id="Process_1" name="SubprocessExample" processType="Public">
-    <bpmn2:startEvent id="655bde75-ea28-40d1-b3f5-7c6ea61e9c28"/>
-    <bpmn2:endEvent id="11bfa637-11aa-49a1-a2f3-1d88e5ec8c29"/>
-    <bpmn2:scriptTask id="deec4135-5439-46af-a56e-271ee1a4ba9a" name="Script Task 2">
+    <bpmn2:startEvent id="99a44b16-e421-49c0-b856-c644a1a8448a"/>
+    <bpmn2:endEvent id="c492200c-2663-49c2-a7cf-68607d5e7d27"/>
+    <bpmn2:scriptTask id="fdc2ca0c-ae55-418d-aeba-aee21ed4222b" name="Script Task 2">
       <bpmn2:script>System.out.println(&quot;Running script outside the subprocess&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow id="5169bc74-7ada-487a-b939-4a8104fd8e88" sourceRef="655bde75-ea28-40d1-b3f5-7c6ea61e9c28" targetRef="0f752eef-6006-44d5-bca9-2a13a13b44ff"/>
-    <bpmn2:sequenceFlow id="65e760f1-1cf2-4e10-b7cf-ea5ba8bdf0d1" sourceRef="0f752eef-6006-44d5-bca9-2a13a13b44ff" targetRef="deec4135-5439-46af-a56e-271ee1a4ba9a"/>
-    <bpmn2:sequenceFlow id="47ada399-4a86-4d21-959c-f062194fdff1" sourceRef="deec4135-5439-46af-a56e-271ee1a4ba9a" targetRef="11bfa637-11aa-49a1-a2f3-1d88e5ec8c29"/>
-    <bpmn2:subProcess id="0f752eef-6006-44d5-bca9-2a13a13b44ff" name="Sub Process 1">
-      <bpmn2:startEvent id="dbb74e69-d5eb-4f1b-b3f8-ea565d8ce1f7"/>
-      <bpmn2:endEvent id="6de8ab38-440e-46ed-a082-bd56c6c070fe"/>
-      <bpmn2:scriptTask id="66f52cde-807f-4c0d-9ddf-4277176baad5" name="Script Task 1">
+    <bpmn2:sequenceFlow id="b436f5a8-d4a9-489e-8fcd-9d81accca19a" sourceRef="99a44b16-e421-49c0-b856-c644a1a8448a" targetRef="c6231470-41fc-446a-8de0-6308dd6734ec"/>
+    <bpmn2:sequenceFlow id="5c5611dc-2a86-4213-b60e-257328d3a3dd" sourceRef="c6231470-41fc-446a-8de0-6308dd6734ec" targetRef="fdc2ca0c-ae55-418d-aeba-aee21ed4222b"/>
+    <bpmn2:sequenceFlow id="00064753-8feb-4cac-b095-b2d196e1e57c" sourceRef="fdc2ca0c-ae55-418d-aeba-aee21ed4222b" targetRef="c492200c-2663-49c2-a7cf-68607d5e7d27"/>
+    <bpmn2:subProcess id="c6231470-41fc-446a-8de0-6308dd6734ec" name="Sub Process 1">
+      <bpmn2:startEvent id="a0cc7ac6-5049-4ef4-96b7-961ea0f6aee7"/>
+      <bpmn2:endEvent id="2501631c-78c3-46cf-b838-a586ebe281b9"/>
+      <bpmn2:scriptTask id="f646cce3-fc30-4cc3-ac3d-c3e6d4dd5db0" name="Script Task 1">
         <bpmn2:script>System.out.println(&quot;Running script inside the subprocess&quot;);</bpmn2:script>
       </bpmn2:scriptTask>
-      <bpmn2:sequenceFlow id="1b0711d8-a883-4e5c-9f7f-d4e7be050cdb" sourceRef="dbb74e69-d5eb-4f1b-b3f8-ea565d8ce1f7" targetRef="66f52cde-807f-4c0d-9ddf-4277176baad5"/>
-      <bpmn2:sequenceFlow id="e1047ee9-f340-4a2d-9f5a-6a535bcfb442" sourceRef="66f52cde-807f-4c0d-9ddf-4277176baad5" targetRef="6de8ab38-440e-46ed-a082-bd56c6c070fe"/>
+      <bpmn2:sequenceFlow id="56efc5fd-5d2d-4831-92b1-a2c62fccd094" sourceRef="a0cc7ac6-5049-4ef4-96b7-961ea0f6aee7" targetRef="f646cce3-fc30-4cc3-ac3d-c3e6d4dd5db0"/>
+      <bpmn2:sequenceFlow id="3bf16d49-5fc8-4c56-a585-b14b2cefd41b" sourceRef="f646cce3-fc30-4cc3-ac3d-c3e6d4dd5db0" targetRef="2501631c-78c3-46cf-b838-a586ebe281b9"/>
+      <messages/>
+      <itemDefinitions/>
     </bpmn2:subProcess>
   </bpmn2:process>
-  <bpmndi:BPMNDiagram id="6197f925-ecfa-4d3e-8a4b-53b81d7e53d3">
-    <bpmndi:BPMNPlane id="43f3bdd7-360d-4f54-ad32-fdac39eb6e43" bpmnElement="Process_1">
-      <bpmndi:BPMNShape id="cf9834ef-ebce-407e-bf1e-29f72e1679a5" bpmnElement="655bde75-ea28-40d1-b3f5-7c6ea61e9c28">
+  <bpmndi:BPMNDiagram id="c41f36ee-e288-47af-a3ba-fae832eeadf5">
+    <bpmndi:BPMNPlane id="98a58f6c-4bda-4cd7-98c8-70dc757de548" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="effbb175-fed5-4beb-886c-42ebd7b0e301" bpmnElement="99a44b16-e421-49c0-b856-c644a1a8448a">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="41180c6e-47c0-4729-a452-dbf51c0e8ada" bpmnElement="11bfa637-11aa-49a1-a2f3-1d88e5ec8c29">
+      <bpmndi:BPMNShape id="0a760574-d861-4008-94e8-9b9c7f81f73e" bpmnElement="c492200c-2663-49c2-a7cf-68607d5e7d27">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="62d3f20e-168a-4b6d-844b-cc1c6b358bea" bpmnElement="deec4135-5439-46af-a56e-271ee1a4ba9a">
+      <bpmndi:BPMNShape id="2c3b1b59-e9b4-4f98-87c5-00593e8ef228" bpmnElement="fdc2ca0c-ae55-418d-aeba-aee21ed4222b">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="4eb26d93-b1b3-4df9-b163-6130d5bcf865" bpmnElement="0f752eef-6006-44d5-bca9-2a13a13b44ff">
+      <bpmndi:BPMNShape id="a36f5e29-6dca-4969-ac5b-13b896a18539" bpmnElement="c6231470-41fc-446a-8de0-6308dd6734ec">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="f8ab5447-9440-41ab-8215-8a90c6509bbb" bpmnElement="dbb74e69-d5eb-4f1b-b3f8-ea565d8ce1f7">
+      <bpmndi:BPMNShape id="e691a6d2-a947-4ab4-8e9b-eca7264a481f" bpmnElement="a0cc7ac6-5049-4ef4-96b7-961ea0f6aee7">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="e55e7692-a740-4594-b163-5965a565a519" bpmnElement="6de8ab38-440e-46ed-a082-bd56c6c070fe">
+      <bpmndi:BPMNShape id="ecfcd9ed-0253-4614-8004-72c1853b380f" bpmnElement="2501631c-78c3-46cf-b838-a586ebe281b9">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="4d6a29d8-0a03-4fe3-92c7-1e7d84a5d78b" bpmnElement="66f52cde-807f-4c0d-9ddf-4277176baad5">
+      <bpmndi:BPMNShape id="7ef84875-d149-468c-bd66-964d1618eff4" bpmnElement="f646cce3-fc30-4cc3-ac3d-c3e6d4dd5db0">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="51e6113b-1b44-49b2-ae0e-bdbec9bb4883" bpmnElement="5169bc74-7ada-487a-b939-4a8104fd8e88" sourceElement="655bde75-ea28-40d1-b3f5-7c6ea61e9c28" targetElement="0f752eef-6006-44d5-bca9-2a13a13b44ff">
+      <bpmndi:BPMNEdge id="8ef8dff7-ab2d-4c16-a68b-12122ebcffe8" bpmnElement="b436f5a8-d4a9-489e-8fcd-9d81accca19a" sourceElement="99a44b16-e421-49c0-b856-c644a1a8448a" targetElement="c6231470-41fc-446a-8de0-6308dd6734ec">
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="910bbe29-3ab7-4034-8b34-a0283598e24c" bpmnElement="65e760f1-1cf2-4e10-b7cf-ea5ba8bdf0d1" sourceElement="0f752eef-6006-44d5-bca9-2a13a13b44ff" targetElement="deec4135-5439-46af-a56e-271ee1a4ba9a">
+      <bpmndi:BPMNEdge id="ff46ed92-6caa-44fd-a630-36b87360e366" bpmnElement="5c5611dc-2a86-4213-b60e-257328d3a3dd" sourceElement="c6231470-41fc-446a-8de0-6308dd6734ec" targetElement="fdc2ca0c-ae55-418d-aeba-aee21ed4222b">
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="d21cb037-d270-4b58-8d68-8bb84d624041" bpmnElement="47ada399-4a86-4d21-959c-f062194fdff1" sourceElement="deec4135-5439-46af-a56e-271ee1a4ba9a" targetElement="11bfa637-11aa-49a1-a2f3-1d88e5ec8c29">
+      <bpmndi:BPMNEdge id="7b6dfc83-062e-40b3-9f4b-01ee73ad67b6" bpmnElement="00064753-8feb-4cac-b095-b2d196e1e57c" sourceElement="fdc2ca0c-ae55-418d-aeba-aee21ed4222b" targetElement="c492200c-2663-49c2-a7cf-68607d5e7d27">
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="0538a925-408a-471a-9b74-dcfc82034eda" bpmnElement="1b0711d8-a883-4e5c-9f7f-d4e7be050cdb" sourceElement="dbb74e69-d5eb-4f1b-b3f8-ea565d8ce1f7" targetElement="66f52cde-807f-4c0d-9ddf-4277176baad5">
+      <bpmndi:BPMNEdge id="b7df9c89-1246-4e7f-bf19-4ab1c592aa04" bpmnElement="56efc5fd-5d2d-4831-92b1-a2c62fccd094" sourceElement="a0cc7ac6-5049-4ef4-96b7-961ea0f6aee7" targetElement="f646cce3-fc30-4cc3-ac3d-c3e6d4dd5db0">
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="5050065f-a5cb-45d2-9221-89baf1281520" bpmnElement="e1047ee9-f340-4a2d-9f5a-6a535bcfb442" sourceElement="66f52cde-807f-4c0d-9ddf-4277176baad5" targetElement="6de8ab38-440e-46ed-a082-bd56c6c070fe">
+      <bpmndi:BPMNEdge id="b1ae461f-ddfb-4718-8e07-8867e94dd6c6" bpmnElement="3bf16d49-5fc8-4c56-a585-b14b2cefd41b" sourceElement="f646cce3-fc30-4cc3-ac3d-c3e6d4dd5db0" targetElement="2501631c-78c3-46cf-b838-a586ebe281b9">
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>

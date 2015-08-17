@@ -48,8 +48,8 @@ public class BpmnProcess {
 	@XStreamImplicit
 	private List<Subprocess> subprocesses = new ArrayList<>();
 	
-	private List<Message> messages;
-	private List<ItemDefinition> itemDefinitions;
+	private List<Message> messages = new ArrayList<>();
+	private List<ItemDefinition> itemDefinitions = new ArrayList<>();
 	
 	public BpmnProcess() {
 	}

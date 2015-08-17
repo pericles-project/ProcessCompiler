@@ -19,12 +19,17 @@ import eu.pericles.modelcompiler.bpmn.Events.TimeCycle;
 import eu.pericles.modelcompiler.bpmn.Events.TimeDate;
 import eu.pericles.modelcompiler.bpmn.Events.TimeDuration;
 import eu.pericles.modelcompiler.bpmn.Events.TimerEventDefinition;
+import eu.pericles.modelcompiler.bpmn.ExternalItems.ItemDefinition;
+import eu.pericles.modelcompiler.bpmn.ExternalItems.Message;
 import eu.pericles.modelcompiler.bpmn.Flows.SequenceFlow;
+import eu.pericles.modelcompiler.bpmn.Variables.Property;
 import eu.pericles.modelcompiler.generic.Activity;
 import eu.pericles.modelcompiler.generic.Event;
+import eu.pericles.modelcompiler.generic.ExternalItem;
 import eu.pericles.modelcompiler.generic.Flow;
 import eu.pericles.modelcompiler.generic.Process;
 import eu.pericles.modelcompiler.generic.Timer;
+import eu.pericles.modelcompiler.generic.Variable;
 
 public class GenericBpmnConversor {
 	private Process genericProcess;
@@ -63,13 +68,45 @@ public class GenericBpmnConversor {
 	// ---- Convert External Items ----//
 
 	private void convertExternalItems(Process genericProcess, BpmnProcess bpmnProcess) {
+		for (ExternalItem externalItem : genericProcess.getExternalItems()) {
+			if (externalItem.getType() == ExternalItem.Type.ITEM)
+				bpmnProcess.getItemDefinitions().add(createItemDefinition(externalItem));
+			if (externalItem.getType() == ExternalItem.Type.MESSAGE)
+				bpmnProcess.getMessages().add(createMessage(externalItem));
+		}
+	}
 
+	private ItemDefinition createItemDefinition(ExternalItem externalItem) {
+		ItemDefinition itemDefinition = new ItemDefinition();
+		itemDefinition.setId(externalItem.getUid());
+		itemDefinition.setStructureRef(externalItem.getStructure());
+		
+		return itemDefinition;
+	}
+
+	private Message createMessage(ExternalItem externalItem) {
+		Message message = new Message();
+		message.setId(externalItem.getUid());
+		message.setItemRef(externalItem.getReference());
+		
+		return message;
 	}
 
 	// ---- Convert Variables ----//
 
 	private void convertVariables(Process genericProcess, BpmnProcess bpmnProcess) {
+		for (Variable variable : genericProcess.getVariables()) {
+			if (variable.getType() == Variable.Type.PROPERTY)
+				bpmnProcess.getProperties().add(createProperty(variable));
+		}
+	}
 
+	private Property createProperty(Variable variable) {
+		Property property = new Property();
+		property.setId(variable.getUid());
+		property.setItemSubjectRef(variable.getReference());
+		
+		return property;
 	}
 
 	// ---- Convert Activities ----//
@@ -139,6 +176,7 @@ public class GenericBpmnConversor {
 
 		DataOutput dataOutput = new DataOutput();
 		dataOutput.setId(event.getData().getUid());
+		dataOutput.setItemSubjectRef(event.getReference());
 		DataOutputAssociation dataOutputAssociation = new DataOutputAssociation();
 		dataOutputAssociation.setId(uidGenerator.requestUUID());
 		dataOutputAssociation.setSource(dataOutput.getId());
@@ -162,6 +200,7 @@ public class GenericBpmnConversor {
 
 		DataOutput dataOutput = new DataOutput();
 		dataOutput.setId(event.getData().getUid());
+		dataOutput.setItemSubjectRef(event.getReference());
 		DataOutputAssociation dataOutputAssociation = new DataOutputAssociation();
 		dataOutputAssociation.setId(uidGenerator.requestUUID());
 		dataOutputAssociation.setSource(dataOutput.getId());
@@ -185,6 +224,7 @@ public class GenericBpmnConversor {
 
 		DataInput dataInput = new DataInput();
 		dataInput.setId(event.getData().getUid());
+		dataInput.setItemSubjectRef(event.getReference());
 		DataInputAssociation dataInputAssociation = new DataInputAssociation();
 		dataInputAssociation.setId(uidGenerator.requestUUID());
 		dataInputAssociation.setSource(dataInput.getId());
@@ -208,6 +248,7 @@ public class GenericBpmnConversor {
 
 		DataInput dataInput = new DataInput();
 		dataInput.setId(event.getData().getUid());
+		dataInput.setItemSubjectRef(event.getReference());
 		DataInputAssociation dataInputAssociation = new DataInputAssociation();
 		dataInputAssociation.setId(uidGenerator.requestUUID());
 		dataInputAssociation.setSource(dataInput.getId());
