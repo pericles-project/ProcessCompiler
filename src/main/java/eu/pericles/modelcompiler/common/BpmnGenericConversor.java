@@ -270,6 +270,32 @@ public class BpmnGenericConversor {
 			}
 		}
 	}
+	
+
+	private Timer createGenericTimer(TimerEventDefinition timerEventDefinition) {
+		Timer timer = (Timer) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.TIMER);
+
+		if (timerEventDefinition.getTimeCycle() != null) {
+			timer.setType(Type.CYCLE);
+			timer.setTime(timerEventDefinition.getTimeCycle().getTime());
+			timer.setTimeType(timerEventDefinition.getTimeCycle().getType());
+			timer.setLanguage(timerEventDefinition.getTimeCycle().getLanguage());
+		}
+		if (timerEventDefinition.getTimeDate() != null) {
+			timer.setType(Type.DATE);
+			timer.setTime(timerEventDefinition.getTimeDate().getTime());
+			timer.setTimeType(timerEventDefinition.getTimeDate().getType());
+			timer.setLanguage(timerEventDefinition.getTimeDate().getLanguage());
+		}
+		if (timerEventDefinition.getTimeDuration() != null) {
+			timer.setType(Type.DURATION);
+			timer.setTime(timerEventDefinition.getTimeDuration().getTime());
+			timer.setTimeType(timerEventDefinition.getTimeDuration().getType());
+			timer.setLanguage(timerEventDefinition.getTimeDuration().getLanguage());
+		}
+
+		return timer;
+	}
 
 	private void convertGateways(BpmnProcess bpmnProcess, Process genericProcess) {
 		if (bpmnProcess.hasParallelGateways()) {
@@ -314,31 +340,6 @@ public class BpmnGenericConversor {
 				mapBpmnIDtoGenericUID.put(bpmnSubprocess.getId(), genericSubprocess.getUid());
 			}
 		}
-	}
-
-	private Timer createGenericTimer(TimerEventDefinition timerEventDefinition) {
-		Timer timer = (Timer) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.TIMER);
-
-		if (timerEventDefinition.getTimeCycle() != null) {
-			timer.setType(Type.CYCLE);
-			timer.setTime(timerEventDefinition.getTimeCycle().getTime());
-			timer.setTimeType(timerEventDefinition.getTimeCycle().getType());
-			timer.setLanguage(timerEventDefinition.getTimeCycle().getLanguage());
-		}
-		if (timerEventDefinition.getTimeDate() != null) {
-			timer.setType(Type.DATE);
-			timer.setTime(timerEventDefinition.getTimeDate().getTime());
-			timer.setTimeType(timerEventDefinition.getTimeDate().getType());
-			timer.setLanguage(timerEventDefinition.getTimeDate().getLanguage());
-		}
-		if (timerEventDefinition.getTimeDuration() != null) {
-			timer.setType(Type.DURATION);
-			timer.setTime(timerEventDefinition.getTimeDuration().getTime());
-			timer.setTimeType(timerEventDefinition.getTimeDuration().getType());
-			timer.setLanguage(timerEventDefinition.getTimeDuration().getLanguage());
-		}
-
-		return timer;
 	}
 
 	// ---- Getters and setters ----//

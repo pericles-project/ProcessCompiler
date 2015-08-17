@@ -347,7 +347,7 @@ public class GenericBpmnConversor {
 			timeDuration.setTime(event.getTimer().getTime());
 			timerEventDefinition.setTimeDuration(timeDuration);
 		}
-		if (event.getTimer().getType() == Timer.Type.CYCLE) {
+		if (event.getTimer().getType() == Timer.Type.DATE) {
 			TimeDate timeDate = new TimeDate();
 			timeDate.setId(uidGenerator.requestUUID());
 			timeDate.setType(event.getTimer().getTimeType());
