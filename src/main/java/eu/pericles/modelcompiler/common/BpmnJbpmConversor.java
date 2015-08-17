@@ -30,7 +30,7 @@ public class BpmnJbpmConversor {
 	private List<NodeElement> nodeElements;
 	private List<ConnectionElement> connectionElements;
 	private static UidGeneration uidGenerator;
-	
+
 	public BpmnJbpmConversor(UidGeneration uidGenerator) {
 		setUidGenerator(uidGenerator);
 	}
@@ -53,7 +53,9 @@ public class BpmnJbpmConversor {
 		getJbpmFile().setXmlns_di("http://www.omg.org/spec/DD/20100524/DI");
 		getJbpmFile().setXmlns_tns("http://www.jboss.org/drools");
 		getJbpmFile().setXmlns("http://www.jboss.org/drools");
-		getJbpmFile().setXsi_schemaLocation("http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd");
+		getJbpmFile()
+				.setXsi_schemaLocation(
+						"http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd");
 		getJbpmFile().setHeaderId("Definition");
 		getJbpmFile().setExpressionLanguage("http://www.mvel.org/2.0");
 		getJbpmFile().setTargetNamespace("http://www.jboss.org/drools");
@@ -75,9 +77,9 @@ public class BpmnJbpmConversor {
 	}
 
 	private void copyExternalVariablesToJbpmFile() {
-		if (getBpmnProcess().getItemDefinitions() != null)
+		if (getBpmnProcess().hasItemDefinitions())
 			getJbpmFile().setItemDefinitions(getBpmnProcess().getItemDefinitions());
-		if (getBpmnProcess().getMessages() != null)
+		if (getBpmnProcess().hasMessages())
 			getJbpmFile().setMessages(getBpmnProcess().getMessages());
 	}
 
@@ -105,28 +107,35 @@ public class BpmnJbpmConversor {
 	}
 
 	private void getNodeElementsFromProcess(BpmnProcess bpmnProcess) {
-		for (StartEvent element : bpmnProcess.getStartEvents()) {
-			addNodeElement(element.getId());
-		}
-		for (IntermediateCatchEvent element : bpmnProcess.getIntermediateCatchEvents()) {
-			addNodeElement(element.getId());
-		}
-		for (IntermediateThrowEvent element : bpmnProcess.getIntermediateThrowEvents()) {
-			addNodeElement(element.getId());
-		}
-		for (EndEvent element : bpmnProcess.getEndEvents()) {
-			addNodeElement(element.getId());
-		}
-		for (ScriptTask element : bpmnProcess.getScriptTasks()) {
-			addNodeElement(element.getId());
-		}
-		for (ParallelGateway element : bpmnProcess.getParallelGateways()) {
-			addNodeElement(element.getId());
-		}
-		for (Subprocess element : bpmnProcess.getSubprocesses()) {
-			addNodeElement(element.getId());
-			getNodeElementsFromProcess(element);
-		}
+		if (bpmnProcess.hasStartEvents())
+			for (StartEvent element : bpmnProcess.getStartEvents()) {
+				addNodeElement(element.getId());
+			}
+		if (bpmnProcess.hasIntermediateCatchEvents())
+			for (IntermediateCatchEvent element : bpmnProcess.getIntermediateCatchEvents()) {
+				addNodeElement(element.getId());
+			}
+		if (bpmnProcess.hasIntermediateThrowEvents())
+			for (IntermediateThrowEvent element : bpmnProcess.getIntermediateThrowEvents()) {
+				addNodeElement(element.getId());
+			}
+		if (bpmnProcess.hasEndEvents())
+			for (EndEvent element : bpmnProcess.getEndEvents()) {
+				addNodeElement(element.getId());
+			}
+		if (bpmnProcess.hasScriptTasks())
+			for (ScriptTask element : bpmnProcess.getScriptTasks()) {
+				addNodeElement(element.getId());
+			}
+		if (bpmnProcess.hasParallelGateways())
+			for (ParallelGateway element : bpmnProcess.getParallelGateways()) {
+				addNodeElement(element.getId());
+			}
+		if (bpmnProcess.hasSubprocesses())
+			for (Subprocess element : bpmnProcess.getSubprocesses()) {
+				addNodeElement(element.getId());
+				getNodeElementsFromProcess(element);
+			}
 	}
 
 	private void addNodeElement(String id) {
@@ -155,17 +164,19 @@ public class BpmnJbpmConversor {
 	}
 
 	private void getConnectionElementsFromProcess(BpmnProcess bpmnProcess) {
-		for (SequenceFlow element : bpmnProcess.getSequenceFlows()) {
-			addConnectionElement(element.getId(), element.getSource(), element.getTarget());
-		}
-
-		for (Subprocess element : bpmnProcess.getSubprocesses()) {
-			getConnectionElementsFromProcess(element);
-		}
+		if (bpmnProcess.hasSequenceFlows())
+			for (SequenceFlow element : bpmnProcess.getSequenceFlows()) {
+				addConnectionElement(element.getId(), element.getSource(), element.getTarget());
+			}
+		if (bpmnProcess.hasSubprocesses())
+			for (Subprocess element : bpmnProcess.getSubprocesses()) {
+				getConnectionElementsFromProcess(element);
+			}
 	}
 
 	private void addConnectionElement(String id, String source, String target) {
-		ConnectionElement connection = (ConnectionElement) ElementFactory.createElement(uidGenerator.requestUUID(), Type.CONNECTION_ELEMENT);
+		ConnectionElement connection = (ConnectionElement) ElementFactory
+				.createElement(uidGenerator.requestUUID(), Type.CONNECTION_ELEMENT);
 		connection.setBpmnElement(id);
 		connection.setSourceElement(source);
 		connection.setTargetElement(target);
