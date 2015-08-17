@@ -47,44 +47,66 @@ public class BpmnGenericConversor {
 
 	public void convert(BpmnProcess bpmnProcess) {
 		setBpmnProcess(bpmnProcess);
+		/** The order on how the conversion methods are called matters, as some elements refer to other. At least, 
+		 *  the following order has to be assure:
+		 *  1- ItemDefinitions
+		 *  2- Other external items: Messages, Signals, etc.
+		 *  3- Process variables: Properties, Data, etc.
+		 *  4- Process elements: Activities, Events, Gateways, Subprocesses
+		 *  5- Flows
+		 */
 		convertExternalItems(getBpmnProcess(), getGenericProcess());
 		convertProcess(getBpmnProcess(), getGenericProcess());
 	}
 
+	// ---- Convert External Items ----//
+	
 	private void convertExternalItems(BpmnProcess bpmnProcess, Process genericProcess) {
 		convertItems(bpmnProcess, genericProcess);
 		convertMessages(bpmnProcess, genericProcess);
 	}
 
+	// ---- Convert Items ----//
+	
 	private void convertItems(BpmnProcess bpmnProcess, Process genericProcess) {
 		if (bpmnProcess.hasItemDefinitions()) {
 			for (ItemDefinition itemDefinition : bpmnProcess.getItemDefinitions()) {
-				ExternalItem item = (ExternalItem) ElementFactory.createElement(getUidGenerator().requestUUID(),
-						ElementFactory.Type.EXTERNAL_ITEM);
-				item.setType(ExternalItem.Type.ITEM);
-				item.setStructure(itemDefinition.getStructureRef());
-				genericProcess.addExternalItem(item);
-
-				addPairIdUidToMap(itemDefinition.getId(), item.getUid());
+				genericProcess.addExternalItem(createItemDefinition(itemDefinition));
 			}
 		}
 	}
+	
+	private ExternalItem createItemDefinition(ItemDefinition itemDefinition) {
+		ExternalItem item = (ExternalItem) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EXTERNAL_ITEM);
+		item.setType(ExternalItem.Type.ITEM);
+		item.setStructure(itemDefinition.getStructureRef());
+		
+		addPairIdUidToMap(itemDefinition.getId(), item.getUid());
+		
+		return item;
+	}
+
+	// ---- Convert Messages ----//
 
 	private void convertMessages(BpmnProcess bpmnProcess, Process genericProcess) {
 		if (bpmnProcess.hasMessages()) {
 			for (Message message : bpmnProcess.getMessages()) {
-
-				ExternalItem item = (ExternalItem) ElementFactory.createElement(getUidGenerator().requestUUID(),
-						ElementFactory.Type.EXTERNAL_ITEM);
-				item.setType(ExternalItem.Type.MESSAGE);
-				item.setReference(idUidMap.get(message.getItemRef()));
-				genericProcess.addExternalItem(item);
-
-				addPairIdUidToMap(message.getId(), item.getUid());
+				genericProcess.addExternalItem(createMessage(message));
 			}
 		}
-
 	}
+	
+	private ExternalItem createMessage(Message message) {
+		ExternalItem item = (ExternalItem) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EXTERNAL_ITEM);
+		item.setType(ExternalItem.Type.MESSAGE);
+		item.setReference(getIdUidMap().get(message.getItemRef()));
+		
+		addPairIdUidToMap(message.getId(), item.getUid());
+		
+		return item;
+	}
+
+	// ---- Convert Process ----//
 
 	private void convertProcess(BpmnProcess bpmnProcess, Process genericProcess) {
 
@@ -98,39 +120,54 @@ public class BpmnGenericConversor {
 		convertSubprocesses(bpmnProcess, genericProcess);
 		convertFlows(bpmnProcess, genericProcess);
 	}
+	
+	// ---- Convert Variables ----//
 
 	private void convertVariables(BpmnProcess bpmnProcess, Process genericProcess) {
 		if (bpmnProcess.hasProperties()) {
 			for (Property property : bpmnProcess.getProperties()) {
-
-				Variable variable = (Variable) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.VARIABLE);
-				variable.setType(Variable.Type.PROPERTY);
-				variable.setReference(idUidMap.get(property.getItemSubjectRef()));
-				genericProcess.addVariable(variable);
-
-				addPairIdUidToMap(property.getId(), variable.getUid());
+				genericProcess.addVariable(createProperty(property));
 			}
 		}
 	}
+
+	private Variable createProperty(Property property) {
+		Variable variable = (Variable) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.VARIABLE);
+		variable.setType(Variable.Type.PROPERTY);
+		variable.setReference(getIdUidMap().get(property.getItemSubjectRef()));
+		
+		addPairIdUidToMap(property.getId(), variable.getUid());
+		
+		return variable;
+	}
+	
+	// ---- Convert Activities ----//
 
 	private void convertActivities(BpmnProcess bpmnProcess, Process genericProcess) {
 		if (bpmnProcess.hasScriptTasks()) {
 			for (ScriptTask scriptTask : bpmnProcess.getScriptTasks()) {
-
-				Activity activity = (Activity) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.ACTIVITY);
-				activity.setName(scriptTask.getName());
-				activity.setType(Activity.Type.SCRIPT);
-				activity.setScript(scriptTask.getScript());
-				genericProcess.addActivity(activity);
-
-				addPairIdUidToMap(scriptTask.getId(), activity.getUid());
+				genericProcess.addActivity(createScriptActivity(scriptTask));
 			}
 		}
 	}
 
+	private Activity createScriptActivity(ScriptTask scriptTask) {
+		Activity activity = (Activity) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.ACTIVITY);
+		activity.setType(Activity.Type.SCRIPT);
+		activity.setName(scriptTask.getName());
+		activity.setScript(scriptTask.getScript());
+		
+		addPairIdUidToMap(scriptTask.getId(), activity.getUid());
+		
+		return activity;
+	}
+	
+	// ---- Convert Events ----//
+
 	private void convertEvents(BpmnProcess bpmnProcess, Process genericProcess) {
 		if (bpmnProcess.hasStartEvents()) {
 			for (StartEvent startEvent : bpmnProcess.getStartEvents()) {
+				
 
 				Event event = (Event) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.EVENT);
 				if (startEvent.getType() == StartEvent.Type.NONE) {
@@ -290,6 +327,8 @@ public class BpmnGenericConversor {
 		return timer;
 	}
 
+	// ---- Convert Gateways ----//
+	
 	private void convertGateways(BpmnProcess bpmnProcess, Process genericProcess) {
 		if (bpmnProcess.hasParallelGateways()) {
 			for (ParallelGateway parallelGateway : bpmnProcess.getParallelGateways()) {
@@ -307,32 +346,43 @@ public class BpmnGenericConversor {
 		}
 	}
 
+	// ---- Convert Flows ----//
+	
 	private void convertFlows(BpmnProcess bpmnProcess, Process genericProcess) {
 		if (bpmnProcess.hasSequenceFlows()) {
 			for (SequenceFlow sequenceFlow : bpmnProcess.getSequenceFlows()) {
-
-				Flow flow = (Flow) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.FLOW);
-				flow.setFrom(idUidMap.get(sequenceFlow.getSource()));
-				flow.setTo(idUidMap.get(sequenceFlow.getTarget()));
-				genericProcess.addFlow(flow);
-
-				addPairIdUidToMap(sequenceFlow.getId(), flow.getUid());
+				genericProcess.addFlow(createFlow(sequenceFlow));
 			}
 		}
 	}
 
+	private Flow createFlow(SequenceFlow sequenceFlow) {
+		Flow flow = (Flow) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.FLOW);
+		flow.setFrom(getIdUidMap().get(sequenceFlow.getSource()));
+		flow.setTo(getIdUidMap().get(sequenceFlow.getTarget()));
+		
+		addPairIdUidToMap(sequenceFlow.getId(), flow.getUid());
+		
+		return flow;
+	}
+	
+	// ---- Convert Subprocesses ----//
+
 	private void convertSubprocesses(BpmnProcess bpmnProcess, Process genericProcess) {
 		if (bpmnProcess.hasSubprocesses()) {
 			for (Subprocess bpmnSubprocess : bpmnProcess.getSubprocesses()) {
-
-				Process genericSubprocess = (Process) ElementFactory.createElement(getUidGenerator().requestUUID(),
-						ElementFactory.Type.PROCESS);
-				convertProcess(bpmnSubprocess, genericSubprocess);
-				genericProcess.addSubprocess(genericSubprocess);
-
-				addPairIdUidToMap(bpmnSubprocess.getId(), genericSubprocess.getUid());
+				genericProcess.addSubprocess(createSubprocess(bpmnSubprocess));
 			}
 		}
+	}
+
+	private Process createSubprocess(Subprocess bpmnSubprocess) {
+		Process genericSubprocess = (Process) ElementFactory.createElement(getUidGenerator().requestUUID(), ElementFactory.Type.PROCESS);
+		convertProcess(bpmnSubprocess, genericSubprocess);
+		
+		addPairIdUidToMap(bpmnSubprocess.getId(), genericSubprocess.getUid());
+		
+		return genericSubprocess;
 	}
 
 	// ---- Getters and setters ----//
