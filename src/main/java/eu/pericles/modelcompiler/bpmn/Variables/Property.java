@@ -3,8 +3,10 @@ package eu.pericles.modelcompiler.bpmn.Variables;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
+import eu.pericles.modelcompiler.bpmn.BpmnElement;
+
 @XStreamAlias("bpmn2:property")
-public class Property {
+public class Property implements BpmnElement {
 	
 	@XStreamAsAttribute
 	private String id;

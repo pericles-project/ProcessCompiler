@@ -69,10 +69,17 @@ public class GenericBpmnConversor {
 
 	private void convertExternalItems(Process genericProcess, BpmnProcess bpmnProcess) {
 		for (ExternalItem externalItem : genericProcess.getExternalItems()) {
-			if (externalItem.getType() == ExternalItem.Type.ITEM)
+			switch (externalItem.getType()) {
+			case ITEM:
 				bpmnProcess.getItemDefinitions().add(createItemDefinition(externalItem));
-			if (externalItem.getType() == ExternalItem.Type.MESSAGE)
+				break;
+			case MESSAGE:
 				bpmnProcess.getMessages().add(createMessage(externalItem));
+				break;
+			default:
+				//TODO throw here an exception
+				break;
+			}
 		}
 	}
 
@@ -131,30 +138,53 @@ public class GenericBpmnConversor {
 
 	private void convertEvents(Process genericProcess, BpmnProcess bpmnProcess) {
 		for (Event event : genericProcess.getEvents()) {
-			if (event.getType() == Event.Type.NONE_START)
+			switch (event.getType()) {
+			case NONE_START:
 				bpmnProcess.getStartEvents().add(createNoneStartEvent(event));
-			if (event.getType() == Event.Type.NONE_END)
+				break;
+			case NONE_CATCH:
+				bpmnProcess.getIntermediateCatchEvents().add(createNoneCatchEvent(event));
+				break;
+			case NONE_THROW:
+				bpmnProcess.getIntermediateThrowEvents().add(createNoneThrowEvent(event));
+				break;
+			case NONE_END:
 				bpmnProcess.getEndEvents().add(createNoneEndEvent(event));
-			if (event.getType() == Event.Type.MESSAGE_START)
+				break;
+			case MESSAGE_START:
 				bpmnProcess.getStartEvents().add(createMessageStartEvent(event));
-			if (event.getType() == Event.Type.MESSAGE_CATCH)
+				break;
+			case MESSAGE_CATCH:
 				bpmnProcess.getIntermediateCatchEvents().add(createMessageCatchEvent(event));
-			if (event.getType() == Event.Type.MESSAGE_THROW)
+				break;
+			case MESSAGE_THROW:
 				bpmnProcess.getIntermediateThrowEvents().add(createMessageThrowEvent(event));
-			if (event.getType() == Event.Type.MESSAGE_END)
+				break;
+			case MESSAGE_END:
 				bpmnProcess.getEndEvents().add(createMessageEndEvent(event));
-			if (event.getType() == Event.Type.SIGNAL_START)
+				break;
+			case SIGNAL_START:
 				bpmnProcess.getStartEvents().add(createSignalStartEvent(event));
-			if (event.getType() == Event.Type.SIGNAL_CATCH)
+				break;
+			case SIGNAL_CATCH:
 				bpmnProcess.getIntermediateCatchEvents().add(createSignalCatchEvent(event));
-			if (event.getType() == Event.Type.SIGNAL_THROW)
+				break;
+			case SIGNAL_THROW:
 				bpmnProcess.getIntermediateThrowEvents().add(createSignalThrowEvent(event));
-			if (event.getType() == Event.Type.SIGNAL_END)
+				break;
+			case SIGNAL_END:
 				bpmnProcess.getEndEvents().add(createSignalEndEvent(event));
-			if (event.getType() == Event.Type.TIMER_START)
+				break;
+			case TIMER_START:
 				bpmnProcess.getStartEvents().add(createTimerStartEvent(event));
-			if (event.getType() == Event.Type.TIMER_CATCH)
+				break;
+			case TIMER_CATCH:
 				bpmnProcess.getIntermediateCatchEvents().add(createTimerCatchEvent(event));
+				break;
+			default:
+				//TODO throw here an exception
+				break;
+			}
 		}
 	}
 
@@ -162,6 +192,18 @@ public class GenericBpmnConversor {
 		StartEvent startEvent = new StartEvent();
 		startEvent.setId(event.getUid());
 		return startEvent;
+	}
+	
+	private IntermediateCatchEvent createNoneCatchEvent(Event event) {
+		IntermediateCatchEvent catchEvent = new IntermediateCatchEvent();
+		catchEvent.setId(event.getUid());
+		return catchEvent;
+	}
+	
+	private IntermediateThrowEvent createNoneThrowEvent(Event event) {
+		IntermediateThrowEvent throwEvent = new IntermediateThrowEvent();
+		throwEvent.setId(event.getUid());
+		return throwEvent;
 	}
 
 	private EndEvent createNoneEndEvent(Event event) {
@@ -391,10 +433,9 @@ public class GenericBpmnConversor {
 		bpmnProcess.setId(genericProcess.getSource());
 		bpmnProcess.setName(genericProcess.getName());
 		bpmnProcess.setType("Public");
+		
 		convertExternalItems(genericProcess, bpmnProcess);
 		convertVariables(genericProcess, bpmnProcess);
-		
-
 	}
 
 	// ---- Convert Flows ----//
