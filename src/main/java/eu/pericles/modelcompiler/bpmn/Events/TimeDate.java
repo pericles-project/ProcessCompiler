@@ -5,9 +5,11 @@ import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.converters.extended.ToAttributedValueConverter;
 
+import eu.pericles.modelcompiler.bpmn.BpmnElement;
+
 @XStreamAlias("bpmn2:timeDate")
 @XStreamConverter(value = ToAttributedValueConverter.class, strings = {"time"})
-public class TimeDate {
+public class TimeDate implements BpmnElement {
 	
 	@XStreamAsAttribute
 	private String id;

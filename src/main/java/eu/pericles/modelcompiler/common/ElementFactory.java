@@ -18,7 +18,8 @@ import eu.pericles.modelcompiler.jbpm.Diagram.Shape;
 
 public class ElementFactory {
 	public enum Type {
-		ACTIVITY, EVENT, GATEWAY, PROCESS, FLOW, DATA, EXTERNAL_ITEM, VARIABLE, TIMER, DIAGRAM, PLANE, SHAPE, EDGE, NODE_ELEMENT, CONNECTION_ELEMENT
+		ACTIVITY, EVENT, GATEWAY, PROCESS, FLOW, DATA, EXTERNAL_ITEM, VARIABLE, TIMER, 
+		DIAGRAM, PLANE, SHAPE, EDGE, NODE_ELEMENT, CONNECTION_ELEMENT
 	}
 
 	public static Element createElement(String uid, Type elementType) {
@@ -85,7 +86,7 @@ public class ElementFactory {
 			connectionElement.setUid(uid);
 			return connectionElement;
 		default:
-			// TODO throw an execption here!!!
+			// TODO throw an exception here
 			return null;
 
 		}

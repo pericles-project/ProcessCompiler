@@ -3,8 +3,10 @@ package eu.pericles.modelcompiler.bpmn.Events;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
+import eu.pericles.modelcompiler.bpmn.BpmnElement;
+
 @XStreamAlias("bpmn2:signalEventDefinition")
-public class SignalEventDefinition {
+public class SignalEventDefinition implements BpmnElement {
 	
 	@XStreamAsAttribute
 	private String id;

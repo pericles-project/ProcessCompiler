@@ -3,12 +3,13 @@ package eu.pericles.modelcompiler.bpmn.Events;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
+import eu.pericles.modelcompiler.bpmn.BpmnElement;
 import eu.pericles.modelcompiler.bpmn.Data.DataInput;
 import eu.pericles.modelcompiler.bpmn.Data.DataInputAssociation;
 import eu.pericles.modelcompiler.bpmn.Data.InputSet;
 
 @XStreamAlias("bpmn2:endEvent")
-public class EndEvent {
+public class EndEvent implements BpmnElement {
 	
 	public enum Type {
 		NONE, SIGNAL, MESSAGE

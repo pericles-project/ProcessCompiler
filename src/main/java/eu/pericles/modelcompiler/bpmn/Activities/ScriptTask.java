@@ -3,8 +3,10 @@ package eu.pericles.modelcompiler.bpmn.Activities;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
+import eu.pericles.modelcompiler.bpmn.BpmnElement;
+
 @XStreamAlias("bpmn2:scriptTask")
-public class ScriptTask {
+public class ScriptTask implements BpmnElement {
 
 	@XStreamAsAttribute
 	private String id;

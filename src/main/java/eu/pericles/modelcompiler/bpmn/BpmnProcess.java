@@ -48,13 +48,13 @@ public class BpmnProcess {
 	@XStreamImplicit
 	private List<Subprocess> subprocesses = new ArrayList<>();
 	
-	private List<Message> messages;
-	private List<ItemDefinition> itemDefinitions;
+	private List<Message> messages = new ArrayList<>();
+	private List<ItemDefinition> itemDefinitions = new ArrayList<>();
 	
 	public BpmnProcess() {
 	}
 	
-	//---- Getters and setters ----// 
+	//---- Getters, setters and hasElementsOnList methods ----// 
 
 	public String getId() {
 		return id;
@@ -167,6 +167,84 @@ public class BpmnProcess {
 
 	public void setItemDefinitions(List<ItemDefinition> itemDefinitions) {
 		this.itemDefinitions = itemDefinitions;
+	}
+	
+	
+	public boolean hasProperties() {
+		if (getProperties() == null)
+			return false;
+		else 
+			return true;
+	}
+	
+	public boolean hasItemDefinitions() {
+		if (getItemDefinitions() == null)
+			return false;
+		else 
+			return true;
+	}
+	
+	public boolean hasMessages() {
+		if (getMessages() == null)
+			return false;
+		else 
+			return true;
+	}
+	
+	public boolean hasStartEvents() {
+		if (getStartEvents() == null)
+			return false;
+		else 
+			return true;
+	}
+	
+	public boolean hasIntermediateCatchEvents() {
+		if (getIntermediateCatchEvents() == null)
+			return false;
+		else 
+			return true;
+	}
+	
+	public boolean hasIntermediateThrowEvents() {
+		if (getIntermediateThrowEvents() == null)
+			return false;
+		else 
+			return true;
+	}
+	
+	public boolean hasEndEvents() {
+		if (getEndEvents() == null)
+			return false;
+		else 
+			return true;
+	}
+	
+	public boolean hasScriptTasks() {
+		if (getScriptTasks() == null)
+			return false;
+		else 
+			return true;
+	}
+	
+	public boolean hasSubprocesses() {
+		if (getSubprocesses() == null)
+			return false;
+		else 
+			return true;
+	}
+	
+	public boolean hasParallelGateways() {
+		if (getParallelGateways() == null)
+			return false;
+		else 
+			return true;
+	}
+	
+	public boolean hasSequenceFlows() {
+		if (getSequenceFlows() == null)
+			return false;
+		else 
+			return true;
 	}
 
 }

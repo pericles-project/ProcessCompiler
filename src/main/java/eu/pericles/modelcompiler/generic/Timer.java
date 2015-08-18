@@ -55,4 +55,11 @@ public class Timer implements Element {
 	public void setType(Type type) {
 		this.type = type;
 	}
+	
+	public void setValues(Type type, String time, String timeType, String language) {
+		setType(type);
+		setTime(time);
+		setTimeType(timeType);
+		setLanguage(language);
+	}
 }

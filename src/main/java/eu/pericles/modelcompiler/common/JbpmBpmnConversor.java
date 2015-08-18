@@ -13,6 +13,10 @@ public class JbpmBpmnConversor {
 	private JbpmFile jbpmFile;
 	
 	public JbpmBpmnConversor() {
+		init();
+	}
+	
+	private void init() {
 		bpmnProcess = new BpmnProcess();
 		jbpmFile = new JbpmFile();
 	}
@@ -27,15 +31,15 @@ public class JbpmBpmnConversor {
 
 	private void addExternalVariablesToBpmnProcess() {
 		
-		if (jbpmFile.getItemDefinitions() == null) 
-			bpmnProcess.setItemDefinitions(new ArrayList<ItemDefinition>());
+		if (getJbpmFile().getItemDefinitions() == null) 
+			getBpmnProcess().setItemDefinitions(new ArrayList<ItemDefinition>());
 		else 
-			getBpmnProcess().setItemDefinitions(jbpmFile.getItemDefinitions());
+			getBpmnProcess().setItemDefinitions(getJbpmFile().getItemDefinitions());
 		
-		if (jbpmFile.getMessages() == null)
-			bpmnProcess.setMessages(new ArrayList<Message>());
+		if (getJbpmFile().getMessages() == null)
+			getBpmnProcess().setMessages(new ArrayList<Message>());
 		else
-			bpmnProcess.setMessages(jbpmFile.getMessages());
+			getBpmnProcess().setMessages(getJbpmFile().getMessages());
 	}
 	
 	//---- Getters and setters ----// 

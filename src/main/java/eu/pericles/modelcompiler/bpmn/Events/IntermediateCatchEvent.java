@@ -3,12 +3,13 @@ package eu.pericles.modelcompiler.bpmn.Events;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
+import eu.pericles.modelcompiler.bpmn.BpmnElement;
 import eu.pericles.modelcompiler.bpmn.Data.DataOutput;
 import eu.pericles.modelcompiler.bpmn.Data.DataOutputAssociation;
 import eu.pericles.modelcompiler.bpmn.Data.OutputSet;
 
 @XStreamAlias("bpmn2:intermediateCatchEvent")
-public class IntermediateCatchEvent {
+public class IntermediateCatchEvent implements BpmnElement {
 	public enum Type {
 		NONE, SIGNAL, MESSAGE, TIMER
 	}

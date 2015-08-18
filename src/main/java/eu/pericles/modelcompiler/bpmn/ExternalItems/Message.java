@@ -3,8 +3,10 @@ package eu.pericles.modelcompiler.bpmn.ExternalItems;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
+import eu.pericles.modelcompiler.bpmn.BpmnElement;
+
 @XStreamAlias("bpmn2:message")
-public class Message {
+public class Message implements BpmnElement {
 	
 	@XStreamAsAttribute
 	private String id;
