@@ -1,5 +1,6 @@
 package eu.pericles.modelcompiler.common;
 
+import eu.pericles.modelcompiler.bpmn.BpmnElementFactory;
 import eu.pericles.modelcompiler.bpmn.BpmnProcess;
 import eu.pericles.modelcompiler.bpmn.Activities.ScriptTask;
 import eu.pericles.modelcompiler.bpmn.Activities.Subprocess;
@@ -28,7 +29,6 @@ import eu.pericles.modelcompiler.generic.Event;
 import eu.pericles.modelcompiler.generic.ExternalItem;
 import eu.pericles.modelcompiler.generic.Flow;
 import eu.pericles.modelcompiler.generic.Process;
-import eu.pericles.modelcompiler.generic.Timer;
 import eu.pericles.modelcompiler.generic.Variable;
 
 public class GenericBpmnConversor {
@@ -77,57 +77,59 @@ public class GenericBpmnConversor {
 				bpmnProcess.getMessages().add(createMessage(externalItem));
 				break;
 			default:
-				//TODO throw here an exception
+				// TODO throw here an exception
 				break;
 			}
 		}
 	}
 
 	private ItemDefinition createItemDefinition(ExternalItem externalItem) {
-		ItemDefinition itemDefinition = new ItemDefinition();
-		itemDefinition.setId(externalItem.getUid());
-		itemDefinition.setStructureRef(externalItem.getStructure());
-		
-		return itemDefinition;
+		return (ItemDefinition) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.ITEM_DEFINITION, externalItem.getUid(),
+				externalItem.getStructure());
 	}
 
 	private Message createMessage(ExternalItem externalItem) {
-		Message message = new Message();
-		message.setId(externalItem.getUid());
-		message.setItemRef(externalItem.getReference());
-		
-		return message;
+		return (Message) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.MESSAGE, externalItem.getUid(),
+				externalItem.getReference());
 	}
 
 	// ---- Convert Variables ----//
 
 	private void convertVariables(Process genericProcess, BpmnProcess bpmnProcess) {
 		for (Variable variable : genericProcess.getVariables()) {
-			if (variable.getType() == Variable.Type.PROPERTY)
+			switch (variable.getType()) {
+			case PROPERTY:
 				bpmnProcess.getProperties().add(createProperty(variable));
+				break;
+			default:
+				// TODO throw here an exception
+				break;
+			}
 		}
 	}
 
 	private Property createProperty(Variable variable) {
-		Property property = new Property();
-		property.setId(variable.getUid());
-		property.setItemSubjectRef(variable.getReference());
-		
-		return property;
+		return (Property) BpmnElementFactory
+				.createBpmnElement(BpmnElementFactory.Type.PROPERTY, variable.getUid(), variable.getReference());
 	}
 
 	// ---- Convert Activities ----//
 
 	private void convertActivities(Process genericProcess, BpmnProcess bpmnProcess) {
 		for (Activity activity : genericProcess.getActivities()) {
-			if (activity.getType() == Activity.Type.SCRIPT)
+			switch (activity.getType()) {
+			case SCRIPT:
 				bpmnProcess.getScriptTasks().add(createScriptTask(activity));
+				break;
+			default:
+				// TODO throw here an exception
+				break;
+			}
 		}
 	}
 
 	private ScriptTask createScriptTask(Activity activity) {
-		ScriptTask scriptTask = new ScriptTask();
-		scriptTask.setId(activity.getUid());
+		ScriptTask scriptTask = (ScriptTask) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.SCRIPT_TASK, activity.getUid());
 		scriptTask.setName(activity.getName());
 		scriptTask.setScript(activity.getScript());
 
@@ -182,221 +184,224 @@ public class GenericBpmnConversor {
 				bpmnProcess.getIntermediateCatchEvents().add(createTimerCatchEvent(event));
 				break;
 			default:
-				//TODO throw here an exception
+				// TODO throw here an exception
 				break;
 			}
 		}
 	}
 
 	private StartEvent createNoneStartEvent(Event event) {
-		StartEvent startEvent = new StartEvent();
-		startEvent.setId(event.getUid());
-		return startEvent;
+		return (StartEvent) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.START_EVENT, event.getUid());
 	}
-	
+
 	private IntermediateCatchEvent createNoneCatchEvent(Event event) {
-		IntermediateCatchEvent catchEvent = new IntermediateCatchEvent();
-		catchEvent.setId(event.getUid());
-		return catchEvent;
+		return (IntermediateCatchEvent) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.CATCH_EVENT, event.getUid());
 	}
-	
+
 	private IntermediateThrowEvent createNoneThrowEvent(Event event) {
-		IntermediateThrowEvent throwEvent = new IntermediateThrowEvent();
-		throwEvent.setId(event.getUid());
-		return throwEvent;
+		return (IntermediateThrowEvent) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.THROW_EVENT, event.getUid());
 	}
 
 	private EndEvent createNoneEndEvent(Event event) {
-		EndEvent endEvent = new EndEvent();
-		endEvent.setId(event.getUid());
-		return endEvent;
+		return (EndEvent) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.END_EVENT, event.getUid());
 	}
 
 	private StartEvent createMessageStartEvent(Event event) {
-		StartEvent startEvent = new StartEvent();
-		startEvent.setId(event.getUid());
-
-		DataOutput dataOutput = new DataOutput();
-		dataOutput.setId(event.getData().getUid());
-		dataOutput.setItemSubjectRef(event.getData().getReference());
-		DataOutputAssociation dataOutputAssociation = new DataOutputAssociation();
-		dataOutputAssociation.setId(uidGenerator.requestUUID());
-		dataOutputAssociation.setSource(dataOutput.getId());
-		dataOutputAssociation.setTarget(event.getData().getAssociation());
-		OutputSet outputSet = new OutputSet();
-		outputSet.setId(uidGenerator.requestUUID());
-		outputSet.setReference(dataOutput.getId());
-
-		startEvent.setData(dataOutput);
-		startEvent.setDataAssociation(dataOutputAssociation);
-		startEvent.setDataSet(outputSet);
-
+		StartEvent startEvent = (StartEvent) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.START_EVENT, event.getUid());
 		startEvent.setMessageEventDefinition(createMessageEventDefinition(event));
 
+		if (event.hasData()) {
+			startEvent.setData(createDataOutput(event.getData().getUid(), event.getData().getReference()));
+			startEvent.setDataAssociation(createDataOutputAssociation(event.getData().getUid(), event.getData().getAssociation()));
+			startEvent.setDataSet(createOutputSet(event.getData().getUid()));
+		}
 		return startEvent;
 	}
 
 	private IntermediateCatchEvent createMessageCatchEvent(Event event) {
-		IntermediateCatchEvent intermediateCatchEvent = new IntermediateCatchEvent();
-		intermediateCatchEvent.setId(event.getUid());
-
-		DataOutput dataOutput = new DataOutput();
-		dataOutput.setId(event.getData().getUid());
-		dataOutput.setItemSubjectRef(event.getData().getReference());
-		DataOutputAssociation dataOutputAssociation = new DataOutputAssociation();
-		dataOutputAssociation.setId(uidGenerator.requestUUID());
-		dataOutputAssociation.setSource(dataOutput.getId());
-		dataOutputAssociation.setTarget(event.getData().getAssociation());
-		OutputSet outputSet = new OutputSet();
-		outputSet.setId(uidGenerator.requestUUID());
-		outputSet.setReference(dataOutput.getId());
-
-		intermediateCatchEvent.setData(dataOutput);
-		intermediateCatchEvent.setDataAssociation(dataOutputAssociation);
-		intermediateCatchEvent.setDataSet(outputSet);
-
+		IntermediateCatchEvent intermediateCatchEvent = (IntermediateCatchEvent) BpmnElementFactory.createBpmnElement(
+				BpmnElementFactory.Type.CATCH_EVENT, event.getUid());
 		intermediateCatchEvent.setMessageEventDefinition(createMessageEventDefinition(event));
 
+		if (event.hasData()) {
+			intermediateCatchEvent.setData(createDataOutput(event.getData().getUid(), event.getData().getReference()));
+			intermediateCatchEvent.setDataAssociation(createDataOutputAssociation(event.getData().getUid(), event.getData()
+					.getAssociation()));
+			intermediateCatchEvent.setDataSet(createOutputSet(event.getData().getUid()));
+		}
 		return intermediateCatchEvent;
 	}
 
 	private IntermediateThrowEvent createMessageThrowEvent(Event event) {
-		IntermediateThrowEvent intermediateThrowEvent = new IntermediateThrowEvent();
-		intermediateThrowEvent.setId(event.getUid());
-
-		DataInput dataInput = new DataInput();
-		dataInput.setId(event.getData().getUid());
-		dataInput.setItemSubjectRef(event.getData().getReference());
-		DataInputAssociation dataInputAssociation = new DataInputAssociation();
-		dataInputAssociation.setId(uidGenerator.requestUUID());
-		dataInputAssociation.setSource(dataInput.getId());
-		dataInputAssociation.setTarget(event.getData().getAssociation());
-		InputSet inputSet = new InputSet();
-		inputSet.setId(uidGenerator.requestUUID());
-		inputSet.setReference(dataInput.getId());
-
-		intermediateThrowEvent.setData(dataInput);
-		intermediateThrowEvent.setDataAssociation(dataInputAssociation);
-		intermediateThrowEvent.setDataSet(inputSet);
-
+		IntermediateThrowEvent intermediateThrowEvent = (IntermediateThrowEvent) BpmnElementFactory.createBpmnElement(
+				BpmnElementFactory.Type.THROW_EVENT, event.getUid());
 		intermediateThrowEvent.setMessageEventDefinition(createMessageEventDefinition(event));
 
+		if (event.hasData()) {
+			intermediateThrowEvent.setData(createDataInput(event.getData().getUid(), event.getData().getReference()));
+			intermediateThrowEvent
+					.setDataAssociation(createDataInputAssociation(event.getData().getUid(), event.getData().getAssociation()));
+			intermediateThrowEvent.setDataSet(createInputSet(event.getData().getUid()));
+		}
 		return intermediateThrowEvent;
 	}
 
 	private EndEvent createMessageEndEvent(Event event) {
-		EndEvent endEvent = new EndEvent();
-		endEvent.setId(event.getUid());
-
-		DataInput dataInput = new DataInput();
-		dataInput.setId(event.getData().getUid());
-		dataInput.setItemSubjectRef(event.getData().getReference());
-		DataInputAssociation dataInputAssociation = new DataInputAssociation();
-		dataInputAssociation.setId(uidGenerator.requestUUID());
-		dataInputAssociation.setSource(dataInput.getId());
-		dataInputAssociation.setTarget(event.getData().getAssociation());
-		InputSet inputSet = new InputSet();
-		inputSet.setId(uidGenerator.requestUUID());
-		inputSet.setReference(dataInput.getId());
-
-		endEvent.setData(dataInput);
-		endEvent.setDataAssociation(dataInputAssociation);
-		endEvent.setDataSet(inputSet);
-
+		EndEvent endEvent = (EndEvent) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.END_EVENT, event.getUid());
 		endEvent.setMessageEventDefinition(createMessageEventDefinition(event));
 
+		if (event.hasData()) {
+			endEvent.setData(createDataInput(event.getData().getUid(), event.getData().getReference()));
+			endEvent.setDataAssociation(createDataInputAssociation(event.getData().getUid(), event.getData().getAssociation()));
+			endEvent.setDataSet(createInputSet(event.getData().getUid()));
+		}
 		return endEvent;
 	}
 
 	private MessageEventDefinition createMessageEventDefinition(Event event) {
-		MessageEventDefinition messageEventDefinition = new MessageEventDefinition();
-		messageEventDefinition.setId(uidGenerator.requestUUID());
-		messageEventDefinition.setMessageRef(event.getReference());
+		return (MessageEventDefinition) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.MESSAGE_EVENT_DEFINITION,
+				getUidGenerator().requestUUID(), event.getReference());
+	}
 
-		return messageEventDefinition;
+	private DataInput createDataInput(String id, String reference) {
+		return (DataInput) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.DATA_INPUT, id, reference);
+	}
+
+	private DataInputAssociation createDataInputAssociation(String source, String target) {
+		DataInputAssociation dataInputAssociation = (DataInputAssociation) BpmnElementFactory.createBpmnElement(
+				BpmnElementFactory.Type.DATA_INPUT_ASSOCIATION, getUidGenerator().requestUUID());
+		dataInputAssociation.setSource(source);
+		dataInputAssociation.setTarget(target);
+
+		return dataInputAssociation;
+	}
+
+	private InputSet createInputSet(String reference) {
+		return (InputSet) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.INPUT_SET, getUidGenerator().requestUUID(),
+				reference);
+	}
+
+	private DataOutput createDataOutput(String id, String reference) {
+		return (DataOutput) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.DATA_OUTPUT, id, reference);
+	}
+
+	private DataOutputAssociation createDataOutputAssociation(String source, String target) {
+		DataOutputAssociation dataOutputAssociation = (DataOutputAssociation) BpmnElementFactory.createBpmnElement(
+				BpmnElementFactory.Type.DATA_OUTPUT_ASSOCIATION, getUidGenerator().requestUUID());
+		dataOutputAssociation.setSource(source);
+		dataOutputAssociation.setTarget(target);
+
+		return dataOutputAssociation;
+	}
+
+	private OutputSet createOutputSet(String reference) {
+		return (OutputSet) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.OUTPUT_SET, getUidGenerator().requestUUID(),
+				reference);
 	}
 
 	private StartEvent createSignalStartEvent(Event event) {
-		StartEvent startEvent = new StartEvent();
-		startEvent.setId(event.getUid());
+		StartEvent startEvent = (StartEvent) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.START_EVENT, event.getUid());
 		startEvent.setSignalEventDefinition(createSignalEventDefinition(event));
 
+		if (event.hasData()) {
+			startEvent.setData(createDataOutput(event.getData().getUid(), event.getData().getReference()));
+			startEvent.setDataAssociation(createDataOutputAssociation(event.getData().getUid(), event.getData().getAssociation()));
+			startEvent.setDataSet(createOutputSet(event.getData().getUid()));
+		}
 		return startEvent;
 	}
 
 	private IntermediateCatchEvent createSignalCatchEvent(Event event) {
-		IntermediateCatchEvent intermediateCatchEvent = new IntermediateCatchEvent();
-		intermediateCatchEvent.setId(event.getUid());
+		IntermediateCatchEvent intermediateCatchEvent = (IntermediateCatchEvent) BpmnElementFactory.createBpmnElement(
+				BpmnElementFactory.Type.CATCH_EVENT, event.getUid());
 		intermediateCatchEvent.setSignalEventDefinition(createSignalEventDefinition(event));
 
+		if (event.hasData()) {
+			intermediateCatchEvent.setData(createDataOutput(event.getData().getUid(), event.getData().getReference()));
+			intermediateCatchEvent.setDataAssociation(createDataOutputAssociation(event.getData().getUid(), event.getData()
+					.getAssociation()));
+			intermediateCatchEvent.setDataSet(createOutputSet(event.getData().getUid()));
+		}
 		return intermediateCatchEvent;
 	}
 
 	private IntermediateThrowEvent createSignalThrowEvent(Event event) {
-		IntermediateThrowEvent intermediateThrowEvent = new IntermediateThrowEvent();
-		intermediateThrowEvent.setId(event.getUid());
+		IntermediateThrowEvent intermediateThrowEvent = (IntermediateThrowEvent) BpmnElementFactory.createBpmnElement(
+				BpmnElementFactory.Type.THROW_EVENT, event.getUid());
 		intermediateThrowEvent.setSignalEventDefinition(createSignalEventDefinition(event));
 
+		if (event.hasData()) {
+			intermediateThrowEvent.setData(createDataInput(event.getData().getUid(), event.getData().getReference()));
+			intermediateThrowEvent
+					.setDataAssociation(createDataInputAssociation(event.getData().getUid(), event.getData().getAssociation()));
+			intermediateThrowEvent.setDataSet(createInputSet(event.getData().getUid()));
+		}
 		return intermediateThrowEvent;
 	}
 
 	private EndEvent createSignalEndEvent(Event event) {
-		EndEvent endEvent = new EndEvent();
-		endEvent.setId(event.getUid());
+		EndEvent endEvent = (EndEvent) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.END_EVENT, event.getUid());
 		endEvent.setSignalEventDefinition(createSignalEventDefinition(event));
 
+		if (event.hasData()) {
+			endEvent.setData(createDataInput(event.getData().getUid(), event.getData().getReference()));
+			endEvent.setDataAssociation(createDataInputAssociation(event.getData().getUid(), event.getData().getAssociation()));
+			endEvent.setDataSet(createInputSet(event.getData().getUid()));
+		}
 		return endEvent;
 	}
 
 	private SignalEventDefinition createSignalEventDefinition(Event event) {
-		SignalEventDefinition signalEventDefinition = new SignalEventDefinition();
-		signalEventDefinition.setId(uidGenerator.requestUUID());
-		signalEventDefinition.setSignalRef(event.getReference());
-
-		return signalEventDefinition;
+		return (SignalEventDefinition) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.SIGNAL_EVENT_DEFINITION,
+				getUidGenerator().requestUUID(), event.getReference());
 	}
 
 	private StartEvent createTimerStartEvent(Event event) {
-		StartEvent startEvent = new StartEvent();
-		startEvent.setId(event.getUid());
+		StartEvent startEvent = (StartEvent) BpmnElementFactory.createBpmnElement(BpmnElementFactory.Type.START_EVENT, event.getUid());
 		startEvent.setTimerEventDefinition(createTimerEventDefinition(event));
 
+		if (event.hasData()) {
+			startEvent.setData(createDataOutput(event.getData().getUid(), event.getData().getReference()));
+			startEvent.setDataAssociation(createDataOutputAssociation(event.getData().getUid(), event.getData().getAssociation()));
+			startEvent.setDataSet(createOutputSet(event.getData().getUid()));
+		}
 		return startEvent;
 	}
 
 	private IntermediateCatchEvent createTimerCatchEvent(Event event) {
-		IntermediateCatchEvent intermediateCatchEvent = new IntermediateCatchEvent();
-		intermediateCatchEvent.setId(event.getUid());
+		IntermediateCatchEvent intermediateCatchEvent = (IntermediateCatchEvent) BpmnElementFactory.createBpmnElement(
+				BpmnElementFactory.Type.CATCH_EVENT, event.getUid());
 		intermediateCatchEvent.setTimerEventDefinition(createTimerEventDefinition(event));
 
+		if (event.hasData()) {
+			intermediateCatchEvent.setData(createDataOutput(event.getData().getUid(), event.getData().getReference()));
+			intermediateCatchEvent.setDataAssociation(createDataOutputAssociation(event.getData().getUid(), event.getData()
+					.getAssociation()));
+			intermediateCatchEvent.setDataSet(createOutputSet(event.getData().getUid()));
+		}
 		return intermediateCatchEvent;
 	}
 
 	private TimerEventDefinition createTimerEventDefinition(Event event) {
-		TimerEventDefinition timerEventDefinition = new TimerEventDefinition();
-		timerEventDefinition.setId(uidGenerator.requestUUID());
-		if (event.getTimer().getType() == Timer.Type.CYCLE) {
-			TimeCycle timeCycle = new TimeCycle();
-			timeCycle.setId(uidGenerator.requestUUID());
-			timeCycle.setType(event.getTimer().getTimeType());
-			timeCycle.setTime(event.getTimer().getTime());
-			timerEventDefinition.setTimeCycle(timeCycle);
+		TimerEventDefinition timerEventDefinition = (TimerEventDefinition) BpmnElementFactory.createBpmnElement(
+				BpmnElementFactory.Type.TIMER_EVENT_DEFINITION, getUidGenerator().requestUUID());
+		switch (event.getTimer().getType()) {
+		case CYCLE:
+			timerEventDefinition.setTimeCycle((TimeCycle) BpmnElementFactory.createBpmnTimeElement(BpmnElementFactory.Type.TIME_CYCLE,
+					getUidGenerator().requestUUID(), event.getTimer().getTime(), event.getTimer().getTimeType()));
+			break;
+		case DURATION:
+			timerEventDefinition.setTimeDuration((TimeDuration) BpmnElementFactory.createBpmnTimeElement(BpmnElementFactory.Type.TIME_DURATION,
+					getUidGenerator().requestUUID(), event.getTimer().getTime(), event.getTimer().getTimeType()));
+			break;
+		case DATE:
+			timerEventDefinition.setTimeDate((TimeDate) BpmnElementFactory.createBpmnTimeElement(BpmnElementFactory.Type.TIME_DATE,
+					getUidGenerator().requestUUID(), event.getTimer().getTime(), event.getTimer().getTimeType()));
+			break;
+		default:
+			// TODO throw an exception here
+			break;
 		}
-		if (event.getTimer().getType() == Timer.Type.DURATION) {
-			TimeDuration timeDuration = new TimeDuration();
-			timeDuration.setId(uidGenerator.requestUUID());
-			timeDuration.setType(event.getTimer().getTimeType());
-			timeDuration.setTime(event.getTimer().getTime());
-			timerEventDefinition.setTimeDuration(timeDuration);
-		}
-		if (event.getTimer().getType() == Timer.Type.DATE) {
-			TimeDate timeDate = new TimeDate();
-			timeDate.setId(uidGenerator.requestUUID());
-			timeDate.setType(event.getTimer().getTimeType());
-			timeDate.setTime(event.getTimer().getTime());
-			timerEventDefinition.setTimeDate(timeDate);
-		}
-
 		return timerEventDefinition;
 	}
 
@@ -416,16 +421,16 @@ public class GenericBpmnConversor {
 	}
 
 	private Subprocess createSubprocess(Process genericSubprocess) {
-		Subprocess bpmnSubprocess = new Subprocess();
-		bpmnSubprocess.setId(genericSubprocess.getUid());
+		Subprocess bpmnSubprocess = (Subprocess) BpmnElementFactory.createBpmnElement(
+				BpmnElementFactory.Type.SUBPROCESS, getUidGenerator().requestUUID());
 		bpmnSubprocess.setName(genericSubprocess.getName());
-		
+
 		convertActivities(genericSubprocess, bpmnSubprocess);
 		convertEvents(genericSubprocess, bpmnSubprocess);
 		convertGateways(genericSubprocess, bpmnSubprocess);
 		convertSubprocesses(genericSubprocess, bpmnSubprocess);
 		convertFlows(genericSubprocess, bpmnSubprocess);
-		
+
 		return bpmnSubprocess;
 	}
 
@@ -433,7 +438,7 @@ public class GenericBpmnConversor {
 		bpmnProcess.setId(genericProcess.getSource());
 		bpmnProcess.setName(genericProcess.getName());
 		bpmnProcess.setType("Public");
-		
+
 		convertExternalItems(genericProcess, bpmnProcess);
 		convertVariables(genericProcess, bpmnProcess);
 	}
@@ -447,8 +452,8 @@ public class GenericBpmnConversor {
 	}
 
 	private SequenceFlow createSequenceFlow(Flow flow) {
-		SequenceFlow sequenceFlow = new SequenceFlow();
-		sequenceFlow.setId(flow.getUid());
+		SequenceFlow sequenceFlow = (SequenceFlow) BpmnElementFactory.createBpmnElement(
+				BpmnElementFactory.Type.SEQUENCE_FLOW, getUidGenerator().requestUUID());
 		sequenceFlow.setSource(flow.getFrom());
 		sequenceFlow.setTarget(flow.getTo());
 

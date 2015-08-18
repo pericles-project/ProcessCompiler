@@ -15,6 +15,13 @@ public class Event implements Element {
 	private Timer timer;
 	private Data data;
 	
+	public boolean hasData() {
+		if (getData() != null)
+			return true;
+		else 
+			return false;
+	}
+	
 	//---- Getters and setters ----// 
 
 	public String getUid() {

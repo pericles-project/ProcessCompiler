@@ -3,8 +3,10 @@ package eu.pericles.modelcompiler.bpmn.Events;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
+import eu.pericles.modelcompiler.bpmn.BpmnElement;
+
 @XStreamAlias("bpmn2:timerEventDefinition")
-public class TimerEventDefinition {
+public class TimerEventDefinition implements BpmnElement {
 	
 	@XStreamAsAttribute
 	private String id;
