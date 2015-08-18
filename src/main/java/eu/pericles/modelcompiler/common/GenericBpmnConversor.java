@@ -408,7 +408,7 @@ public class GenericBpmnConversor {
 	// ---- Convert Gateways ----//
 
 	private void convertGateways(Process genericProcess, BpmnProcess bpmnProcess) {
-
+		// TODO
 	}
 
 	// ---- Convert Subprocesses ----//
@@ -422,7 +422,7 @@ public class GenericBpmnConversor {
 
 	private Subprocess createSubprocess(Process genericSubprocess) {
 		Subprocess bpmnSubprocess = (Subprocess) BpmnElementFactory.createBpmnElement(
-				BpmnElementFactory.Type.SUBPROCESS, getUidGenerator().requestUUID());
+				BpmnElementFactory.Type.SUBPROCESS, genericSubprocess.getUid());
 		bpmnSubprocess.setName(genericSubprocess.getName());
 
 		convertActivities(genericSubprocess, bpmnSubprocess);
@@ -453,7 +453,7 @@ public class GenericBpmnConversor {
 
 	private SequenceFlow createSequenceFlow(Flow flow) {
 		SequenceFlow sequenceFlow = (SequenceFlow) BpmnElementFactory.createBpmnElement(
-				BpmnElementFactory.Type.SEQUENCE_FLOW, getUidGenerator().requestUUID());
+				BpmnElementFactory.Type.SEQUENCE_FLOW, flow.getUid());
 		sequenceFlow.setSource(flow.getFrom());
 		sequenceFlow.setTarget(flow.getTo());
 
