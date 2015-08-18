@@ -31,7 +31,7 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
-					<generatedSourcesDirectory>${project.build.directory}/generated-sources/annotations</generatedSourcesDirectory>
+					<generatedSourcesDirectory>${project.build.directory}/generated-sources/java</generatedSourcesDirectory>
 				</configuration>
 			</plugin>
 			<plugin>

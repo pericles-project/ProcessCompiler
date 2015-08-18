@@ -1,11 +1,7 @@
-<jaxb:bindings xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
-           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
-           jaxb:extensionBindingPrefixes="xjc"
-           jaxb:version="2.0">
-
-  <jaxb:globalBindings generateValueClass="true">
-    <xjc:simple />
-    <xjc:treatRestrictionLikeNewType />
-  </jaxb:globalBindings>
-</jaxb:bindings>
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb" xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+	extensionBindingPrefixes="xjc" version="2.1">
+	<globalBindings generateValueClass="true">
+		<xjc:simple />
+		<xjc:treatRestrictionLikeNewType />
+	</globalBindings>
+</bindings>
