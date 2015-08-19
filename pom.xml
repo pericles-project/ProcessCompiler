@@ -4,6 +4,10 @@
 	<groupId>ModelCompiler</groupId>
 	<artifactId>ModelCompiler</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<prerequisites>
+		<maven>2.2.1</maven>
+	</prerequisites>
+
 	<dependencies>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
@@ -27,16 +31,16 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.3</version>
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
-					<generatedSourcesDirectory>${project.build.directory}/generated-sources/java</generatedSourcesDirectory>
 				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.9.1</version>
 				<executions>
 					<execution>
 						<phase>generate-sources</phase>
