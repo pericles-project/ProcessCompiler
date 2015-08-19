@@ -11,7 +11,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
 import org.junit.Test;
-import org.omg.spec.bpmn._20100524.model.TDefinitions;
+import org.omg.spec.bpmn._20100524.model.Definitions;
 import org.omg.spec.bpmn._20100524.model.TProcess;
 import org.omg.spec.bpmn._20100524.model.TRootElement;
 
@@ -25,11 +25,11 @@ public class XLSTest {
 
 		// Example to read an XML file:
 		Unmarshaller unmarshaller = jc.createUnmarshaller();				
-		JAXBElement<TDefinitions> feed = unmarshaller.unmarshal(
+		JAXBElement<Definitions> feed = unmarshaller.unmarshal(
 				new StreamSource(getClass().getResourceAsStream(
-						"/helloworld/Input.bpmn2")), TDefinitions.class);
-		TDefinitions definitions = feed.getValue();
-		for(JAXBElement<? extends TRootElement> rootElement: definitions.getRootElement()) {
+						"/helloworld/Input.bpmn2")), Definitions.class);
+		Definitions definitions = feed.getValue();
+		for(JAXBElement<? extends TRootElement> rootElement: definitions.getRootElements()) {
 			if(rootElement.getDeclaredType().isAssignableFrom(TProcess.class)) {
 				TProcess progress = (TProcess) rootElement.getValue();
 				progress.getName(); //...
