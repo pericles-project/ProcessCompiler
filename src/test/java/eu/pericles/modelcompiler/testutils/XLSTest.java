@@ -1,7 +1,6 @@
 package eu.pericles.modelcompiler.testutils;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
