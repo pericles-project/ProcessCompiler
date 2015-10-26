@@ -1,31 +1,31 @@
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.jboss.org/drools" xmlns="http://www.jboss.org/drools" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" id="Definition" expressionLanguage="http://www.mvel.org/2.0" typeLanguage="http://www.java.com/javaTypes" targetNamespace="http://www.jboss.org/drools">
-  <bpmn2:process id="eu.pericles.modelcompiler.unittests.PrintHelloWorld" name="PrintHelloWorld" processType="Private">
-    <bpmn2:startEvent id="StartEvent_1"/>
-    <bpmn2:endEvent id="EndEvent_1"/>
-    <bpmn2:scriptTask id="ScriptTask_1" name="HelloWorld">
+  <bpmn2:process id="5bbb350e-5760-40d9-b93a-a04ef402afbb" name="PrintHelloWorld" processType="Private">
+    <bpmn2:startEvent id="0bd5fa0d-47c0-41dd-82c2-75f9d6b084d0"/>
+    <bpmn2:endEvent id="359df6bd-47fd-4318-a284-56f58c0d748c"/>
+    <bpmn2:scriptTask id="920f24ce-a6e6-4df2-bb0f-8ca1afc6fc34" name="HelloWorld">
       <bpmn2:script>printf(&quot;Hello World&quot;);</bpmn2:script>
     </bpmn2:scriptTask>
-    <bpmn2:sequenceFlow id="SequenceFlow_1" sourceRef="StartEvent_1" targetRef="ScriptTask_1"/>
-    <bpmn2:sequenceFlow id="SequenceFlow_2" sourceRef="ScriptTask_1" targetRef="EndEvent_1"/>
+    <bpmn2:sequenceFlow id="3737d65d-7ace-414a-8f1b-e24ce8cd8c96" sourceRef="0bd5fa0d-47c0-41dd-82c2-75f9d6b084d0" targetRef="920f24ce-a6e6-4df2-bb0f-8ca1afc6fc34"/>
+    <bpmn2:sequenceFlow id="94bda321-2cd6-470b-bc02-e06c3c637e82" sourceRef="920f24ce-a6e6-4df2-bb0f-8ca1afc6fc34" targetRef="359df6bd-47fd-4318-a284-56f58c0d748c"/>
   </bpmn2:process>
-  <bpmndi:BPMNDiagram id="b416c084-185c-4e14-a73f-b14759b674f1">
-    <bpmndi:BPMNPlane id="9b37053a-c297-4483-b78c-2c94be663587" bpmnElement="eu.pericles.modelcompiler.unittests.PrintHelloWorld">
-      <bpmndi:BPMNShape id="a2284274-cfe2-4a11-b4d8-29349bbb3def" bpmnElement="StartEvent_1">
+  <bpmndi:BPMNDiagram id="626fa070-d864-4114-a8f4-0342aeeb2765">
+    <bpmndi:BPMNPlane id="984044e7-6d54-4b23-932d-bdc4376974c8" bpmnElement="5bbb350e-5760-40d9-b93a-a04ef402afbb">
+      <bpmndi:BPMNShape id="65e16f84-99b4-4818-92f2-ea72679c97da" bpmnElement="0bd5fa0d-47c0-41dd-82c2-75f9d6b084d0">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="e01ba1d1-8f02-481d-b852-7159740ce2a7" bpmnElement="EndEvent_1">
+      <bpmndi:BPMNShape id="d5b48ced-3ff1-4070-a926-805463da36c9" bpmnElement="359df6bd-47fd-4318-a284-56f58c0d748c">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="1ea7a83c-62d3-4bc6-9722-a207ecb8c78a" bpmnElement="ScriptTask_1">
+      <bpmndi:BPMNShape id="259e7f03-9655-45de-88ec-369aa3c2bdd2" bpmnElement="920f24ce-a6e6-4df2-bb0f-8ca1afc6fc34">
         <dc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="cc4d4cfb-c3c2-4d68-abc3-e9d679ea9dee" bpmnElement="SequenceFlow_1" sourceElement="StartEvent_1" targetElement="ScriptTask_1">
+      <bpmndi:BPMNEdge id="e19792d6-cb17-457a-9838-6e4580db7944" bpmnElement="3737d65d-7ace-414a-8f1b-e24ce8cd8c96" sourceElement="0bd5fa0d-47c0-41dd-82c2-75f9d6b084d0" targetElement="920f24ce-a6e6-4df2-bb0f-8ca1afc6fc34">
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="33ced889-7a87-48ba-b250-5b97b321f022" bpmnElement="SequenceFlow_2" sourceElement="ScriptTask_1" targetElement="EndEvent_1">
+      <bpmndi:BPMNEdge id="883d0a0d-fe63-47dd-918a-ca8e76e482d0" bpmnElement="94bda321-2cd6-470b-bc02-e06c3c637e82" sourceElement="920f24ce-a6e6-4df2-bb0f-8ca1afc6fc34" targetElement="359df6bd-47fd-4318-a284-56f58c0d748c">
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
         <di:waypoint xsi:type="dc:Point" x="0.0" y="0.0"/>
