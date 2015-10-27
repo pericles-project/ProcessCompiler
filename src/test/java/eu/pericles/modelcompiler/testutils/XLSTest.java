@@ -1,6 +1,8 @@
 package eu.pericles.modelcompiler.testutils;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -14,19 +16,26 @@ import org.omg.spec.bpmn._20100524.model.Definitions;
 import org.omg.spec.bpmn._20100524.model.TProcess;
 import org.omg.spec.bpmn._20100524.model.TRootElement;
 
+import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
+
+import eu.pericles.modelcompiler.bpnmx.FancyDefinitions;
+import eu.pericles.modelcompiler.bpnmx.FancyObjectFactory;
+
 public class XLSTest {
 
 	@Test
 	public void fooTest() throws JAXBException, IOException {
-		JAXBContext jc = JAXBContext
-				.newInstance("org.omg.spec.bpmn._20100524.model:org.omg.spec.bpmn._20100524.di"
-						+ ":org.omg.spec.dd._20100524.dc:org.omg.spec.dd._20100524.di");
+		JAXBContext jc = JAXBContext.newInstance(
+				FancyObjectFactory.class, // org.omg.spec.bpmn._20100524.model.ObjectFactory.class,
+				org.omg.spec.bpmn._20100524.di.ObjectFactory.class,
+				org.omg.spec.dd._20100524.di.ObjectFactory.class,
+				org.omg.spec.dd._20100524.dc.ObjectFactory.class);
 
 		// Example to read an XML file:
-		Unmarshaller unmarshaller = jc.createUnmarshaller();				
-		JAXBElement<Definitions> feed = unmarshaller.unmarshal(
+		Unmarshaller unmarshaller = jc.createUnmarshaller();
+		JAXBElement<FancyDefinitions> feed = unmarshaller.unmarshal(
 				new StreamSource(getClass().getResourceAsStream(
-						"/helloworld/Input.bpmn2")), Definitions.class);
+						"/helloworld/Input.bpmn2")), FancyDefinitions.class);
 		Definitions definitions = feed.getValue();
 		for(JAXBElement<? extends TRootElement> rootElement: definitions.getRootElements()) {
 			if(rootElement.getDeclaredType().isAssignableFrom(TProcess.class)) {
@@ -36,9 +45,21 @@ public class XLSTest {
 				throw new RuntimeException("Unsupported root element of type:" + rootElement.getName());
 			}
 		}
-		
+
 		// Write the XML file to system out.
 		Marshaller marshaller = jc.createMarshaller();
+		final Map<String, String> prefixes = new HashMap<>();
+		prefixes.put("http://www.omg.org/spec/BPMN/20100524/MODEL","bpnm");
+		prefixes.put("http://www.omg.org/spec/DD/20100524/DI","dddi");
+		prefixes.put("http://www.omg.org/spec/DD/20100524/DC","dddc");
+		prefixes.put("http://www.omg.org/spec/BPMN/20100524/DI","di");
+
+    	marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new NamespacePrefixMapper() {
+			@Override
+			public String getPreferredPrefix(String arg0, String arg1, boolean arg2) {
+				return prefixes.get(arg0);
+			}
+		});
 		marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		marshaller.marshal(feed, System.out);
 	}
