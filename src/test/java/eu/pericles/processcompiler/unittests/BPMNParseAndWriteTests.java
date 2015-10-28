@@ -16,7 +16,7 @@ import eu.pericles.processcompiler.bpmn.BPMNWriter;
 @RunWith(Parameterized.class)
 public class BPMNParseAndWriteTests {
 	
-	static String[] folders = {"helloworld"};//, "subprocesses", "signalevents", "messageevents", "timerevents"};
+	static String[] folders = {"helloworld", "completeprocess"};
 	private String path;
 	
     public BPMNParseAndWriteTests(String folder) {
