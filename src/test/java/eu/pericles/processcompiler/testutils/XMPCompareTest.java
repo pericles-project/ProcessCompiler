@@ -1,4 +1,4 @@
-package eu.pericles.modelcompiler.testutils;
+package eu.pericles.processcompiler.testutils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,8 +20,8 @@ public class XMPCompareTest {
 	
 	@Test
 	public void compareTest() throws SAXException, IOException, ParserConfigurationException, XMLStreamException, TransformerException {
-		InputStream lstream = getClass().getResourceAsStream("/helloworld/GenericConversionTest.bpmn2");
-		InputStream rstream = getClass().getResourceAsStream("/helloworld/GenericConversionOutput.bpmn2");
+		InputStream lstream = getClass().getResourceAsStream("/helloworld/Test.bpmn2");
+		InputStream rstream = getClass().getResourceAsStream("/helloworld/Output.bpmn2");
 		XMLCompare.assertEquals(lstream, rstream);
 	}
 }

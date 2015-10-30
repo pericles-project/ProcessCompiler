@@ -8,17 +8,16 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
-import org.omg.spec.bpmn._20100524.model.Definitions;
-
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
-import eu.pericles.processcompiler.bpnmx.FancyObjectFactory;
+import eu.pericles.processcompiler.bpmnx.FancyDefinitions;
+import eu.pericles.processcompiler.bpmnx.FancyObjectFactory;
 
 public class BPMNWriter {
 	
 	private BPMNProcess bpmnProcess;
 	private String file;
-	private Definitions definitions;
+	private FancyDefinitions definitions;
 	
 	public void write(BPMNProcess process, String file) {
 		setBpmnProcess(process);
@@ -35,12 +34,9 @@ public class BPMNWriter {
 	}
 	
 	private void marshal(FileOutputStream fos) throws JAXBException {
-		FancyObjectFactory object = new FancyObjectFactory();
-		setDefinitions(new Definitions());
+		setDefinitions((new FancyObjectFactory()).createDefinitions());
 		
-		getDefinitions().setTargetNamespace(getBpmnProcess().getTargetNamespace());
-		getDefinitions().getRootElements().add(object.createProcess(getBpmnProcess().getProcess()));
-		getDefinitions().getBPMNDiagrams().add(getBpmnProcess().getDiagram());
+		getDefinitions().copyFromBpmnProcess(getBpmnProcess());
 		
 		createMarshaller().marshal(getDefinitions(), fos);
 	}
@@ -55,12 +51,12 @@ public class BPMNWriter {
 		Marshaller marshaller = jc.createMarshaller();
 		
 		final Map<String, String> prefixes = new HashMap<>();
-		prefixes.put("http://www.omg.org/spec/BPMN/20100524/MODEL","bpnm2");
+		prefixes.put("http://www.omg.org/spec/BPMN/20100524/MODEL","bpmn2");
 		prefixes.put("http://www.omg.org/spec/BPMN/20100524/DI","bpmndi");
 		prefixes.put("http://www.omg.org/spec/DD/20100524/DI","di");
 		prefixes.put("http://www.omg.org/spec/DD/20100524/DC","dc");
 		prefixes.put("http://www.w3.org/2001/XMLSchema-instance","xsi");
-		prefixes.put("http://www.jboss.org/drools","tns");
+		prefixes.put(getDefinitions().getTargetNamespace(),"tns");
 
     	marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new NamespacePrefixMapper() {
 			@Override
@@ -75,6 +71,8 @@ public class BPMNWriter {
 		
 		return marshaller;
 	}
+	
+	//------------------- GETTERS AND SETTERS ----------------------//
 
 	public BPMNProcess getBpmnProcess() {
 		return bpmnProcess;
@@ -92,11 +90,11 @@ public class BPMNWriter {
 		this.file = file;
 	}
 
-	public Definitions getDefinitions() {
+	public FancyDefinitions getDefinitions() {
 		return definitions;
 	}
 
-	public void setDefinitions(Definitions definitions) {
+	public void setDefinitions(FancyDefinitions definitions) {
 		this.definitions = definitions;
 	}
 	

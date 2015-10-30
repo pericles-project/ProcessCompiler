@@ -1,4 +1,4 @@
-package eu.pericles.modelcompiler.testutils;
+package eu.pericles.processcompiler.testutils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -18,8 +18,8 @@ import org.omg.spec.bpmn._20100524.model.TRootElement;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
-import eu.pericles.processcompiler.bpnmx.FancyDefinitions;
-import eu.pericles.processcompiler.bpnmx.FancyObjectFactory;
+import eu.pericles.processcompiler.bpmnx.FancyDefinitions;
+import eu.pericles.processcompiler.bpmnx.FancyObjectFactory;
 
 public class XLSTest {
 

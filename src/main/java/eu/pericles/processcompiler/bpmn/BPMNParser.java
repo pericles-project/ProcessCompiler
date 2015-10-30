@@ -11,17 +11,14 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.stream.StreamSource;
 
-import org.omg.spec.bpmn._20100524.model.Definitions;
-import org.omg.spec.bpmn._20100524.model.TProcess;
-import org.omg.spec.bpmn._20100524.model.TRootElement;
-
-import eu.pericles.processcompiler.bpnmx.FancyObjectFactory;
+import eu.pericles.processcompiler.bpmnx.FancyDefinitions;
+import eu.pericles.processcompiler.bpmnx.FancyObjectFactory;
 
 public class BPMNParser {
 	
 	private BPMNProcess bpmnProcess;
 	private String file;
-	private Definitions definitions;
+	private FancyDefinitions definitions;
 	
 	public void parse(String file) {		
 		setBPMNProcess(new BPMNProcess());
@@ -30,8 +27,7 @@ public class BPMNParser {
 		try {
 			unmarshal();
 			
-			getBPMNProcess().setTargetNamespace(getDefinitions().getTargetNamespace());
-			
+			parseAttributes();
 			parseRootElements();
 			parseDiagram();
 			
@@ -41,27 +37,10 @@ public class BPMNParser {
 	}
 
 	private void unmarshal() throws JAXBException, FileNotFoundException {
-		JAXBElement<Definitions> feed = createUnmarshaller().unmarshal(
-				new StreamSource(new InputStreamReader(new FileInputStream(new File(getFile())))), Definitions.class);
+		JAXBElement<FancyDefinitions> feed = createUnmarshaller().unmarshal(
+				new StreamSource(new InputStreamReader(new FileInputStream(new File(getFile())))), FancyDefinitions.class);
 		
 		setDefinitions(feed.getValue());
-	}
-
-	private void parseRootElements() {
-		for(JAXBElement<? extends TRootElement> rootElement: getDefinitions().getRootElements()) {
-			if(rootElement.getDeclaredType().isAssignableFrom(TProcess.class)) {
-				TProcess progress = (TProcess) rootElement.getValue();
-				getBPMNProcess().setProcess(progress);
-			} else {
-				throw new RuntimeException("Unsupported root element of type:" + rootElement.getName());
-			}
-		}
-	}
-
-	private void parseDiagram() {
-		if (!(getDefinitions().getBPMNDiagrams().isEmpty())) {
-			getBPMNProcess().setDiagram(getDefinitions().getBPMNDiagrams().get(0));
-		}		
 	}
 
 	private Unmarshaller createUnmarshaller() throws JAXBException {
@@ -69,11 +48,34 @@ public class BPMNParser {
 				FancyObjectFactory.class, // org.omg.spec.bpmn._20100524.model.ObjectFactory.class,
 				org.omg.spec.bpmn._20100524.di.ObjectFactory.class,
 				org.omg.spec.dd._20100524.di.ObjectFactory.class,
-				org.omg.spec.dd._20100524.dc.ObjectFactory.class);
-		
+				org.omg.spec.dd._20100524.dc.ObjectFactory.class);		
 		return jc.createUnmarshaller();
 	}
 
+	private void parseAttributes() {
+		getBPMNProcess().setId(getDefinitions().getId());
+		getBPMNProcess().setTargetNamespace(getDefinitions().getTargetNamespace());
+		getBPMNProcess().setExpressionLanguage(getDefinitions().getExpressionLanguage());
+		getBPMNProcess().setTypeLanguage(getDefinitions().getTypeLanguage());		
+	}
+
+	private void parseRootElements() {
+		getBPMNProcess().setProcess(getDefinitions().getProcess());
+		getBPMNProcess().setItemDefinitions(getDefinitions().getItemDefinitions());
+		getBPMNProcess().setErrors(getDefinitions().getErrors());
+		getBPMNProcess().setEscalations(getDefinitions().getEscalations());
+		getBPMNProcess().setMessages(getDefinitions().getMessages());
+		getBPMNProcess().setSignals(getDefinitions().getSignals());
+		getBPMNProcess().setInterfaces(getDefinitions().getInterfaces());
+		getBPMNProcess().setDataStores(getDefinitions().getDataStores());
+	}
+
+	private void parseDiagram() {
+		getBPMNProcess().setDiagram(getDefinitions().getDiagram());
+	}
+
+	//------------------- GETTERS AND SETTERS ----------------------//
+	
 	public BPMNProcess getBPMNProcess() {
 		return bpmnProcess;
 	}
@@ -90,11 +92,11 @@ public class BPMNParser {
 		this.file = file;
 	}
 
-	public Definitions getDefinitions() {
+	public FancyDefinitions getDefinitions() {
 		return definitions;
 	}
 
-	public void setDefinitions(Definitions definitions) {
+	public void setDefinitions(FancyDefinitions definitions) {
 		this.definitions = definitions;
 	}
 

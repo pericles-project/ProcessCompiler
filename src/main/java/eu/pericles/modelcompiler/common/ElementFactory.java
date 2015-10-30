@@ -7,19 +7,11 @@ import eu.pericles.modelcompiler.generic.ExternalItem;
 import eu.pericles.modelcompiler.generic.Flow;
 import eu.pericles.modelcompiler.generic.Gateway;
 import eu.pericles.modelcompiler.generic.Process;
-import eu.pericles.modelcompiler.generic.Timer;
 import eu.pericles.modelcompiler.generic.Variable;
-import eu.pericles.modelcompiler.jbpm.Diagram.ConnectionElement;
-import eu.pericles.modelcompiler.jbpm.Diagram.Diagram;
-import eu.pericles.modelcompiler.jbpm.Diagram.Edge;
-import eu.pericles.modelcompiler.jbpm.Diagram.NodeElement;
-import eu.pericles.modelcompiler.jbpm.Diagram.Plane;
-import eu.pericles.modelcompiler.jbpm.Diagram.Shape;
 
 public class ElementFactory {
 	public enum Type {
-		ACTIVITY, EVENT, GATEWAY, PROCESS, FLOW, DATA, EXTERNAL_ITEM, VARIABLE, TIMER, 
-		DIAGRAM, PLANE, SHAPE, EDGE, NODE_ELEMENT, CONNECTION_ELEMENT
+		ACTIVITY, EVENT, GATEWAY, PROCESS, FLOW, DATA, EXTERNAL_ITEM, VARIABLE
 	}
 
 	public static Element createElement(String uid, Type elementType) {
@@ -57,34 +49,6 @@ public class ElementFactory {
 			Variable variable = new Variable();
 			variable.setUid(uid);
 			return variable;
-		case TIMER:
-			Timer timer = new Timer();
-			timer.setUid(uid);
-			return timer;
-		case DIAGRAM:
-			Diagram diagram = new Diagram();
-			diagram.setUid(uid);
-			return diagram;
-		case PLANE:
-			Plane plane = new Plane();
-			plane.setUid(uid);
-			return plane;
-		case SHAPE:
-			Shape shape = new Shape();
-			shape.setUid(uid);
-			return shape;
-		case EDGE:
-			Edge edge = new Edge();
-			edge.setUid(uid);
-			return edge;
-		case NODE_ELEMENT:
-			NodeElement nodeElement = new NodeElement();
-			nodeElement.setUid(uid);
-			return nodeElement;
-		case CONNECTION_ELEMENT:
-			ConnectionElement connectionElement = new ConnectionElement();
-			connectionElement.setUid(uid);
-			return connectionElement;
 		default:
 			// TODO throw an exception here
 			return null;

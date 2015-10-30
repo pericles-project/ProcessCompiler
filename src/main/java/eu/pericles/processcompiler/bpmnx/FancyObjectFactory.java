@@ -1,4 +1,4 @@
-package eu.pericles.processcompiler.bpnmx;
+package eu.pericles.processcompiler.bpmnx;
 
 import javax.xml.bind.annotation.XmlRegistry;
 
