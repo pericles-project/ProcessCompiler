@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.omg.spec.bpmn._20100524.di.BPMNDiagram;
 import org.omg.spec.bpmn._20100524.model.Definitions;
+import org.omg.spec.bpmn._20100524.model.Import;
 import org.omg.spec.bpmn._20100524.model.TDataStore;
 import org.omg.spec.bpmn._20100524.model.TError;
 import org.omg.spec.bpmn._20100524.model.TEscalation;
@@ -29,6 +30,7 @@ public class FancyDefinitions extends Definitions {
 		this.setTargetNamespace(process.getTargetNamespace());
 		this.setExpressionLanguage(process.getExpressionLanguage());
 		this.setTypeLanguage(process.getTypeLanguage());
+		this.addImports(process.getImports());
 		
 		this.addItemDefinitions(process.getItemDefinitions());
 		
@@ -51,6 +53,12 @@ public class FancyDefinitions extends Definitions {
 	private void addProcess(TProcess process) {
 		FancyObjectFactory object = new FancyObjectFactory();
 		this.getRootElements().add(object.createProcess(process));
+	}
+	
+	private void addImports(List<Import> list) {
+		for (Import item : list) {
+			this.getImports().add(item);
+		}
 	}
 	
 	private void addItemDefinitions(List<TItemDefinition> list) {

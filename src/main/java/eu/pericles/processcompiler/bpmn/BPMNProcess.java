@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.omg.spec.bpmn._20100524.di.BPMNDiagram;
+import org.omg.spec.bpmn._20100524.model.Import;
 import org.omg.spec.bpmn._20100524.model.TDataStore;
 import org.omg.spec.bpmn._20100524.model.TError;
 import org.omg.spec.bpmn._20100524.model.TEscalation;
@@ -19,6 +20,7 @@ public class BPMNProcess {
 	private String targetNamespace;
 	private String typeLanguage;
 	private String expressionLanguage;
+	private List<Import> imports = new ArrayList<>();
 	private List<TItemDefinition> itemDefinitions = new ArrayList<>();
 	private List<TError> errors = new ArrayList<>();
 	private List<TEscalation> escalations = new ArrayList<>();
@@ -61,6 +63,14 @@ public class BPMNProcess {
 
 	public void setExpressionLanguage(String expressionLanguage) {
 		this.expressionLanguage = expressionLanguage;
+	}
+
+	public List<Import> getImports() {
+		return imports;
+	}
+
+	public void setImports(List<Import> imports) {
+		this.imports = imports;
 	}
 
 	public List<TItemDefinition> getItemDefinitions() {

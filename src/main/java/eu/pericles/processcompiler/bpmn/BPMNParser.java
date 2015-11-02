@@ -28,6 +28,7 @@ public class BPMNParser {
 			unmarshal();
 			
 			parseAttributes();
+			parseImports();
 			parseRootElements();
 			parseDiagram();
 			
@@ -57,6 +58,10 @@ public class BPMNParser {
 		getBPMNProcess().setTargetNamespace(getDefinitions().getTargetNamespace());
 		getBPMNProcess().setExpressionLanguage(getDefinitions().getExpressionLanguage());
 		getBPMNProcess().setTypeLanguage(getDefinitions().getTypeLanguage());		
+	}
+	
+	private void parseImports() {
+		getBPMNProcess().setImports(getDefinitions().getImports());
 	}
 
 	private void parseRootElements() {
