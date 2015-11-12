@@ -1,0 +1,7 @@
+{
+	"name": "HelloWorld",
+	"description": "Atomic process that print Hello World! in the screen",
+	"id": "/api/cdmi/cdmi_objectid/0000A4EF0018D21BD7D441A772C449A6886C06A3284BC5A1",
+	"version": "1.0",
+	"implementation": "/api/cdmi/cdmi_objectid/0000A4EF001821A36C7763B7220A4AD180ED3050BC5380D4"
+}
