@@ -30,8 +30,7 @@ public class ERMRClientAPI {
 	}
 	
 	public Response createCollection(String collection) {
-		String entity = "aa";
-		return getBuilder(objectStore, collection).put(Entity.entity(entity, MediaType.APPLICATION_JSON));
+		return getBuilder(objectStore, collection).put(Entity.entity(collection, MediaType.APPLICATION_JSON));
 	}
 	
 	public Response getCollection(String collection) {
@@ -42,8 +41,8 @@ public class ERMRClientAPI {
 		return getBuilder(objectStore, collection).delete();
 	}
 	
-	public Response createRepository(String collection) {
-		return getBuilder(tripleStore, collection).put(null);
+	public Response createRepository(String repository) {
+		return getBuilder(tripleStore, repository).put(Entity.entity(repository, MediaType.APPLICATION_JSON));
 	}
 	
 	public Response getRepository(String repository) {

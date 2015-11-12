@@ -16,9 +16,10 @@ public class CreateRepositoryTest {
 
 	@Test
 	public void createRepository() throws KeyManagementException, NoSuchAlgorithmException {
-		Response response = new ERMRClientAPI().createCollection(repository);
+		Response response = new ERMRClientAPI().createRepository(repository);
 		System.out.println("Create Repository: " + response.getStatus() + " " + response.getStatusInfo());
-		assertEquals(201, response.getStatus());
+		//Error in the ERMR design: this should be 201 Created 
+		assertEquals(204, response.getStatus());
 	}
 	
 	public static void setRepository(String repository2) {

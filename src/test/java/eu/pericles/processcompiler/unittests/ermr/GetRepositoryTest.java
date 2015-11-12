@@ -16,7 +16,7 @@ public class GetRepositoryTest {
 
 	@Test
 	public void getRepository() throws KeyManagementException, NoSuchAlgorithmException {
-		Response response = new ERMRClientAPI().getCollection(repository);
+		Response response = new ERMRClientAPI().getRepository(repository);
 		System.out.println("Get Repository: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(200, response.getStatus());
 	}

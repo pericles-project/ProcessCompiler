@@ -16,7 +16,7 @@ public class DeleteRepositoryTest {
 
 	@Test
 	public void deleteRepository() throws KeyManagementException, NoSuchAlgorithmException {
-		Response response = new ERMRClientAPI().deleteCollection(repository);
+		Response response = new ERMRClientAPI().deleteRepository(repository);
 		System.out.println("Delete Repository: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(204, response.getStatus());
 	}
