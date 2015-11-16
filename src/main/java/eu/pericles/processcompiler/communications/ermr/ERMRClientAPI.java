@@ -1,5 +1,6 @@
 package eu.pericles.processcompiler.communications.ermr;
 
+import java.io.File;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 
@@ -28,7 +29,7 @@ public class ERMRClientAPI {
 	public Client getClient() {
 		return client;
 	}
-	
+	//TODO this doesn't work! We need to find a way to create a folder/container/whatever via put() method
 	public Response createCollection(String collection) {
 		return getBuilder(objectStore, collection).put(Entity.entity(collection, MediaType.APPLICATION_JSON));
 	}
@@ -41,6 +42,7 @@ public class ERMRClientAPI {
 		return getBuilder(objectStore, collection).delete();
 	}
 	
+	//TODO this doesn't work! We need to find a way to create a folder/container/whatever via put() method
 	public Response createRepository(String repository) {
 		return getBuilder(tripleStore, repository).put(Entity.entity(repository, MediaType.APPLICATION_JSON));
 	}
@@ -51,5 +53,33 @@ public class ERMRClientAPI {
 	
 	public Response deleteRepository(String repository) {
 		return getBuilder(tripleStore, repository).delete();
+	}
+
+	public Response createDigitalObject(String digitalObjectPath, String digitalObject, String mediaType){
+		return getBuilder(objectStore, digitalObjectPath).put(Entity.entity(new File(digitalObject), mediaType));
+	}
+
+	public Response deleteDigitalObject(String digitalObjectPath) {
+		return getBuilder(objectStore, digitalObjectPath).delete();
+	}
+
+	public Response getDigitalObject(String digitalObjectPath) {
+		return getBuilder(objectStore, digitalObjectPath).get();
+	}
+
+	public Response updateDigitalObject(String digitalObjectPath, String digitalObject, String mediaType) {
+		return getBuilder(objectStore, digitalObjectPath).put(Entity.entity(new File(digitalObject), mediaType));
+	}
+
+	public Response addTriples(String repository, String triples, String mediaType) {
+		return getBuilder(tripleStore, repository + "statements").put(Entity.entity(new File(triples), mediaType));
+	}
+
+	public Response deleteTriples(String repository) {
+		return getBuilder(tripleStore, repository + "statements").delete();
+	}
+
+	public Response getTriples(String repository) {
+		return getBuilder(tripleStore, repository + "statements").get();
 	}
 }

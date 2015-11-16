@@ -1,6 +1,6 @@
 package eu.pericles.processcompiler.unittests.ermr;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -11,13 +11,14 @@ import org.junit.Test;
 
 import eu.pericles.processcompiler.communications.ermr.ERMRClientAPI;
 
-public class DeleteRepositoryTest {
+public class DeleteTriplesTest {
 	static String repository;
 
 	@Test
-	public void deleteRepository() throws KeyManagementException, NoSuchAlgorithmException {
-		Response response = new ERMRClientAPI().deleteRepository(repository);
-		System.out.println("Delete Repository: " + response.getStatus() + " " + response.getStatusInfo());
+	public void deleteTriples() throws KeyManagementException, NoSuchAlgorithmException {
+		Response response = new ERMRClientAPI().deleteTriples(repository);
+		System.out.println("Delete Triples: " + response.getStatus() + " " + response.getStatusInfo());
+		//Error in the ERMR design: this should be 201 Created 
 		assertEquals(204, response.getStatus());
 	}
 	

@@ -4,7 +4,7 @@
 	"type": "BPMN",
 	"location": "/api/cdmi/cdmi_objectid/0000A4EF00180DE4AF2F3AEB5FD949E68617FE5EB6A569E0",
 	"fixity": {
-		"checksum": "sha256",
-		"algorithm": "5e17af01b2a6ed09cda05096d137166ac783fbe022763d084a8335079ffd8663",
+		"checksum": "5e17af01b2a6ed09cda05096d137166ac783fbe022763d084a8335079ffd8663",
+		"algorithm": "sha256",
 	}
 }

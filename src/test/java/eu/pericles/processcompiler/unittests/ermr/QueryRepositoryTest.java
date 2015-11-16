@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import eu.pericles.processcompiler.communications.ermr.ERMRClientAPI;
 
-public class CreateCollectionTest {
+public class QueryRepositoryTest {
 	static String collection;
 
 	@Test
@@ -21,7 +21,7 @@ public class CreateCollectionTest {
 		assertEquals(201, response.getStatus());
 	}
 	
-	public static void setVariables(String collection2) {
+	public static void setCollection(String collection2) {
 		collection = collection2;
 	}
 

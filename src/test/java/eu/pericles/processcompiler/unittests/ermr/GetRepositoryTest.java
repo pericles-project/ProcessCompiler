@@ -21,7 +21,7 @@ public class GetRepositoryTest {
 		assertEquals(200, response.getStatus());
 	}
 	
-	public static void setRepository(String repository2) {
+	public static void setVariables(String repository2) {
 		repository = repository2;
 	}
 }

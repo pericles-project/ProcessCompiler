@@ -21,7 +21,7 @@ public class DeleteCollectionTest {
 		assertEquals(204, response.getStatus());
 	}
 	
-	public static void setCollection(String collection2) {
+	public static void setVariables(String collection2) {
 		collection = collection2;
 	}
 
