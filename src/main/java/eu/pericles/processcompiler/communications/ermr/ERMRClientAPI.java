@@ -17,6 +17,7 @@ public class ERMRClientAPI {
 	final static String password = "Per1cles1Pw";
 	final static String tripleStore = "https://141.5.102.86/api/triple";
 	final static String objectStore = "https://141.5.102.86/api/cdmi";
+	final static String findApi = "https://141.5.102.86/api/find";
 	
 	public ERMRClientAPI() throws KeyManagementException, NoSuchAlgorithmException {
 		client = AllTrustingClient.getAllTrustingClientWithCredentials(user, password);
@@ -72,14 +73,22 @@ public class ERMRClientAPI {
 	}
 
 	public Response addTriples(String repository, String triples, String mediaType) {
-		return getBuilder(tripleStore, repository + "statements").put(Entity.entity(new File(triples), mediaType));
+		return getBuilder(tripleStore, repository + "/statements").put(Entity.entity(new File(triples), mediaType));
 	}
 
 	public Response deleteTriples(String repository) {
-		return getBuilder(tripleStore, repository + "statements").delete();
+		return getBuilder(tripleStore, repository + "/statements").delete();
 	}
 
 	public Response getTriples(String repository) {
-		return getBuilder(tripleStore, repository + "statements").get();
+		return getBuilder(tripleStore, repository + "/statements").get();
+	}
+
+	public Response find(String term) {
+		return getClient().target(findApi + "?findTerms=" + term).request().get();
+	}
+
+	public Response query(String repository, String query) {
+		return getClient().target(tripleStore + "/" + repository + "?query=" + query).request().get();
 	}
 }
