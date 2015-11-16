@@ -27,8 +27,8 @@ import eu.pericles.processcompiler.unittests.ermr.UpdateDigitalObjectTest;
 	UpdateDigitalObjectTest.class, DeleteDigitalObjectTest.class,
 	GetRepositoryTest.class,
 	AddTriplesTest.class, GetTriplesTest.class, 
-	QueryRepositoryTest.class/*,
-	DeleteTriplesTest.class*/})
+	QueryRepositoryTest.class,
+	DeleteTriplesTest.class})
 /*@SuiteClasses({ CreateCollectionTest.class, GetCollectionTest.class, 
 	CreateDigitalObjectTest.class, GetDigitalObjectTest.class, UpdateDigitalObjectTest.class, 
 	DeleteDigitalObjectTest.class, DeleteCollectionTest.class, 
