@@ -20,21 +20,17 @@ import eu.pericles.processcompiler.unittests.ermr.QueryRepositoryTest;
 import eu.pericles.processcompiler.unittests.ermr.UpdateDigitalObjectTest;
 
 @RunWith(Suite.class)
-@SuiteClasses({
-	GetCollectionTest.class, 
-	CreateDigitalObjectTest.class, GetDigitalObjectTest.class, 
-	FindTest.class,
-	UpdateDigitalObjectTest.class, DeleteDigitalObjectTest.class,
-	GetRepositoryTest.class,
-	AddTriplesTest.class, GetTriplesTest.class, 
-	QueryRepositoryTest.class,
-	DeleteTriplesTest.class})
-/*@SuiteClasses({ CreateCollectionTest.class, GetCollectionTest.class, 
-	CreateDigitalObjectTest.class, GetDigitalObjectTest.class, UpdateDigitalObjectTest.class, 
-	DeleteDigitalObjectTest.class, DeleteCollectionTest.class, 
-	CreateRepositoryTest.class, GetRepositoryTest.class,
-	AddTriplesTest.class, GetTriplesTest.class,
-	DeleteTriplesTest.class, DeleteRepositoryTest.class })*/
+@SuiteClasses({ GetCollectionTest.class, CreateDigitalObjectTest.class, GetDigitalObjectTest.class, FindTest.class,
+		UpdateDigitalObjectTest.class, DeleteDigitalObjectTest.class, GetRepositoryTest.class, AddTriplesTest.class, GetTriplesTest.class,
+		QueryRepositoryTest.class, DeleteTriplesTest.class })
+/*
+ * @SuiteClasses({ CreateCollectionTest.class, GetCollectionTest.class,
+ * CreateDigitalObjectTest.class, GetDigitalObjectTest.class,
+ * UpdateDigitalObjectTest.class, DeleteDigitalObjectTest.class,
+ * DeleteCollectionTest.class, CreateRepositoryTest.class,
+ * GetRepositoryTest.class, AddTriplesTest.class, GetTriplesTest.class,
+ * DeleteTriplesTest.class, DeleteRepositoryTest.class })
+ */
 public class ERMRRequestsTests {
 	static String collection = "NoaCollectionTest";
 	static String repository = "NoaRepositoryTest";
@@ -62,9 +58,11 @@ public class ERMRRequestsTests {
 		QueryRepositoryTest.setVariables(repository, query, expectedQueryResult);
 		GetTriplesTest.setVariables(repository, expectedTriples);
 		DeleteTriplesTest.setVariables(repository);
-		/*CreateCollectionTest.setVariables(collection);
-		DeleteCollectionTest.setVariables(collection);
-		CreateRepositoryTest.setVariables(repository);
-		DeleteRepositoryTest.setVariables(repository);*/
+		/*
+		 * CreateCollectionTest.setVariables(collection);
+		 * DeleteCollectionTest.setVariables(collection);
+		 * CreateRepositoryTest.setVariables(repository);
+		 * DeleteRepositoryTest.setVariables(repository);
+		 */
 	}
 }

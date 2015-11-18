@@ -1,59 +1,74 @@
 {
     "values": [
         [
-            "<http://www.pericles.org/models#implementation1>",
-            "<http://www.pericles.org/models#algorithm>",
+            "<http://www.pericles-project.eu/models#fixHelloWorld>",
+            "<http://www.pericles-project.eu/models#algorithm>",
             "\"sha256\""
         ],
         [
-            "<http://www.pericles.org/models#implementation1>",
-            "<http://www.pericles.org/models#checksum>",
+            "<http://www.pericles-project.eu/models#fixHelloWorld>",
+            "<http://www.pericles-project.eu/models#checksum>",
             "\"5e17af01b2a6ed09cda05096d137166ac783fbe022763d084a8335079ffd8663\""
         ],
         [
-            "<http://www.pericles.org/models#implementation1>",
-            "<http://www.pericles.org/models#location>",
-            "\"/api/cdmi/cdmi_objectid/0000A4EF00180DE4AF2F3AEB5FD949E68617FE5EB6A569E0\""
+            "<http://www.pericles-project.eu/models#fixHelloWorld>",
+            "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+            "<http://www.pericles-project.eu/ns/Ecosystem#Fixity>"
         ],
         [
-            "<http://www.pericles.org/models#implementation1>",
-            "<http://www.pericles.org/models#type>",
+            "<http://www.pericles-project.eu/models#impHelloWorld>",
+            "<http://www.pericles-project.eu/models#location>",
+            "\"https://c102-086.cloud.gwdg.de/api/cdmi/cdmi_objectid/0000A4EF00180DE4AF2F3AEB5FD949E68617FE5EB6A569E0\""
+        ],
+        [
+            "<http://www.pericles-project.eu/models#impHelloWorld>",
+            "<http://www.pericles-project.eu/models#type>",
             "\"BPMN\""
         ],
         [
-            "<http://www.pericles.org/models#implementation1>",
-            "<http://www.pericles.org/models#version>",
-            "\"1.0\""
+            "<http://www.pericles-project.eu/models#impHelloWorld>",
+            "<http://www.pericles-project.eu/models#version>",
+            "\"1\""
         ],
         [
-            "<http://www.pericles.org/models#implementation1>",
-            "<http://www.pericles.org/models#id>",
+            "<http://www.pericles-project.eu/models#impHelloWorld>",
+            "<http://www.pericles-project.eu/models#id>",
             "\"bc5125f3-210c-42d2-ad58-f427de7a02e4\""
         ],
         [
-            "<http://www.pericles.org/models#atomicprocess1>",
-            "<http://www.pericles.org/models#hasImplementation>",
-            "\"bc5125f3-210c-42d2-ad58-f427de7a02e4\""
+            "<http://www.pericles-project.eu/models#impHelloWorld>",
+            "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+            "<http://www.pericles-project.eu/ns/Ecosystem#Implementation>"
         ],
         [
-            "<http://www.pericles.org/models#atomicprocess1>",
-            "<http://www.pericles.org/models#version>",
-            "\"1.0\""
+            "<http://www.pericles-project.eu/models#atpHelloWorld>",
+            "<http://www.pericles-project.eu/models#hasImplementation>",
+            "<http://www.pericles-project.eu/models#impHelloWorld>"
         ],
         [
-            "<http://www.pericles.org/models#atomicprocess1>",
-            "<http://www.pericles.org/models#id>",
+            "<http://www.pericles-project.eu/models#atpHelloWorld>",
+            "<http://www.pericles-project.eu/models#version>",
+            "\"1\""
+        ],
+        [
+            "<http://www.pericles-project.eu/models#atpHelloWorld>",
+            "<http://www.pericles-project.eu/models#id>",
             "\"6d4c7d23-d1cc-4ebd-915e-4b465b494ab3\""
         ],
         [
-            "<http://www.pericles.org/models#atomicprocess1>",
-            "<http://www.pericles.org/models#description>",
+            "<http://www.pericles-project.eu/models#atpHelloWorld>",
+            "<http://www.pericles-project.eu/models#description>",
             "\"Atomic process that print Hello World! in the screen\""
         ],
         [
-            "<http://www.pericles.org/models#atomicprocess1>",
-            "<http://www.pericles.org/models#name>",
+            "<http://www.pericles-project.eu/models#atpHelloWorld>",
+            "<http://www.pericles-project.eu/models#name>",
             "\"Hello World\""
+        ],
+        [
+            "<http://www.pericles-project.eu/models#atpHelloWorld>",
+            "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>",
+            "<http://www.pericles-project.eu/ns/Ecosystem#AtomicProcess>"
         ]
     ],
     "names": [
