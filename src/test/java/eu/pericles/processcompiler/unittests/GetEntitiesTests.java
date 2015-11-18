@@ -17,6 +17,7 @@ import org.junit.Test;
 import eu.pericles.processcompiler.communications.ermr.ERMRClientAPI;
 import eu.pericles.processcompiler.communications.ermr.JSONParser;
 import eu.pericles.processcompiler.communications.ermr.SPARQLQuery;
+import eu.pericles.processcompiler.testutils.Utils;
 
 public class GetEntitiesTests {
 
@@ -63,9 +64,10 @@ public class GetEntitiesTests {
 			assertEquals(200, response.getStatus());
 			String location = JSONParser.parseGetImplementationLocationResponse(response);
 			assertEquals(expectedLocation, location);
-			URL url = new URL(location);
-			String content = new Scanner(new File(url.getFile())).useDelimiter("\\Z").next();
-			System.out.println(content);
+			URL url = new URL(location);			
+			Utils.fileContentEquals(url.getFile(), "src/test/resources/ermr/communications/DigitalObject.bpmn2");
+			//String content = new Scanner(new File(url.getFile())).useDelimiter("\\Z").next();
+			//System.out.println(content);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
