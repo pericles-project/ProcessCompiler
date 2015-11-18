@@ -64,9 +64,9 @@ public class GetEntitiesTests {
 			response = client.query(repository, new SPARQLQuery().createQueryGetImplementationLocation(id));
 			assertEquals(200, response.getStatus());
 			//Create a function to parse the results of the requests
-			//System.out.println("Response to query:\n" + response.readEntity(String.class));
-			JsonObject jsonObject = Json.createReader(response.readEntity(InputStream.class)).readObject();
-			System.out.println("JSON OBJECT:\n" + jsonObject.toString());
+			System.out.println("Response to query:\n" + response.readEntity(String.class));
+			//JsonObject jsonObject = Json.createReader(response.readEntity(InputStream.class)).readObject();
+			//System.out.println("JSON OBJECT:\n" + jsonObject.toString());
 			} catch (Exception e) {
 			e.printStackTrace();
 			fail();
