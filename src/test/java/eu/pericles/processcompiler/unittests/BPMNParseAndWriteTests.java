@@ -20,7 +20,7 @@ public class BPMNParseAndWriteTests {
 	private String path;
 	
     public BPMNParseAndWriteTests(String folder) {
-        this.path = "src/test/resources/" + folder + "/";
+        this.path = "src/test/resources/bpmnfiles/" + folder + "/";
     }
 	
     @Parameters(name="{0}")

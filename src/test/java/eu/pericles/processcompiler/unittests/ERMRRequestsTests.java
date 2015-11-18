@@ -34,12 +34,12 @@ import eu.pericles.processcompiler.unittests.ermr.UpdateDigitalObjectTest;
 public class ERMRRequestsTests {
 	static String collection = "NoaCollectionTest";
 	static String repository = "NoaRepositoryTest";
-	static String digitalObjectPath = collection + "/" + "Input.bpmn2";
-	static String digitalObject = "src/test/resources/helloworld/Input.bpmn2";
-	static String triples = "src/test/resources/helloworld/Ecosystem.txt";
-	static String expectedTriples = "src/test/resources/helloworld/Triples.txt";
-	static String expectedFindResult = "src/test/resources/helloworld/ExpectedFindResult.txt";
-	static String expectedQueryResult = "src/test/resources/helloworld/ExpectedQueryResult.txt";
+	static String digitalObjectPath = collection + "/" + "DigitalObject.bpmn2";
+	static String digitalObject = "src/test/resources/ermr/basicrequests/DigitalObject.bpmn2";
+	static String triples = "src/test/resources/ermr/basicrequests/Triples.txt";
+	static String expectedTriples = "src/test/resources/ermr/basicrequests/ExpectedTriples.txt";
+	static String expectedFindResult = "src/test/resources/ermr/basicrequests/ExpectedFindResult.txt";
+	static String expectedQueryResult = "src/test/resources/ermr/basicrequests/ExpectedQueryResult.txt";
 	static String findTerm = "bpmn2";
 	static String query = "select%20?s%20?p%20?o%20%7B?s%20?p%20?o%7D";
 	static String digitalObjectMediaType = MediaType.APPLICATION_XML;

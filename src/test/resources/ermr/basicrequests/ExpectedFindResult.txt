@@ -1,5 +1,5 @@
 [
     "/NoaCollection/HelloWorld.bpmn2",
-    "/NoaCollectionTest/Input.bpmn2",
+    "/NoaCollectionTest/DigitalObject.bpmn2",
     "/NoaCollection/HelloWorld/Input.bpmn2"
 ]
