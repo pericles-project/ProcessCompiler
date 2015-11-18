@@ -3,11 +3,8 @@ package eu.pericles.processcompiler.unittests;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
-import java.util.Scanner;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -66,8 +63,6 @@ public class GetEntitiesTests {
 			assertEquals(expectedLocation, location);
 			URL url = new URL(location);			
 			Utils.fileContentEquals(url.getFile(), "src/test/resources/ermr/communications/DigitalObject.bpmn2");
-			//String content = new Scanner(new File(url.getFile())).useDelimiter("\\Z").next();
-			//System.out.println(content);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
