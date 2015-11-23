@@ -21,4 +21,9 @@ public class SPARQLQuery {
 		return encode(query);
 	}
 
+	public static String createQueryGetImplementationEntity(String id) throws UnsupportedEncodingException {
+		String query = "SELECT ?uri WHERE { ?uri <http://www.pericles-project.eu/models#id> \"" + id + "\" . }";
+		return encode(query);
+	}
+
 }

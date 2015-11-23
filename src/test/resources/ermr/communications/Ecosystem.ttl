@@ -1,0 +1,173 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ecosystem: <http://www.pericles-project.eu/ns/ecosystem#> .
+
+#### Hello World - Atomic Process ####
+
+ecosystem:atpHelloWorld a ecosystem:AtomicProcess ;
+  ecosystem:name "Hello World" ;
+  ecosystem:description "Atomic process that print Hello World! in the screen" ;
+  ecosystem:id "6d4c7d23-d1cc-4ebd-915e-4b465b494ab3" ;
+  ecosystem:version "1" ;
+  ecosystem:hasImplementation ecosystem:impHelloWorld .
+
+ecosystem:impHelloWorld a ecosystem:Implementation ;
+  ecosystem:id "bc5125f3-210c-42d2-ad58-f427de7a02e4" ;
+  ecosystem:version "1" ;
+  ecosystem:type "BPMN" ;
+  ecosystem:location "https://c102-086.cloud.gwdg.de/api/cdmi/cdmi_objectid/0000A4EF00180DE4AF2F3AEB5FD949E68617FE5EB6A569E0" .
+  ecosystem:fixity ecosystem:fixHelloWorld .
+
+ecosystem:fixHelloWorld a ecosystem:Fixity ;
+  ecosystem:checksum "5e17af01b2a6ed09cda05096d137166ac783fbe022763d084a8335079ffd8663" ;
+  ecosystem:algorithm "sha256" .
+  
+  #### Ingest Artwork Software - Aggregated Process ####
+
+ecosystem:agpIngestAWSW a ecosystem:AggregatedProcess ;
+  ecosystem:name "Ingest Artwork Software" ;
+  ecosystem:description "Aggregated process that ingest an artwork software by doing the following: check for viruses, extract the metadata and encapsulate the artwork together with it" ;
+  ecosystem:id "81e328e2-ccf9-45b2-a9cd-e9b613a3605b" ;
+  ecosystem:version "1" ;
+  ecosystem:hasInputSlot ecosystem:isIngestAWSWAW, ecosystem:isIngestAWSWPF ;
+  ecosystem:hasOutputSlot ecosystem:osIngestAWSWP ;
+  ecosystem:hasSequence ecosystem:seqIngestAWSWP .
+
+ecosystem:isIngestAWSWAW a ecosystem:InputSlot ;
+  ecosystem:name "InputSlot Artwork Software" ;
+  ecosystem:description "Input slot corresponding to the Artwork Software entity for the aggregated process Ingest Artwork Software" ;
+  ecosystem:id "6d8d0572-8b88-4931-8444-21949a1875e7" ;
+  ecosystem:type ecosystem:ArtworkSoftware ;
+  ecosystem:isOptional "false" .
+
+ecosystem:isIngestAWSWPF a ecosystem:InputSlot ;
+  ecosystem:name "InputSlot Package Format" ;
+  ecosystem:description "Input slot corresponding to the Package Format entity for the aggregated process Ingest Artwork Software" ;
+  ecosystem:id "1b4b5b2c-3910-457f-8cf2-056cb8944a8c" ;
+  ecosystem:type ecosystem:PackageFormat ;
+  ecosystem:isOptional "false" .
+
+ecosystem:osIngestAWSWP a ecosystem:OutputSlot ;
+  ecosystem:name "OutputSlot Package" ;
+  ecosystem:description "Output slot corresponding to the Package entity created as the result of the aggregated process Ingest Artwork Software" ;
+  ecosystem:id "63b95973-ec47-4910-aea2-ad64cf2b4ffb" ;
+  ecosystem:type ecosystem:Package .
+
+ecosystem:seqIngestAWSWP a ecosystem:Sequence ;
+  ecosystem:processFlow "1272f559-7578-4034-8891-1dc603e04415, 1d43c167-aa5b-4c86-b3c1-2dc0cf2da2a6, 271f7a41-b1c8-4f26-a8f9-3e20ab442472" ;
+  ecosystem:dataFlow "6d8d0572-8b88-4931-8444-21949a1875e7:a13de55b-fd02-45d1-b72b-35f5b5b8f52c, 6d8d0572-8b88-4931-8444-21949a1875e7:3b55fd51-3b76-4a82-9696-e5242ca90a63, 6d8d0572-8b88-4931-8444-21949a1875e7:c7d2a135-6431-4e71-9436-786f5759837f, 1b4b5b2c-3910-457f-8cf2-056cb8944a8c:fd0a160c-279a-49c6-addc-4bb3b95a1e64, 6cf7f109-9016-40f7-a617-f99158b3ad67:ca99669b-6841-4b3c-886f-3105dd2b0a7d, 44d238fd-b335-4637-aa8f-b8aea901906c:63b95973-ec47-4910-aea2-ad64cf2b4ffb" ;
+
+#### Virus Check - Atomic Process ####
+
+ecosystem:atpVirusCheck a ecosystem:AtomicProcess ;
+  ecosystem:name "Virus Check" ;
+  ecosystem:description "Atomic process that check for viruses a digital material" ;
+  ecosystem:id "1272f559-7578-4034-8891-1dc603e04415" ;
+  ecosystem:version "1" ;
+  ecosystem:hasImplementation ecosystem:impVirusCheck .
+
+ecosystem:isVirusCheckDM a ecosystem:InputSlot ;
+  ecosystem:name "InputSlot Digital Material" ;
+  ecosystem:description "Input slot corresponding to the digital material to be checked for viruses" ;
+  ecosystem:id "a13de55b-fd02-45d1-b72b-35f5b5b8f52c" ;
+  ecosystem:type ecosystem:DigitalObject ;
+  ecosystem:isOptional "false" .
+  
+ecosystem:osVirusCheckRes a ecosystem:OutputSlot ;
+  ecosystem:name "OutputSlot Digital Material" ;
+  ecosystem:description "Output slot corresponding to the result of the virus check" ;
+  ecosystem:id "8fa5f1fb-0e04-4a68-95ee-a468ba783036" ;
+  ecosystem:type ecosystem:File ;
+
+ecosystem:impVirusCheck a ecosystem:Implementation ;
+  ecosystem:id "d176313e-d278-4a31-a0f3-ea1ebbb677db" ;
+  ecosystem:version "1" ;
+  ecosystem:type "BPMN" ;
+  ecosystem:location "https://c102-086.cloud.gwdg.de/api/cdmi/cdmi_objectid/0000A4EF00180DE4AF2F3AEB5FD949E68617FE5EB6A569E0" .
+  ecosystem:fixity ecosystem:fixVirusCheck .
+
+ecosystem:fixVirusCheck a ecosystem:Fixity ;
+  ecosystem:checksum "5e17af01b2a6ed09cda05096d137166ac783fbe022763d084a8335079ffd8663" ;
+  ecosystem:algorithm "sha256" .
+  
+#### Extract Metadata - Atomic Process ####
+
+ecosystem:atpExtractMD a ecosystem:AtomicProcess ;
+  ecosystem:name "Extract Metadata" ;
+  ecosystem:description "Atomic process that extract the metadata of a digital material" ;
+  ecosystem:id "1d43c167-aa5b-4c86-b3c1-2dc0cf2da2a6" ;
+  ecosystem:version "1" ;
+  ecosystem:hasImplementation ecosystem:impExtractMD .
+
+ecosystem:isExtractMDDM a ecosystem:InputSlot ;
+  ecosystem:name "InputSlot Digital Material" ;
+  ecosystem:description "Input slot corresponding to the digital material from which metadata is extracted" ;
+  ecosystem:id "3b55fd51-3b76-4a82-9696-e5242ca90a63" ;
+  ecosystem:type ecosystem:DigitalObject ;
+  ecosystem:isOptional "false" .
+  
+ecosystem:osExtractMDMD a ecosystem:OutputSlot ;
+  ecosystem:name "OutputSlot Digital Material" ;
+  ecosystem:description "Output slot corresponding to the extracted metadata" ;
+  ecosystem:id "6cf7f109-9016-40f7-a617-f99158b3ad67" ;
+  ecosystem:type ecosystem:Metadata ;
+
+ecosystem:impExtractMD a ecosystem:Implementation ;
+  ecosystem:id "d71c16c8-bde0-4db9-b78c-601dd88d04b3" ;
+  ecosystem:version "1" ;
+  ecosystem:type "BPMN" ;
+  ecosystem:location "https://c102-086.cloud.gwdg.de/api/cdmi/cdmi_objectid/0000A4EF00180DE4AF2F3AEB5FD949E68617FE5EB6A569E0" .
+  ecosystem:fixity ecosystem:fixExtractMD .
+
+ecosystem:fixExtractMD a ecosystem:Fixity ;
+  ecosystem:checksum "5e17af01b2a6ed09cda05096d137166ac783fbe022763d084a8335079ffd8663" ;
+  ecosystem:algorithm "sha256" .
+  
+#### Encapsulate Metadata and Digital Material - Atomic Process ####
+
+ecosystem:atpEncapsulateDOMD a ecosystem:AtomicProcess ;
+  ecosystem:name "Encapsulate Digital Object and its Metadata" ;
+  ecosystem:description "Atomic process that encapsulate a digital object and its metadata together in a package of a specific format" ;
+  ecosystem:id "271f7a41-b1c8-4f26-a8f9-3e20ab442472" ;
+  ecosystem:version "1" ;
+  ecosystem:hasImplementation ecosystem:impEncapsulateDOMD .
+
+ecosystem:isEncapsulateDOMDDO a ecosystem:InputSlot ;
+  ecosystem:name "InputSlot Digital Object" ;
+  ecosystem:description "Input slot corresponding to the digital object" ;
+  ecosystem:id "c7d2a135-6431-4e71-9436-786f5759837f" ;
+  ecosystem:type ecosystem:DigitalObject ;
+  ecosystem:isOptional "false" .
+  
+ecosystem:isEncapsulateDOMDMD a ecosystem:InputSlot ;
+  ecosystem:name "InputSlot Metadata" ;
+  ecosystem:description "Input slot corresponding to the metadata" ;
+  ecosystem:id "ca99669b-6841-4b3c-886f-3105dd2b0a7d" ;
+  ecosystem:type ecosystem:Metadata ;
+  ecosystem:isOptional "false" .
+  
+ecosystem:isEncapsulateDOMDPF a ecosystem:InputSlot ;
+  ecosystem:name "InputSlot Package Format" ;
+  ecosystem:description "Input slot corresponding to the package format used to encapsulate the digital object and its metadata" ;
+  ecosystem:id "fd0a160c-279a-49c6-addc-4bb3b95a1e64" ;
+  ecosystem:type ecosystem:PackageFormat ;
+  ecosystem:isOptional "false" .
+  
+ecosystem:osEncapsulateDOMDP a ecosystem:OutputSlot ;
+  ecosystem:name "OutputSlot Package" ;
+  ecosystem:description "Output slot corresponding to the package resulting of encapsulate a digital object and its metadata" ;
+  ecosystem:id "44d238fd-b335-4637-aa8f-b8aea901906c" ;
+  ecosystem:type ecosystem:Package ;
+
+ecosystem:impEncapsulateDOMD a ecosystem:Implementation ;
+  ecosystem:id "0788c5a1-a9d0-4459-aecf-d5e3ca71c6d1" ;
+  ecosystem:version "1" ;
+  ecosystem:type "BPMN" ;
+  ecosystem:location "https://c102-086.cloud.gwdg.de/api/cdmi/cdmi_objectid/0000A4EF00180DE4AF2F3AEB5FD949E68617FE5EB6A569E0" .
+  ecosystem:fixity ecosystem:fixEncapsulateDOMD .
+
+ecosystem:fixEncapsulateDOMD a ecosystem:Fixity ;
+  ecosystem:checksum "5e17af01b2a6ed09cda05096d137166ac783fbe022763d084a8335079ffd8663" ;
+  ecosystem:algorithm "sha256" .

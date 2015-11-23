@@ -6,27 +6,31 @@ import javax.json.Json;
 import javax.json.JsonObject;
 import javax.ws.rs.core.Response;
 
+import eu.pericles.processcompiler.ecosystem.Implementation;
+
 public class JSONParser {
 
 	public static String parseGetImplementationLocationResponse(Response response) throws Exception {
-		JsonObject jsonObject = Json.createReader(response.readEntity(InputStream.class)).readObject();
-
-		if (isValidGetImplementationLocationResponse(jsonObject)) {
-			String location = jsonObject.getJsonArray("values").getJsonArray(0).getString(0);
+		try {
+			String location = getJSONObject(response).getJsonArray("values").getJsonArray(0).getString(0);
 			return location.replace("\"", "");
-		} else {
-			throw new Exception("Response not valid");
+		} catch (Exception e) {
+			throw new Exception("Response from ERMR is not valid");
 		}
 	}
 
-	private static boolean isValidGetImplementationLocationResponse(JsonObject jsonObject) {
-		if (jsonObject.getJsonArray("names").size() != 1)
-			return false;
-		if (!jsonObject.getJsonArray("names").getString(0).equals("location"))
-		 return false;
-		if (jsonObject.getJsonArray("values").size() != 1)
-			return false;
-		return true;
+	public static Implementation parseGetImplementationEntityResponse(Response response) throws Exception {
+		Implementation implementation = new Implementation();
+		try {
+			String location = getJSONObject(response).getJsonArray("values").getJsonArray(0).getString(0);
+			return implementation;
+		} catch (Exception e) {
+			throw new Exception("Response from ERMR is not valid");
+		}
+	}
+
+	private static JsonObject getJSONObject(Response response) {
+		return Json.createReader(response.readEntity(InputStream.class)).readObject();
 	}
 
 }

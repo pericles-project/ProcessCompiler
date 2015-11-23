@@ -30,7 +30,6 @@ public class BPMNParseAndWriteTests {
 
 	@Test
 	public void parseAndWriteBPMNFile() {
-		
 		String inputFileName = path + "Input.bpmn2";
 		String testFileName = path + "Test.bpmn2";
 		String outputFileName = path + "Output.bpmn2";
@@ -48,8 +47,7 @@ public class BPMNParseAndWriteTests {
 		return process;
 	}
 
-	private void write(BPMNProcess process, String outputFileName) {
-		
+	private void write(BPMNProcess process, String outputFileName) {		
 		BPMNWriter writer = new BPMNWriter();
 		writer.write(process, outputFileName);		
 	}
