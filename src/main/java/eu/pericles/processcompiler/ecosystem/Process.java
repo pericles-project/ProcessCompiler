@@ -2,7 +2,7 @@ package eu.pericles.processcompiler.ecosystem;
 
 import java.util.List;
 
-public abstract class Process {
+public class Process {
 	
 	private String id;
 	private String version;
@@ -12,8 +12,21 @@ public abstract class Process {
 	private List<OutputSlot> outputs;
 	private Implementation implementation;
 	
-	//--------------- GETTERS AND SETTERS ----------------//
+	public Process() {
+		super();
+	}
 	
+	public Process(Process process) {
+		setId(process.getId());
+		setVersion(process.getVersion());
+		setName(process.getName());
+		setDescription(process.getDescription());
+		setInputs(process.getInputs());
+		setOutputs(process.getOutputs());
+		setImplementation(process.getImplementation());
+	}
+	
+	//--------------- GETTERS AND SETTERS ----------------//
 	public String getId() {
 		return id;
 	}
@@ -57,6 +70,6 @@ public abstract class Process {
 		this.implementation = implementation;
 	}
 	
-	
+	//--------------- HASHCODE AND EQUALS ----------------//
 
 }

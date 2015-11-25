@@ -12,14 +12,20 @@
 		targetNamespace="http://www.jboss.org/drools" 
 		typeLanguage="http://www.java.com/javaTypes">
 
+
+  <!--    external inputs    -->
+  <bpmn2:itemDefinition id="_d61d3bdc-7bb6-4294-933c-b298f64212df" structureRef="String" />
+  
   <!--    process    -->
   
-  <bpmn2:process id="_bf96549a-7b98-45af-af77-0f715fe66566" tns:version="1" tns:packageName="eu.pericles.modelcompiler.unittests" tns:adHoc="false" name="PrintHelloWorld" isExecutable="true" processType="Private">
+  <bpmn2:process id="_bf96549a-7b98-45af-af77-0f715fe66566" tns:version="1" tns:packageName="eu.pericles.modelcompiler.unittests" tns:adHoc="false" name="VirusCheckProcess" isExecutable="true" processType="Private">
+  
+    <bpmn2:dataObject id="virusCheckObject" itemSubjectRef="_d61d3bdc-7bb6-4294-933c-b298f64212df"/>
     
     <bpmn2:startEvent id="_44728fc8-7c80-4fde-9fe6-bada4fda93b8" />    
     
-    <bpmn2:scriptTask id="_a5fbab4b-70cd-482c-9651-ca8a56387ce7" name="HelloWorld" scriptFormat="http://www.java.com/java">
-      <bpmn2:script>printf(&quot;Hello World&quot;);</bpmn2:script>
+    <bpmn2:scriptTask id="_a5fbab4b-70cd-482c-9651-ca8a56387ce7" name="Virus Check" scriptFormat="http://www.java.com/java">
+      <bpmn2:script>System.out.println("Executing process: " + virusCheckObject);</bpmn2:script>
     </bpmn2:scriptTask>
     
     <bpmn2:endEvent id="_b89887eb-517b-479f-b4db-f90343b1f0b7" />
