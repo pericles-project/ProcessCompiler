@@ -69,14 +69,13 @@ public class SPARQLQuery {
 	}
 
 	public static String createQueryGetImplementationURI(String process) throws UnsupportedEncodingException {
-		String query = createQueryGetURI(process, "ecosystem:hasImplementation");
-		return encode(query);
+		return createQueryGetURI(process, "ecosystem:hasImplementation");
 	}
 	
 	public static String createQueryGetURI(String subject, String predicate) throws UnsupportedEncodingException {
 		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
 				+ "SELECT DISTINCT ?uri WHERE {"
-				+ subject + " " + predicate + " ?uri. "
+				+ subject + " " + predicate + " ?uri . "
 				+ " }";
 		return encode(query);
 	}

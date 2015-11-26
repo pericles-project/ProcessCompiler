@@ -96,7 +96,7 @@ public class JSONParser {
 
 
 	public static String parseGetURIResponse(Response response) {
-		return getValues(response).getString(0).replace("\"", "");
+		return getValues(response).getJsonArray(0).getString(0).replace("\"", "");
 	}
 	
 	private static JsonArray getValues(Response response) {

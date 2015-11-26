@@ -91,8 +91,8 @@ public class ERMRCommunications {
 		return JSONParser.parseGetImplementationEntityResponse(response, uri);
 	}
 
-	public String getImplementationURI(String repository, String process) throws UnsupportedEncodingException {
-		Response response = client.query(repository, SPARQLQuery.createQueryGetImplementationURI(process));
+	public String getImplementationURI(String repository, String uri) throws UnsupportedEncodingException {
+		Response response = client.query(repository, SPARQLQuery.createQueryGetImplementationURI(uri));
 		return JSONParser.parseGetURIResponse(response);
 	}
 

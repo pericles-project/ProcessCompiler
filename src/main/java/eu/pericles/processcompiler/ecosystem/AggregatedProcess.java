@@ -24,5 +24,28 @@ public class AggregatedProcess extends Process {
 	
 	//--------------- HASHCODE AND EQUALS ----------------//
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((sequence == null) ? 0 : sequence.hashCode());
+		return result;
+	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AggregatedProcess other = (AggregatedProcess) obj;
+		if (sequence == null) {
+			if (other.sequence != null)
+				return false;
+		} else if (!sequence.equals(other.sequence))
+			return false;
+		return true;
+	}
 }
