@@ -14,6 +14,7 @@ import eu.pericles.processcompiler.ecosystem.Implementation;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
 import eu.pericles.processcompiler.ecosystem.Process;
+import eu.pericles.processcompiler.ecosystem.Sequence;
 
 public class ERMRCommunications {
 	
@@ -29,6 +30,7 @@ public class ERMRCommunications {
 	
 	public AggregatedProcess getAggregatedProcessEntity(String repository, String uri) throws Exception {
 		AggregatedProcess aggregatedProcess = new AggregatedProcess(getProcessEntity(repository, uri));
+		aggregatedProcess.setSequence(getProcessSequence(repository, uri));
 		
 		return aggregatedProcess;
 	}
@@ -40,6 +42,11 @@ public class ERMRCommunications {
 		process.setImplementation(getProcessImplementation(repository, uri));
 		
 		return process;
+	}
+	
+	public String getProcessType(String repository, String uri) throws UnsupportedEncodingException {
+		Response response = client.query(repository, SPARQLQuery.createQueryGetProcessType(uri));
+		return JSONParser.parseGetTypeResponse(response);
 	}
 	
 	public Process getProcessAttributes(String repository, String uri) throws UnsupportedEncodingException {
@@ -57,7 +64,7 @@ public class ERMRCommunications {
 
 	public List<String> getInputSlotURIList(String repository, String uri) throws UnsupportedEncodingException {
 		Response response = client.query(repository, SPARQLQuery.createQueryGetInputSlotURIList(uri));
-		return JSONParser.parseGetInputSlotURIListResponse(response, uri);
+		return JSONParser.parseGetURIListResponse(response, uri);
 	}
 
 	public InputSlot getInputSlotEntity(String repository, String uri) throws UnsupportedEncodingException {
@@ -74,7 +81,7 @@ public class ERMRCommunications {
 
 	public List<String> getOutputSlotURIList(String repository, String uri) throws UnsupportedEncodingException {
 		Response response = client.query(repository, SPARQLQuery.createQueryGetOutputSlotURIList(uri));
-		return JSONParser.parseGetOutputSlotURIListResponse(response, uri);
+		return JSONParser.parseGetURIListResponse(response, uri);
 	}
 
 	public OutputSlot getOutputSlotEntity(String repository, String uri) throws UnsupportedEncodingException {
@@ -96,5 +103,18 @@ public class ERMRCommunications {
 		return JSONParser.parseGetURIResponse(response);
 	}
 
+	public Sequence getProcessSequence(String repository, String uri) throws Exception {
+		return getSequenceEntity(repository, getSequenceURI(repository, uri));
+	}
+	
+	public Sequence getSequenceEntity(String repository, String uri) throws UnsupportedEncodingException {
+		Response response = client.query(repository, SPARQLQuery.createQueryGetSequenceEntity(uri));
+		return JSONParser.parseGetSequenceEntityResponse(response, uri);
+	}
+	
+	public String getSequenceURI(String repository, String uri) throws UnsupportedEncodingException {
+		Response response = client.query(repository, SPARQLQuery.createQueryGetSequenceURI(uri));
+		return JSONParser.parseGetURIResponse(response);
+	}
 
 }

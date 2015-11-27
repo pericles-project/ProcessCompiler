@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import eu.pericles.processcompiler.communications.ermr.ERMRClientAPI;
 import eu.pericles.processcompiler.communications.ermr.ERMRCommunications;
+import eu.pericles.processcompiler.communications.ermr.JSONParser;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.Fixity;
 import eu.pericles.processcompiler.ecosystem.Implementation;
@@ -146,50 +147,39 @@ public class GetEntitiesTests {
 		}
 	}
 	
-	
-	
-	/*
 	@Test 
-	public void getSequence() {
-		String uri = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
+	public void getSequenceEntity() {
+		String uri = "<http://www.pericles-project.eu/ns/ecosystem#seqIngestAWSW>";
 		try {
 			Sequence sequence = new ERMRCommunications().getSequenceEntity(repository, uri);
-			assertEquals("<http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>", outputSlotURIList.get(0));
+			assertEquals(expectedAggregatedProcess.getSequence(), sequence);
 		} catch (Exception e) {
-			fail("getOutputSlotURIs(): " + e.getMessage());
+			fail("getSequenceEntity(): " + e.getMessage());
 		}
 	}
 	
-	
-	@Test
-	public void getAggregatedProcess() {
+	@Test 
+	public void getAggregatedProcessEntity() {
 		String uri = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
-		AggregatedProcess expectedProcess = new AggregatedProcess();
 		try {
 			AggregatedProcess process = new ERMRCommunications().getAggregatedProcessEntity(repository, uri);
-			assertEquals(expectedProcess, process);
+			assertEquals(expectedAggregatedProcess, process);
 		} catch (Exception e) {
-			fail("getAggregatedProcess(): " + e.getMessage());
+			fail("getAggregatedProcessEntity(): " + e.getMessage());
 		}
 	}
-	*/
-	
-	/*
 	
 	@Test
-	public void getAtomicProcess() {
-		String uri = "<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck>";
-		AtomicProcess expectedProcess = new AtomicProcess();
+	public void getProcessType() {
+		String uriAGP = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
+		//String uriATP = "<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck>";
 		try {
-			AtomicProcess process = new ERMRCommunications().getAtomicProcessEntity(repository, uri);
-			assertEquals(expectedProcess, process);
+			String type = new ERMRCommunications().getProcessType(repository, uriAGP);
+			assertEquals(expectedAggregatedProcess.getClass().getSimpleName(), type);
 		} catch (Exception e) {
-			fail("getAtomicProcess(): " + e.getMessage());
+			fail("getProcessType(): " + e.getMessage());
 		}
 	}
-	
-
-	*/
 	
 
 	/*
@@ -283,9 +273,8 @@ public class GetEntitiesTests {
 				"OutputSlot Package",
 				"Output slot corresponding to the Package entity created as the result of the aggregated process Ingest Artwork Software",
 				"<http://www.pericles-project.eu/ns/ecosystem#Package>"))));
-		expectedAggregatedProcess.setSequence(createSequence("<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck>, "
-				+ "<http://www.pericles-project.eu/ns/ecosystem#atpExtractMD>, <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>", 
-				"{[<http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM> <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]} "
+		expectedAggregatedProcess.setSequence(createSequence("<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>",
+				"{[<http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM> <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]}"
 				+ " {[<http://www.pericles-project.eu/ns/ecosystem#isExtracMDDM> <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>] "
 				+ " [<http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD> <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>]}"
 				+ " {[<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO> <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]"
@@ -330,9 +319,9 @@ public class GetEntitiesTests {
 	
 	private Sequence createSequence(String processFlow, String dataFlow) {
 		Sequence sequence = new Sequence();
-		String[] processes = processFlow.split("\\s\\s*");
-		sequence.setProcessFlow(new ArrayList<String>(Arrays.asList(processes)));
-		sequence.setDataFlow(createDataFlow(dataFlow));
+		//String[] processes = processFlow.split("\\s\\s*");
+		sequence.setProcessFlow(JSONParser.parseProcessFlow(processFlow));//(new ArrayList<String>(Arrays.asList(processes)));
+		sequence.setDataFlow(JSONParser.parseDataFlow(dataFlow));//(createDataFlow(dataFlow));
 		
 		return sequence;
 	}

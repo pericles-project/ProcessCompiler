@@ -9,6 +9,8 @@ public class SPARQLQuery {
 		return URLEncoder.encode(query, "UTF-8");
 	}
 	
+	//--------------------------- GET ENTITIES --------------------------------//
+	
 	public static String createQueryGetProcessAttributes(String process) throws UnsupportedEncodingException {
 		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
 				+ " SELECT DISTINCT ?name ?description ?version WHERE {"
@@ -42,6 +44,27 @@ public class SPARQLQuery {
 				+ " }";
 		return encode(query);
 	}
+	
+	public static String createQueryGetOutputSlotEntity(String outputSlot) throws UnsupportedEncodingException {
+		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
+				+ "SELECT DISTINCT ?name ?description ?type WHERE {"
+				+ outputSlot + " ecosystem:name ?name . "
+				+ outputSlot + " ecosystem:description ?description . "
+				+ outputSlot + " ecosystem:type ?type . "
+				+ " }";
+		return encode(query);
+	}
+	
+	public static String createQueryGetSequenceEntity(String sequence) throws UnsupportedEncodingException {
+		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
+				+ "SELECT DISTINCT ?processFlow ?dataFlow WHERE {"
+				+ sequence + " ecosystem:processFlow ?processFlow . "
+				+ sequence + " ecosystem:dataFlow ?dataFlow . "
+				+ " }";
+	return encode(query);
+	}
+	
+	//--------------------------- GET URIs --------------------------------//
 
 	public static String createQueryGetInputSlotURIList(String process) throws UnsupportedEncodingException {
 		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> "
@@ -58,18 +81,17 @@ public class SPARQLQuery {
 				+ " }";
 		return encode(query);
 	}
-	public static String createQueryGetOutputSlotEntity(String outputSlot) throws UnsupportedEncodingException {
-		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
-				+ "SELECT DISTINCT ?name ?description ?type WHERE {"
-				+ outputSlot + " ecosystem:name ?name . "
-				+ outputSlot + " ecosystem:description ?description . "
-				+ outputSlot + " ecosystem:type ?type . "
-				+ " }";
-		return encode(query);
-	}
 
 	public static String createQueryGetImplementationURI(String process) throws UnsupportedEncodingException {
 		return createQueryGetURI(process, "ecosystem:hasImplementation");
+	}
+	
+	public static String createQueryGetSequenceURI(String process) throws UnsupportedEncodingException {
+		return createQueryGetURI(process, "ecosystem:hasSequence");
+	}
+
+	public static String createQueryGetProcessType(String process) throws UnsupportedEncodingException {
+		return createQueryGetURI(process, "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>");
 	}
 	
 	public static String createQueryGetURI(String subject, String predicate) throws UnsupportedEncodingException {
