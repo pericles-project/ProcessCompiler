@@ -1,5 +1,6 @@
 package eu.pericles.processcompiler.communications.ermr;
 
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -9,7 +10,6 @@ import java.util.List;
 import javax.ws.rs.core.Response;
 
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
-import eu.pericles.processcompiler.ecosystem.AtomicProcess;
 import eu.pericles.processcompiler.ecosystem.Implementation;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
@@ -115,6 +115,10 @@ public class ERMRCommunications {
 	public String getSequenceURI(String repository, String uri) throws UnsupportedEncodingException {
 		Response response = client.query(repository, SPARQLQuery.createQueryGetSequenceURI(uri));
 		return JSONParser.parseGetURIResponse(response);
+	}
+
+	public InputStream getImplementationFile(String repository, String uri) {
+		return client.getDigitalObject(uri).readEntity(InputStream.class);
 	}
 
 }

@@ -12,15 +12,14 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.ws.rs.core.Response;
 
-import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
-import eu.pericles.processcompiler.ecosystem.AtomicProcess;
 import eu.pericles.processcompiler.ecosystem.Fixity;
 import eu.pericles.processcompiler.ecosystem.Implementation;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
 import eu.pericles.processcompiler.ecosystem.Process;
 import eu.pericles.processcompiler.ecosystem.Sequence;
-import eu.pericles.processcompiler.ecosystem.SlotPair;
+import eu.pericles.processcompiler.ecosystem.SequenceSlot;
+import eu.pericles.processcompiler.ecosystem.SlotConnection;
 
 public class JSONParser {
 	
@@ -107,6 +106,33 @@ public class JSONParser {
 		return new ArrayList<String>(Arrays.asList(processFlowString.split("\\s\\s*")));
 	}
 	
+	public static ArrayList<SlotConnection> parseDataFlow(String dataFlowString) {
+		ArrayList<SlotConnection> dataFlow = new ArrayList<SlotConnection>();		
+		Pattern pattern = Pattern.compile("\\{(.*?)\\}");
+		Matcher matcher = pattern.matcher(dataFlowString);
+		while (matcher.find()) {
+			dataFlow.add(parseSlotConnection(matcher.group()));
+		}
+		return dataFlow;
+	}
+	
+	public static SlotConnection parseSlotConnection(String slotConnectionString) {
+		SequenceSlot inputSlot, resourceSlot;
+		Pattern pattern = Pattern.compile("\\[(.*?)\\]");
+		Matcher matcher = pattern.matcher(slotConnectionString);
+		matcher.find();
+		inputSlot = parseSequenceSlot(matcher.group());
+		matcher.find();
+		resourceSlot = parseSequenceSlot(matcher.group());
+		return new SlotConnection(inputSlot, resourceSlot);
+	}
+	
+	private static SequenceSlot parseSequenceSlot(String sequenceSlotString) {
+		String[] values = sequenceSlotString.substring(1, sequenceSlotString.length()-1).split("\\s\\s*");
+		return new SequenceSlot(values[0],values[1]);
+	}
+	
+	/*
 	public static ArrayList<ArrayList<SlotPair<String,String>>> parseDataFlow(String dataFlowString) {
 		ArrayList<ArrayList<SlotPair<String,String>>> dataFlow = new ArrayList<ArrayList<SlotPair<String,String>>>();		
 		Pattern pattern = Pattern.compile("\\{(.*?)\\}");
@@ -114,7 +140,7 @@ public class JSONParser {
 		while (matcher.find()) {
 			dataFlow.add(parseSlotPairs(matcher.group()));
 		}
-		return dataFlow;
+		return dataFlow;lotConnection slotConnection =
 	}
 	
 	public static ArrayList<SlotPair<String,String>> parseSlotPairs(String slotPairsString) {
@@ -131,7 +157,8 @@ public class JSONParser {
 		String[] pairValues = slotPairString.substring(1, slotPairString.length()-1).split("\\s\\s*");
 		return new SlotPair<String, String>(pairValues[0], pairValues[1]);
 	}
-	
+	*/
+
 	private static JsonArray getValues(Response response) {
 		return getJSONObject(response).getJsonArray("values");
 	}

@@ -1,7 +1,10 @@
 package eu.pericles.processcompiler.testutils;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 
 public class Utils {
@@ -66,6 +70,13 @@ public class Utils {
 			replacedSequence = matcher.replaceAll(map.get(oldUUID));
 		}
 		return replacedSequence;
+	}
+	
+	public static void writeInputStream(InputStream is, String outputFile) throws IOException {
+		OutputStream os = new FileOutputStream(new File(outputFile));
+		IOUtils.copy(is,os);
+		is.close();
+		os.close();
 	}
 
 }

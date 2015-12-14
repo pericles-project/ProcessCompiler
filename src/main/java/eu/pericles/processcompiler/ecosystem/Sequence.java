@@ -1,12 +1,11 @@
 package eu.pericles.processcompiler.ecosystem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Sequence {
 	
 	private List<String> processFlow;
-	private List<ArrayList<SlotPair<String, String>>> dataFlow; 
+	private List<SlotConnection> dataFlow; //List<ArrayList<SlotPair<String, String>>> dataFlow; 
 	
 	//--------------- GETTERS AND SETTERS ----------------//
 
@@ -18,16 +17,16 @@ public class Sequence {
 		this.processFlow = processFlow;
 	}
 
-	public List<ArrayList<SlotPair<String, String>>> getDataFlow() {
+	public List<SlotConnection> getDataFlow() {
 		return dataFlow;
 	}
 
-	public void setDataFlow(ArrayList<ArrayList<SlotPair<String, String>>> arrayList) {
-		this.dataFlow = arrayList;
+	public void setDataFlow(List<SlotConnection> dataFlow) {
+		this.dataFlow = dataFlow;
 	}
 	
 	//--------------- HASHCODE AND EQUALS ----------------//
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
