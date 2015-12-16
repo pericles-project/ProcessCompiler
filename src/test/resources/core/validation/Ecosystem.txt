@@ -23,7 +23,7 @@
 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP> <http://www.pericles-project.eu/ns/ecosystem#type> <http://www.pericles-project.eu/ns/ecosystem#Package> .
 <http://www.pericles-project.eu/ns/ecosystem#seqIngestAWSW> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.pericles-project.eu/ns/ecosystem#Sequence> .
 <http://www.pericles-project.eu/ns/ecosystem#seqIngestAWSW> <http://www.pericles-project.eu/ns/ecosystem#processFlow> "<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>" .
-<http://www.pericles-project.eu/ns/ecosystem#seqIngestAWSW> <http://www.pericles-project.eu/ns/ecosystem#dataFlow> "{[1 <http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]} {[2 <http://www.pericles-project.eu/ns/ecosystem#isExtracMDDM>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]} {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]} {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>]} {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>] [2 <http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>]} {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}" .
+<http://www.pericles-project.eu/ns/ecosystem#seqIngestAWSW> <http://www.pericles-project.eu/ns/ecosystem#dataFlow> "{[1 <http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]} {[2 <http://www.pericles-project.eu/ns/ecosystem#isExtractMDDM>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]} {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]} {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>]} {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>] [2 <http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>]} {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}" .
 <http://www.pericles-project.eu/ns/ecosystem#impIngestAWSW> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.pericles-project.eu/ns/ecosystem#Implementation> .
 <http://www.pericles-project.eu/ns/ecosystem#impIngestAWSW> <http://www.pericles-project.eu/ns/ecosystem#version> "1" .
 <http://www.pericles-project.eu/ns/ecosystem#impIngestAWSW> <http://www.pericles-project.eu/ns/ecosystem#type> "BPMN" .
@@ -36,6 +36,8 @@
 <http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#name> "Virus Check" .
 <http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#description> "Atomic process that check for viruses a digital material" .
 <http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#version> "1" .
+<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#hasInputSlot> <http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM> .
+<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#hasOutputSlot> <http://www.pericles-project.eu/ns/ecosystem#osVirusCheckRes> .
 <http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#hasImplementation> <http://www.pericles-project.eu/ns/ecosystem#impVirusCheck> .
 <http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.pericles-project.eu/ns/ecosystem#InputSlot> .
 <http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM> <http://www.pericles-project.eu/ns/ecosystem#name> "InputSlot Digital Material" .
@@ -58,6 +60,8 @@
 <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#name> "Extract Metadata" .
 <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#description> "Atomic process that extract the metadata of a digital material" .
 <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#version> "1" .
+<http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#hasInputSlot> <http://www.pericles-project.eu/ns/ecosystem#isExtractMDDM> .
+<http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#hasOutputSlot> <http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD> .
 <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#hasImplementation> <http://www.pericles-project.eu/ns/ecosystem#impExtractMD> .
 <http://www.pericles-project.eu/ns/ecosystem#isExtractMDDM> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.pericles-project.eu/ns/ecosystem#InputSlot> .
 <http://www.pericles-project.eu/ns/ecosystem#isExtractMDDM> <http://www.pericles-project.eu/ns/ecosystem#name> "InputSlot Digital Material" .
@@ -80,6 +84,10 @@
 <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> <http://www.pericles-project.eu/ns/ecosystem#name> "Encapsulate Digital Object and its Metadata" .
 <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> <http://www.pericles-project.eu/ns/ecosystem#description> "Atomic process that encapsulate a digital object and its metadata together in a package of a specific format" .
 <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> <http://www.pericles-project.eu/ns/ecosystem#version> "1" .
+<http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> <http://www.pericles-project.eu/ns/ecosystem#hasInputSlot> <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO> .
+<http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> <http://www.pericles-project.eu/ns/ecosystem#hasInputSlot> <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD> .
+<http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> <http://www.pericles-project.eu/ns/ecosystem#hasInputSlot> <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF> .
+<http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> <http://www.pericles-project.eu/ns/ecosystem#hasOutputSlot> <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP> .
 <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> <http://www.pericles-project.eu/ns/ecosystem#hasImplementation> <http://www.pericles-project.eu/ns/ecosystem#impEncapsulateDOMD> .
 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.pericles-project.eu/ns/ecosystem#InputSlot> .
 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO> <http://www.pericles-project.eu/ns/ecosystem#name> "InputSlot Digital Object" .

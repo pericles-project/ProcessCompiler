@@ -5,7 +5,7 @@ import java.util.List;
 public class Sequence {
 	
 	private List<String> processFlow;
-	private List<SlotConnection> dataFlow; //List<ArrayList<SlotPair<String, String>>> dataFlow; 
+	private List<DataConnection> dataFlow; //List<ArrayList<SlotPair<String, String>>> dataFlow; 
 	
 	//--------------- GETTERS AND SETTERS ----------------//
 
@@ -17,11 +17,11 @@ public class Sequence {
 		this.processFlow = processFlow;
 	}
 
-	public List<SlotConnection> getDataFlow() {
+	public List<DataConnection> getDataFlow() {
 		return dataFlow;
 	}
 
-	public void setDataFlow(List<SlotConnection> dataFlow) {
+	public void setDataFlow(List<DataConnection> dataFlow) {
 		this.dataFlow = dataFlow;
 	}
 	

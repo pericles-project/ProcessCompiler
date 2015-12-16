@@ -18,8 +18,8 @@ import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
 import eu.pericles.processcompiler.ecosystem.Process;
 import eu.pericles.processcompiler.ecosystem.Sequence;
-import eu.pericles.processcompiler.ecosystem.SequenceSlot;
-import eu.pericles.processcompiler.ecosystem.SlotConnection;
+import eu.pericles.processcompiler.ecosystem.DataFlowNode;
+import eu.pericles.processcompiler.ecosystem.DataConnection;
 
 public class JSONParser {
 	
@@ -106,8 +106,8 @@ public class JSONParser {
 		return new ArrayList<String>(Arrays.asList(processFlowString.split("\\s\\s*")));
 	}
 	
-	public static ArrayList<SlotConnection> parseDataFlow(String dataFlowString) {
-		ArrayList<SlotConnection> dataFlow = new ArrayList<SlotConnection>();		
+	public static ArrayList<DataConnection> parseDataFlow(String dataFlowString) {
+		ArrayList<DataConnection> dataFlow = new ArrayList<DataConnection>();		
 		Pattern pattern = Pattern.compile("\\{(.*?)\\}");
 		Matcher matcher = pattern.matcher(dataFlowString);
 		while (matcher.find()) {
@@ -116,20 +116,20 @@ public class JSONParser {
 		return dataFlow;
 	}
 	
-	public static SlotConnection parseSlotConnection(String slotConnectionString) {
-		SequenceSlot inputSlot, resourceSlot;
+	public static DataConnection parseSlotConnection(String slotConnectionString) {
+		DataFlowNode inputSlot, resourceSlot;
 		Pattern pattern = Pattern.compile("\\[(.*?)\\]");
 		Matcher matcher = pattern.matcher(slotConnectionString);
 		matcher.find();
 		inputSlot = parseSequenceSlot(matcher.group());
 		matcher.find();
 		resourceSlot = parseSequenceSlot(matcher.group());
-		return new SlotConnection(inputSlot, resourceSlot);
+		return new DataConnection(inputSlot, resourceSlot);
 	}
 	
-	private static SequenceSlot parseSequenceSlot(String sequenceSlotString) {
+	private static DataFlowNode parseSequenceSlot(String sequenceSlotString) {
 		String[] values = sequenceSlotString.substring(1, sequenceSlotString.length()-1).split("\\s\\s*");
-		return new SequenceSlot(values[0],values[1]);
+		return new DataFlowNode(Integer.parseInt(values[0]),values[1]);
 	}
 	
 	/*
