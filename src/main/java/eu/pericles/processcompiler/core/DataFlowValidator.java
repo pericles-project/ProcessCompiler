@@ -30,10 +30,8 @@ public class DataFlowValidator {
 		initiateAvailableResourcesList();
 
 		for (int sequenceStep = 1; sequenceStep <= getSequenceSteps(); sequenceStep++) {
-			System.out.println("Sequence Step: " + sequenceStep);
 			if (validateDataConnectionsAtSequenceStep(sequenceStep) == false)
 				return false;
-			//System.out.println("Available Resources List Size: " + availableResources.size());
 		}
 		return true;
 	}
@@ -45,19 +43,16 @@ public class DataFlowValidator {
 				return false;
 		}
 		updateAvailableResourcesList(sequenceStep);
-		System.out.println("Validate Process Data Flow = true");
 		return true;
 	}
 
 	private boolean validateDataConnection(DataConnection dataConnection) throws UnsupportedEncodingException {
-		System.out.println("Validate Slot Connection " + dataConnection.getEntryNode().getSlot() + " " + dataConnection.getResourceNode().getSlot());
 		if (existSlotInDataConnection(dataConnection) == false)
 			return false;
 		if (existResourceInDataConnection(dataConnection) == false)
 			return false;
 		if (isDataTypeCompatibleInDataConnection(dataConnection) == false)
 			return false;
-		System.out.println("Validate Slot Connection = true");
 		return true;
 	}
 
@@ -83,9 +78,19 @@ public class DataFlowValidator {
 		return false;
 	}
 
-	private boolean isDataTypeCompatibleInDataConnection(DataConnection dataConnection) {
-		// TODO Auto-generated method stub
-		return true;
+	private boolean isDataTypeCompatibleInDataConnection(DataConnection dataConnection) throws UnsupportedEncodingException {
+		String dataTypeSlot = ermrCommunications.getDataTypeURI(getRepository(), dataConnection.getEntryNode().getSlot());
+		String dataTypeResource = ermrCommunications.getDataTypeURI(getRepository(), dataConnection.getResourceNode().getSlot());
+		return isDataTypeCompatible(dataTypeSlot, dataTypeResource);
+	}
+	
+	public boolean isDataTypeCompatible(String dataTypeSlot, String dataTypeResource) throws UnsupportedEncodingException {
+		while (dataTypeResource != null) {
+			if (dataTypeResource.equals(dataTypeSlot))
+				return true;
+			dataTypeResource = ermrCommunications.getParentEntityURI(getRepository(), dataTypeResource);
+		}
+		return false;
 	}
 
 	private List<DataConnection> getDataConnectionsAtSequenceStep(int sequenceStep) {

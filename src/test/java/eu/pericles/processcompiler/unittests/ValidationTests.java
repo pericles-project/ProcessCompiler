@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.awt.datatransfer.DataFlavor;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import eu.pericles.processcompiler.communications.ermr.ERMRClientAPI;
+import eu.pericles.processcompiler.communications.ermr.ERMRCommunications;
+import eu.pericles.processcompiler.core.DataFlowValidator;
 import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
@@ -29,6 +32,8 @@ public class ValidationTests {
 	static String repository = "NoaRepositoryTest";
 	static String triplesMediaType = MediaType.TEXT_PLAIN;	
 	private String ecosystem = "src/test/resources/core/validation/Ecosystem.txt";
+	
+	//------------------------------- TESTS ----------------------------------//
 	
 	@Before
 	public void setRepository() {
@@ -52,6 +57,41 @@ public class ValidationTests {
 			fail("deleteRepository(): " + e.getMessage());
 		}
 	}
+	
+	@Test 
+	public void getDataTypeURI() {
+		String slot = "<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>";
+		try {
+			String dataType = new ERMRCommunications().getDataTypeURI(repository, slot);
+			assertEquals("<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>", dataType);
+		} catch (Exception e) {
+			fail("getDataTypeURI(): " + e.getMessage());
+		}
+	}
+	
+	@Test 
+	public void getParentEntityURI() {
+		String child = "<http://www.pericles-project.eu/ns/ecosystem#File>";
+		try {
+			String parent = new ERMRCommunications().getParentEntityURI(repository, child);
+			assertEquals("<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>", parent);
+		} catch (Exception e) {
+			fail("getParentEntityURI(): " + e.getMessage());
+		}
+	}
+	
+	@Test
+	public void isDataTypeCompatible() {
+		try {
+			DataFlowValidator validator = new DataFlowValidator(repository, createAggregatedProcess());
+			assertTrue(validator.isDataTypeCompatible("<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>", "<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>"));
+			assertTrue(validator.isDataTypeCompatible("<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>", "<http://www.pericles-project.eu/ns/ecosystem#File>"));
+			assertFalse(validator.isDataTypeCompatible("<http://www.pericles-project.eu/ns/ecosystem#File>", "<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>"));
+			assertFalse(validator.isDataTypeCompatible("<http://www.pericles-project.eu/ns/ecosystem#PackageFormat>", "<http://www.pericles-project.eu/ns/ecosystem#Metadata>"));
+		} catch (Exception e) {
+			fail("isDataTypeCompatible(): " + e.getMessage());
+		}
+	}
 
 	@Test
 	public void validDataFlow() {
@@ -64,22 +104,60 @@ public class ValidationTests {
 	}
 	
 	@Test
-	public void invalidDataFlowWithWrongConnection() {
+	public void invalidDataFlowWithNoAvailableResource() {
 		try {
 			ProcessCompiler processCompiler = new ProcessCompiler();
 			AggregatedProcess invalidProcess = createAggregatedProcess();
 			invalidProcess.setSequence(CreateEntities.createSequence("<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>",
 					"{[1 <http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM>] [2 <http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>]}"
-							+ " {[2 <http://www.pericles-project.eu/ns/ecosystem#isExtracMDDM>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]}"
+							+ " {[2 <http://www.pericles-project.eu/ns/ecosystem#isExtractMDDM>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]}"
 							+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]}"
 							+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>]}"
 							+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>] [2 <http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>]}"
 							+ " {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}"));
 			assertFalse(processCompiler.validateDataFlow(repository,invalidProcess));
 			} catch (Exception e) {
-				fail("invalidDataFlow(): " + e.getMessage());
+				fail("invalidDataFlowWithNoAvailableResource(): " + e.getMessage());
 			}
 	}
+	
+	@Test
+	public void invalidDataFlowWithNoExistSlot() {
+		try {
+			ProcessCompiler processCompiler = new ProcessCompiler();
+			AggregatedProcess invalidProcess = createAggregatedProcess();
+			invalidProcess.setSequence(CreateEntities.createSequence("<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>",
+					"{[1 <http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]}"
+							+ " {[2 <http://www.pericles-project.eu/ns/ecosystem#isExtractMDDM>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWXX>]}"
+							+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]}"
+							+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>]}"
+							+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>] [2 <http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>]}"
+							+ " {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}"));
+			assertFalse(processCompiler.validateDataFlow(repository,invalidProcess));
+			} catch (Exception e) {
+				fail("invalidDataFlowWithNoExistSlot(): " + e.getMessage());
+			}
+	}
+	
+	@Test
+	public void invalidDataFlowWithNoCompatibleDataType() {
+		try {
+			ProcessCompiler processCompiler = new ProcessCompiler();
+			AggregatedProcess invalidProcess = createAggregatedProcess();
+			invalidProcess.setSequence(CreateEntities.createSequence("<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>",
+					"{[1 <http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]}"
+							+ " {[2 <http://www.pericles-project.eu/ns/ecosystem#isExtractMDDM>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]}"
+							+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]}"
+							+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>] [1 <http://www.pericles-project.eu/ns/ecosystem#osVirusCheckRes>]}"
+							+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>] [2 <http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>]}"
+							+ " {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}"));
+			assertFalse(processCompiler.validateDataFlow(repository,invalidProcess));
+			} catch (Exception e) {
+				fail("invalidDataFlowWithNoCompatibleDataType(): " + e.getMessage());
+			}
+	}
+	
+	//------------------------------- HELP FUNCTIONS ----------------------------------//
 	
 	private AggregatedProcess createAggregatedProcess() {
 		AggregatedProcess aggregatedProcess = new AggregatedProcess();

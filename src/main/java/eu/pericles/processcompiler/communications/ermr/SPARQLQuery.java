@@ -90,8 +90,16 @@ public class SPARQLQuery {
 		return createQueryGetURI(process, "ecosystem:hasSequence");
 	}
 
-	public static String createQueryGetProcessType(String process) throws UnsupportedEncodingException {
-		return createQueryGetURI(process, "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>");
+	public static String createQueryGetEntityTypeURI(String entity) throws UnsupportedEncodingException {
+		return createQueryGetURI(entity, "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>");
+	}
+
+	public static String createQueryGetDataTypeURI(String entity) throws UnsupportedEncodingException {
+		return createQueryGetURI(entity, "ecosystem:type");
+	}
+
+	public static String createQueryGetParentEntityURI(String childEntity) throws UnsupportedEncodingException {
+		return createQueryGetURI(childEntity, "<http://www.w3.org/2000/01/rdf-schema#subClassOf>");
 	}
 	
 	public static String createQueryGetURI(String subject, String predicate) throws UnsupportedEncodingException {
@@ -101,7 +109,6 @@ public class SPARQLQuery {
 				+ " }";
 		return encode(query);
 	}
-
 }
 
 /**

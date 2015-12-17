@@ -28,6 +28,8 @@ public class ERMRCommunications {
 		return client;
 	}
 	
+	//------------------------------- GET ENTITIES -------------------------------//
+	
 	public AggregatedProcess getAggregatedProcessEntity(String repository, String uri) throws Exception {
 		AggregatedProcess aggregatedProcess = new AggregatedProcess(getProcessEntity(repository, uri));
 		aggregatedProcess.setSequence(getProcessSequence(repository, uri));
@@ -45,8 +47,8 @@ public class ERMRCommunications {
 	}
 	
 	public String getProcessType(String repository, String uri) throws UnsupportedEncodingException {
-		Response response = client.query(repository, SPARQLQuery.createQueryGetProcessType(uri));
-		return JSONParser.parseGetTypeResponse(response);
+		Response response = client.query(repository, SPARQLQuery.createQueryGetEntityTypeURI(uri));
+		return JSONParser.parseGetProcessTypeResponse(response);
 	}
 	
 	public Process getProcessAttributes(String repository, String uri) throws UnsupportedEncodingException {
@@ -62,11 +64,6 @@ public class ERMRCommunications {
 		return inputSlots;
 	}
 
-	public List<String> getInputSlotURIList(String repository, String uri) throws UnsupportedEncodingException {
-		Response response = client.query(repository, SPARQLQuery.createQueryGetInputSlotURIList(uri));
-		return JSONParser.parseGetURIListResponse(response, uri);
-	}
-
 	public InputSlot getInputSlotEntity(String repository, String uri) throws UnsupportedEncodingException {
 		Response response = client.query(repository, SPARQLQuery.createQueryGetInputSlotEntity(uri));
 		return JSONParser.parseGetInputSlotEntityResponse(response, uri);
@@ -77,11 +74,6 @@ public class ERMRCommunications {
 		for (String outputSlotURI : getOutputSlotURIList(repository, uri))
 			outputSlots.add(getOutputSlotEntity(repository, outputSlotURI));
 		return outputSlots;
-	}
-
-	public List<String> getOutputSlotURIList(String repository, String uri) throws UnsupportedEncodingException {
-		Response response = client.query(repository, SPARQLQuery.createQueryGetOutputSlotURIList(uri));
-		return JSONParser.parseGetURIListResponse(response, uri);
 	}
 
 	public OutputSlot getOutputSlotEntity(String repository, String uri) throws UnsupportedEncodingException {
@@ -98,11 +90,6 @@ public class ERMRCommunications {
 		return JSONParser.parseGetImplementationEntityResponse(response, uri);
 	}
 
-	public String getImplementationURI(String repository, String uri) throws UnsupportedEncodingException {
-		Response response = client.query(repository, SPARQLQuery.createQueryGetImplementationURI(uri));
-		return JSONParser.parseGetURIResponse(response);
-	}
-
 	public Sequence getProcessSequence(String repository, String uri) throws Exception {
 		return getSequenceEntity(repository, getSequenceURI(repository, uri));
 	}
@@ -111,14 +98,50 @@ public class ERMRCommunications {
 		Response response = client.query(repository, SPARQLQuery.createQueryGetSequenceEntity(uri));
 		return JSONParser.parseGetSequenceEntityResponse(response, uri);
 	}
+
+	public InputStream getImplementationFile(String repository, String uri) {
+		return client.getDigitalObject(uri).readEntity(InputStream.class);
+	}
+	
+	//------------------------------- GET URIs -------------------------------//
+
+	public List<String> getInputSlotURIList(String repository, String uri) throws UnsupportedEncodingException {
+		Response response = client.query(repository, SPARQLQuery.createQueryGetInputSlotURIList(uri));
+		return JSONParser.parseGetURIListResponse(response, uri);
+	}
+
+	public List<String> getOutputSlotURIList(String repository, String uri) throws UnsupportedEncodingException {
+		Response response = client.query(repository, SPARQLQuery.createQueryGetOutputSlotURIList(uri));
+		return JSONParser.parseGetURIListResponse(response, uri);
+	}
+
+	public String getImplementationURI(String repository, String uri) throws UnsupportedEncodingException {
+		Response response = client.query(repository, SPARQLQuery.createQueryGetImplementationURI(uri));
+		return JSONParser.parseGetURIResponse(response);
+	}
 	
 	public String getSequenceURI(String repository, String uri) throws UnsupportedEncodingException {
 		Response response = client.query(repository, SPARQLQuery.createQueryGetSequenceURI(uri));
 		return JSONParser.parseGetURIResponse(response);
 	}
-
-	public InputStream getImplementationFile(String repository, String uri) {
-		return client.getDigitalObject(uri).readEntity(InputStream.class);
+	
+	public String getParentEntityURI(String repository, String uri) throws UnsupportedEncodingException {
+		try {
+			Response response = client.query(repository, SPARQLQuery.createQueryGetParentEntityURI(uri));
+			return JSONParser.parseGetURIResponse(response);
+		} catch (Exception e) {
+			return null;
+		}
+	}
+	
+	public String getEntityTypeURI(String repository, String uri) throws UnsupportedEncodingException {
+		Response response = client.query(repository, SPARQLQuery.createQueryGetEntityTypeURI(uri));
+		return JSONParser.parseGetURIResponse(response);
+	}
+	
+	public String getDataTypeURI(String repository, String uri) throws UnsupportedEncodingException {
+		Response response = client.query(repository, SPARQLQuery.createQueryGetDataTypeURI(uri));
+		return JSONParser.parseGetURIResponse(response);
 	}
 
 }

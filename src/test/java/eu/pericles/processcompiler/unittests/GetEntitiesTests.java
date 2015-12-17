@@ -39,6 +39,8 @@ public class GetEntitiesTests {
 	private AggregatedProcess expectedAggregatedProcess; 
 	private Process expectedProcess;
 	
+	//------------------------------- TESTS ----------------------------------//
+	
 	@Before
 	public void prepareTests() {
 		setRepository();
@@ -195,21 +197,8 @@ public class GetEntitiesTests {
 			fail("getImplementationFile(): " + e.getMessage());
 		}
 	}
-
-	/*
-	@Test
-	public void getImplementationLocation() {
-		String uri = "<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck>";
-		String expectedLocation = "https://c102-086.cloud.gwdg.de/api/cdmi/cdmi_objectid/0000A4EF00186738BE125FC57E4E4BF5AED5B4845BB62AF7";
-		try {
-			String location = new ERMRCommunications().getImplementationLocation(repository, uri);
-			assertEquals(expectedLocation, location);
-			//URL url = new URL(location);			
-			//Utils.fileContentEquals(url.getFile(), "src/test/resources/ermr/communications/DigitalObject.bpmn2");
-		} catch (Exception e) {
-			fail("getImplementationLocation(): " + e.getMessage());
-		}
-	}*/
+	
+	//------------------------------- HELP FUNCTIONS ----------------------------------//
 	
 	public void setRepository() {
 		try {
