@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.awt.datatransfer.DataFlavor;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -157,7 +156,7 @@ public class ValidationTests {
 			}
 	}
 	
-	//------------------------------- HELP FUNCTIONS ----------------------------------//
+	//------------------------------- HELP FUNCTIONS: create expected entities ----------------------------------//
 	
 	private AggregatedProcess createAggregatedProcess() {
 		AggregatedProcess aggregatedProcess = new AggregatedProcess();

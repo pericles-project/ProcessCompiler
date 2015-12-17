@@ -10,10 +10,43 @@ import eu.pericles.processcompiler.ecosystem.DataConnection;
 import eu.pericles.processcompiler.ecosystem.DataFlowNode;
 import eu.pericles.processcompiler.ecosystem.Slot;
 
+/**
+ * Three important concepts about Data Flow in an Aggregated Process:
+ * 
+ * Sequence Step: each step in the data flow, identified by the current process
+ * 
+ * - INITIAL_STEP: corresponds to the first step, that is the data at the
+ * inputslots of the aggregated process (0)
+ * 
+ * - intermediate steps: correspond to intermediate steps, that is the data at
+ * the inputslots of the subprocesses (1, 2, ...), in the same order as in the
+ * Process Flow
+ * 
+ * - FINAL_STEP: corresponds to the final step, that is the data at the
+ * outputslots of the aggregated process (0)
+ * 
+ * Data Connection: data are connected by linking two nodes of the flow
+ * (DataFlowNode)
+ * 
+ * - SlotNode: this is a slot of the process corresponding to the current
+ * sequence step
+ * 
+ * - ResourceNode: this is a slot from which comes the data
+ * 
+ * In a DataConnection:
+ * 
+ * - Slot = Slot of the SlotNode
+ * 
+ * - Resource = Slot of the ResourceNode
+ * 
+ * - SequenceStep = Sequence Step of the SlotNode
+ */
+
 public class DataFlowValidator {
-	
+
 	public static final int INITIAL_STEP = 0;
-	
+	public static final int FINAL_STEP = 0;
+
 	private String repository;
 	private AggregatedProcess process;
 	private ERMRCommunications ermrCommunications;
@@ -24,15 +57,23 @@ public class DataFlowValidator {
 		this.process = aggregatedProcess;
 		this.ermrCommunications = new ERMRCommunications();
 	}
-	
+
 	public boolean validateDataFlow() throws Exception {
 		// At the beginning, only inputs of the aggregated process are available
 		initiateAvailableResourcesList();
 
+		// Validate the data connections for each subprocess in the sequence and
+		// update the list of available resource with the outputs of the
+		// subprocess
 		for (int sequenceStep = 1; sequenceStep <= getSequenceSteps(); sequenceStep++) {
 			if (validateDataConnectionsAtSequenceStep(sequenceStep) == false)
 				return false;
+			updateAvailableResourcesList(sequenceStep);
 		}
+		// Validate the data connections with the aggregated process outputs
+		if (validateDataConnectionsAtSequenceStep(FINAL_STEP) == false)
+			return false;
+
 		return true;
 	}
 
@@ -42,7 +83,6 @@ public class DataFlowValidator {
 			if (validateDataConnection(dataConnection) == false)
 				return false;
 		}
-		updateAvailableResourcesList(sequenceStep);
 		return true;
 	}
 
@@ -57,14 +97,14 @@ public class DataFlowValidator {
 	}
 
 	private boolean existSlotInDataConnection(DataConnection dataConnection) throws UnsupportedEncodingException {
-		List<String> slots;
-		int sequenceStep = dataConnection.getEntryNode().getSequenceStep();
-		if (sequenceStep == INITIAL_STEP)
+		List<String> slots = getSlots(dataConnection);
+		int sequenceStep = dataConnection.getSlotNode().getSequenceStep();
+		if (sequenceStep == FINAL_STEP)
 			slots = ermrCommunications.getOutputSlotURIList(getRepository(), getProcess().getId());
 		else
 			slots = ermrCommunications.getInputSlotURIList(getRepository(), getSubprocessAtSequenceStep(sequenceStep));
 		for (String slot : slots) {
-			if (dataConnection.getEntryNode().getSlot().equals(slot))
+			if (dataConnection.getSlot().equals(slot))
 				return true;
 		}
 		return false;
@@ -78,12 +118,20 @@ public class DataFlowValidator {
 		return false;
 	}
 
+	/**
+	 * The data types are compatible if the type of the resource is the same
+	 * type or a child type of the type allowed by the slot
+	 * 
+	 * @param dataConnection
+	 * @return boolean
+	 * @throws UnsupportedEncodingException
+	 */
 	private boolean isDataTypeCompatibleInDataConnection(DataConnection dataConnection) throws UnsupportedEncodingException {
-		String dataTypeSlot = ermrCommunications.getDataTypeURI(getRepository(), dataConnection.getEntryNode().getSlot());
-		String dataTypeResource = ermrCommunications.getDataTypeURI(getRepository(), dataConnection.getResourceNode().getSlot());
+		String dataTypeSlot = ermrCommunications.getDataTypeURI(getRepository(), dataConnection.getSlot());
+		String dataTypeResource = ermrCommunications.getDataTypeURI(getRepository(), dataConnection.getResource());
 		return isDataTypeCompatible(dataTypeSlot, dataTypeResource);
 	}
-	
+
 	public boolean isDataTypeCompatible(String dataTypeSlot, String dataTypeResource) throws UnsupportedEncodingException {
 		while (dataTypeResource != null) {
 			if (dataTypeResource.equals(dataTypeSlot))
@@ -91,6 +139,16 @@ public class DataFlowValidator {
 			dataTypeResource = ermrCommunications.getParentEntityURI(getRepository(), dataTypeResource);
 		}
 		return false;
+	}
+	
+	private List<String> getSlots(DataConnection dataConnection) throws UnsupportedEncodingException {
+		List<String> slots;
+		int sequenceStep = dataConnection.getSequenceStep();
+		if (sequenceStep == FINAL_STEP)
+			slots = ermrCommunications.getOutputSlotURIList(getRepository(), getProcess().getId());
+		else
+			slots = ermrCommunications.getInputSlotURIList(getRepository(), getSubprocessAtSequenceStep(sequenceStep));
+		return slots;
 	}
 
 	private List<DataConnection> getDataConnectionsAtSequenceStep(int sequenceStep) {
@@ -103,9 +161,9 @@ public class DataFlowValidator {
 	}
 
 	private boolean isDataConnectionAtSequenceStep(DataConnection dataConnection, int sequenceStep) {
-		return (dataConnection.getEntryNode().getSequenceStep() == sequenceStep);
+		return (dataConnection.getSlotNode().getSequenceStep() == sequenceStep);
 	}
-	
+
 	private void initiateAvailableResourcesList() {
 		setAvailableResources(new ArrayList<DataFlowNode>());
 		for (Slot slot : getProcess().getInputs()) {

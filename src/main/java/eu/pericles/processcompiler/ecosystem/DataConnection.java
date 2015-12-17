@@ -3,21 +3,33 @@ package eu.pericles.processcompiler.ecosystem;
 public class DataConnection {
 	
 	private DataFlowNode resourceNode;
-	private DataFlowNode entryNode;
+	private DataFlowNode slotNode;
 	
 	public DataConnection(DataFlowNode entryNode, DataFlowNode resourceNode) {
-		this.entryNode = entryNode;
+		this.slotNode = entryNode;
 		this.resourceNode = resourceNode;
+	}
+	
+	public String getSlot() {
+		return getSlotNode().getProcessSlot();
+	}
+	
+	public String getResource() {
+		return getResourceNode().getProcessSlot();
+	}
+	
+	public int getSequenceStep() {
+		return getSlotNode().getSequenceStep();
 	}
 	
 	//--------------- GETTERS AND SETTERS ----------------//
 
-	public DataFlowNode getEntryNode() {
-		return entryNode;
+	public DataFlowNode getSlotNode() {
+		return slotNode;
 	}
 
-	public void setEntryNode(DataFlowNode entrySlot) {
-		this.entryNode = entrySlot;
+	public void setSlotNode(DataFlowNode entrySlot) {
+		this.slotNode = entrySlot;
 	}
 
 	public DataFlowNode getResourceNode() {
@@ -34,7 +46,7 @@ public class DataConnection {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((entryNode == null) ? 0 : entryNode.hashCode());
+		result = prime * result + ((slotNode == null) ? 0 : slotNode.hashCode());
 		result = prime * result + ((resourceNode == null) ? 0 : resourceNode.hashCode());
 		return result;
 	}
@@ -48,10 +60,10 @@ public class DataConnection {
 		if (getClass() != obj.getClass())
 			return false;
 		DataConnection other = (DataConnection) obj;
-		if (entryNode == null) {
-			if (other.entryNode != null)
+		if (slotNode == null) {
+			if (other.slotNode != null)
 				return false;
-		} else if (!entryNode.equals(other.entryNode))
+		} else if (!slotNode.equals(other.slotNode))
 			return false;
 		if (resourceNode == null) {
 			if (other.resourceNode != null)

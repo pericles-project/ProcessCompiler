@@ -186,7 +186,7 @@ public class GetEntitiesTests {
 	
 	@Test
 	public void getImplementationFile() {
-		String uri = "cdmi_objectid/0000A4EF00186738BE125FC57E4E4BF5AED5B4845BB62AF7";//"https://c102-086.cloud.gwdg.de/api/cdmi/cdmi_objectid/0000A4EF00186738BE125FC57E4E4BF5AED5B4845BB62AF7";
+		String uri = "cdmi_objectid/0000A4EF00186738BE125FC57E4E4BF5AED5B4845BB62AF7";
 		try {
 			InputStream inputStream = new ERMRCommunications().getImplementationFile(repository, uri);
 			InputStream expectedStream = new FileInputStream(new File("src/test/resources/ermr/communications/VirusCheckProcess.bpmn2"));
@@ -198,7 +198,7 @@ public class GetEntitiesTests {
 		}
 	}
 	
-	//------------------------------- HELP FUNCTIONS ----------------------------------//
+	//------------------------------- HELP FUNCTIONS: create expected entities and results ----------------------------------//
 	
 	public void setRepository() {
 		try {
@@ -283,16 +283,5 @@ public class GetEntitiesTests {
 				+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>]}"
 				+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>] [2 <http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>]}"
 				+ " {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}"));
-				
-		/*
-		 expectedAggregatedProcess.setSequence(CreateEntities.createSequence("<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>",
-				"{[<http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM> <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]}"
-				+ " {[<http://www.pericles-project.eu/ns/ecosystem#isExtracMDDM> <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>] "
-				+ " [<http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD> <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>]}"
-				+ " {[<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO> <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]"
-				+ " [<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF> <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>]"
-				+ " [<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD> <http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>]"
-				+ " [<http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP> <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>]}"));
-				*/
 	}
 }

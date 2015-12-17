@@ -3,11 +3,11 @@ package eu.pericles.processcompiler.ecosystem;
 public class DataFlowNode {
 	
 	private int sequenceStep;
-	private String slot;
+	private String processSlot;
 	
 	public DataFlowNode(int step, String slot) {
 		sequenceStep = step;
-		this.slot = slot;
+		this.processSlot = slot;
 	}
 	
 	//--------------- GETTERS AND SETTERS ----------------//
@@ -18,11 +18,11 @@ public class DataFlowNode {
 	public void setSequenceStep(int processFlowStep) {
 		this.sequenceStep = processFlowStep;
 	}
-	public String getSlot() {
-		return slot;
+	public String getProcessSlot() {
+		return processSlot;
 	}
-	public void setSlot(String processSlotID) {
-		this.slot = processSlotID;
+	public void setProcessSlot(String processSlotID) {
+		this.processSlot = processSlotID;
 	}
 	
 	//--------------- HASHCODE AND EQUALS ----------------//
@@ -32,7 +32,7 @@ public class DataFlowNode {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + sequenceStep;
-		result = prime * result + ((slot == null) ? 0 : slot.hashCode());
+		result = prime * result + ((processSlot == null) ? 0 : processSlot.hashCode());
 		return result;
 	}
 	
@@ -47,10 +47,10 @@ public class DataFlowNode {
 		DataFlowNode other = (DataFlowNode) obj;
 		if (sequenceStep != other.sequenceStep)
 			return false;
-		if (slot == null) {
-			if (other.slot != null)
+		if (processSlot == null) {
+			if (other.processSlot != null)
 				return false;
-		} else if (!slot.equals(other.slot))
+		} else if (!processSlot.equals(other.processSlot))
 			return false;
 		return true;
 	}
