@@ -2,7 +2,6 @@ package eu.pericles.processcompiler.bpmn;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -37,7 +36,7 @@ public class BPMNParser {
 		return getBPMNProcess();
 	}
 
-	private void unmarshal(InputStream inputStream) throws JAXBException, FileNotFoundException {
+	private void unmarshal(InputStream inputStream) throws JAXBException {
 		JAXBElement<FancyDefinitions> feed = createUnmarshaller().unmarshal(new StreamSource(new InputStreamReader(inputStream)),
 				FancyDefinitions.class);
 
