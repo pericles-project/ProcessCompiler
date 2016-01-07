@@ -1,5 +1,6 @@
 package eu.pericles.processcompiler.communications.ermr;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.security.KeyManagementException;
@@ -99,7 +100,7 @@ public class ERMRCommunications {
 		return JSONParser.parseGetSequenceEntityResponse(response, uri);
 	}
 
-	public InputStream getImplementationFile(String repository, String uri) {
+	public InputStream getImplementationFile(String uri) {
 		return client.getDigitalObject(uri).readEntity(InputStream.class);
 	}
 	

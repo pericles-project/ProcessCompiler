@@ -1,5 +1,7 @@
 package eu.pericles.processcompiler.unittests;
 
+import static org.junit.Assert.fail;
+
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -8,10 +10,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
-import eu.pericles.processcompiler.testutils.Utils;
 import eu.pericles.processcompiler.bpmn.BPMNParser;
-import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.bpmn.BPMNWriter;
+import eu.pericles.processcompiler.testutils.Utils;
 
 @RunWith(Parameterized.class)
 public class BPMNParseAndWriteTests {
@@ -34,22 +35,13 @@ public class BPMNParseAndWriteTests {
 		String testFileName = path + "Test.bpmn2";
 		String outputFileName = path + "Output.bpmn2";
 		
-		write(parse(inputFileName), outputFileName);
+		try {
+			new BPMNWriter().write(new BPMNParser().parse(inputFileName), outputFileName);
+		} catch (Exception e) {
+			fail("ParseAndWriteBPMNFile(): " + e.getMessage());
+		}
 		
 		Utils.fileContentEquals(outputFileName, testFileName);
-	}
-
-	private BPMNProcess parse(String inputFileName) {
-		BPMNParser parser = new BPMNParser();
-		parser.parse(inputFileName);
-		BPMNProcess process = parser.getBPMNProcess();
-		
-		return process;
-	}
-
-	private void write(BPMNProcess process, String outputFileName) {		
-		BPMNWriter writer = new BPMNWriter();
-		writer.write(process, outputFileName);		
 	}
 
 }

@@ -3,6 +3,7 @@ package eu.pericles.processcompiler.bpmn;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import javax.xml.bind.JAXBContext;
@@ -15,41 +16,39 @@ import eu.pericles.processcompiler.bpmnx.FancyDefinitions;
 import eu.pericles.processcompiler.bpmnx.FancyObjectFactory;
 
 public class BPMNParser {
-	
+
 	private BPMNProcess bpmnProcess;
-	private String file;
 	private FancyDefinitions definitions;
-	
-	public void parse(String file) {		
-		setBPMNProcess(new BPMNProcess());
-		setFile(file);
-		
-		try {
-			unmarshal();
-			
-			parseAttributes();
-			parseImports();
-			parseRootElements();
-			parseDiagram();
-			
-		} catch (Exception exception) {
-			exception.printStackTrace();
-		}
+
+	public BPMNProcess parse(String file) throws Exception {		
+		return parse(new FileInputStream(new File(file)));
 	}
 
-	private void unmarshal() throws JAXBException, FileNotFoundException {
-		JAXBElement<FancyDefinitions> feed = createUnmarshaller().unmarshal(
-				new StreamSource(new InputStreamReader(new FileInputStream(new File(getFile())))), FancyDefinitions.class);
+	public BPMNProcess parse(InputStream inputStream) throws Exception {
+		setBPMNProcess(new BPMNProcess());
+
+		unmarshal(inputStream);
+
+		parseAttributes();
+		parseImports();
+		parseRootElements();
+		parseDiagram();
 		
+		return getBPMNProcess();
+	}
+
+	private void unmarshal(InputStream inputStream) throws JAXBException, FileNotFoundException {
+		JAXBElement<FancyDefinitions> feed = createUnmarshaller().unmarshal(new StreamSource(new InputStreamReader(inputStream)),
+				FancyDefinitions.class);
+
 		setDefinitions(feed.getValue());
 	}
 
 	private Unmarshaller createUnmarshaller() throws JAXBException {
 		JAXBContext jc = JAXBContext.newInstance(
 				FancyObjectFactory.class, // org.omg.spec.bpmn._20100524.model.ObjectFactory.class,
-				org.omg.spec.bpmn._20100524.di.ObjectFactory.class,
-				org.omg.spec.dd._20100524.di.ObjectFactory.class,
-				org.omg.spec.dd._20100524.dc.ObjectFactory.class);		
+				org.omg.spec.bpmn._20100524.di.ObjectFactory.class, org.omg.spec.dd._20100524.di.ObjectFactory.class,
+				org.omg.spec.dd._20100524.dc.ObjectFactory.class);
 		return jc.createUnmarshaller();
 	}
 
@@ -57,9 +56,9 @@ public class BPMNParser {
 		getBPMNProcess().setId(getDefinitions().getId());
 		getBPMNProcess().setTargetNamespace(getDefinitions().getTargetNamespace());
 		getBPMNProcess().setExpressionLanguage(getDefinitions().getExpressionLanguage());
-		getBPMNProcess().setTypeLanguage(getDefinitions().getTypeLanguage());		
+		getBPMNProcess().setTypeLanguage(getDefinitions().getTypeLanguage());
 	}
-	
+
 	private void parseImports() {
 		getBPMNProcess().setImports(getDefinitions().getImports());
 	}
@@ -79,22 +78,14 @@ public class BPMNParser {
 		getBPMNProcess().setDiagram(getDefinitions().getDiagram());
 	}
 
-	//------------------- GETTERS AND SETTERS ----------------------//
-	
+	// ------------------- GETTERS AND SETTERS ----------------------//
+
 	public BPMNProcess getBPMNProcess() {
 		return bpmnProcess;
 	}
 
 	public void setBPMNProcess(BPMNProcess process) {
 		this.bpmnProcess = process;
-	}
-
-	public String getFile() {
-		return file;
-	}
-
-	public void setFile(String file) {
-		this.file = file;
 	}
 
 	public FancyDefinitions getDefinitions() {

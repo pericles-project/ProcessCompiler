@@ -188,7 +188,7 @@ public class GetEntitiesTests {
 	public void getImplementationFile() {
 		String uri = "cdmi_objectid/0000A4EF00186738BE125FC57E4E4BF5AED5B4845BB62AF7";
 		try {
-			InputStream inputStream = new ERMRCommunications().getImplementationFile(repository, uri);
+			InputStream inputStream = new ERMRCommunications().getImplementationFile(uri);
 			InputStream expectedStream = new FileInputStream(new File("src/test/resources/ermr/communications/VirusCheckProcess.bpmn2"));
 			//Utils.writeInputStream(expectedStream, "/home/noa/expectedStream.txt");
 			//Utils.writeInputStream(inputStream, "/home/noa/inputStream.txt");

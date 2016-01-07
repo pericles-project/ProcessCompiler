@@ -1,0 +1,60 @@
+<bpmn2:definitions 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+		xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+		xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+		xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+		xmlns:tns="http://www.jboss.org/drools" 
+		xmlns="http://www.jboss.org/drools" 
+		xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" 
+		id="_019c1579-689e-447b-9d4d-c20d56c60249" 
+		expressionLanguage="http://www.mvel.org/2.0" 
+		targetNamespace="http://www.jboss.org/drools" 
+		typeLanguage="http://www.java.com/javaTypes">
+  
+  <!--    process    -->
+  
+  <bpmn2:process id="_3b8e18d2-d35e-4d6d-898d-6a3f41e227e0" tns:version="1" tns:packageName="eu.pericles.processcompiler.unittests.core.basicprocessaggregation" tns:adHoc="false" name="ExtractMetadataProcess" isExecutable="true" processType="Private">
+    
+    <bpmn2:startEvent id="_a02f97aa-232f-494d-abcd-c86a9127ce47" />    
+    
+    <bpmn2:scriptTask id="_34c3adda-607f-4300-95ae-00cb468c70f5" name="Extract MD" scriptFormat="http://www.java.com/java">
+      <bpmn2:script>System.out.println("Executing Extract Metadata Process");</bpmn2:script>
+    </bpmn2:scriptTask>
+    
+    <bpmn2:endEvent id="_e216a4fa-afaa-4baa-b733-9c0cc4a861f3" />
+    
+    <bpmn2:sequenceFlow id="_075d8c7a-b39a-44f6-95a4-34924c1782c7" sourceRef="_a02f97aa-232f-494d-abcd-c86a9127ce47" targetRef="_34c3adda-607f-4300-95ae-00cb468c70f5"/>
+    <bpmn2:sequenceFlow id="_bea5f602-4295-4c1f-a594-2d0999cd0a17" sourceRef="_34c3adda-607f-4300-95ae-00cb468c70f5" targetRef="_e216a4fa-afaa-4baa-b733-9c0cc4a861f3"/>
+  
+  </bpmn2:process>
+  
+  <!--    diagram    -->
+  
+  <bpmndi:BPMNDiagram id="_26af78ff-2af6-48a5-a4b3-40abb4011b79">
+    <bpmndi:BPMNPlane id="_c63785a5-0c6a-4591-825d-073c5cae927f" bpmnElement="_3b8e18d2-d35e-4d6d-898d-6a3f41e227e0">
+      <bpmndi:BPMNShape id="_8721102f-4722-4fbb-9ef8-cb7f1223f134" bpmnElement="_a02f97aa-232f-494d-abcd-c86a9127ce47">
+        <dc:Bounds height="0.0" width="0.0" x="45.0" y="45.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_5ed80c4b-9e9d-41b3-81ec-dda2ce7cf929" bpmnElement="_34c3adda-607f-4300-95ae-00cb468c70f5">
+        <dc:Bounds height="50.0" width="110.0" x="185.0" y="35.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_5329bb26-7bd1-4b90-8183-49538982197d" bpmnElement="_e216a4fa-afaa-4baa-b733-9c0cc4a861f3">
+        <dc:Bounds height="36.0" width="36.0" x="412.0" y="42.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_d9dcf3a8-54cb-41ba-a45c-06ef0c634162" bpmnElement="_075d8c7a-b39a-44f6-95a4-34924c1782c7" sourceElement="_8721102f-4722-4fbb-9ef8-cb7f1223f134" targetElement="_5ed80c4b-9e9d-41b3-81ec-dda2ce7cf929">
+        <di:waypoint xsi:type="dc:Point" x="81.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="127.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="127.0" y="60.0"/>
+        <di:waypoint xsi:type="dc:Point" x="185.0" y="60.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_822ea40b-ba10-4c3e-bed2-8512302f5dc1" bpmnElement="_bea5f602-4295-4c1f-a594-2d0999cd0a17" sourceElement="_5ed80c4b-9e9d-41b3-81ec-dda2ce7cf929" targetElement="_5329bb26-7bd1-4b90-8183-49538982197d">
+        <di:waypoint xsi:type="dc:Point" x="295.0" y="60.0"/>
+        <di:waypoint xsi:type="dc:Point" x="347.0" y="60.0"/>
+        <di:waypoint xsi:type="dc:Point" x="347.0" y="60.0"/>
+        <di:waypoint xsi:type="dc:Point" x="412.0" y="60.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  
+</bpmn2:definitions>

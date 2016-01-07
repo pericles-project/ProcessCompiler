@@ -83,10 +83,10 @@ public class ValidationTests {
 	public void isDataTypeCompatible() {
 		try {
 			DataFlowValidator validator = new DataFlowValidator(repository, createAggregatedProcess());
-			assertTrue(validator.isDataTypeCompatible("<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>", "<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>"));
-			assertTrue(validator.isDataTypeCompatible("<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>", "<http://www.pericles-project.eu/ns/ecosystem#File>"));
-			assertFalse(validator.isDataTypeCompatible("<http://www.pericles-project.eu/ns/ecosystem#File>", "<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>"));
-			assertFalse(validator.isDataTypeCompatible("<http://www.pericles-project.eu/ns/ecosystem#PackageFormat>", "<http://www.pericles-project.eu/ns/ecosystem#Metadata>"));
+			assertTrue(validator.isSubclass("<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>", "<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>"));
+			assertTrue(validator.isSubclass("<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>", "<http://www.pericles-project.eu/ns/ecosystem#File>"));
+			assertFalse(validator.isSubclass("<http://www.pericles-project.eu/ns/ecosystem#File>", "<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>"));
+			assertFalse(validator.isSubclass("<http://www.pericles-project.eu/ns/ecosystem#PackageFormat>", "<http://www.pericles-project.eu/ns/ecosystem#Metadata>"));
 		} catch (Exception e) {
 			fail("isDataTypeCompatible(): " + e.getMessage());
 		}

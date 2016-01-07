@@ -86,6 +86,12 @@ public class DataFlowValidator {
 		return true;
 	}
 
+	/** 
+	 * A Data Connection is valid if:
+	 *  - the slot exists in the process
+	 *  - the resource is available
+	 *  - the data type of the slot and the resource are compatible
+	 */
 	private boolean validateDataConnection(DataConnection dataConnection) throws UnsupportedEncodingException {
 		if (existSlotInDataConnection(dataConnection) == false)
 			return false;
@@ -97,12 +103,7 @@ public class DataFlowValidator {
 	}
 
 	private boolean existSlotInDataConnection(DataConnection dataConnection) throws UnsupportedEncodingException {
-		List<String> slots = getSlots(dataConnection);
-		int sequenceStep = dataConnection.getSlotNode().getSequenceStep();
-		if (sequenceStep == FINAL_STEP)
-			slots = ermrCommunications.getOutputSlotURIList(getRepository(), getProcess().getId());
-		else
-			slots = ermrCommunications.getInputSlotURIList(getRepository(), getSubprocessAtSequenceStep(sequenceStep));
+		List<String> slots = getSlotsAtSequenceStep(dataConnection.getSequenceStep());
 		for (String slot : slots) {
 			if (dataConnection.getSlot().equals(slot))
 				return true;
@@ -119,8 +120,8 @@ public class DataFlowValidator {
 	}
 
 	/**
-	 * The data types are compatible if the type of the resource is the same
-	 * type or a child type of the type allowed by the slot
+	 * The data types are compatible if the resource class is the same
+	 * class or a subclass of the slot data type
 	 * 
 	 * @param dataConnection
 	 * @return boolean
@@ -129,21 +130,20 @@ public class DataFlowValidator {
 	private boolean isDataTypeCompatibleInDataConnection(DataConnection dataConnection) throws UnsupportedEncodingException {
 		String dataTypeSlot = ermrCommunications.getDataTypeURI(getRepository(), dataConnection.getSlot());
 		String dataTypeResource = ermrCommunications.getDataTypeURI(getRepository(), dataConnection.getResource());
-		return isDataTypeCompatible(dataTypeSlot, dataTypeResource);
+		return isSubclass(dataTypeSlot, dataTypeResource);
 	}
 
-	public boolean isDataTypeCompatible(String dataTypeSlot, String dataTypeResource) throws UnsupportedEncodingException {
-		while (dataTypeResource != null) {
-			if (dataTypeResource.equals(dataTypeSlot))
+	public boolean isSubclass(String parentClass, String childClass) throws UnsupportedEncodingException {
+		while (childClass != null) {
+			if (childClass.equals(parentClass))
 				return true;
-			dataTypeResource = ermrCommunications.getParentEntityURI(getRepository(), dataTypeResource);
+			childClass = ermrCommunications.getParentEntityURI(getRepository(), childClass);
 		}
 		return false;
 	}
 	
-	private List<String> getSlots(DataConnection dataConnection) throws UnsupportedEncodingException {
+	private List<String> getSlotsAtSequenceStep(int sequenceStep) throws UnsupportedEncodingException {
 		List<String> slots;
-		int sequenceStep = dataConnection.getSequenceStep();
 		if (sequenceStep == FINAL_STEP)
 			slots = ermrCommunications.getOutputSlotURIList(getRepository(), getProcess().getId());
 		else
