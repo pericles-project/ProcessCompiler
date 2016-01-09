@@ -100,6 +100,10 @@ public class ERMRCommunications {
 		return JSONParser.parseGetSequenceEntityResponse(response, uri);
 	}
 
+	public InputStream getProcessImplementationFile(String repository, String uri) throws Exception {
+		return getImplementationFile(getProcessImplementation(repository, uri).getLocation());
+	}
+	
 	public InputStream getImplementationFile(String uri) {
 		return client.getDigitalObject(uri).readEntity(InputStream.class);
 	}

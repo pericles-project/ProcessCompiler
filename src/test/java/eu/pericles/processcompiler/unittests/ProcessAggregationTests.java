@@ -1,6 +1,7 @@
 package eu.pericles.processcompiler.unittests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -14,25 +15,22 @@ import javax.ws.rs.core.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.omg.spec.bpmn._20100524.model.TFlowElement;
 
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
+import eu.pericles.processcompiler.bpmn.BPMNProcessesAggregator;
 import eu.pericles.processcompiler.bpmn.BPMNWriter;
 import eu.pericles.processcompiler.communications.ermr.ERMRClientAPI;
-import eu.pericles.processcompiler.core.BPMNProcessAggregator;
 import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
 import eu.pericles.processcompiler.testutils.CreateEntities;
-import eu.pericles.processcompiler.testutils.Utils;
 
 public class ProcessAggregationTests {
 	static String repository = "NoaRepositoryTest";
 	static String triplesMediaType = MediaType.TEXT_PLAIN;
 	private String ecosystem = "src/test/resources/core/basicprocessaggregation/Ecosystem.txt";
-
-	// ------------------------------- TESTS
-	// ----------------------------------//
 
 	@Before
 	public void setRepository() {
@@ -57,11 +55,12 @@ public class ProcessAggregationTests {
 		}
 	}
 	
+	// ----------------------- TESTS ----------------------------------//
+	
 	@Test
 	public void getBPMNSubprocess() {
 		try {
-			BPMNProcess process = new BPMNProcessAggregator(repository, createAggregatedProcess()).getBPMNSubprocess(
-					"<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck>");
+			BPMNProcess process = new ProcessCompiler().getBPMNProcess(repository, "<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck>");
 			assertEquals("_223e152f-97f6-4f9f-864b-cc6af31253ff", process.getId());
 			assertEquals("_bf96549a-7b98-45af-af77-0f715fe66566", process.getProcess().getId());
 		} catch (Exception e) {
@@ -72,12 +71,34 @@ public class ProcessAggregationTests {
 	@Test
 	public void getBPMNSubprocesses() {
 		try {
-			List<BPMNProcess> processes = new BPMNProcessAggregator(repository, createAggregatedProcess()).getBPMNSubprocesses();
+			List<BPMNProcess> processes = new ProcessCompiler().getBPMNProcessesOfAggregatedProcess(repository, createAggregatedProcess());
 			assertEquals("_bf96549a-7b98-45af-af77-0f715fe66566", processes.get(0).getProcess().getId());
 			assertEquals("_3b8e18d2-d35e-4d6d-898d-6a3f41e227e0", processes.get(1).getProcess().getId());
 			assertEquals("_99113fc4-116c-4351-a90d-168ee4f038b8", processes.get(2).getProcess().getId());
 		} catch (Exception e) {
 			fail("getBPMNSubprocesses(): " + e.getMessage());
+		}
+	}
+	
+	@Test
+	public void findAndDeleteEndEvent() {
+		try {
+			BPMNProcess process = new ProcessCompiler().getBPMNProcess(repository, "<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck>");
+			Object sourceRef = new BPMNProcessesAggregator().findAndDeleteEndEvent(process);
+			assertEquals("_a5fbab4b-70cd-482c-9651-ca8a56387ce7", ((TFlowElement) sourceRef).getId());
+		} catch (Exception e) {
+			fail("findEndEvent(): " + e.getMessage());
+		}
+	}
+	
+	@Test
+	public void compileAggregatedProcess() {
+		try {
+			String outputFileName = "src/test/resources/core/basicprocessaggregation/CompiledAggregatedProcess.bpmn2";
+			BPMNProcess bpmnProcess = new ProcessCompiler().compileAggregatedProcess(repository, createAggregatedProcess());
+			new BPMNWriter().write(bpmnProcess, outputFileName);
+		} catch (Exception e) {
+			fail("compileAggregatedProcess(): " + e.getMessage());
 		}
 	}
 /*

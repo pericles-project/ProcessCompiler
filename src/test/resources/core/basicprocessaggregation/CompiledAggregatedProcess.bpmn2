@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<bpmn2:definitions xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="&lt;http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW&gt;" targetNamespace="http://www.jboss.org/drools" expressionLanguage="http://www.mvel.org/2.0" typeLanguage="http://www.java.com/javaTypes" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd">
+    <bpmn2:process xmlns:tns="http://www.jboss.org/drools" processType="Private" isExecutable="true" name="Ingest Artwork Software" id="_bf96549a-7b98-45af-af77-0f715fe66566" tns:version="1" tns:packageName="eu.pericles.processcompiler.unittests.core.basicprocessaggregation" tns:adHoc="false">
+        <bpmn2:startEvent id="_44728fc8-7c80-4fde-9fe6-bada4fda93b8"/>
+        <bpmn2:scriptTask scriptFormat="http://www.java.com/java" name="Virus Check" id="_a5fbab4b-70cd-482c-9651-ca8a56387ce7">
+            <bpmn2:script>System.out.println("Executing Virus Check Process");</bpmn2:script>
+        </bpmn2:scriptTask>
+        <bpmn2:sequenceFlow sourceRef="_44728fc8-7c80-4fde-9fe6-bada4fda93b8" targetRef="_a5fbab4b-70cd-482c-9651-ca8a56387ce7" id="_3a48aea5-7b81-43dd-82e9-7f819c038f3d"/>
+    </bpmn2:process>
+    <bpmndi:BPMNDiagram id="_854498e3-1e63-4162-9fcb-cfd0fcd39ffd">
+        <bpmndi:BPMNPlane xmlns:tns="http://www.jboss.org/drools" bpmnElement="tns:_bf96549a-7b98-45af-af77-0f715fe66566" id="_2a096d31-0058-4309-93dc-16ebc7c008bb">
+            <bpmndi:BPMNShape bpmnElement="tns:_44728fc8-7c80-4fde-9fe6-bada4fda93b8" id="_4ad29cb4-826b-413e-b391-53e29bea1233">
+                <dc:Bounds x="45.0" y="45.0" width="0.0" height="0.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:_a5fbab4b-70cd-482c-9651-ca8a56387ce7" id="_1b7266dd-6285-4081-a71d-98c027355591">
+                <dc:Bounds x="185.0" y="35.0" width="110.0" height="50.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:_3a48aea5-7b81-43dd-82e9-7f819c038f3d" sourceElement="tns:_4ad29cb4-826b-413e-b391-53e29bea1233" targetElement="tns:_1b7266dd-6285-4081-a71d-98c027355591" id="_297a70e4-e521-4c2b-9eeb-e0f0461f62bf">
+                <di:waypoint x="81.0" y="63.0"/>
+                <di:waypoint x="127.0" y="63.0"/>
+                <di:waypoint x="127.0" y="60.0"/>
+                <di:waypoint x="185.0" y="60.0"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
