@@ -26,6 +26,7 @@ import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
 import eu.pericles.processcompiler.testutils.CreateEntities;
+import eu.pericles.processcompiler.testutils.Utils;
 
 public class ProcessAggregationTests {
 	static String repository = "NoaRepositoryTest";
@@ -97,6 +98,7 @@ public class ProcessAggregationTests {
 			String outputFileName = "src/test/resources/core/basicprocessaggregation/CompiledAggregatedProcess.bpmn2";
 			BPMNProcess bpmnProcess = new ProcessCompiler().compileAggregatedProcess(repository, createAggregatedProcess());
 			new BPMNWriter().write(bpmnProcess, outputFileName);
+			Utils.fileContentEquals(outputFileName, "src/test/resources/core/basicprocessaggregation/CompiledAggregatedProcessTest.bpmn2");
 		} catch (Exception e) {
 			fail("compileAggregatedProcess(): " + e.getMessage());
 		}

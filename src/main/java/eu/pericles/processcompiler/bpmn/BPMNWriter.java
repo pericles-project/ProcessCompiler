@@ -48,10 +48,8 @@ public class BPMNWriter {
 		prefixes.put("http://www.omg.org/spec/DD/20100524/DI", "di");
 		prefixes.put("http://www.omg.org/spec/DD/20100524/DC", "dc");
 		prefixes.put("http://www.w3.org/2001/XMLSchema-instance", "xsi");
-		//if (getDefinitions().getTargetNamespace() != null)
-			prefixes.put(getDefinitions().getTargetNamespace(), "tns");
-		//else
-			//prefixes.put("http://www.jboss.org/drools", "tns");
+		prefixes.put("http://www.jboss.org/drools" , "tns");
+		//prefixes.put(getDefinitions().getTargetNamespace(), "tns");
 
 		marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new NamespacePrefixMapper() {
 			@Override

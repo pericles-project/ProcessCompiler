@@ -3,16 +3,20 @@ package eu.pericles.processcompiler.bpmn;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.JAXBElement;
+
 import org.omg.spec.bpmn._20100524.di.BPMNDiagram;
 import org.omg.spec.bpmn._20100524.model.Import;
 import org.omg.spec.bpmn._20100524.model.TDataStore;
 import org.omg.spec.bpmn._20100524.model.TError;
 import org.omg.spec.bpmn._20100524.model.TEscalation;
+import org.omg.spec.bpmn._20100524.model.TFlowElement;
 import org.omg.spec.bpmn._20100524.model.TInterface;
 import org.omg.spec.bpmn._20100524.model.TItemDefinition;
 import org.omg.spec.bpmn._20100524.model.TMessage;
 import org.omg.spec.bpmn._20100524.model.TProcess;
 import org.omg.spec.bpmn._20100524.model.TSignal;
+import org.omg.spec.dd._20100524.di.DiagramElement;
 
 public class BPMNProcess {
 	
@@ -30,6 +34,18 @@ public class BPMNProcess {
 	private List<TDataStore> dataStores = new ArrayList<>();
 	private TProcess process;
 	private BPMNDiagram diagram;
+
+	public void addFlowElements(List<JAXBElement<? extends TFlowElement>> flowElements) {
+		for (JAXBElement<? extends TFlowElement> flowElement : flowElements) {
+			getProcess().getFlowElements().add(flowElement);
+		}
+	}
+
+	public void addDiagramElements(List<JAXBElement<? extends DiagramElement>> diagramElements) {
+		for (JAXBElement<? extends DiagramElement> diagramElement : diagramElements) {
+			getDiagram().getBPMNPlane().getDiagramElements().add(diagramElement);
+		}
+	}
 
 	//------------------- GETTERS AND SETTERS ----------------------//
 	

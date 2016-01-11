@@ -30,6 +30,7 @@ public class FancyDefinitions extends Definitions {
 		this.setTargetNamespace(process.getTargetNamespace());
 		this.setExpressionLanguage(process.getExpressionLanguage());
 		this.setTypeLanguage(process.getTypeLanguage());
+		
 		this.addImports(process.getImports());
 		
 		this.addItemDefinitions(process.getItemDefinitions());

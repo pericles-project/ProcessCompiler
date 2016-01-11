@@ -6,6 +6,16 @@
             <bpmn2:script>System.out.println("Executing Virus Check Process");</bpmn2:script>
         </bpmn2:scriptTask>
         <bpmn2:sequenceFlow sourceRef="_44728fc8-7c80-4fde-9fe6-bada4fda93b8" targetRef="_a5fbab4b-70cd-482c-9651-ca8a56387ce7" id="_3a48aea5-7b81-43dd-82e9-7f819c038f3d"/>
+        <bpmn2:scriptTask scriptFormat="http://www.java.com/java" name="Extract MD" id="_34c3adda-607f-4300-95ae-00cb468c70f5">
+            <bpmn2:script>System.out.println("Executing Extract Metadata Process");</bpmn2:script>
+        </bpmn2:scriptTask>
+        <bpmn2:sequenceFlow sourceRef="_a5fbab4b-70cd-482c-9651-ca8a56387ce7" targetRef="_34c3adda-607f-4300-95ae-00cb468c70f5" id="_075d8c7a-b39a-44f6-95a4-34924c1782c7"/>
+        <bpmn2:scriptTask scriptFormat="http://www.java.com/java" name="Encapsulate DO and MD" id="_242b8e3c-ce09-40e6-8702-af4f6e0be608">
+            <bpmn2:script>System.out.println("Executing Encapsulate DO and MD Process);</bpmn2:script>
+        </bpmn2:scriptTask>
+        <bpmn2:endEvent id="_3a6ed65f-47ef-42b4-95a4-ae10fd42e923"/>
+        <bpmn2:sequenceFlow sourceRef="_34c3adda-607f-4300-95ae-00cb468c70f5" targetRef="_242b8e3c-ce09-40e6-8702-af4f6e0be608" id="_6cabbd57-fc38-492e-9719-ccdbb73d8f1a"/>
+        <bpmn2:sequenceFlow sourceRef="_242b8e3c-ce09-40e6-8702-af4f6e0be608" targetRef="_3a6ed65f-47ef-42b4-95a4-ae10fd42e923" id="_b27b2ab4-cd3e-4731-b71c-64435bb5731e"/>
     </bpmn2:process>
     <bpmndi:BPMNDiagram id="_854498e3-1e63-4162-9fcb-cfd0fcd39ffd">
         <bpmndi:BPMNPlane xmlns:tns="http://www.jboss.org/drools" bpmnElement="tns:_bf96549a-7b98-45af-af77-0f715fe66566" id="_2a096d31-0058-4309-93dc-16ebc7c008bb">
@@ -20,6 +30,33 @@
                 <di:waypoint x="127.0" y="63.0"/>
                 <di:waypoint x="127.0" y="60.0"/>
                 <di:waypoint x="185.0" y="60.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="tns:_34c3adda-607f-4300-95ae-00cb468c70f5" id="_5ed80c4b-9e9d-41b3-81ec-dda2ce7cf929">
+                <dc:Bounds x="185.0" y="35.0" width="110.0" height="50.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:_075d8c7a-b39a-44f6-95a4-34924c1782c7" sourceElement="_1b7266dd-6285-4081-a71d-98c027355591" targetElement="tns:_5ed80c4b-9e9d-41b3-81ec-dda2ce7cf929" id="_d9dcf3a8-54cb-41ba-a45c-06ef0c634162">
+                <di:waypoint x="81.0" y="63.0"/>
+                <di:waypoint x="127.0" y="63.0"/>
+                <di:waypoint x="127.0" y="60.0"/>
+                <di:waypoint x="185.0" y="60.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNShape bpmnElement="tns:_242b8e3c-ce09-40e6-8702-af4f6e0be608" id="_13a5f925-2737-4da0-957e-4a61e00cfec9">
+                <dc:Bounds x="185.0" y="35.0" width="110.0" height="50.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="tns:_3a6ed65f-47ef-42b4-95a4-ae10fd42e923" id="_caa847d4-9d11-4654-a1a4-7fef0945e8ed">
+                <dc:Bounds x="412.0" y="42.0" width="36.0" height="36.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="tns:_6cabbd57-fc38-492e-9719-ccdbb73d8f1a" sourceElement="_5ed80c4b-9e9d-41b3-81ec-dda2ce7cf929" targetElement="tns:_13a5f925-2737-4da0-957e-4a61e00cfec9" id="_274f2b73-aa10-4a08-a706-e741869467cf">
+                <di:waypoint x="81.0" y="63.0"/>
+                <di:waypoint x="127.0" y="63.0"/>
+                <di:waypoint x="127.0" y="60.0"/>
+                <di:waypoint x="185.0" y="60.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="tns:_b27b2ab4-cd3e-4731-b71c-64435bb5731e" sourceElement="tns:_13a5f925-2737-4da0-957e-4a61e00cfec9" targetElement="tns:_caa847d4-9d11-4654-a1a4-7fef0945e8ed" id="_552530c6-89ab-4a3a-9dfc-1fd4d1e40975">
+                <di:waypoint x="295.0" y="60.0"/>
+                <di:waypoint x="347.0" y="60.0"/>
+                <di:waypoint x="347.0" y="60.0"/>
+                <di:waypoint x="412.0" y="60.0"/>
             </bpmndi:BPMNEdge>
         </bpmndi:BPMNPlane>
     </bpmndi:BPMNDiagram>
