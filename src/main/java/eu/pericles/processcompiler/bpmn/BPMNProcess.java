@@ -34,6 +34,14 @@ public class BPMNProcess {
 	private List<TDataStore> dataStores = new ArrayList<>();
 	private TProcess process;
 	private BPMNDiagram diagram;
+	
+	public List<JAXBElement<? extends TFlowElement>> getFlowElements() {
+		return getProcess().getFlowElements();
+	}
+	
+	public List<JAXBElement<? extends DiagramElement>> getDiagramElements() {
+		return getDiagram().getBPMNPlane().getDiagramElements();
+	}
 
 	public void addFlowElements(List<JAXBElement<? extends TFlowElement>> flowElements) {
 		for (JAXBElement<? extends TFlowElement> flowElement : flowElements) {

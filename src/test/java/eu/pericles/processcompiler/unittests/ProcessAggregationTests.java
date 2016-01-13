@@ -15,10 +15,8 @@ import javax.ws.rs.core.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.omg.spec.bpmn._20100524.model.TFlowElement;
 
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
-import eu.pericles.processcompiler.bpmn.BPMNProcessesAggregator;
 import eu.pericles.processcompiler.bpmn.BPMNWriter;
 import eu.pericles.processcompiler.communications.ermr.ERMRClientAPI;
 import eu.pericles.processcompiler.core.ProcessCompiler;
@@ -82,38 +80,17 @@ public class ProcessAggregationTests {
 	}
 	
 	@Test
-	public void findAndDeleteEndEvent() {
-		try {
-			BPMNProcess process = new ProcessCompiler().getBPMNProcess(repository, "<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck>");
-			Object sourceRef = new BPMNProcessesAggregator().findAndDeleteEndEvent(process);
-			assertEquals("_a5fbab4b-70cd-482c-9651-ca8a56387ce7", ((TFlowElement) sourceRef).getId());
-		} catch (Exception e) {
-			fail("findEndEvent(): " + e.getMessage());
-		}
-	}
-	
-	@Test
 	public void compileAggregatedProcess() {
 		try {
 			String outputFileName = "src/test/resources/core/basicprocessaggregation/CompiledAggregatedProcess.bpmn2";
+			String testFileName = "src/test/resources/core/basicprocessaggregation/CompiledAggregatedProcessTest.bpmn2";
 			BPMNProcess bpmnProcess = new ProcessCompiler().compileAggregatedProcess(repository, createAggregatedProcess());
 			new BPMNWriter().write(bpmnProcess, outputFileName);
-			Utils.fileContentEquals(outputFileName, "src/test/resources/core/basicprocessaggregation/CompiledAggregatedProcessTest.bpmn2");
+			Utils.fileContentEquals(outputFileName, testFileName);
 		} catch (Exception e) {
 			fail("compileAggregatedProcess(): " + e.getMessage());
 		}
 	}
-/*
-	@Test
-	public void compileAggregatedProcess() {
-		try {
-			String outputFileName = "CompiledAggregatedProcess.bpmn2";
-			new BPMNWriter().write(new ProcessCompiler().compileAggregatedProcess(repository, createAggregatedProcess()), outputFileName);
-			Utils.fileContentEquals(outputFileName, "IngestArtworkSoftware.bpmn2");
-		} catch (Exception e) {
-			fail("compileAggregatedProcess(): " + e.getMessage());
-		}
-	}*/
 
 	// ----------------------- HELP FUNCTIONS ----------------------------------//
 
