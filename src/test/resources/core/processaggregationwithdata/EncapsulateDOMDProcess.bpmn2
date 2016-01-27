@@ -21,19 +21,19 @@
   
   <bpmn2:process id="_99113fc4-116c-4351-a90d-168ee4f038b8" tns:version="1" tns:packageName="eu.pericles.processcompiler.unittests.core.processaggregationwithdata" tns:adHoc="false" name="EncapsulatDOMDProcess" isExecutable="true" processType="Private">
     
-    <bpmn2:dataObject id="_9bfa891c-1c1d-4ea2-9046-ea6685af96d2" name="Digital Material" itemSubjectRef="_03aafcb1-b7a9-4133-93e1-22a07f2fb66b" />
+    <bpmn2:dataObject id="_9bfa891c-1c1d-4ea2-9046-ea6685af96d2" name="Digital Object" itemSubjectRef="_03aafcb1-b7a9-4133-93e1-22a07f2fb66b" />
     <bpmn2:dataObject id="_bd0a0504-ea17-4d26-9282-3e4db3eeb333" name="Metadata" itemSubjectRef="_f88a467d-3602-4b38-951e-31df1832fed6" />
-    <bpmn2:dataObject id="_3545d1fa-de3d-4ac2-943f-f5eb0f90b695" name="PackageFormat" itemSubjectRef="_f4213e53-bb4a-442b-9f61-e5032b1c052d" />
+    <bpmn2:dataObject id="_3545d1fa-de3d-4ac2-943f-f5eb0f90b695" name="Package Format" itemSubjectRef="_f4213e53-bb4a-442b-9f61-e5032b1c052d" />
     <bpmn2:dataObject id="_4667f420-f6d9-4017-bf01-f2a6f4f32730" name="Package" itemSubjectRef="_634475f1-e80e-4bad-b3c1-878955e6f396" />
     
     <bpmn2:startEvent id="_74d2cd8a-b9d2-4ef7-8f6b-853acff3c7a1" />    
     
     <bpmn2:scriptTask id="_242b8e3c-ce09-40e6-8702-af4f6e0be608" name="Encapsulate DO and MD" scriptFormat="http://www.java.com/java">
       <bpmn2:ioSpecification id="_127ab3a0-92fe-4614-afd7-5f033d0e0c80">
-    	<bpmn2:dataInput id="_3d809718-951c-43ef-89b6-039e065e1254" name="Digital Material Slot" itemSubjectRef="_03aafcb1-b7a9-4133-93e1-22a07f2fb66b"/>
-    	<bpmn2:dataInput id="_14c259aa-00c7-41b9-b830-c2aae2fa512c" name="Metadata Slot" itemSubjectRef="_f88a467d-3602-4b38-951e-31df1832fed6"/>
-    	<bpmn2:dataInput id="_d4552b51-6d4c-45b3-88e4-329e67c7c909" name="Package Format Slot" itemSubjectRef="_f4213e53-bb4a-442b-9f61-e5032b1c052d"/>
-        <bpmn2:dataOutput id="_bdc5fa79-5eab-4870-bb5d-b9d4a624204b" name="Package Slot" itemSubjectRef="_634475f1-e80e-4bad-b3c1-878955e6f396"/>
+    	<bpmn2:dataInput id="_3d809718-951c-43ef-89b6-039e065e1254" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO&gt;" itemSubjectRef="_03aafcb1-b7a9-4133-93e1-22a07f2fb66b"/>
+    	<bpmn2:dataInput id="_14c259aa-00c7-41b9-b830-c2aae2fa512c" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD&gt;" itemSubjectRef="_f88a467d-3602-4b38-951e-31df1832fed6"/>
+    	<bpmn2:dataInput id="_d4552b51-6d4c-45b3-88e4-329e67c7c909" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF&gt;" itemSubjectRef="_f4213e53-bb4a-442b-9f61-e5032b1c052d"/>
+        <bpmn2:dataOutput id="_bdc5fa79-5eab-4870-bb5d-b9d4a624204b" name="&lt;http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDDP&gt;" itemSubjectRef="_634475f1-e80e-4bad-b3c1-878955e6f396"/>
         <bpmn2:inputSet id="_84fc02ff-5c67-4896-bcff-4bdf7afa4fb6">
           <bpmn2:dataInputRefs>_3d809718-951c-43ef-89b6-039e065e1254</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_14c259aa-00c7-41b9-b830-c2aae2fa512c</bpmn2:dataInputRefs>

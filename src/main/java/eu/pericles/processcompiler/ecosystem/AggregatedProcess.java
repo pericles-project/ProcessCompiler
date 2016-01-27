@@ -1,5 +1,8 @@
 package eu.pericles.processcompiler.ecosystem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AggregatedProcess extends Process {
 	
 	private Sequence sequence;
@@ -10,6 +13,18 @@ public class AggregatedProcess extends Process {
 	
 	public AggregatedProcess(Process process) {
 		super(process);
+	}
+	
+	public List<DataConnection> getDataConnectionsAtSequenceStep(int sequenceStep) {
+		List<DataConnection> dataConnections = new ArrayList<DataConnection>();
+		for (DataConnection dataConnection : getSequence().getDataFlow()) {
+			if (isDataConnectionAtSequenceStep(dataConnection, sequenceStep))
+				dataConnections.add(dataConnection);
+		}
+		return dataConnections;
+	}
+	private boolean isDataConnectionAtSequenceStep(DataConnection dataConnection, int sequenceStep) {
+		return (dataConnection.getSlotNode().getSequenceStep() == sequenceStep);
 	}
 
 	//--------------- GETTERS AND SETTERS ----------------//

@@ -26,7 +26,7 @@
     <bpmn2:scriptTask id="_a5fbab4b-70cd-482c-9651-ca8a56387ce7" name="Virus Check" scriptFormat="http://www.java.com/java">
       <bpmn2:ioSpecification id="_ca82a195-e37a-4b43-bb63-24a2a25a642a">
         <bpmn2:dataInput id="_5038624e-d42f-44c6-98bf-7134892665ee" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM&gt;" itemSubjectRef="_576caad9-9d2d-4fad-aa08-f12073c92334"/>
-        <bpmn2:dataOutput id="_5948b4fc-a026-4909-b05b-426c0208dd5d" name="&lt;http://www.pericles-project.eu/ns/ecosystem#osVirusCheckRes&gt;" itemSubjectRef="_00d91780-7dcc-432b-969a-bb1e6fd623fa"/>
+        <bpmn2:dataOutput id="_5948b4fc-a026-4909-b05b-426c0208dd5d" name="http://www.pericles-project.eu/ns/ecosystem#osVirusCheckRes" itemSubjectRef="_00d91780-7dcc-432b-969a-bb1e6fd623fa"/>
         <bpmn2:inputSet id="_8efc0dab-a2b9-4251-9e70-78f427a2a2ed">
           <bpmn2:dataInputRefs>_5038624e-d42f-44c6-98bf-7134892665ee</bpmn2:dataInputRefs>
         </bpmn2:inputSet>

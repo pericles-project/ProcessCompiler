@@ -65,6 +65,13 @@ public class Sequence {
 		this.dataFlow = dataFlow;
 	}
 
+	public DataConnection findDataConnectionBySlot(DataFlowNode dataFlowNode) throws Exception {
+		for (DataConnection dataConnection : getDataFlow())
+			if (dataConnection.getSlotNode().equals(dataFlowNode))
+				return dataConnection;
+		throw new Exception("There is not Data Connection for the node: [" + dataFlowNode.getSequenceStep() + "," + dataFlowNode.getProcessSlot() + "]");
+	}
+
 	// --------------- HASHCODE AND EQUALS ----------------//
 
 	@Override

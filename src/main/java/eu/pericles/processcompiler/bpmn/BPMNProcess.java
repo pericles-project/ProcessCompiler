@@ -54,6 +54,20 @@ public class BPMNProcess {
 			getDiagram().getBPMNPlane().getDiagramElements().add(diagramElement);
 		}
 	}
+	
+	public void addItemDefinitions(List<TItemDefinition> itemDefinitions) {
+		for (TItemDefinition diagramElement : itemDefinitions) {
+			getItemDefinitions().add(diagramElement);
+		}
+	}
+	
+	public JAXBElement<? extends TFlowElement> getFlowElementByID(String id) throws Exception {
+		for (JAXBElement<? extends TFlowElement> flowElement : getFlowElements()) {
+			if (flowElement.getValue().getId().equals(id))
+				return flowElement;
+		}
+		throw new Exception("There is not a Flow Element with ID: " + id);
+	}
 
 	//------------------- GETTERS AND SETTERS ----------------------//
 	

@@ -1,24 +1,43 @@
 package eu.pericles.processcompiler.bpmn;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.namespace.QName;
 
 import org.omg.spec.bpmn._20100524.di.BPMNEdge;
 import org.omg.spec.bpmn._20100524.di.BPMNShape;
+import org.omg.spec.bpmn._20100524.model.DataInput;
+import org.omg.spec.bpmn._20100524.model.DataInputAssociation;
+import org.omg.spec.bpmn._20100524.model.DataOutput;
+import org.omg.spec.bpmn._20100524.model.DataOutputAssociation;
+import org.omg.spec.bpmn._20100524.model.ExtensionElements;
+import org.omg.spec.bpmn._20100524.model.IoSpecification;
+import org.omg.spec.bpmn._20100524.model.TActivity;
+import org.omg.spec.bpmn._20100524.model.TCallableElement;
+import org.omg.spec.bpmn._20100524.model.TDataObject;
 import org.omg.spec.bpmn._20100524.model.TEndEvent;
 import org.omg.spec.bpmn._20100524.model.TFlowElement;
 import org.omg.spec.bpmn._20100524.model.TSequenceFlow;
 import org.omg.spec.bpmn._20100524.model.TStartEvent;
 import org.omg.spec.dd._20100524.di.DiagramElement;
+import org.w3c.dom.Element;
 
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
+import eu.pericles.processcompiler.ecosystem.DataConnection;
+import eu.pericles.processcompiler.ecosystem.DataFlowNode;
 
 public class BPMNProcessesAggregator {
 
+	private AggregatedProcess aggregatedProcess;
 	private BPMNProcess aggregatedBPMNProcess;
 	private Object lastFlowElement;
+	private HashMap<DataFlowNode, Object> availableDataObjects = new HashMap<DataFlowNode, Object>();
 
 	/**
 	 * Create a BPMN process (aggregatedBPMNProcess) by connecting together a
@@ -58,23 +77,114 @@ public class BPMNProcessesAggregator {
 	public BPMNProcess createBPMNProcessByProcessAggregation(AggregatedProcess aggregatedProcess, List<BPMNProcess> bpmnProcesses)
 			throws Exception {
 
+		this.aggregatedProcess = aggregatedProcess;
 		initialiseAggregatedBPMNProcess(aggregatedProcess, bpmnProcesses.get(0));
 		for (int process = 1; process <= bpmnProcesses.size() - 1; process++) {
-			aggregateBPMNProcessToAggregatedBPMNProcess(bpmnProcesses.get(process));
+			aggregateBPMNProcessToAggregatedBPMNProcess(process+1, bpmnProcesses.get(process));
 		}
 
 		return getAggregatedBPMNProcess();
 	}
 
-	private void initialiseAggregatedBPMNProcess(AggregatedProcess aggregatedProcess, BPMNProcess bpmnProcess) {
+	private void initialiseAggregatedBPMNProcess(AggregatedProcess aggregatedProcess, BPMNProcess bpmnProcess) throws Exception {
 		aggregatedBPMNProcess = bpmnProcess;
 		aggregatedBPMNProcess.setId(aggregatedProcess.getId());
 		aggregatedBPMNProcess.getProcess().setName(aggregatedProcess.getName());
+		/*
+		 * For each new subprocess to be aggregated, we have to be updated their
+		 * DataObjects as available resources. Therefore, we look for
+		 * DataInputAssociations and DataOutputAssociations.
+		 * 
+		 * With DataOutputAssociations: the targetRef corresponds to the new
+		 * available resource which is related to the DataFlowNode compounded by
+		 * the sourceRef and the sequenceStep
+		 * 
+		 * With DataInputAssociations: if the DataObject is already available,
+		 * we update the association with it (update sourceRef, delete the
+		 * previous dataObject (bpmnElement and diagramElement)). If not, we
+		 * update available resources with the DataObject associated to the
+		 * sourceRef (DataFlowNode of the corresponded DataConnection)
+		 */
+		findDataAssociations(1, aggregatedBPMNProcess);
 	}
 
-	private void aggregateBPMNProcessToAggregatedBPMNProcess(BPMNProcess bpmnProcess) throws Exception {
+	private void findDataAssociations(int sequenceStep, BPMNProcess bpmnProcess) throws Exception {
+		System.out.println("Sequence step: " + sequenceStep);
+		List<TDataObject> dataObjectsToBeDeleted = new ArrayList<TDataObject>();
+		for (JAXBElement<? extends TFlowElement> element : bpmnProcess.getFlowElements()) {
+			if (TActivity.class.isAssignableFrom(element.getValue().getClass())) {
+				System.out.println("Activity: " + element.getValue().getName());
+				TActivity activity = (TActivity) element.getValue();
+				List<DataInputAssociation> inputAssociations = activity.getDataInputAssociations();
+				for (DataInputAssociation inputAssociation : inputAssociations) {
+					Object source = inputAssociation.getSourceReves().get(0).getValue();
+					Object target = inputAssociation.getTargetRef();
+					//System.out.println("Input Association: " + source.toString() + " " + target.toString());
+					TDataObject dataObject = (TDataObject) inputAssociation.getSourceReves().get(0).getValue();
+					System.out.println("DataObject ID: " + dataObject.getId());
+					DataInput dataInput = (DataInput) target;
+					//System.out.println("Slot Name: " + dataInput.getName());
+					DataFlowNode resourceNode = findResourceNodeOfDataConnection(sequenceStep, dataInput.getName());
+					System.out.println("Resource Node: " + resourceNode.getSequenceStep() + " " + resourceNode.getProcessSlot());
+					if (availableDataObjects.containsKey(resourceNode)) {
+						System.out.println("Resource already exists");
+						//updateDataInputAssociation(inputAssociation, resourceNode);
+						System.out.println("New Target Ref: " + ((TDataObject) availableDataObjects.get(resourceNode)).getId());
+						inputAssociation.getSourceReves().get(0).setValue(availableDataObjects.get(resourceNode));
+						dataObjectsToBeDeleted.add(dataObject);//deleteDataObject(bpmnProcess, dataObject);
+					} else {
+						availableDataObjects.put(resourceNode, dataObject);
+					}
+					System.out.println("");
+				}
+				List<DataOutputAssociation> outputAssociations = activity.getDataOutputAssociations();
+				for (DataOutputAssociation outputAssociation : outputAssociations) {
+					Object source = outputAssociation.getSourceReves().get(0).getValue();
+					Object target = outputAssociation.getTargetRef();
+					//System.out.println("Output Association: " + source.toString() + " " + target.toString());
+					TDataObject dataObject = (TDataObject) target;
+					System.out.println("DataObject ID: " + dataObject.getId());
+					DataOutput dataOutput = (DataOutput) source;
+					//System.out.println("Slot Name: " + dataOutput.getName());
+					DataFlowNode resourceNode = new DataFlowNode(sequenceStep, dataOutput.getName());
+					System.out.println("Resource Node: " + resourceNode.getSequenceStep() + " " + resourceNode.getProcessSlot());
+					System.out.println("");
+					availableDataObjects.put(resourceNode, dataObject);
+				}
+				System.out.println("");
+			}
+		}
+		deleteDataObjects(bpmnProcess,dataObjectsToBeDeleted);
+	}
+
+	private void deleteDataObjects(BPMNProcess bpmnProcess, List<TDataObject> dataObjects) throws Exception {
+		for (TDataObject dataObject : dataObjects)
+			deleteDataObject(bpmnProcess, dataObject);
+	}
+
+	private void deleteDataObject(BPMNProcess bpmnProcess, TDataObject dataObject) throws Exception {
+		JAXBElement<? extends TFlowElement> bpmnElement = bpmnProcess.getFlowElementByID(dataObject.getId());
+		JAXBElement<? extends DiagramElement> diagramElement = findDiagramElementByBPMNElement(bpmnProcess, bpmnElement);
+		bpmnProcess.getFlowElements().remove(bpmnElement);
+		bpmnProcess.getDiagramElements().remove(diagramElement);
+	}
+
+	private void updateDataInputAssociation(DataInputAssociation inputAssociation, DataFlowNode resourceNode) {
+		inputAssociation.setTargetRef(availableDataObjects.get(resourceNode));
+	}
+
+	private DataFlowNode findResourceNodeOfDataConnection(int sequenceStep, String slot) throws Exception {
+		DataConnection dataConnection = aggregatedProcess.getSequence().findDataConnectionBySlot(new DataFlowNode(sequenceStep, slot));
+		return dataConnection.getResourceNode();
+	}
+
+	// -----------------------------------------------------------------------------------------------------------
+
+	private void aggregateBPMNProcessToAggregatedBPMNProcess(int sequenceStep, BPMNProcess bpmnProcess) throws Exception {
 		prepareAggregatedBPMNProcessForAggregation();
 		prepareBPMNProcessToBeAggregated(bpmnProcess);
+		findDataAssociations(sequenceStep, bpmnProcess);
+		
 		addBPMNProcessToAggregatedBPMNProcess(bpmnProcess);
 	}
 
@@ -90,6 +200,7 @@ public class BPMNProcessesAggregator {
 	}
 
 	private void addBPMNProcessToAggregatedBPMNProcess(BPMNProcess bpmnProcess) {
+		aggregatedBPMNProcess.addItemDefinitions(bpmnProcess.getItemDefinitions());
 		aggregatedBPMNProcess.addFlowElements(bpmnProcess.getFlowElements());
 		aggregatedBPMNProcess.addDiagramElements(bpmnProcess.getDiagramElements());
 	}
@@ -139,8 +250,8 @@ public class BPMNProcessesAggregator {
 			throws Exception {
 		setSourceOfSequenceFlow(sequenceFlow, lastFlowElement);
 		JAXBElement<? extends DiagramElement> diagramSequenceFlow = findDiagramElementByBPMNElement(bpmnProcess, sequenceFlow);
-		setSourceOfSequenceFlowDiagramElement(diagramSequenceFlow, new QName(findDiagramElementByBPMNElementRef(aggregatedBPMNProcess,
-				lastFlowElement).getValue().getId()));
+		setSourceOfSequenceFlowDiagramElement(diagramSequenceFlow,
+				new QName(findDiagramElementByBPMNElementRef(aggregatedBPMNProcess, lastFlowElement).getValue().getId()));
 	}
 
 	private void setSourceOfSequenceFlow(JAXBElement<? extends TFlowElement> sequenceFlow, Object sourceRef) {

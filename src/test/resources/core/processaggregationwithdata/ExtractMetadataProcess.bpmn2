@@ -26,8 +26,8 @@
     
     <bpmn2:scriptTask id="_34c3adda-607f-4300-95ae-00cb468c70f5" name="Extract MD" scriptFormat="http://www.java.com/java">
       <bpmn2:ioSpecification id="_31af33eb-e631-4360-a65f-55c1f1a27eea">
-    	<bpmn2:dataInput id="_6c3b3d47-d6db-41ae-b816-eb622da2740a" name="Digital Material Slot" itemSubjectRef="_18d83a35-5221-4cfb-bdd2-3f02b1a6ceac"/>
-        <bpmn2:dataOutput id="_fec7c44f-df6a-418a-b424-a49faf7c4694" name="Metadata Slot" itemSubjectRef="_32688bc1-4861-405e-a947-8d4d252c698e"/>
+    	<bpmn2:dataInput id="_6c3b3d47-d6db-41ae-b816-eb622da2740a" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isExtractMDDM&gt;" itemSubjectRef="_18d83a35-5221-4cfb-bdd2-3f02b1a6ceac"/>
+        <bpmn2:dataOutput id="_fec7c44f-df6a-418a-b424-a49faf7c4694" name="&lt;http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD&gt;" itemSubjectRef="_32688bc1-4861-405e-a947-8d4d252c698e"/>
         <bpmn2:inputSet id="_424b7aab-7a82-4cfa-b3e1-a909bfe0bf9a">
           <bpmn2:dataInputRefs>_6c3b3d47-d6db-41ae-b816-eb622da2740a</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
