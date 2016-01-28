@@ -6,6 +6,8 @@ import java.util.List;
 import javax.xml.bind.JAXBElement;
 
 import org.omg.spec.bpmn._20100524.di.BPMNDiagram;
+import org.omg.spec.bpmn._20100524.di.BPMNEdge;
+import org.omg.spec.bpmn._20100524.di.BPMNShape;
 import org.omg.spec.bpmn._20100524.model.Import;
 import org.omg.spec.bpmn._20100524.model.TDataStore;
 import org.omg.spec.bpmn._20100524.model.TError;
@@ -19,7 +21,7 @@ import org.omg.spec.bpmn._20100524.model.TSignal;
 import org.omg.spec.dd._20100524.di.DiagramElement;
 
 public class BPMNProcess {
-	
+
 	private String id;
 	private String targetNamespace;
 	private String typeLanguage;
@@ -35,10 +37,68 @@ public class BPMNProcess {
 	private TProcess process;
 	private BPMNDiagram diagram;
 	
+	public void addBPMNProcess(BPMNProcess bpmnProcess) {
+		this.addItemDefinitions(bpmnProcess.getItemDefinitions());
+		this.addFlowElements(bpmnProcess.getFlowElements());
+		this.addDiagramElements(bpmnProcess.getDiagramElements());
+	}
+
+	public JAXBElement<? extends TFlowElement> findFlowElement(Object element) throws Exception {
+		for (JAXBElement<? extends TFlowElement> flowElement : getFlowElements()) {
+			if (flowElement.getValue().equals(element))
+				return flowElement;
+		}
+		throw new Exception("There is not a flow element corresponding to the element: " + element.toString());
+	}
+	
+	public List<JAXBElement<? extends TFlowElement>> findFlowElementsByClass(String className) {
+		List<JAXBElement<? extends TFlowElement>> elements = new ArrayList<JAXBElement<? extends TFlowElement>>();
+		for (JAXBElement<? extends TFlowElement> element : getFlowElements()) {
+			if (element.getDeclaredType().getSimpleName().equals(className))
+				elements.add(element);
+		}
+		return elements;
+	}
+
+	public JAXBElement<? extends DiagramElement> findDiagramElementByFlowElement(Object flowElement) throws Exception {
+		JAXBElement<? extends TFlowElement> element = findFlowElement(flowElement);
+		return findDiagramElementByFlowElement(element);
+	}
+
+	public JAXBElement<? extends DiagramElement> findDiagramElementByFlowElement(JAXBElement<? extends TFlowElement> bpmnElement)
+			throws Exception {
+		for (JAXBElement<? extends DiagramElement> element : getDiagramElements()) {
+			// The function getBpmnElement() returns the QName (prefix + ID).
+			// Use getLocalPart() to get the same ID as the BPMNElement
+			if (element.getDeclaredType().isAssignableFrom(BPMNShape.class))
+				if (((BPMNShape) element.getValue()).getBpmnElement().getLocalPart().equals(bpmnElement.getValue().getId()))
+					return element;
+			if (element.getDeclaredType().isAssignableFrom(BPMNEdge.class))
+				if (((BPMNEdge) element.getValue()).getBpmnElement().getLocalPart().equals(bpmnElement.getValue().getId()))
+					return element;
+		}
+		throw new Exception("There is not a diagram element corresponding to the element " + bpmnElement.getValue().getId());
+	}
+
+	/**
+	 * Deletes an element of the BPMNProcess, that means, the specified flow
+	 * element and its corresponded diagram element
+	 * 
+	 * @param element
+	 * @throws Exception
+	 */
+	public void deleteProcessElement(JAXBElement<? extends TFlowElement> element) throws Exception {
+		JAXBElement<? extends DiagramElement> diagramEndEvent = findDiagramElementByFlowElement(element);
+		getFlowElements().remove(element);
+		getDiagramElements().remove(diagramEndEvent);
+	}
+
+	// ------------------- GETTERS AND SETTERS ----------------------//
+
 	public List<JAXBElement<? extends TFlowElement>> getFlowElements() {
 		return getProcess().getFlowElements();
 	}
-	
+
 	public List<JAXBElement<? extends DiagramElement>> getDiagramElements() {
 		return getDiagram().getBPMNPlane().getDiagramElements();
 	}
@@ -54,23 +114,13 @@ public class BPMNProcess {
 			getDiagram().getBPMNPlane().getDiagramElements().add(diagramElement);
 		}
 	}
-	
+
 	public void addItemDefinitions(List<TItemDefinition> itemDefinitions) {
 		for (TItemDefinition diagramElement : itemDefinitions) {
 			getItemDefinitions().add(diagramElement);
 		}
-	}
-	
-	public JAXBElement<? extends TFlowElement> getFlowElementByID(String id) throws Exception {
-		for (JAXBElement<? extends TFlowElement> flowElement : getFlowElements()) {
-			if (flowElement.getValue().getId().equals(id))
-				return flowElement;
-		}
-		throw new Exception("There is not a Flow Element with ID: " + id);
-	}
+	}	
 
-	//------------------- GETTERS AND SETTERS ----------------------//
-	
 	public String getId() {
 		return id;
 	}
@@ -78,7 +128,7 @@ public class BPMNProcess {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	public String getTargetNamespace() {
 		return targetNamespace;
 	}
@@ -182,5 +232,5 @@ public class BPMNProcess {
 	public void setDiagram(BPMNDiagram diagram) {
 		this.diagram = diagram;
 	}
-
+	
 }

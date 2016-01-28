@@ -19,10 +19,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
-import org.omg.spec.bpmn._20100524.model.TActivity;
-import org.omg.spec.bpmn._20100524.model.DataInput;
 
-import eu.pericles.processcompiler.bpmn.BPMNParser;
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.bpmn.BPMNWriter;
 import eu.pericles.processcompiler.communications.ermr.ERMRClientAPI;
