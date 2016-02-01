@@ -43,29 +43,32 @@ public class BPMNProcessesAggregator {
 	 * - the data flow: describes how the data is generated and linked during
 	 * the process execution
 	 * 
-	 * The process aggregation (process flow) is done by:
+	 * The process aggregation is done by:
 	 * 
-	 * - Initialise the aggregated BPMN process with the first bpmnprocess in
-	 * the process flow and modify its values with the information given by the
-	 * AggregatedProcess entity, i.e. ID, name, etc.
+	 * - Initialise the aggregated BPMN process with the first BPMN process in
+	 * the process flow and the values provided by the AggregatedProcess entity
 	 * 
 	 * - Aggregate remaining BPMN processes, doing the following for each one:
 	 * 
-	 * --- Prepare the aggregated BPMNProcess: by deleting the end event and its
-	 * incoming sequence flow. The last flow of the aggregated BPMNProcess is
-	 * therefore updated to the element referenced as source in the incoming
-	 * sequence flow
+	 * --- Process the Data Flow: by deleting the data objects that are
+	 * duplicated and updating the data associations with the valid data object
 	 * 
-	 * --- Prepare the BPMNProcess that is going to be aggregated: by deleting
-	 * the start event and connecting the outgoing flow to the last flow element
-	 * of the aggregated BPMNProcess
+	 * --- Process the Process Flow: by deleting the end event of the previous
+	 * process and the start event of the next process, and connecting the last
+	 * element of the previous process to the first element of the next process
 	 * 
-	 * --- Add the BPMNProcess to the aggregated BPMNProcess by adding its flow
+	 * --- Add the BPMNProcess to the AggregatedBPMNProcess: by adding its flow
 	 * and diagram elements
 	 * 
 	 * @param aggregatedProcess
+	 *            an AggregatedProcess entity (definition in the ecosystem
+	 *            model), containing some parameters of the aggregated process,
+	 *            i.e. name, ID, process flow and data flow
 	 * @param bpmnProcesses
-	 * @return BPMNProcess
+	 *            list of BPMNProcess that conform the aggregated process
+	 * @return BPMNProcess the BPMNProcess resulting of combining the
+	 *         bpmnProcesses as indicated in the process and data flow of the
+	 *         aggregated process entity
 	 * @throws Exception
 	 */
 	public BPMNProcess createBPMNProcessByProcessAggregation(AggregatedProcess aggregatedProcess, List<BPMNProcess> bpmnProcesses)
@@ -82,49 +85,40 @@ public class BPMNProcessesAggregator {
 	}
 
 	private void initialiseAggregatedBPMNProcess() throws Exception {
+		initialiseAggregatedBPMNProcessWithFirstSubprocess();
+		setAggregatedBPMNProcessParameters();
+	}
+
+	private void initialiseAggregatedBPMNProcessWithFirstSubprocess() throws Exception {
 		processDataFlow(INITIAL_STEP);
 		aggregatedBPMNProcess = getBPMNProcessAtSequenceStep(INITIAL_STEP);
+	}
+
+	private void setAggregatedBPMNProcessParameters() {
 		aggregatedBPMNProcess.setId(aggregatedProcess.getId());
 		aggregatedBPMNProcess.getProcess().setName(aggregatedProcess.getName());
 	}
 
 	private void aggregateBPMNProcessToAggregatedBPMNProcess(int sequenceStep) throws Exception {
-		prepareAggregatedBPMNProcessForAggregation();
-		prepareBPMNProcessToBeAggregated(sequenceStep);
-
+		processDataFlow(sequenceStep);
+		processProcessFlow(sequenceStep);
 		addBPMNProcessToAggregatedBPMNProcess(sequenceStep);
 	}
 
-	private void prepareAggregatedBPMNProcessForAggregation() throws Exception {
-		JAXBElement<? extends TFlowElement> endEvent = findAndDeleteEndEvent(aggregatedBPMNProcess);
-		JAXBElement<? extends TFlowElement> sequenceFlow = findAndDeleteSequenceFlowByTargetRef(aggregatedBPMNProcess, endEvent);
-		setLastFlowElement(((TSequenceFlow) sequenceFlow.getValue()).getSourceRef());
-	}
-
-	private void prepareBPMNProcessToBeAggregated(int sequenceStep) throws Exception {
-		JAXBElement<? extends TFlowElement> startEvent = findAndDeleteStartEvent(getBPMNProcessAtSequenceStep(sequenceStep));
-		pointBPMNProcessToLastFlowElement(getBPMNProcessAtSequenceStep(sequenceStep), startEvent);
-		processDataFlow(sequenceStep);
-	}
-
-	private void addBPMNProcessToAggregatedBPMNProcess(int sequenceStep) {
-		aggregatedBPMNProcess.addBPMNProcess(getBPMNProcessAtSequenceStep(sequenceStep));
-	}
-
-	/*
-	 * For each new subprocess to be aggregated, we have to update their
-	 * DataObjects as available resources. Therefore, we look for
-	 * DataInputAssociations and DataOutputAssociations.
+	/**
+	 * For each new BPMNProcess to be aggregated, we process the DataInputs and
+	 * DataOutputs of its activities.
 	 * 
-	 * With DataOutputAssociations: the targetRef corresponds to the new
-	 * available resource which is related to the DataFlowNode compounded by the
-	 * sourceRef and the sequenceStep
+	 * - If the DataObjects associated to the DataInputs are already available,
+	 * the are deleted from the BPMNProcess and the DataAssociations are updated
+	 * to the available DataObject. If not, the DataObjects are updated as new
+	 * available resources.
 	 * 
-	 * With DataInputAssociations: if the DataObject is already available, we
-	 * update the association with it (update sourceRef, delete the previous
-	 * dataObject (bpmnElement and diagramElement)). If not, we update available
-	 * resources with the DataObject associated to the sourceRef (DataFlowNode
-	 * of the corresponded DataConnection)
+	 * - The DataObjects associated to the DataOutputs are updated as new
+	 * available resources.
+	 * 
+	 * @param sequenceStep
+	 * @throws Exception
 	 */
 	private void processDataFlow(int sequenceStep) throws Exception {
 		List<TDataObject> dataObjectsToBeDeleted = processDataInputs(sequenceStep);
@@ -132,6 +126,56 @@ public class BPMNProcessesAggregator {
 		deleteDataObjects(getBPMNProcessAtSequenceStep(sequenceStep), dataObjectsToBeDeleted);
 	}
 
+	/**
+	 * The Process Flow is processed in two steps: process the aggregated
+	 * BPMNProcess and the BPMNProcess to be aggregated
+	 * 
+	 * - Process the aggregated BPMNProcess: by deleting the end event and its
+	 * incoming sequence flow. The last flow of the aggregated BPMNProcess is
+	 * therefore updated to the element referenced as source in the incoming
+	 * sequence flow
+	 * 
+	 * - Process the BPMNProcess that is going to be aggregated: by deleting the
+	 * start event and connecting the outgoing flow to the last flow element of
+	 * the aggregated BPMNProcess
+	 * 
+	 * @param sequenceStep
+	 * @throws Exception
+	 */
+	private void processProcessFlow(int sequenceStep) throws Exception {
+		processProcessFlowAtAggregatedBPMNProcess();
+		processProcessFlowAtBPMNProcess(sequenceStep);
+	}
+
+	private void processProcessFlowAtAggregatedBPMNProcess() throws Exception {
+		JAXBElement<? extends TFlowElement> endEvent = findAndDeleteEndEvent(aggregatedBPMNProcess);
+		JAXBElement<? extends TFlowElement> sequenceFlow = findAndDeleteSequenceFlowByTargetRef(aggregatedBPMNProcess, endEvent);
+		setLastFlowElement(((TSequenceFlow) sequenceFlow.getValue()).getSourceRef());
+	}
+
+	private void processProcessFlowAtBPMNProcess(int sequenceStep) throws Exception {
+		JAXBElement<? extends TFlowElement> startEvent = findAndDeleteStartEvent(getBPMNProcessAtSequenceStep(sequenceStep));
+		pointBPMNProcessToLastFlowElement(getBPMNProcessAtSequenceStep(sequenceStep), startEvent);
+	}
+
+	private void addBPMNProcessToAggregatedBPMNProcess(int sequenceStep) {
+		aggregatedBPMNProcess.addBPMNProcess(getBPMNProcessAtSequenceStep(sequenceStep));
+	}
+
+	/**
+	 * Process Data Inputs: if the DataObject is already available (based on the
+	 * Data Flow specified in the aggregated process entity), we update the
+	 * DataInputAssociation with the available one (update sourceRef) and delete
+	 * the current DataObject (bpmnElement and diagramElement) to avoid
+	 * duplications. If not, we update the available resources list with the
+	 * DataObject associated to the sourceRef and the DataFlowNode associated to
+	 * the DataConnection that has as Slot Node the one compounded by the
+	 * sequenceStep and the targetRef of the DataInputAssociation.
+	 * 
+	 * @param sequenceStep
+	 * @return list of DataObjects to be deleted as they are already available
+	 *         in the AggregatedBPMNProcess
+	 */
 	private List<TDataObject> processDataInputs(int sequenceStep) {
 		List<TDataObject> dataObjectsToBeDeleted = new ArrayList<TDataObject>();
 		for (DataInputAssociation dataInputAssociation : getDataInputAssociations(getBPMNProcessAtSequenceStep(sequenceStep))) {
@@ -144,16 +188,15 @@ public class BPMNProcessesAggregator {
 
 	private TDataObject processDataInput(int sequenceStep, DataInputAssociation dataInputAssociation) {
 		TDataObject dataObject = (TDataObject) dataInputAssociation.getSourceReves().get(0).getValue();
-		DataInput dataInput = (DataInput) dataInputAssociation.getTargetRef();
-		/**
+		/*
 		 * Subprocesses can contain activities that produce and consume data
-		 * that is not input/output entities. Therefore, these data is not
-		 * going to appear in any connection of the aggregated process, as
-		 * it is only concerned on the connections between input/output
-		 * entities of subprocesses
+		 * that is not input/output entities. Therefore, these data is not going
+		 * to appear in any connection of the aggregated process, as it is only
+		 * concerned on the connections between input/output entities of
+		 * subprocesses
 		 */
 		try {
-			DataFlowNode resourceNode = findResourceNodeInDataConnectionBySlotNode(new DataFlowNode(sequenceStep, dataInput.getName()));
+			DataFlowNode resourceNode = findResourceNodeOfDataInputAssociation(sequenceStep, dataInputAssociation);
 			if (availableDataObjects.containsKey(resourceNode)) {
 				updateDataInputAssociation(dataInputAssociation, resourceNode);
 				return dataObject;
@@ -166,6 +209,14 @@ public class BPMNProcessesAggregator {
 		}
 	}
 
+	/**
+	 * Process Data Outputs: we update the available objects list with the
+	 * DataObject associated to the targetRef of the DataOutputAssociation and
+	 * the DataFlowNode compounded by the sequenceStep and the sourceRef of the
+	 * DataOutputAssociation.
+	 * 
+	 * @param sequenceStep
+	 */
 	private void processDataOutputs(int sequenceStep) {
 		for (DataOutputAssociation dataOutputAssociation : getDataOutputAssociations(getBPMNProcessAtSequenceStep(sequenceStep))) {
 			updateAvailableDataObjectsWithDataOutput(sequenceStep, dataOutputAssociation);
@@ -174,17 +225,30 @@ public class BPMNProcessesAggregator {
 
 	private void updateAvailableDataObjectsWithDataOutput(int sequenceStep, DataOutputAssociation dataOutputAssociation) {
 		TDataObject dataObject = (TDataObject) dataOutputAssociation.getTargetRef();
-		DataOutput dataOutput = (DataOutput) dataOutputAssociation.getSourceReves().get(0).getValue();
-		DataFlowNode resourceNode = new DataFlowNode(sequenceStep, dataOutput.getName());
-		availableDataObjects.put(resourceNode, dataObject);
+		availableDataObjects.put(findResourceNodeOfDataOutputAssociation(sequenceStep, dataOutputAssociation), dataObject);
 	}
 
-	// -----------------------------------------------------------------------------------------------------------
+	private DataFlowNode findResourceNodeOfDataInputAssociation(int sequenceStep, DataInputAssociation dataInputAssociation)
+			throws Exception {
+		DataInput dataInput = (DataInput) dataInputAssociation.getTargetRef();
+		DataConnection dataConnection = findDataConnectionBySlotNode(new DataFlowNode(sequenceStep, dataInput.getName()));
+		return dataConnection.getResourceNode();
+	}
+
+	private DataConnection findDataConnectionBySlotNode(DataFlowNode slotNode) throws Exception {
+		DataConnection dataConnection = aggregatedProcess.getSequence().findDataConnectionBySlot(slotNode);
+		return dataConnection;
+	}
+
+	private DataFlowNode findResourceNodeOfDataOutputAssociation(int sequenceStep, DataOutputAssociation dataOutputAssociation) {
+		DataOutput dataOutput = (DataOutput) dataOutputAssociation.getSourceReves().get(0).getValue();
+		return new DataFlowNode(sequenceStep, dataOutput.getName());
+	}
 
 	/**
 	 * Connect the first sequence flow of a BPMN process (the one with source
 	 * reference the specified in sourceRef, i.e. a start event) to the last
-	 * flow element of the aggregated BPMNProcess
+	 * flow element of the aggregated BPMNProcess.
 	 * 
 	 * @param bpmnProcess
 	 * @param sourceRef
@@ -223,18 +287,12 @@ public class BPMNProcessesAggregator {
 		inputAssociation.getSourceReves().get(0).setValue(availableDataObjects.get(resourceNode));
 	}
 
-	private DataFlowNode findResourceNodeInDataConnectionBySlotNode(DataFlowNode slotNode) throws Exception {
-		DataConnection dataConnection = aggregatedProcess.getSequence().findDataConnectionBySlot(slotNode);
-		return dataConnection.getResourceNode();
-	}
-
 	private void deleteDataObjects(BPMNProcess bpmnProcess, List<TDataObject> dataObjects) throws Exception {
 		for (TDataObject dataObject : dataObjects)
 			bpmnProcess.deleteProcessElement(bpmnProcess.findFlowElement(dataObject));
 	}
 
-	// -------------------- FIND FUNCTIONS BY USING BPMN STANDARD ELEMENTS
-	// ---------------------------//
+	// -------------------------- FIND FUNCTIONS BY USING BPMN STANDARD ELEMENTS
 
 	private JAXBElement<? extends TFlowElement> findAndDeleteEndEvent(BPMNProcess bpmnProcess) throws Exception {
 		JAXBElement<? extends TFlowElement> endEvent = findEndEvent(bpmnProcess);
