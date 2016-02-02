@@ -33,7 +33,7 @@
     	<bpmn2:dataInput id="_3d809718-951c-43ef-89b6-039e065e1254" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO&gt;" itemSubjectRef="_03aafcb1-b7a9-4133-93e1-22a07f2fb66b"/>
     	<bpmn2:dataInput id="_14c259aa-00c7-41b9-b830-c2aae2fa512c" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD&gt;" itemSubjectRef="_f88a467d-3602-4b38-951e-31df1832fed6"/>
     	<bpmn2:dataInput id="_d4552b51-6d4c-45b3-88e4-329e67c7c909" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF&gt;" itemSubjectRef="_f4213e53-bb4a-442b-9f61-e5032b1c052d"/>
-        <bpmn2:dataOutput id="_bdc5fa79-5eab-4870-bb5d-b9d4a624204b" name="&lt;http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDDP&gt;" itemSubjectRef="_634475f1-e80e-4bad-b3c1-878955e6f396"/>
+        <bpmn2:dataOutput id="_bdc5fa79-5eab-4870-bb5d-b9d4a624204b" name="&lt;http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP&gt;" itemSubjectRef="_634475f1-e80e-4bad-b3c1-878955e6f396"/>
         <bpmn2:inputSet id="_84fc02ff-5c67-4896-bcff-4bdf7afa4fb6">
           <bpmn2:dataInputRefs>_3d809718-951c-43ef-89b6-039e065e1254</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_14c259aa-00c7-41b9-b830-c2aae2fa512c</bpmn2:dataInputRefs>

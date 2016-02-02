@@ -1,5 +1,6 @@
 package eu.pericles.processcompiler.ecosystem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Sequence {
@@ -65,11 +66,45 @@ public class Sequence {
 		this.dataFlow = dataFlow;
 	}
 
-	public DataConnection findDataConnectionBySlot(DataFlowNode dataFlowNode) throws Exception {
+	public DataConnection findDataConnectionBySlot(DataFlowNode dataFlowNode) {
 		for (DataConnection dataConnection : getDataFlow())
 			if (dataConnection.getSlotNode().equals(dataFlowNode))
 				return dataConnection;
-		throw new Exception("There is not Data Connection for the node: [" + dataFlowNode.getSequenceStep() + "," + dataFlowNode.getProcessSlot() + "]");
+		return null;
+	}
+	
+	public List<DataConnection> findDataConnectionsByResource(DataFlowNode dataFlowNode) {
+		List<DataConnection> dataConnections = new ArrayList<DataConnection>();
+		for (DataConnection dataConnection : getDataFlow())
+			if (dataConnection.getResourceNode().equals(dataFlowNode))
+				dataConnections.add(dataConnection);
+		return dataConnections;
+	}
+	
+	public List<DataConnection> getDataConnectionsWithSlotNodeAtSequenceStep(int sequenceStep) {
+		List<DataConnection> dataConnections = new ArrayList<DataConnection>();
+		for (DataConnection dataConnection : this.getDataFlow()) {
+			if (isDataConnectionWithSlotNodeAtSequenceStep(dataConnection, sequenceStep))
+				dataConnections.add(dataConnection);
+		}
+		return dataConnections;
+	}
+	
+	public boolean isDataConnectionWithSlotNodeAtSequenceStep(DataConnection dataConnection, int sequenceStep) {
+		return (dataConnection.getSlotNode().getSequenceStep() == sequenceStep);
+	}
+	
+	public List<DataConnection> getDataConnectionsWithResourceNodeAtSequenceStep(int sequenceStep) {
+		List<DataConnection> dataConnections = new ArrayList<DataConnection>();
+		for (DataConnection dataConnection : this.getDataFlow()) {
+			if (isDataConnectionWithResourceNodeAtSequenceStep(dataConnection, sequenceStep))
+				dataConnections.add(dataConnection);
+		}
+		return dataConnections;
+	}
+
+	private boolean isDataConnectionWithResourceNodeAtSequenceStep(DataConnection dataConnection, int sequenceStep) {
+		return (dataConnection.getResourceNode().getSequenceStep() == sequenceStep);
 	}
 
 	// --------------- HASHCODE AND EQUALS ----------------//

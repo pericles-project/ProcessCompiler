@@ -152,16 +152,7 @@ public class DataFlowValidator {
 	}
 
 	private List<DataConnection> getDataConnectionsAtSequenceStep(int sequenceStep) {
-		List<DataConnection> dataConnections = new ArrayList<DataConnection>();
-		for (DataConnection dataConnection : getProcess().getSequence().getDataFlow()) {
-			if (isDataConnectionAtSequenceStep(dataConnection, sequenceStep))
-				dataConnections.add(dataConnection);
-		}
-		return dataConnections;
-	}
-
-	private boolean isDataConnectionAtSequenceStep(DataConnection dataConnection, int sequenceStep) {
-		return (dataConnection.getSlotNode().getSequenceStep() == sequenceStep);
+		return getProcess().getSequence().getDataConnectionsWithSlotNodeAtSequenceStep(sequenceStep);
 	}
 
 	private void initiateAvailableResourcesList() {
