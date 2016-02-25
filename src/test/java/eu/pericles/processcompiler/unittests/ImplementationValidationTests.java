@@ -1,5 +1,6 @@
 package eu.pericles.processcompiler.unittests;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -28,10 +29,51 @@ public class ImplementationValidationTests {
 			String file = "src/test/resources/core/implementationvalidation/ValidImplementation.bpmn2";
 			BPMNProcess bpmnProcess = new BPMNParser().parse(file);
 			ImplementationValidationResult validationResult = new ImplementationValidator(process, bpmnProcess).validate();
-			System.out.println("Validation result: " + validationResult.isValid() + " " + validationResult.getMessage());
 			assertTrue(validationResult.isValid());
 		} catch (Exception e) {
 			fail("validProcessImplementation(): " + e.getMessage());
+		}
+	}
+	
+	@Test
+	public void inputSlotMissing() {
+		try {
+			Process process = this.createProcess();
+			String file = "src/test/resources/core/implementationvalidation/InputSlotMissing.bpmn2";
+			BPMNProcess bpmnProcess = new BPMNParser().parse(file);
+			ImplementationValidationResult validationResult = new ImplementationValidator(process, bpmnProcess).validate();
+			System.out.println("Validation result: " + validationResult.isValid() + " " + validationResult.getMessage());
+			assertFalse(validationResult.isValid());
+		} catch (Exception e) {
+			fail("inputSlotMissing(): " + e.getMessage());
+		}
+	}
+	
+	@Test
+	public void inputSlotWithDifferentResources() {
+		try {
+			Process process = this.createProcess();
+			String file = "src/test/resources/core/implementationvalidation/InputSlotWithDifferentResources.bpmn2";
+			BPMNProcess bpmnProcess = new BPMNParser().parse(file);
+			ImplementationValidationResult validationResult = new ImplementationValidator(process, bpmnProcess).validate();
+			System.out.println("Validation result: " + validationResult.isValid() + " " + validationResult.getMessage());
+			assertFalse(validationResult.isValid());
+		} catch (Exception e) {
+			fail("inputSlotWithDifferentResources(): " + e.getMessage());
+		}
+	}
+	
+	@Test
+	public void inputAssociationMissing() {
+		try {
+			Process process = this.createProcess();
+			String file = "src/test/resources/core/implementationvalidation/InputAssociationMissing.bpmn2";
+			BPMNProcess bpmnProcess = new BPMNParser().parse(file);
+			ImplementationValidationResult validationResult = new ImplementationValidator(process, bpmnProcess).validate();
+			System.out.println("Validation result: " + validationResult.isValid() + " " + validationResult.getMessage());
+			assertFalse(validationResult.isValid());
+		} catch (Exception e) {
+			fail("inputAssociationMissing(): " + e.getMessage());
 		}
 	}
 
