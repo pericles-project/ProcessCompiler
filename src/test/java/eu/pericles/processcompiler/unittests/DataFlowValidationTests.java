@@ -26,7 +26,7 @@ import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
 import eu.pericles.processcompiler.testutils.CreateEntities;
 
-public class ValidationTests {
+public class DataFlowValidationTests {
 
 	static String repository = "NoaRepositoryTest";
 	static String triplesMediaType = MediaType.TEXT_PLAIN;	

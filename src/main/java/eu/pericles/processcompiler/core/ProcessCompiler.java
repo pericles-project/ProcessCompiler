@@ -1,13 +1,17 @@
 package eu.pericles.processcompiler.core;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import eu.pericles.processcompiler.bpmn.BPMNParser;
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.bpmn.BPMNProcessesAggregator;
 import eu.pericles.processcompiler.communications.ermr.ERMRCommunications;
+import eu.pericles.processcompiler.core.ImplementationValidator.ImplementationValidationResult;
+import eu.pericles.processcompiler.core.Validator.ValidationException;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
+import eu.pericles.processcompiler.ecosystem.Process;
 
 public class ProcessCompiler {
 
@@ -20,6 +24,13 @@ public class ProcessCompiler {
 			System.out.println("Error when creating an API with the ERMR");
 			e.printStackTrace();
 		}
+	}
+
+	public void validateImplementation(String repository, Process process) throws Exception {
+		BPMNProcess bpmnProcess = getBPMNProcess(repository, process.getId());
+		ImplementationValidationResult validationResult = new ImplementationValidator(process, bpmnProcess).validate();
+		if (validationResult.isValid() == false)
+			throw new ValidationException(validationResult);
 	}
 
 	/**
@@ -59,8 +70,7 @@ public class ProcessCompiler {
 			BPMNProcess bpmnProcess = new BPMNProcessesAggregator().createBPMNProcessByProcessAggregation(aggregatedProcess,
 					getBPMNProcessesOfAggregatedProcess(repository, aggregatedProcess));
 			return bpmnProcess;
-		}
-		else
+		} else
 			throw new Exception("The data flow of " + aggregatedProcess.getName() + " is not valid");
 	}
 

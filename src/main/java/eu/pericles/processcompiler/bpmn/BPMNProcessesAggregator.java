@@ -242,6 +242,8 @@ public class BPMNProcessesAggregator {
 	}
 
 	/**
+	 * Process Data Outputs:
+	 * 
 	 * - Check if the new resource is connected to an aggregated process slot.
 	 * If so, update the DataOutput name with the aggregated process slot.
 	 * 
@@ -463,6 +465,9 @@ public class BPMNProcessesAggregator {
 		return bpmnProcesses.get(sequenceStep - 1);
 	}
 
+	/*
+	 * TODO Delete these gets() and update to use them through the BPMNProcess class
+	 */
 	private List<DataInput> getDataInputs(BPMNProcess bpmnProcess) {
 		List<DataInput> dataInputs = new ArrayList<DataInput>();
 		for (TActivity activity : getActivities(bpmnProcess))

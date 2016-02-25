@@ -20,9 +20,9 @@ import eu.pericles.processcompiler.unittests.ermr.QueryRepositoryTest;
 import eu.pericles.processcompiler.unittests.ermr.UpdateDigitalObjectTest;
 
 @RunWith(Suite.class)
-@SuiteClasses({ GetCollectionTest.class, CreateDigitalObjectTest.class, GetDigitalObjectTest.class, FindTest.class,
+@SuiteClasses({ CreateDigitalObjectTest.class, GetDigitalObjectTest.class,
 		UpdateDigitalObjectTest.class, DeleteDigitalObjectTest.class, GetRepositoryTest.class, AddTriplesTest.class, GetTriplesTest.class,
-		QueryRepositoryTest.class, DeleteTriplesTest.class })
+		QueryRepositoryTest.class, DeleteTriplesTest.class }) //GetCollectionTest.class, FindTest.class,
 /*
  * @SuiteClasses({ CreateCollectionTest.class, GetCollectionTest.class,
  * CreateDigitalObjectTest.class, GetDigitalObjectTest.class,
@@ -47,11 +47,11 @@ public class ERMRRequestsTests {
 
 	@BeforeClass
 	static public void init() {
-		GetCollectionTest.setVariables(collection);
+		//GetCollectionTest.setVariables(collection);
 		GetRepositoryTest.setVariables(repository);
 		CreateDigitalObjectTest.setVariables(digitalObjectPath, digitalObject, digitalObjectMediaType);
 		GetDigitalObjectTest.setVariables(digitalObjectPath, digitalObject);
-		FindTest.setVaribles(findTerm, expectedFindResult);
+		//FindTest.setVaribles(findTerm, expectedFindResult);
 		UpdateDigitalObjectTest.setVariables(digitalObjectPath, digitalObject, digitalObjectMediaType);
 		DeleteDigitalObjectTest.setVariables(digitalObjectPath);
 		AddTriplesTest.setVariables(repository, triples, triplesMediaType);

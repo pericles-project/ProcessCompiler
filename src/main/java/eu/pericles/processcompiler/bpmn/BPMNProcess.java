@@ -8,7 +8,12 @@ import javax.xml.bind.JAXBElement;
 import org.omg.spec.bpmn._20100524.di.BPMNDiagram;
 import org.omg.spec.bpmn._20100524.di.BPMNEdge;
 import org.omg.spec.bpmn._20100524.di.BPMNShape;
+import org.omg.spec.bpmn._20100524.model.DataInput;
+import org.omg.spec.bpmn._20100524.model.DataInputAssociation;
+import org.omg.spec.bpmn._20100524.model.DataOutput;
+import org.omg.spec.bpmn._20100524.model.DataOutputAssociation;
 import org.omg.spec.bpmn._20100524.model.Import;
+import org.omg.spec.bpmn._20100524.model.TActivity;
 import org.omg.spec.bpmn._20100524.model.TDataStore;
 import org.omg.spec.bpmn._20100524.model.TError;
 import org.omg.spec.bpmn._20100524.model.TEscalation;
@@ -92,6 +97,49 @@ public class BPMNProcess {
 		getFlowElements().remove(element);
 		getDiagramElements().remove(diagramEndEvent);
 	}
+	
+	//------------------------ GET LISTS ---------------------------------
+
+	public List<TActivity> getActivities() {
+		List<TActivity> activities = new ArrayList<TActivity>();
+		for (JAXBElement<? extends TFlowElement> element : getFlowElements())
+			if (TActivity.class.isAssignableFrom(element.getValue().getClass()))
+				activities.add((TActivity) element.getValue());
+		return activities;
+	}
+	
+	public List<DataInput> getDataInputs() {
+		List<DataInput> dataInputs = new ArrayList<DataInput>();
+		for (TActivity activity : getActivities())
+			for (DataInput dataInput : activity.getIoSpecification().getDataInputs())
+				dataInputs.add(dataInput);
+		return dataInputs;
+	}
+
+	public List<DataOutput> getDataOutputs() {
+		List<DataOutput> dataOutputs = new ArrayList<DataOutput>();
+		for (TActivity activity : getActivities())
+			for (DataOutput dataOutput : activity.getIoSpecification().getDataOutputs())
+				dataOutputs.add(dataOutput);
+		return dataOutputs;
+	}
+
+	public List<DataInputAssociation> getDataInputAssociations() {
+		List<DataInputAssociation> dataInputAssociations = new ArrayList<DataInputAssociation>();
+		for (TActivity activity : getActivities())
+			for (DataInputAssociation dataInputAssociation : activity.getDataInputAssociations())
+				dataInputAssociations.add(dataInputAssociation);
+		return dataInputAssociations;
+	}
+
+	public List<DataOutputAssociation> getDataOutputAssociations() {
+		List<DataOutputAssociation> dataOutputAssociations = new ArrayList<DataOutputAssociation>();
+		for (TActivity activity : getActivities())
+			for (DataOutputAssociation dataOutputAssociation : activity.getDataOutputAssociations())
+				dataOutputAssociations.add(dataOutputAssociation);
+		return dataOutputAssociations;
+	}
+	
 
 	// ------------------- GETTERS AND SETTERS ----------------------//
 

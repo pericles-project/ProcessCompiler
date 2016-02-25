@@ -14,7 +14,7 @@ public class ERMRClientAPI {
 	
 	Client client;
 	final static String user = "pericles1";
-	final static String password = "Per1cles1Pw";
+	final static String password = "PASSWORD";
 	final static String tripleStore = "https://141.5.102.86/api/triple";
 	final static String objectStore = "https://141.5.102.86/api/cdmi";
 	final static String findApi = "https://141.5.102.86/api/find";
@@ -36,7 +36,8 @@ public class ERMRClientAPI {
 	}
 	
 	public Response getCollection(String collection) {
-		return getBuilder(objectStore, collection).get();
+		return getBuilder(objectStore, collection).header("X-CDMI-Specification-Version", "1.1").get();
+		//return client.target("https://141.5.102.86/api/cdmi").path("NoaCollection/").request().header("X-CDMI-Specification-Version", "1.1").get();
 	}
 	
 	public Response deleteCollection(String collection) {
