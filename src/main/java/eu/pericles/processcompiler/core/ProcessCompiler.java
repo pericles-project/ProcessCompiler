@@ -68,14 +68,15 @@ public class ProcessCompiler {
 	 * @throws Exception
 	 */
 	public BPMNProcess compileAggregatedProcess(String repository, AggregatedProcess aggregatedProcess) throws Exception {
-		ValidationResult validationResult = new DataFlowValidator(repository, aggregatedProcess).validate();
-		if (validationResult.isValid()) {
+		//ValidationResult validationResult = new DataFlowValidator(repository, aggregatedProcess).validate();
+		//if (validationResult.isValid()) {
 		//if (new DataFlowValidator(repository, aggregatedProcess).validateDataFlow()) {
+		validateDataFlow(repository, aggregatedProcess);
 			BPMNProcess bpmnProcess = new BPMNProcessesAggregator().createBPMNProcessByProcessAggregation(aggregatedProcess,
 					getBPMNProcessesOfAggregatedProcess(repository, aggregatedProcess));
 			return bpmnProcess;
-		} else
-			throw new Exception("The data flow of " + aggregatedProcess.getName() + " is not valid");
+		//} else
+		//	throw new Exception("The data flow of " + aggregatedProcess.getName() + " is not valid");
 	}
 
 	/**
