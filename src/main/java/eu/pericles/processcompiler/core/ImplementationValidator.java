@@ -51,10 +51,8 @@ public class ImplementationValidator implements Validator {
 		try {
 			result.setInputConnections(validateInputSlots());
 			result.setOutputConnections(validateOutputSlots());
-			result.setValid(true);
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
-			result.setValid(false);
 		}
 		return result;
 	}

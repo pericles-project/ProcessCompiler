@@ -31,6 +31,9 @@ import eu.pericles.processcompiler.ecosystem.Process;
 import eu.pericles.processcompiler.ecosystem.Sequence;
 import eu.pericles.processcompiler.testutils.CreateEntities;
 
+/**
+ * BPMN Files are stored in the Object Store under the Folder: Home/NoaCollection/IngestArtworkSoftware
+ */
 public class GetEntitiesTests {
 
 	static String repository = "NoaRepositoryTest";
@@ -52,7 +55,8 @@ public class GetEntitiesTests {
 		try {
 			ERMRClientAPI client = new ERMRClientAPI();
 			Response response = client.deleteTriples(repository);
-			assertEquals(204, response.getStatus());
+			//TODO Error in the ERMR design: this should be 204 NO CONTENT
+			assertEquals(200, response.getStatus());
 		} catch (KeyManagementException | NoSuchAlgorithmException e) {
 			fail("deleteRepository(): " + e.getMessage());
 		}
@@ -186,7 +190,7 @@ public class GetEntitiesTests {
 	
 	@Test
 	public void getImplementationFile() {
-		String uri = "cdmi_objectid/0000A4EF00186738BE125FC57E4E4BF5AED5B4845BB62AF7";
+		String uri = "NoaCollection/IngestArtworkSoftware/VirusCheckProcess.bpmn2";
 		try {
 			InputStream inputStream = new ERMRCommunications().getImplementationFile(uri);
 			InputStream expectedStream = new FileInputStream(new File("src/test/resources/ermr/communications/VirusCheckProcess.bpmn2"));
@@ -204,8 +208,7 @@ public class GetEntitiesTests {
 		try {
 			ERMRClientAPI client = new ERMRClientAPI();
 			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
-			// TODO Error in the ERMR design: this should be 201 Created
-			assertEquals(204, response.getStatus());
+			assertEquals(201, response.getStatus());
 		} catch (KeyManagementException | NoSuchAlgorithmException e) {
 			fail("setRepository(): " + e.getMessage());
 		}

@@ -22,7 +22,6 @@ public class GetTriplesTest {
 	public void getTriples() throws KeyManagementException, NoSuchAlgorithmException, IOException {
 		Response response = new ERMRClientAPI().getTriples(repository);
 		System.out.println("Get Triples: " + response.getStatus() + " " + response.getStatusInfo());
-		//Error in the ERMR design: this should be 201 Created 
 		assertEquals(200, response.getStatus());
 		assertEquals(FileUtils.readFileToString(new File(triples)), response.readEntity(String.class));
 	}

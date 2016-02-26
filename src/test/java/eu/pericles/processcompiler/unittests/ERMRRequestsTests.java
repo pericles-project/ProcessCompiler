@@ -11,13 +11,15 @@ import eu.pericles.processcompiler.unittests.ermr.AddTriplesTest;
 import eu.pericles.processcompiler.unittests.ermr.CreateDigitalObjectTest;
 import eu.pericles.processcompiler.unittests.ermr.DeleteDigitalObjectTest;
 import eu.pericles.processcompiler.unittests.ermr.DeleteTriplesTest;
-import eu.pericles.processcompiler.unittests.ermr.FindTest;
-import eu.pericles.processcompiler.unittests.ermr.GetCollectionTest;
 import eu.pericles.processcompiler.unittests.ermr.GetDigitalObjectTest;
 import eu.pericles.processcompiler.unittests.ermr.GetRepositoryTest;
 import eu.pericles.processcompiler.unittests.ermr.GetTriplesTest;
 import eu.pericles.processcompiler.unittests.ermr.QueryRepositoryTest;
 import eu.pericles.processcompiler.unittests.ermr.UpdateDigitalObjectTest;
+
+/**
+ * BPMN Files are stored in the Object Store under the Folder: Home/NoaCollection/HelloWorld *
+ */
 
 @RunWith(Suite.class)
 @SuiteClasses({ CreateDigitalObjectTest.class, GetDigitalObjectTest.class,
@@ -34,8 +36,8 @@ import eu.pericles.processcompiler.unittests.ermr.UpdateDigitalObjectTest;
 public class ERMRRequestsTests {
 	static String collection = "NoaCollectionTest";
 	static String repository = "NoaRepositoryTest";
-	static String digitalObjectPath = collection + "/" + "DigitalObject.bpmn2";
-	static String digitalObject = "src/test/resources/ermr/basicrequests/DigitalObject.bpmn2";
+	static String digitalObjectPath = collection + "/" + "HelloWorld.bpmn2";
+	static String digitalObject = "src/test/resources/ermr/basicrequests/HelloWorld.bpmn2";
 	static String triples = "src/test/resources/ermr/basicrequests/Triples.txt";
 	static String expectedTriples = "src/test/resources/ermr/basicrequests/ExpectedTriples.txt";
 	static String expectedFindResult = "src/test/resources/ermr/basicrequests/ExpectedFindResult.txt";
@@ -47,11 +49,9 @@ public class ERMRRequestsTests {
 
 	@BeforeClass
 	static public void init() {
-		//GetCollectionTest.setVariables(collection);
 		GetRepositoryTest.setVariables(repository);
 		CreateDigitalObjectTest.setVariables(digitalObjectPath, digitalObject, digitalObjectMediaType);
 		GetDigitalObjectTest.setVariables(digitalObjectPath, digitalObject);
-		//FindTest.setVaribles(findTerm, expectedFindResult);
 		UpdateDigitalObjectTest.setVariables(digitalObjectPath, digitalObject, digitalObjectMediaType);
 		DeleteDigitalObjectTest.setVariables(digitalObjectPath);
 		AddTriplesTest.setVariables(repository, triples, triplesMediaType);
@@ -59,6 +59,8 @@ public class ERMRRequestsTests {
 		GetTriplesTest.setVariables(repository, expectedTriples);
 		DeleteTriplesTest.setVariables(repository);
 		/*
+		 * GetCollectionTest.setVariables(collection);
+		 * FindTest.setVaribles(findTerm, expectedFindResult);
 		 * CreateCollectionTest.setVariables(collection);
 		 * DeleteCollectionTest.setVariables(collection);
 		 * CreateRepositoryTest.setVariables(repository);

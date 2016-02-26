@@ -18,8 +18,8 @@ public class DeleteTriplesTest {
 	public void deleteTriples() throws KeyManagementException, NoSuchAlgorithmException {
 		Response response = new ERMRClientAPI().deleteTriples(repository);
 		System.out.println("Delete Triples: " + response.getStatus() + " " + response.getStatusInfo());
-		//Error in the ERMR design: this should be 201 Created 
-		assertEquals(204, response.getStatus());
+		//TODO Error in the ERMR design: this should be 204 NO CONTENT
+		assertEquals(200, response.getStatus());
 	}
 	
 	public static void setVariables(String repository2) {

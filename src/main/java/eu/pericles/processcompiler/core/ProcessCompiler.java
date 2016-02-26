@@ -1,7 +1,6 @@
 package eu.pericles.processcompiler.core;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
 import eu.pericles.processcompiler.bpmn.BPMNParser;
@@ -10,6 +9,7 @@ import eu.pericles.processcompiler.bpmn.BPMNProcessesAggregator;
 import eu.pericles.processcompiler.communications.ermr.ERMRCommunications;
 import eu.pericles.processcompiler.core.ImplementationValidator.ImplementationValidationResult;
 import eu.pericles.processcompiler.core.Validator.ValidationException;
+import eu.pericles.processcompiler.core.Validator.ValidationResult;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.Process;
 
@@ -46,8 +46,10 @@ public class ProcessCompiler {
 	 * @return true if the data flow is valid
 	 * @throws Exception
 	 */
-	public boolean validateDataFlow(String repository, AggregatedProcess aggregatedProcess) throws Exception {
-		return new DataFlowValidator(repository, aggregatedProcess).validateDataFlow();
+	public void validateDataFlow(String repository, AggregatedProcess aggregatedProcess) throws Exception {
+		ValidationResult validationResult = new DataFlowValidator(repository, aggregatedProcess).validate();
+		if (validationResult.isValid() == false)
+			throw new ValidationException(validationResult);
 	}
 
 	/**
@@ -66,7 +68,9 @@ public class ProcessCompiler {
 	 * @throws Exception
 	 */
 	public BPMNProcess compileAggregatedProcess(String repository, AggregatedProcess aggregatedProcess) throws Exception {
-		if (new DataFlowValidator(repository, aggregatedProcess).validateDataFlow()) {
+		ValidationResult validationResult = new DataFlowValidator(repository, aggregatedProcess).validate();
+		if (validationResult.isValid()) {
+		//if (new DataFlowValidator(repository, aggregatedProcess).validateDataFlow()) {
 			BPMNProcess bpmnProcess = new BPMNProcessesAggregator().createBPMNProcessByProcessAggregation(aggregatedProcess,
 					getBPMNProcessesOfAggregatedProcess(repository, aggregatedProcess));
 			return bpmnProcess;

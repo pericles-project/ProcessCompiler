@@ -54,8 +54,7 @@ public class ProcessAggregationTests {
 		try {
 			ERMRClientAPI client = new ERMRClientAPI();
 			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
-			// TODO Error in the ERMR design: this should be 201 Created
-			assertEquals(204, response.getStatus());
+			assertEquals(201, response.getStatus());
 		} catch (KeyManagementException | NoSuchAlgorithmException e) {
 			fail("setRepository(): " + e.getMessage());
 		}
@@ -66,7 +65,8 @@ public class ProcessAggregationTests {
 		try {
 			ERMRClientAPI client = new ERMRClientAPI();
 			Response response = client.deleteTriples(repository);
-			assertEquals(204, response.getStatus());
+			//TODO Error in the ERMR design: this should be 204 NO CONTENT
+			assertEquals(200, response.getStatus());
 		} catch (KeyManagementException | NoSuchAlgorithmException e) {
 			fail("deleteRepository(): " + e.getMessage());
 		}

@@ -5,10 +5,9 @@ public interface Validator {
 
 	public static class ValidationResult {
 		private String message;
-		private boolean valid;
 
 		public boolean isValid() {
-			return valid;
+			return (message == null);
 		}
 
 		public String getMessage() {
@@ -17,10 +16,6 @@ public interface Validator {
 
 		public void setMessage(String message) {
 			this.message = message;
-		}
-
-		public void setValid(boolean valid) {
-			this.valid = valid;
 		}
 	}
 
