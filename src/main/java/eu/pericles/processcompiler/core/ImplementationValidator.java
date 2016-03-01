@@ -14,6 +14,26 @@ import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
 import eu.pericles.processcompiler.ecosystem.Process;
 
+/**
+ * The Implementation Validator validates a BPMN Process with the RDF-based
+ * definition of it. This implies to validate the connections between data
+ * inputs and outputs with external resources. Therefore, it validates the input
+ * and output slots defined in the RDF-based process within the data in the BPMN
+ * process.
+ * 
+ * An input(output) slot is valid if:
+ * - there is at least one data input(output) related to the input(output) slot
+ * - all data inputs(outputs) related to the input(output) slot have one and the
+ * same external resource associated
+ * 
+ * The validate() function returns an ImplementationValidationResult containing:
+ * - when the validation is not valid: a message with the error/cause of
+ * invalidation
+ * - when the validation is valid: the input and output connections, each of
+ * them a hashmap where the key is the input(output) slot and the value is the
+ * reference to the external resource
+ * 
+ */
 public class ImplementationValidator implements Validator {
 	private Process process;
 	private BPMNProcess bpmnProcess;
@@ -201,7 +221,8 @@ public class ImplementationValidator implements Validator {
 	}
 
 	private boolean isDataOutputAssociationRelatedToDataOutput(DataOutput dataOutput, DataOutputAssociation dataOutputAssociation) {
-		return ((dataOutputAssociation.getSourceReves().size() == 1) && (dataOutputAssociation.getSourceReves().get(0).getValue().equals(dataOutput)));
+		return ((dataOutputAssociation.getSourceReves().size() == 1) && (dataOutputAssociation.getSourceReves().get(0).getValue()
+				.equals(dataOutput)));
 	}
 
 	// --------------- GETTERS AND SETTERS ----------------//

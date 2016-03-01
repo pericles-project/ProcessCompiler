@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Sequence {
 	/**
-	 * processFlow: list of strings, where each String represents the id of a
+	 * - processFlow: list of strings, where each String represents the id of a
 	 * process entity (URI). It represents the process flow, not only the
 	 * subprocesses used to perform a function. Therefore, a process entity can
 	 * be more than once in the list, i.e. we could want to use the process
@@ -15,15 +15,15 @@ public class Sequence {
 	 * subprocesses in execution order and separated by a space, i.e.:
 	 * "<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>"
 	 * 
-	 * dataFlow: list of data connections, where each DataConnection represents
+	 * - dataFlow: list of data connections, where each DataConnection represents
 	 * the connection between two DataFlowNode:
 	 * 
-	 * - slotNode: target, to where the data flows. That is, output slots of the
+	 * --- slotNode: target, to where the data flows. That is, output slots of the
 	 * aggregated process, and input slots of sequence processes (subprocesses).
 	 * The slot node is unique, it cannot appear more than once in the data
 	 * flow.
 	 * 
-	 * - resourceNode: source, from where the data is coming. That is, input
+	 * --- resourceNode: source, from where the data is coming. That is, input
 	 * slots of the aggregated process, and output slots of sequence processes
 	 * (subprocesses). A resource node can appear more than once in the data
 	 * flow.

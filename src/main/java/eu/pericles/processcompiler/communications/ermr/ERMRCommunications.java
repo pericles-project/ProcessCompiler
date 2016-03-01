@@ -33,7 +33,6 @@ public class ERMRCommunications {
 	public AggregatedProcess getAggregatedProcessEntity(String repository, String uri) throws Exception {
 		AggregatedProcess aggregatedProcess = new AggregatedProcess(getProcessEntity(repository, uri));
 		aggregatedProcess.setSequence(getProcessSequence(repository, uri));
-		
 		return aggregatedProcess;
 	}
 
@@ -52,7 +51,6 @@ public class ERMRCommunications {
 	}
 	
 	public Process getProcessAttributes(String repository, String uri) throws UnsupportedEncodingException {
-		
 		Response response = client.query(repository, SPARQLQuery.createQueryGetProcessAttributes(uri));
 		return JSONParser.parseGetProcessAttributesResponse(response, uri);
 	}

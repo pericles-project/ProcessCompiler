@@ -5,9 +5,9 @@ import java.util.List;
 
 import eu.pericles.processcompiler.bpmn.BPMNParser;
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
-import eu.pericles.processcompiler.bpmn.BPMNProcessesAggregator;
 import eu.pericles.processcompiler.communications.ermr.ERMRCommunications;
 import eu.pericles.processcompiler.core.ImplementationValidator.ImplementationValidationResult;
+import eu.pericles.processcompiler.core.ProcessAggregator.SequenceSubprocess;
 import eu.pericles.processcompiler.core.Validator.ValidationException;
 import eu.pericles.processcompiler.core.Validator.ValidationResult;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
@@ -26,17 +26,25 @@ public class ProcessCompiler {
 		}
 	}
 
-	public void validateImplementation(String repository, Process process) throws Exception {
-		BPMNProcess bpmnProcess = getBPMNProcess(repository, process.getId());
+	/**
+	 * Validate the implementation (BPMNProcess) of a process with its RDF-based definition.
+	 * 
+	 * @param repository
+	 * @param process
+	 * @throws Exception
+	 */
+	public ImplementationValidationResult validateImplementation(Process process, BPMNProcess bpmnProcess) throws Exception {
+		//BPMNProcess bpmnProcess = getBPMNProcess(repository, process.getId());
 		ImplementationValidationResult validationResult = new ImplementationValidator(process, bpmnProcess).validate();
 		if (validationResult.isValid() == false)
 			throw new ValidationException(validationResult);
+		return validationResult;
 	}
 
 	/**
 	 * Validate a data flow related to a process aggregation sequence. It uses a
 	 * DataFlowValidator which is initialised with the triplestore location and
-	 * the AggregatedProcess entity
+	 * the AggregatedProcess entity.
 	 * 
 	 * @param repository
 	 *            - location to the triples in the ERMR
@@ -57,10 +65,13 @@ public class ProcessCompiler {
 	 * Process Entity in the Ecosystem, into a BPMN process. The
 	 * AggregatedProcess describes a combination of processes to create a new
 	 * and more complex one, that is a process flow, as well as the data flow in
-	 * the process flow. The compilation is done by: - get and parse the
-	 * implementation files of the other processes - validate data flow -
-	 * connect BPMN processes together as described in the process flow by using
-	 * a BPMNProcessesAggregator
+	 * the process flow.
+	 * 
+	 * The compilation is done by:
+	 * - get and parse the implementation files of the other processes
+	 * - validate data flow
+	 * - connect BPMN processes together as described in the process flow by
+	 * using a BPMNProcessesAggregator
 	 * 
 	 * @param repository
 	 * @param aggregatedProcess
@@ -68,15 +79,41 @@ public class ProcessCompiler {
 	 * @throws Exception
 	 */
 	public BPMNProcess compileAggregatedProcess(String repository, AggregatedProcess aggregatedProcess) throws Exception {
-		//ValidationResult validationResult = new DataFlowValidator(repository, aggregatedProcess).validate();
-		//if (validationResult.isValid()) {
-		//if (new DataFlowValidator(repository, aggregatedProcess).validateDataFlow()) {
 		validateDataFlow(repository, aggregatedProcess);
-			BPMNProcess bpmnProcess = new BPMNProcessesAggregator().createBPMNProcessByProcessAggregation(aggregatedProcess,
-					getBPMNProcessesOfAggregatedProcess(repository, aggregatedProcess));
-			return bpmnProcess;
-		//} else
-		//	throw new Exception("The data flow of " + aggregatedProcess.getName() + " is not valid");
+		List<SequenceSubprocess> sequenceSubprocesses = validateAndGetSequenceSubprocess(repository, aggregatedProcess);
+		BPMNProcess bpmnProcess = new ProcessAggregator().createBPMNProcessByProcessAggregation(aggregatedProcess, sequenceSubprocesses);// ProcessAggregator().createBPMNProcessByProcessAggregation(aggregatedProcess,
+				//getBPMNProcessesOfAggregatedProcess(repository, aggregatedProcess));
+		return bpmnProcess;
+	}
+	
+	public List<SequenceSubprocess> validateAndGetSequenceSubprocess(String repository, AggregatedProcess aggregatedProcess) throws Exception {
+		List<SequenceSubprocess> sequenceSubprocesses = new ArrayList<SequenceSubprocess>();
+		//validateDataFlow(repository, aggregatedProcess);
+		List<Process> processes = getProcessesOfAggregatedProcess(repository, aggregatedProcess);
+		for (Process process : processes) {
+			BPMNProcess bpmnProcess = getBPMNProcess(repository, process.getId());
+			ImplementationValidationResult result = validateImplementation(process, bpmnProcess);
+			SequenceSubprocess sequenceSubprocess = new SequenceSubprocess();
+			sequenceSubprocess.setProcess(aggregatedProcess);
+			sequenceSubprocess.setBpmnProcess(bpmnProcess);
+			sequenceSubprocess.setInputConnections(result.getInputConnections());
+			sequenceSubprocess.setOutputConnections(result.getOutputConnections());
+			sequenceSubprocesses.add(sequenceSubprocess);
+		}
+		return sequenceSubprocesses;
+	}
+	
+	public List<Process> getProcessesOfAggregatedProcess(String repository, AggregatedProcess aggregatedProcess) throws Exception {
+		List<Process> subprocesses = new ArrayList<Process>();
+		for (String subprocess : aggregatedProcess.getSequence().getProcessFlow()) {
+			subprocesses.add(getProcess(repository, subprocess));
+		}
+		return subprocesses;
+	}
+	
+	public Process getProcess(String repository, String process) throws Exception {
+		Process subprocess = ermrCommunications.getProcessEntity(repository, process);
+		return subprocess;
 	}
 
 	/**
@@ -109,6 +146,11 @@ public class ProcessCompiler {
 	public BPMNProcess getBPMNProcess(String repository, String process) throws Exception {
 		BPMNProcess bpmnSubprocess = new BPMNParser().parse(ermrCommunications.getProcessImplementationFile(repository, process));
 		return bpmnSubprocess;
+	}
+	
+	public AggregatedProcess getAggregatedProcess(String repository, String process) throws Exception {
+		AggregatedProcess aggregatedProcess = ermrCommunications.getAggregatedProcessEntity(repository, process);
+		return aggregatedProcess;
 	}
 
 }

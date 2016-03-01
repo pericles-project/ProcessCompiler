@@ -1,6 +1,7 @@
-package eu.pericles.processcompiler.bpmn;
+package eu.pericles.processcompiler.core;
 
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,19 +21,56 @@ import org.omg.spec.bpmn._20100524.model.TSequenceFlow;
 import org.omg.spec.bpmn._20100524.model.TStartEvent;
 import org.omg.spec.dd._20100524.di.DiagramElement;
 
+import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.DataConnection;
 import eu.pericles.processcompiler.ecosystem.DataFlowNode;
+import eu.pericles.processcompiler.ecosystem.InputSlot;
+import eu.pericles.processcompiler.ecosystem.OutputSlot;
+import eu.pericles.processcompiler.ecosystem.Process;
 
-public class BPMNProcessesAggregator {
+public class ProcessAggregator {
 
 	public static final int INITIAL_STEP = 1;
 	public static final int AGGREGATED_PROCESS_STEP = 0;
 	private AggregatedProcess aggregatedProcess;
 	private BPMNProcess aggregatedBPMNProcess;
 	private List<BPMNProcess> bpmnProcesses;
+	private List<SequenceSubprocess> sequenceSubprocesses;
 	private Object lastFlowElement;
 	private HashMap<DataFlowNode, Object> availableDataObjects = new HashMap<DataFlowNode, Object>();
+	
+	public static class SequenceSubprocess {
+		private Process process;
+		private BPMNProcess bpmnProcess;
+		private HashMap<InputSlot, Object> inputConnections;
+		private HashMap<OutputSlot, Object> outputConnections;
+		
+		public Process getProcess() {
+			return process;
+		}
+		public void setProcess(Process process) {
+			this.process = process;
+		}
+		public BPMNProcess getBpmnProcess() {
+			return bpmnProcess;
+		}
+		public void setBpmnProcess(BPMNProcess bpmnProcess) {
+			this.bpmnProcess = bpmnProcess;
+		}
+		public HashMap<InputSlot, Object> getInputConnections() {
+			return inputConnections;
+		}
+		public void setInputConnections(HashMap<InputSlot, Object> inputConnections) {
+			this.inputConnections = inputConnections;
+		}
+		public HashMap<OutputSlot, Object> getOutputConnections() {
+			return outputConnections;
+		}
+		public void setOutputConnections(HashMap<OutputSlot, Object> outputConnections) {
+			this.outputConnections = outputConnections;
+		}
+	}
 
 	/**
 	 * Create a BPMN process (aggregatedBPMNProcess) by connecting together a
@@ -72,14 +110,15 @@ public class BPMNProcessesAggregator {
 	 *         aggregated process entity
 	 * @throws Exception
 	 */
-	public BPMNProcess createBPMNProcessByProcessAggregation(AggregatedProcess aggregatedProcess, List<BPMNProcess> bpmnProcesses)
+	public BPMNProcess createBPMNProcessByProcessAggregation(AggregatedProcess aggregatedProcess, List<SequenceSubprocess> sequenceSubprocesses) //List<BPMNProcess> bpmnProcesses)
 			throws Exception {
 
 		this.aggregatedProcess = aggregatedProcess;
-		this.bpmnProcesses = bpmnProcesses;
+		//this.bpmnProcesses = bpmnProcesses;
+		this.sequenceSubprocesses = sequenceSubprocesses;
 
 		initialiseAggregatedBPMNProcess();
-		for (int sequenceStep = 2; sequenceStep <= bpmnProcesses.size(); sequenceStep++) {
+		for (int sequenceStep = 2; sequenceStep <= sequenceSubprocesses.size(); sequenceStep++) { //bpmnProcesses.size(); sequenceStep++) {
 			aggregateBPMNProcessToAggregatedBPMNProcess(sequenceStep);
 		}
 		return getAggregatedBPMNProcess();
@@ -462,7 +501,7 @@ public class BPMNProcessesAggregator {
 	}
 
 	private BPMNProcess getBPMNProcessAtSequenceStep(int sequenceStep) {
-		return bpmnProcesses.get(sequenceStep - 1);
+		return sequenceSubprocesses.get(sequenceStep-1).getBpmnProcess();//bpmnProcesses.get(sequenceStep - 1);
 	}
 
 	/*
