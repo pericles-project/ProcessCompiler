@@ -34,7 +34,6 @@ public class ProcessCompiler {
 	 * @throws Exception
 	 */
 	public ImplementationValidationResult validateImplementation(Process process, BPMNProcess bpmnProcess) throws Exception {
-		//BPMNProcess bpmnProcess = getBPMNProcess(repository, process.getId());
 		ImplementationValidationResult validationResult = new ImplementationValidator(process, bpmnProcess).validate();
 		if (validationResult.isValid() == false)
 			throw new ValidationException(validationResult);
@@ -103,6 +102,11 @@ public class ProcessCompiler {
 		return sequenceSubprocesses;
 	}
 	
+	public AggregatedProcess getAggregatedProcess(String repository, String process) throws Exception {
+		AggregatedProcess aggregatedProcess = ermrCommunications.getAggregatedProcessEntity(repository, process);
+		return aggregatedProcess;
+	}
+	
 	public List<Process> getProcessesOfAggregatedProcess(String repository, AggregatedProcess aggregatedProcess) throws Exception {
 		List<Process> subprocesses = new ArrayList<Process>();
 		for (String subprocess : aggregatedProcess.getSequence().getProcessFlow()) {
@@ -146,11 +150,6 @@ public class ProcessCompiler {
 	public BPMNProcess getBPMNProcess(String repository, String process) throws Exception {
 		BPMNProcess bpmnSubprocess = new BPMNParser().parse(ermrCommunications.getProcessImplementationFile(repository, process));
 		return bpmnSubprocess;
-	}
-	
-	public AggregatedProcess getAggregatedProcess(String repository, String process) throws Exception {
-		AggregatedProcess aggregatedProcess = ermrCommunications.getAggregatedProcessEntity(repository, process);
-		return aggregatedProcess;
 	}
 
 }

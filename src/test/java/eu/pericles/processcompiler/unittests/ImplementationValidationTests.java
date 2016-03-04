@@ -12,7 +12,6 @@ import org.junit.Test;
 import eu.pericles.processcompiler.bpmn.BPMNParser;
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.core.ImplementationValidator;
-import eu.pericles.processcompiler.core.ImplementationValidator.ImplementationValidationResult;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
 import eu.pericles.processcompiler.ecosystem.Process;

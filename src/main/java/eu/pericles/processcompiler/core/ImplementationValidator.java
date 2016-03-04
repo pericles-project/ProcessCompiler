@@ -163,7 +163,7 @@ public class ImplementationValidator implements Validator {
 
 	private Object findAssociatedInputResource(DataInputAssociation dataInputAssociation) throws Exception {
 		if ((dataInputAssociation.getSourceReves().size() == 1))
-			return dataInputAssociation.getSourceReves().get(0);
+			return dataInputAssociation.getSourceReves().get(0).getValue();
 		else {
 			if (dataInputAssociation.getSourceReves().isEmpty())
 				throw new Exception("The data association: " + dataInputAssociation.getId() + " has not input resource");

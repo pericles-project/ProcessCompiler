@@ -41,7 +41,7 @@ public class BPMNProcess {
 	private List<TDataStore> dataStores = new ArrayList<>();
 	private TProcess process;
 	private BPMNDiagram diagram;
-	
+
 	public void addBPMNProcess(BPMNProcess bpmnProcess) {
 		this.addItemDefinitions(bpmnProcess.getItemDefinitions());
 		this.addFlowElements(bpmnProcess.getFlowElements());
@@ -55,13 +55,15 @@ public class BPMNProcess {
 		}
 		throw new Exception("There is not a flow element corresponding to the element: " + element.toString());
 	}
-	
-	public List<JAXBElement<? extends TFlowElement>> findFlowElementsByClass(String className) {
+
+	public List<JAXBElement<? extends TFlowElement>> findFlowElementsByClass(String className) throws Exception {
 		List<JAXBElement<? extends TFlowElement>> elements = new ArrayList<JAXBElement<? extends TFlowElement>>();
 		for (JAXBElement<? extends TFlowElement> element : getFlowElements()) {
 			if (element.getDeclaredType().getSimpleName().equals(className))
 				elements.add(element);
 		}
+		if (elements.isEmpty())
+			throw new Exception("There is not flow elements of class: " + className);
 		return elements;
 	}
 
@@ -97,8 +99,8 @@ public class BPMNProcess {
 		getFlowElements().remove(element);
 		getDiagramElements().remove(diagramEndEvent);
 	}
-	
-	//------------------------ GET LISTS ---------------------------------
+
+	// ------------------------ GET LISTS ---------------------------------
 
 	public List<TActivity> getActivities() {
 		List<TActivity> activities = new ArrayList<TActivity>();
@@ -107,7 +109,7 @@ public class BPMNProcess {
 				activities.add((TActivity) element.getValue());
 		return activities;
 	}
-	
+
 	public List<DataInput> getDataInputs() {
 		List<DataInput> dataInputs = new ArrayList<DataInput>();
 		for (TActivity activity : getActivities())
@@ -139,9 +141,8 @@ public class BPMNProcess {
 				dataOutputAssociations.add(dataOutputAssociation);
 		return dataOutputAssociations;
 	}
-	
 
-	// ------------------- GETTERS AND SETTERS ----------------------//
+	// ------------------- GETTERS, SETTERS AND ADDERS ----------------------//
 
 	public List<JAXBElement<? extends TFlowElement>> getFlowElements() {
 		return getProcess().getFlowElements();
@@ -167,7 +168,7 @@ public class BPMNProcess {
 		for (TItemDefinition diagramElement : itemDefinitions) {
 			getItemDefinitions().add(diagramElement);
 		}
-	}	
+	}
 
 	public String getId() {
 		return id;
@@ -280,5 +281,5 @@ public class BPMNProcess {
 	public void setDiagram(BPMNDiagram diagram) {
 		this.diagram = diagram;
 	}
-	
+
 }

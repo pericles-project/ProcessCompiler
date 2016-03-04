@@ -3,6 +3,7 @@ package eu.pericles.processcompiler.testutils;
 import java.util.List;
 
 import eu.pericles.processcompiler.communications.ermr.JSONParser;
+import eu.pericles.processcompiler.ecosystem.DataConnection;
 import eu.pericles.processcompiler.ecosystem.Fixity;
 import eu.pericles.processcompiler.ecosystem.Implementation;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
@@ -51,6 +52,10 @@ public class CreateEntities {
 		sequence.setDataFlow(JSONParser.parseDataFlow(dataFlow));
 		
 		return sequence;
+	}
+	
+	public static List<DataConnection> createDataFlow(String dataFlow) {
+		return JSONParser.parseDataFlow(dataFlow);
 	}
 
 }
