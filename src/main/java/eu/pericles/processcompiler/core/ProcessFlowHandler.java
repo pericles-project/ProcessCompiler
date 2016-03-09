@@ -13,29 +13,85 @@ import org.omg.spec.bpmn._20100524.model.TStartEvent;
 import org.omg.spec.dd._20100524.di.DiagramElement;
 
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
+import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 
 public class ProcessFlowHandler {
 
-	public static class ParametersForAggregation {
+	static class AggregationParameters {
 		private BPMNProcess bpmnProcess;
 		private Object previousFlowElement;
 		private DiagramElement previousDiagramElement;
 
-		public ParametersForAggregation(BPMNProcess bpmnProcess, Object previousFlowElement, DiagramElement previousDiagramElement) {
+		AggregationParameters(BPMNProcess bpmnProcess, Object previousFlowElement, DiagramElement previousDiagramElement) {
 			this.bpmnProcess = bpmnProcess;
 			this.previousFlowElement = previousFlowElement;
 			this.previousDiagramElement = previousDiagramElement;
 		}
 	}
 
-	public static BPMNProcess processBPMNProcessForAggregation(ParametersForAggregation parameters) throws Exception {
+	/**
+	 * Create a BPMN process (aggregatedBPMNProcess) by connecting together a
+	 * list of BPMN processes as specified in the process flow of the aggregated
+	 * process. This process aggregation is done by:
+	 * 
+	 * - Initialise the aggregated BPMN process with the first BPMN process in
+	 * the process flow and the values provided by the AggregatedProcess entity
+	 * 
+	 * - Aggregate remaining BPMN processes by doing the following for each one:
+	 * 
+	 * --- Prepare the aggregated process for a new aggregation: by deleting the
+	 * end event and its incoming sequence flow. The last flow of the aggregated
+	 * BPMNProcess is therefore updated to the element referenced as source in
+	 * the incoming sequence flow
+	 * 
+	 * --- Prepare the bpmn process to be aggregated: by deleting the start
+	 * event and updating the source of its outgoing sequence flow to the last
+	 * flow element of the aggregated process
+	 * 
+	 * --- Add the BPMNProcess to the aggregated BPMNProcess: by adding its flow
+	 * and diagram elements
+	 * 
+	 * @param aggregatedProcess
+	 *            - RDF-based description of the aggregated process
+	 * @param bpmnProcesses
+	 *            - list of BPMNProcess that conform the process flow of the
+	 *            AggregatedProcess
+	 * @return aggregatedBPMNProcess
+	 *         - BPMNProcess resulting of aggregating the processes specified in
+	 *         the process flow (executed in the same order)
+	 * @throws Exception
+	 */
+	public static BPMNProcess processProcessFlow(AggregatedProcess aggregatedProcess, List<BPMNProcess> bpmnProcesses) throws Exception {
+		BPMNProcess aggregatedBPMNProcess = initialiseAggregatedBPMNProcess(aggregatedProcess, bpmnProcesses.get(0));
+		for (int process = 1; process < bpmnProcesses.size(); process++) {
+			aggregateBPMNProcessToAggregatedBPMNProcess(aggregatedBPMNProcess, bpmnProcesses.get(process));
+		}
+		return aggregatedBPMNProcess;
+	}
+
+	private static BPMNProcess initialiseAggregatedBPMNProcess(AggregatedProcess aggregatedProcess, BPMNProcess bpmnProcess)
+			throws Exception {
+		BPMNProcess aggregatedBPMNProcess = bpmnProcess;
+		aggregatedBPMNProcess.setId(aggregatedProcess.getId());
+		aggregatedBPMNProcess.getProcess().setName(aggregatedProcess.getName());
+		return aggregatedBPMNProcess;
+	}
+
+	private static void aggregateBPMNProcessToAggregatedBPMNProcess(BPMNProcess aggregatedBPMNProcess, BPMNProcess bpmnProcess)
+			throws Exception {
+		Object lastFlowElement = prepareAggregatedProcessForAggregation(aggregatedBPMNProcess);
+		DiagramElement lastDiagramElement = findDiagramElement(aggregatedBPMNProcess, lastFlowElement);
+		BPMNProcess process = prepareProcessToBeAggregated(new AggregationParameters(bpmnProcess, lastFlowElement, lastDiagramElement));
+		aggregatedBPMNProcess.addBPMNProcess(process);
+	}
+
+	private static BPMNProcess prepareProcessToBeAggregated(AggregationParameters parameters) throws Exception {
 		JAXBElement<? extends TFlowElement> startEvent = findAndDeleteStartEvent(parameters.bpmnProcess);
 		pointBPMNProcessToPreviousFlowElement(parameters, startEvent);
-
 		return parameters.bpmnProcess;
 	}
 
-	public static Object processAggregatedBPMNProcessForAggregation(BPMNProcess aggregatedBPMNProcess) throws Exception {
+	private static Object prepareAggregatedProcessForAggregation(BPMNProcess aggregatedBPMNProcess) throws Exception {
 		JAXBElement<? extends TFlowElement> endEvent = findAndDeleteEndEvent(aggregatedBPMNProcess);
 		JAXBElement<? extends TFlowElement> sequenceFlow = findAndDeleteSequenceFlowByTargetRef(aggregatedBPMNProcess, endEvent);
 		return ((TSequenceFlow) sequenceFlow.getValue()).getSourceRef();
@@ -88,6 +144,10 @@ public class ProcessFlowHandler {
 		throw new Exception("There is not a sequence flow pointing to " + flowElement.getValue().getId());
 	}
 
+	private static DiagramElement findDiagramElement(BPMNProcess bpmnProcess, Object flowElement) throws Exception {
+		return bpmnProcess.findDiagramElementByFlowElement(flowElement).getValue();
+	}
+
 	/**
 	 * Connect the first sequence flow of a BPMN process (the one with source
 	 * reference the specified in sourceRef, i.e. a start event) to the previous
@@ -97,7 +157,7 @@ public class ProcessFlowHandler {
 	 * @param sourceRef
 	 * @throws Exception
 	 */
-	private static void pointBPMNProcessToPreviousFlowElement(ParametersForAggregation parameters,
+	private static void pointBPMNProcessToPreviousFlowElement(AggregationParameters parameters,
 			JAXBElement<? extends TFlowElement> sourceRef) throws Exception {
 		JAXBElement<? extends TFlowElement> sequenceFlow = findSequenceFlowBySourceRef(parameters.bpmnProcess, sourceRef);
 		updateSourceOfSequenceFlowToPreviousFlowElement(parameters, sequenceFlow);
@@ -122,7 +182,7 @@ public class ProcessFlowHandler {
 	 * @param sequenceFlow
 	 * @throws Exception
 	 */
-	private static void updateSourceOfSequenceFlowToPreviousFlowElement(ParametersForAggregation parameters,
+	private static void updateSourceOfSequenceFlowToPreviousFlowElement(AggregationParameters parameters,
 			JAXBElement<? extends TFlowElement> sequenceFlow) throws Exception {
 		((TSequenceFlow) sequenceFlow.getValue()).setSourceRef(parameters.previousFlowElement);
 		JAXBElement<? extends DiagramElement> diagramSequenceFlow = parameters.bpmnProcess.findDiagramElementByFlowElement(sequenceFlow);

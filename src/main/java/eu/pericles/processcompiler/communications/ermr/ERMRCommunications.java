@@ -2,8 +2,6 @@ package eu.pericles.processcompiler.communications.ermr;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +18,22 @@ public class ERMRCommunications {
 	
 	private ERMRClientAPI client;
 	
-	public ERMRCommunications() throws KeyManagementException, NoSuchAlgorithmException {
-		client = new ERMRClientAPI();
+	public static class ERMRException extends Exception {
+		
+		private static final long serialVersionUID = -1585025716760400668L;
+		
+		public ERMRException(String message) {
+			super(message);
+		}
+	}
+	
+	public ERMRCommunications() throws ERMRException {
+		try {
+			client = new ERMRClientAPI();
+		}
+		catch (Exception e) {
+			throw new ERMRException("Error when creating the API with the ERMR: " + e.getMessage());
+		}
 	}
 
 	public ERMRClientAPI getClient() {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.pericles.processcompiler.communications.ermr.ERMRCommunications;
-import eu.pericles.processcompiler.core.ImplementationValidator.ImplementationValidationResult;
+import eu.pericles.processcompiler.communications.ermr.ERMRCommunications.ERMRException;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.DataConnection;
 import eu.pericles.processcompiler.ecosystem.DataFlowNode;
@@ -17,11 +17,9 @@ import eu.pericles.processcompiler.ecosystem.Slot;
  * SEQUENCE STEP: each step in the data flow, identified by the current process
  * --- Initial Step: corresponds to the first step, that is the data at the
  * inputslots of the aggregated process (0)
- * 
  * --- Intermediate Steps: correspond to intermediate steps, that is the data at
  * the inputslots of the subprocesses (1, 2, ...), in the same order as in the
  * Process Flow
- * 
  * --- Final Step: corresponds to the final step, that is the data at the
  * outputslots of the aggregated process (0)
  * 
@@ -31,10 +29,19 @@ import eu.pericles.processcompiler.ecosystem.Slot;
  * sequence step
  * --- ResourceNode: this is a slot from which comes the data
  * 
- * In DataConnection class:
- * - Slot = Slot of the SlotNode
- * - Resource = Slot of the ResourceNode
- * - SequenceStep = Sequence Step of the SlotNode
+ * The DataFlow Validator validates the data flow of an aggregated process, that
+ * is, validates each of data connections in the data flow.
+ * 
+ * A Data Connection is VALID if:
+ * - the slot node exists in the process
+ * - the resource node exists in the process
+ * - the resource is available
+ * - the data type of the slot and the resource are compatible
+ * 
+ * The validate() function returns a ValidationResult containing:
+ * - when the validation is not valid: a message with the error/cause of
+ * invalidation
+ * - when the validation is valid: the valid message
  * 
  */
 
@@ -48,7 +55,7 @@ public class DataFlowValidator implements Validator {
 	private ERMRCommunications ermrCommunications;
 	private ArrayList<DataFlowNode> availableResources;
 
-	public DataFlowValidator(String repository, AggregatedProcess aggregatedProcess) throws Exception {
+	public DataFlowValidator(String repository, AggregatedProcess aggregatedProcess) throws ERMRException {
 		this.repository = repository;
 		this.process = aggregatedProcess;
 		this.ermrCommunications = new ERMRCommunications();
@@ -56,9 +63,10 @@ public class DataFlowValidator implements Validator {
 
 	@Override
 	public ValidationResult validate() {
-		ImplementationValidationResult result = new ImplementationValidationResult();
+		ValidationResult result = new ValidationResult();
 		try {
 			validateDataFlow();
+			result.setMessage(ValidationResult.VALID_MESSAGE);
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
 		}
@@ -75,7 +83,7 @@ public class DataFlowValidator implements Validator {
 	 * FINALLY: validate the data connections with the aggregated process
 	 * outputs
 	 */
-	public void validateDataFlow() throws Exception {
+	private void validateDataFlow() throws Exception {
 		initiateAvailableResourcesList();
 		for (int sequenceStep = 1; sequenceStep <= getSequenceSteps(); sequenceStep++) {
 			validateDataConnectionsAtSequenceStep(sequenceStep);
@@ -90,13 +98,6 @@ public class DataFlowValidator implements Validator {
 			validateDataConnection(dataConnection);
 	}
 
-	/**
-	 * A Data Connection is valid if:
-	 * - the slot node exists in the process
-	 * - the resource node exists in the process
-	 * - the resource is available
-	 * - the data type of the slot and the resource are compatible
-	 */
 	private void validateDataConnection(DataConnection dataConnection) throws Exception {
 		if (existSlotNodeInDataConnection(dataConnection) == false)
 			throw new Exception("The slot in data connection doesn't exist");

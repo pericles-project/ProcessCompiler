@@ -47,7 +47,29 @@ public class BPMNProcess {
 		this.addFlowElements(bpmnProcess.getFlowElements());
 		this.addDiagramElements(bpmnProcess.getDiagramElements());
 	}
+	
+	//-------------- ADD FUNCTIONS -------------//
 
+	public void addFlowElements(List<JAXBElement<? extends TFlowElement>> flowElements) {
+		for (JAXBElement<? extends TFlowElement> flowElement : flowElements) {
+			getProcess().getFlowElements().add(flowElement);
+		}
+	}
+
+	public void addDiagramElements(List<JAXBElement<? extends DiagramElement>> diagramElements) {
+		for (JAXBElement<? extends DiagramElement> diagramElement : diagramElements) {
+			getDiagram().getBPMNPlane().getDiagramElements().add(diagramElement);
+		}
+	}
+
+	public void addItemDefinitions(List<TItemDefinition> itemDefinitions) {
+		for (TItemDefinition diagramElement : itemDefinitions) {
+			getItemDefinitions().add(diagramElement);
+		}
+	}
+
+	//-------------- FIND FUNCTIONS -------------//
+	
 	public JAXBElement<? extends TFlowElement> findFlowElement(Object element) throws Exception {
 		for (JAXBElement<? extends TFlowElement> flowElement : getFlowElements()) {
 			if (flowElement.getValue().equals(element))
@@ -86,7 +108,36 @@ public class BPMNProcess {
 		}
 		throw new Exception("There is not a diagram element corresponding to the element " + bpmnElement.getValue().getId());
 	}
+	
+	//-------------- UPDATE FUNCTIONS -------------//
 
+	public void updateSourceOfDataInputAssociations(Object oldResource, Object newResource) {
+		for (DataInputAssociation inputAssociation : getDataInputAssociations())
+			if (inputAssociation.getSourceReves().get(0).getValue().equals(oldResource))
+				inputAssociation.getSourceReves().get(0).setValue(newResource);
+	}
+	
+	public void updateNameOfDataInput(String oldName, String newName) {
+		for (DataInput dataInput : getDataInputs()) {
+			if (dataInput.getName().equals(oldName))
+				dataInput.setName(newName);
+		}
+	}
+	
+	public void updateNameOfDataOutput(String oldName, String newName) {
+		for (DataOutput dataOutput : getDataOutputs()) {
+			if (dataOutput.getName().equals(oldName))
+				dataOutput.setName(newName);
+		}
+	}
+	
+	//-------------- DELETE FUNCTIONS -------------//
+
+	public void deleteProcessElement(Object object) throws Exception {
+		JAXBElement<? extends TFlowElement> element  = findFlowElement(object);
+		deleteProcessElement(element);
+	}
+	
 	/**
 	 * Deletes an element of the BPMNProcess, that means, the specified flow
 	 * element and its corresponded diagram element
@@ -100,7 +151,15 @@ public class BPMNProcess {
 		getDiagramElements().remove(diagramEndEvent);
 	}
 
-	// ------------------------ GET LISTS ---------------------------------
+	//-------------- GET FUNCTIONS -------------//
+
+	public List<JAXBElement<? extends TFlowElement>> getFlowElements() {
+		return getProcess().getFlowElements();
+	}
+
+	public List<JAXBElement<? extends DiagramElement>> getDiagramElements() {
+		return getDiagram().getBPMNPlane().getDiagramElements();
+	}
 
 	public List<TActivity> getActivities() {
 		List<TActivity> activities = new ArrayList<TActivity>();
@@ -142,33 +201,7 @@ public class BPMNProcess {
 		return dataOutputAssociations;
 	}
 
-	// ------------------- GETTERS, SETTERS AND ADDERS ----------------------//
-
-	public List<JAXBElement<? extends TFlowElement>> getFlowElements() {
-		return getProcess().getFlowElements();
-	}
-
-	public List<JAXBElement<? extends DiagramElement>> getDiagramElements() {
-		return getDiagram().getBPMNPlane().getDiagramElements();
-	}
-
-	public void addFlowElements(List<JAXBElement<? extends TFlowElement>> flowElements) {
-		for (JAXBElement<? extends TFlowElement> flowElement : flowElements) {
-			getProcess().getFlowElements().add(flowElement);
-		}
-	}
-
-	public void addDiagramElements(List<JAXBElement<? extends DiagramElement>> diagramElements) {
-		for (JAXBElement<? extends DiagramElement> diagramElement : diagramElements) {
-			getDiagram().getBPMNPlane().getDiagramElements().add(diagramElement);
-		}
-	}
-
-	public void addItemDefinitions(List<TItemDefinition> itemDefinitions) {
-		for (TItemDefinition diagramElement : itemDefinitions) {
-			getItemDefinitions().add(diagramElement);
-		}
-	}
+	// ------------------- GETTERS AND SETTERS ----------------------//
 
 	public String getId() {
 		return id;
