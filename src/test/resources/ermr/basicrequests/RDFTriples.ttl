@@ -1,0 +1,21 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ecosystem: <http://www.pericles-project.eu/ns/ecosystem#> .
+
+ecosystem:atpHelloWorld a ecosystem:AtomicProcess ;
+  ecosystem:name "Hello World" ;
+  ecosystem:description "Atomic process that print Hello World in the screen" ;
+  ecosystem:version "1" ;
+  ecosystem:hasImplementation ecosystem:impHelloWorld .
+
+ecosystem:impHelloWorld a ecosystem:Implementation ;
+  ecosystem:version "1" ;
+  ecosystem:type "BPMN" ;
+  ecosystem:location "https://c102-086.cloud.gwdg.de/api/cdmi/NoaCollection/HelloWorld/HelloWorld.bpmn2";
+  ecosystem:hasFixity ecosystem:fixHelloWorld .
+
+ecosystem:fixHelloWorld a ecosystem:Fixity ;
+  ecosystem:checksum "5e17af01b2a6ed09cda05096d137166ac783fbe022763d084a8335079ffd8663" ;
+  ecosystem:algorithm "sha256" .

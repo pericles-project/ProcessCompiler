@@ -3,14 +3,13 @@ package eu.pericles.processcompiler.unittests.ermr;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 
 import javax.ws.rs.core.Response;
 
 import org.junit.Test;
 
 import eu.pericles.processcompiler.communications.ermr.ERMRClientAPI;
+import eu.pericles.processcompiler.exceptions.ERMRClientException;
 
 public class CreateDigitalObjectTest {
 	static String digitalObjectPath;
@@ -18,7 +17,7 @@ public class CreateDigitalObjectTest {
 	static String mediaType;
 
 	@Test
-	public void createDigitalObject() throws KeyManagementException, NoSuchAlgorithmException, IOException {
+	public void createDigitalObject() throws IOException, ERMRClientException {
 		Response response = new ERMRClientAPI().createDigitalObject(digitalObjectPath, digitalObject, mediaType);
 		System.out.println("Create Digital Object: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(201, response.getStatus());

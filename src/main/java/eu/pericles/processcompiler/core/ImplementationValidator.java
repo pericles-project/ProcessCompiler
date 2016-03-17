@@ -28,7 +28,7 @@ import eu.pericles.processcompiler.ecosystem.Process;
  * 
  * The validate() function returns an ImplementationValidationResult containing:
  * - when the validation is not valid: a message with the error/cause of
- * invalidation
+ * invalidation and the exception that caused it
  * - when the validation is valid: the valid message and the input and output
  * connections, each of them a hashmap where the key is the input(output) slot
  * and the value is the reference to the external resource
@@ -73,6 +73,7 @@ public class ImplementationValidator implements Validator {
 			result.setMessage(ValidationResult.VALID_MESSAGE);
 		} catch (Exception e) {
 			result.setMessage(e.getMessage());
+			result.setException(e);
 		}
 		return result;
 	}

@@ -15,12 +15,12 @@ import eu.pericles.processcompiler.bpmn.BPMNWriter;
 import eu.pericles.processcompiler.testutils.Utils;
 
 @RunWith(Parameterized.class)
-public class BPMNParseAndWriteTests {
+public class BPMNParserAndWriterTests {
 	
 	static String[] folders = {"helloworld", "completeprocess", "serviceprocess", "viruscheck"};
 	private String path;
 	
-    public BPMNParseAndWriteTests(String folder) {
+    public BPMNParserAndWriterTests(String folder) {
         this.path = "src/test/resources/bpmnfiles/" + folder + "/";
     }
 	

@@ -5,8 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -21,13 +19,14 @@ import eu.pericles.processcompiler.communications.ermr.ERMRClientAPI;
 import eu.pericles.processcompiler.communications.ermr.ERMRCommunications;
 import eu.pericles.processcompiler.core.DataFlowValidator;
 import eu.pericles.processcompiler.core.ProcessCompiler;
-import eu.pericles.processcompiler.core.Validator.ValidationException;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
+import eu.pericles.processcompiler.exceptions.ERMRClientException;
+import eu.pericles.processcompiler.exceptions.ValidationException;
 import eu.pericles.processcompiler.testutils.CreateEntities;
 
-public class DataFlowValidationTests {
+public class DataFlowValidatorTests {
 
 	static String repository = "NoaRepositoryTest";
 	static String triplesMediaType = MediaType.TEXT_PLAIN;
@@ -41,7 +40,7 @@ public class DataFlowValidationTests {
 			ERMRClientAPI client = new ERMRClientAPI();
 			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
 			assertEquals(201, response.getStatus());
-		} catch (KeyManagementException | NoSuchAlgorithmException e) {
+		} catch (ERMRClientException e) {
 			fail("setRepository(): " + e.getMessage());
 		}
 	}
@@ -53,7 +52,7 @@ public class DataFlowValidationTests {
 			Response response = client.deleteTriples(repository);
 			// TODO Error in the ERMR design: this should be 204 No Content
 			assertEquals(200, response.getStatus());
-		} catch (KeyManagementException | NoSuchAlgorithmException e) {
+		} catch (ERMRClientException e) {
 			fail("deleteRepository(): " + e.getMessage());
 		}
 	}
@@ -83,7 +82,7 @@ public class DataFlowValidationTests {
 	@Test
 	public void isDataTypeCompatible() {
 		try {
-			DataFlowValidator validator = new DataFlowValidator(repository, createAggregatedProcess());
+			DataFlowValidator validator = new DataFlowValidator(new ERMRCommunications(), repository, createAggregatedProcess());
 			assertTrue(validator.isSubclass("<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>",
 					"<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>"));
 			assertTrue(validator.isSubclass("<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>",
@@ -123,7 +122,7 @@ public class DataFlowValidationTests {
 											+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>] [2 <http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>]}"
 											+ " {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}"));
 			processCompiler.validateDataFlow(repository, invalidProcess);
-		} catch (ValidationException e) {
+		} catch (eu.pericles.processcompiler.exceptions.ValidationException e) {
 			assertEquals("The resource in data connection is not available", e.getMessage());
 		} catch (Exception e) {
 			fail("invalidDataFlowWithNoAvailableResource(): " + e.getMessage());

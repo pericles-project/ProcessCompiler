@@ -17,7 +17,7 @@ import eu.pericles.processcompiler.ecosystem.OutputSlot;
 import eu.pericles.processcompiler.ecosystem.Process;
 import eu.pericles.processcompiler.testutils.CreateEntities;
 
-public class ImplementationValidationTests {
+public class ImplementationValidatorTests {
 
 	// ----------------------------- TESTS ----------------------------------
 

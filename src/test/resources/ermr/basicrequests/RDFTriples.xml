@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ecosystem="http://www.pericles-project.eu/ns/ecosystem#">
+
+  <rdf:Description rdf:about="http://www.pericles-project.eu/ns/ecosystem#atpHelloWorld">
+    <rdf:type rdf:resource="http://www.pericles-project.eu/ns/ecosystem#AtomicProcess"/>
+    <ecosystem:name>Hello World</ecosystem:name>
+    <ecosystem:description>Atomic process that print Hello World in the screen</ecosystem:description>
+    <ecosystem:version>1</ecosystem:version>
+    <ecosystem:hasImplementation>
+      <ecosystem:Implementation rdf:about="http://www.pericles-project.eu/ns/ecosystem#impHelloWorld">
+        <ecosystem:version>1</ecosystem:version>
+        <ecosystem:type>BPMN</ecosystem:type>
+        <ecosystem:location>https://c102-086.cloud.gwdg.de/api/cdmi/NoaCollection/HelloWorld/HelloWorld.bpmn2</ecosystem:location>
+        <ecosystem:hasFixity>
+          <ecosystem:Fixity rdf:about="http://www.pericles-project.eu/ns/ecosystem#fixHelloWorld">
+            <ecosystem:checksum>5e17af01b2a6ed09cda05096d137166ac783fbe022763d084a8335079ffd8663</ecosystem:checksum>
+            <ecosystem:algorithm>sha256</ecosystem:algorithm>
+          </ecosystem:Fixity>
+        </ecosystem:hasFixity>
+
+      </ecosystem:Implementation>
+    </ecosystem:hasImplementation>
+
+  </rdf:Description>
+
+</rdf:RDF>

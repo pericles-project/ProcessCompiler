@@ -3,15 +3,21 @@ package eu.pericles.processcompiler.communications.ermr;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import eu.pericles.processcompiler.exceptions.ERMRClientException;
+
 public class SPARQLQuery {
 
-	public static String encode(String query) throws UnsupportedEncodingException {
-		return URLEncoder.encode(query, "UTF-8");
+	public static String encode(String query) throws ERMRClientException {
+		try {
+			return URLEncoder.encode(query, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new ERMRClientException("Error creating SPARQL query", e);
+		}
 	}
 	
 	//--------------------------- GET ENTITIES --------------------------------//
 	
-	public static String createQueryGetProcessAttributes(String process) throws UnsupportedEncodingException {
+	public static String createQueryGetProcessAttributes(String process) throws ERMRClientException {
 		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
 				+ " SELECT DISTINCT ?name ?description ?version WHERE {"
 				+ process + " ecosystem:name ?name . "
@@ -21,7 +27,7 @@ public class SPARQLQuery {
 		return encode(query);
 	}
 
-	public static String createQueryGetImplementationEntity(String implementation) throws UnsupportedEncodingException {
+	public static String createQueryGetImplementationEntity(String implementation) throws ERMRClientException {
 		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
 			   + " SELECT DISTINCT ?version ?type ?location ?checksum ?algorithm WHERE { "
 			   + implementation + " ecosystem:version ?version . "
@@ -34,7 +40,7 @@ public class SPARQLQuery {
 		return encode(query);
 	}
 
-	public static String createQueryGetInputSlotEntity(String inputSlot) throws UnsupportedEncodingException {
+	public static String createQueryGetInputSlotEntity(String inputSlot) throws ERMRClientException {
 		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
 				+ "SELECT DISTINCT ?name ?description ?type ?optional WHERE {"
 				+ inputSlot + " ecosystem:name ?name . "
@@ -45,7 +51,7 @@ public class SPARQLQuery {
 		return encode(query);
 	}
 	
-	public static String createQueryGetOutputSlotEntity(String outputSlot) throws UnsupportedEncodingException {
+	public static String createQueryGetOutputSlotEntity(String outputSlot) throws ERMRClientException {
 		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
 				+ "SELECT DISTINCT ?name ?description ?type WHERE {"
 				+ outputSlot + " ecosystem:name ?name . "
@@ -55,7 +61,7 @@ public class SPARQLQuery {
 		return encode(query);
 	}
 	
-	public static String createQueryGetSequenceEntity(String sequence) throws UnsupportedEncodingException {
+	public static String createQueryGetSequenceEntity(String sequence) throws ERMRClientException {
 		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
 				+ "SELECT DISTINCT ?processFlow ?dataFlow WHERE {"
 				+ sequence + " ecosystem:processFlow ?processFlow . "
@@ -66,7 +72,7 @@ public class SPARQLQuery {
 	
 	//--------------------------- GET URIs --------------------------------//
 
-	public static String createQueryGetInputSlotURIList(String process) throws UnsupportedEncodingException {
+	public static String createQueryGetInputSlotURIList(String process) throws ERMRClientException {
 		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> "
 				+ " SELECT DISTINCT ?inputs WHERE { "
 				+ process + " ecosystem:hasInputSlot ?inputs  . "
@@ -74,7 +80,7 @@ public class SPARQLQuery {
 		return encode(query);
 	}
 
-	public static String createQueryGetOutputSlotURIList(String process) throws UnsupportedEncodingException {
+	public static String createQueryGetOutputSlotURIList(String process) throws ERMRClientException {
 		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> "
 				+ " SELECT DISTINCT ?outputs WHERE { "
 				+ process + " ecosystem:hasOutputSlot ?outputs  . "
@@ -82,27 +88,27 @@ public class SPARQLQuery {
 		return encode(query);
 	}
 
-	public static String createQueryGetImplementationURI(String process) throws UnsupportedEncodingException {
+	public static String createQueryGetImplementationURI(String process) throws ERMRClientException {
 		return createQueryGetURI(process, "ecosystem:hasImplementation");
 	}
 	
-	public static String createQueryGetSequenceURI(String process) throws UnsupportedEncodingException {
+	public static String createQueryGetSequenceURI(String process) throws ERMRClientException {
 		return createQueryGetURI(process, "ecosystem:hasSequence");
 	}
 
-	public static String createQueryGetEntityTypeURI(String entity) throws UnsupportedEncodingException {
+	public static String createQueryGetEntityTypeURI(String entity) throws ERMRClientException {
 		return createQueryGetURI(entity, "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>");
 	}
 
-	public static String createQueryGetDataTypeURI(String entity) throws UnsupportedEncodingException {
+	public static String createQueryGetDataTypeURI(String entity) throws ERMRClientException {
 		return createQueryGetURI(entity, "ecosystem:type");
 	}
 
-	public static String createQueryGetParentEntityURI(String childEntity) throws UnsupportedEncodingException {
+	public static String createQueryGetParentEntityURI(String childEntity) throws ERMRClientException {
 		return createQueryGetURI(childEntity, "<http://www.w3.org/2000/01/rdf-schema#subClassOf>");
 	}
 	
-	public static String createQueryGetURI(String subject, String predicate) throws UnsupportedEncodingException {
+	public static String createQueryGetURI(String subject, String predicate) throws ERMRClientException {
 		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
 				+ "SELECT DISTINCT ?uri WHERE {"
 				+ subject + " " + predicate + " ?uri . "

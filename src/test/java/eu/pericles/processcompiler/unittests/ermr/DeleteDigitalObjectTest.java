@@ -1,21 +1,19 @@
 package eu.pericles.processcompiler.unittests.ermr;
 
-import static org.junit.Assert.*;
-
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import static org.junit.Assert.assertEquals;
 
 import javax.ws.rs.core.Response;
 
 import org.junit.Test;
 
 import eu.pericles.processcompiler.communications.ermr.ERMRClientAPI;
+import eu.pericles.processcompiler.exceptions.ERMRClientException;
 
 public class DeleteDigitalObjectTest {
 	static String digitalObjectPath;
 
 	@Test
-	public void deleteDigitalObject() throws KeyManagementException, NoSuchAlgorithmException {
+	public void deleteDigitalObject() throws ERMRClientException {
 		Response response = new ERMRClientAPI().deleteDigitalObject(digitalObjectPath);
 		System.out.println("Delete Digital Object: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(204, response.getStatus());

@@ -1,12 +1,12 @@
 package eu.pericles.processcompiler.unittests;
 
-import static org.junit.Assert.*;
-
-import java.io.UnsupportedEncodingException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
 import eu.pericles.processcompiler.communications.ermr.SPARQLQuery;
+import eu.pericles.processcompiler.exceptions.ERMRClientException;
 
 public class SPARQLQueriesTests {
 
@@ -17,7 +17,7 @@ public class SPARQLQueriesTests {
 		try {
 			String encodedQuery = SPARQLQuery.encode(decodedQuery);
 			assertEquals(expectedQuery, encodedQuery);
-		} catch (UnsupportedEncodingException e) {
+		} catch (ERMRClientException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -29,7 +29,7 @@ public class SPARQLQueriesTests {
 		try {
 			String query = SPARQLQuery.createQueryGetImplementationEntity(uri);
 			assertEquals(expectedQuery, query);
-		} catch (UnsupportedEncodingException e) {
+		} catch (ERMRClientException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -41,7 +41,7 @@ public class SPARQLQueriesTests {
 		try {
 			String query = SPARQLQuery.createQueryGetInputSlotEntity(uri);
 			assertEquals(expectedQuery, query);
-		} catch (UnsupportedEncodingException e) {
+		} catch (ERMRClientException e) {
 			fail(e.getMessage());
 		}
 	}
@@ -53,7 +53,7 @@ public class SPARQLQueriesTests {
 		try {
 			String query = SPARQLQuery.createQueryGetInputSlotURIList(uri);
 			assertEquals(expectedQuery, query);
-		} catch (UnsupportedEncodingException e) {
+		} catch (ERMRClientException e) {
 			fail(e.getMessage());
 		}
 	}

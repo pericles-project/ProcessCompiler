@@ -1,8 +1,7 @@
 package eu.pericles.processcompiler.communications.ermr;
 
 import java.io.File;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
@@ -10,17 +9,42 @@ import javax.ws.rs.client.Invocation.Builder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import eu.pericles.processcompiler.exceptions.ERMRClientException;
+
 public class ERMRClientAPI {
 	
 	Client client;
-	final static String user = "pericles1";
-	final static String password = "PASSWORD";
-	final static String tripleStore = "https://141.5.102.86/api/triple";
-	final static String objectStore = "https://141.5.102.86/api/cdmi";
-	final static String findApi = "https://141.5.102.86/api/find";
+	private String user = "pericles1";
+	private String password = "PASSWORD";
+	private String tripleStore = "https://141.5.102.86/api/triple";
+	private String objectStore = "https://141.5.102.86/api/cdmi";
+	private String findApi = "https://141.5.102.86/api/find";
 	
-	public ERMRClientAPI() throws KeyManagementException, NoSuchAlgorithmException {
-		client = AllTrustingClient.getAllTrustingClientWithCredentials(user, password);
+	public ERMRClientAPI() throws ERMRClientException {
+		client = createClient();
+	}
+	
+	private Client createClient() throws ERMRClientException {
+		try {
+			Client client = AllTrustingClient.getAllTrustingClientWithCredentials(user, password);
+			return client;
+		} catch (Exception e) {
+			throw new ERMRClientException("Error when creating the ERMR client API", e);
+		}
+	}
+
+	public ERMRClientAPI(HashMap<String, String> parameters) throws ERMRClientException {
+		if (parameters.containsKey("user"))
+			this.user = parameters.get("user");
+		if (parameters.containsKey("password"))
+			this.password = parameters.get("password");
+		if (parameters.containsKey("tripleStore"))
+			this.tripleStore = parameters.get("tripleStore");
+		if (parameters.containsKey("objectStore"))
+			this.objectStore = parameters.get("objectStore");
+		if (parameters.containsKey("findApi"))
+			this.findApi = parameters.get("findApi");
+		client = createClient();
 	}
 	
 	public Builder getBuilder(String target, String path) {
@@ -30,23 +54,21 @@ public class ERMRClientAPI {
 	public Client getClient() {
 		return client;
 	}
-	//TODO this doesn't work! We need to find a way to create a folder/container/whatever via put() method
+
 	public Response createCollection(String collection) {
-		return getBuilder(objectStore, collection).put(Entity.entity(collection, MediaType.APPLICATION_JSON));
+		return getBuilder(objectStore, collection).header("X-CDMI-Specification-Version", "1.1").put(Entity.entity(collection, new MediaType("application", "cdmi-container")));
 	}
-	
+
 	public Response getCollection(String collection) {
-		return getBuilder(objectStore, collection).header("X-CDMI-Specification-Version", "1.1").get();
-		//return client.target("https://141.5.102.86/api/cdmi").path("NoaCollection/").request().header("X-CDMI-Specification-Version", "1.1").get();
+		return getBuilder(objectStore, collection).header("X-CDMI-Specification-Version", "1.1").accept(new MediaType("application", "cdmi-container")).get();
 	}
 	
 	public Response deleteCollection(String collection) {
 		return getBuilder(objectStore, collection).delete();
 	}
 	
-	//TODO this doesn't work! We need to find a way to create a folder/container/whatever via put() method
 	public Response createRepository(String repository) {
-		return getBuilder(tripleStore, repository).put(Entity.entity(repository, MediaType.APPLICATION_JSON));
+		return getBuilder(tripleStore, repository).header("X-CDMI-Specification-Version", "1.1").put(Entity.entity(repository, new MediaType("application", "cdmi-container")));
 	}
 	
 	public Response getRepository(String repository) {

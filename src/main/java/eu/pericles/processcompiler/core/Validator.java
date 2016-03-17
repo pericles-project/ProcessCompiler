@@ -6,6 +6,7 @@ public interface Validator {
 	public static class ValidationResult {
 		public static final String VALID_MESSAGE = "OK";
 		private String message;
+		private Exception exception;
 
 		public boolean isValid() {
 			return (message == VALID_MESSAGE);
@@ -16,13 +17,11 @@ public interface Validator {
 		public void setMessage(String message) {
 			this.message = message;
 		}
-	}
-
-	public static class ValidationException extends Exception {
-		private static final long serialVersionUID = 5035038260506935669L;
-
-		public ValidationException(ValidationResult result) {
-			super(result.getMessage());
+		public Exception getException() {
+			return exception;
+		}
+		public void setException(Exception exception) {
+			this.exception = exception;
 		}
 	}
 	

@@ -14,6 +14,7 @@ import org.omg.spec.dd._20100524.di.DiagramElement;
 
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
+import eu.pericles.processcompiler.exceptions.ProcessProcessFlowException;
 
 public class ProcessFlowHandler {
 
@@ -59,14 +60,19 @@ public class ProcessFlowHandler {
 	 * @return aggregatedBPMNProcess
 	 *         - BPMNProcess resulting of aggregating the processes specified in
 	 *         the process flow (executed in the same order)
-	 * @throws Exception
+	 * @throws ProcessProcessFlowException 
+	 * 
 	 */
-	public static BPMNProcess processProcessFlow(AggregatedProcess aggregatedProcess, List<BPMNProcess> bpmnProcesses) throws Exception {
+	public static BPMNProcess processProcessFlow(AggregatedProcess aggregatedProcess, List<BPMNProcess> bpmnProcesses) throws ProcessProcessFlowException {
+		try {
 		BPMNProcess aggregatedBPMNProcess = initialiseAggregatedBPMNProcess(aggregatedProcess, bpmnProcesses.get(0));
 		for (int process = 1; process < bpmnProcesses.size(); process++) {
 			aggregateBPMNProcessToAggregatedBPMNProcess(aggregatedBPMNProcess, bpmnProcesses.get(process));
 		}
 		return aggregatedBPMNProcess;
+		} catch (Exception e) {
+			throw new ProcessProcessFlowException(e.getMessage(),e);
+		}
 	}
 
 	private static BPMNProcess initialiseAggregatedBPMNProcess(AggregatedProcess aggregatedProcess, BPMNProcess bpmnProcess)

@@ -8,9 +8,14 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import eu.pericles.processcompiler.unittests.ermr.AddTriplesTest;
+import eu.pericles.processcompiler.unittests.ermr.CreateCollectionTest;
 import eu.pericles.processcompiler.unittests.ermr.CreateDigitalObjectTest;
+import eu.pericles.processcompiler.unittests.ermr.CreateRepositoryTest;
+import eu.pericles.processcompiler.unittests.ermr.DeleteCollectionTest;
 import eu.pericles.processcompiler.unittests.ermr.DeleteDigitalObjectTest;
+import eu.pericles.processcompiler.unittests.ermr.DeleteRepositoryTest;
 import eu.pericles.processcompiler.unittests.ermr.DeleteTriplesTest;
+import eu.pericles.processcompiler.unittests.ermr.GetCollectionTest;
 import eu.pericles.processcompiler.unittests.ermr.GetDigitalObjectTest;
 import eu.pericles.processcompiler.unittests.ermr.GetRepositoryTest;
 import eu.pericles.processcompiler.unittests.ermr.GetTriplesTest;
@@ -22,49 +27,52 @@ import eu.pericles.processcompiler.unittests.ermr.UpdateDigitalObjectTest;
  */
 
 @RunWith(Suite.class)
-@SuiteClasses({ CreateDigitalObjectTest.class, GetDigitalObjectTest.class,
-		UpdateDigitalObjectTest.class, DeleteDigitalObjectTest.class, GetRepositoryTest.class, AddTriplesTest.class, GetTriplesTest.class,
-		QueryRepositoryTest.class, DeleteTriplesTest.class }) //GetCollectionTest.class, FindTest.class,
-/*
- * @SuiteClasses({ CreateCollectionTest.class, GetCollectionTest.class,
- * CreateDigitalObjectTest.class, GetDigitalObjectTest.class,
- * UpdateDigitalObjectTest.class, DeleteDigitalObjectTest.class,
- * DeleteCollectionTest.class, CreateRepositoryTest.class,
- * GetRepositoryTest.class, AddTriplesTest.class, GetTriplesTest.class,
- * DeleteTriplesTest.class, DeleteRepositoryTest.class })
- */
-public class ERMRRequestsTests {
-	static String collection = "NoaCollectionTest";
-	static String repository = "NoaRepositoryTest";
-	static String digitalObjectPath = collection + "/" + "HelloWorld.bpmn2";
+@SuiteClasses({ CreateCollectionTest.class, 
+	CreateDigitalObjectTest.class, GetDigitalObjectTest.class,
+	UpdateDigitalObjectTest.class, DeleteDigitalObjectTest.class,
+	GetCollectionTest.class, DeleteCollectionTest.class,
+	CreateRepositoryTest.class,
+	GetRepositoryTest.class, AddTriplesTest.class, GetTriplesTest.class,
+	QueryRepositoryTest.class, DeleteTriplesTest.class, 
+	DeleteRepositoryTest.class }) //FindTest.class
+
+public class ERMRClientAPITests {
+	static String collection = "NoaCollectionTest_2/";
+	static String repository = "NoaRepositoryTest_2";
+	static String digitalObjectPath = collection + "HelloWorld.bpmn2";
 	static String digitalObject = "src/test/resources/ermr/basicrequests/HelloWorld.bpmn2";
 	static String triples = "src/test/resources/ermr/basicrequests/Triples.txt";
+	static String rdfTriples = "src/test/resources/ermr/basicrequests/RDFTriples.xml";
 	static String expectedTriples = "src/test/resources/ermr/basicrequests/ExpectedTriples.txt";
 	static String expectedFindResult = "src/test/resources/ermr/basicrequests/ExpectedFindResult.txt";
 	static String expectedQueryResult = "src/test/resources/ermr/basicrequests/ExpectedQueryResult.txt";
 	static String findTerm = "bpmn2";
 	static String query = "select%20?s%20?p%20?o%20%7B?s%20?p%20?o%7D";
 	static String digitalObjectMediaType = MediaType.APPLICATION_XML;
-	static String triplesMediaType = MediaType.TEXT_PLAIN;
+	static String textPlain = MediaType.TEXT_PLAIN;
+	static String rdfXml = "application/rdf+xml";
 
 	@BeforeClass
-	static public void init() {
-		GetRepositoryTest.setVariables(repository);
+	static public void objectStoreTests() {
+		CreateCollectionTest.setVariables(collection);
 		CreateDigitalObjectTest.setVariables(digitalObjectPath, digitalObject, digitalObjectMediaType);
 		GetDigitalObjectTest.setVariables(digitalObjectPath, digitalObject);
 		UpdateDigitalObjectTest.setVariables(digitalObjectPath, digitalObject, digitalObjectMediaType);
+		GetCollectionTest.setVariables(collection);
+		//FindTest.setVaribles(findTerm, expectedFindResult);
 		DeleteDigitalObjectTest.setVariables(digitalObjectPath);
-		AddTriplesTest.setVariables(repository, triples, triplesMediaType);
+		DeleteCollectionTest.setVariables(collection);
+	}
+	
+	@BeforeClass
+	static public void tripleStoreTests() {
+		CreateRepositoryTest.setVariables(repository);
+		AddTriplesTest.setVariables(repository, triples, textPlain);
+		GetRepositoryTest.setVariables(repository);
 		QueryRepositoryTest.setVariables(repository, query, expectedQueryResult);
 		GetTriplesTest.setVariables(repository, expectedTriples);
 		DeleteTriplesTest.setVariables(repository);
-		/*
-		 * GetCollectionTest.setVariables(collection);
-		 * FindTest.setVaribles(findTerm, expectedFindResult);
-		 * CreateCollectionTest.setVariables(collection);
-		 * DeleteCollectionTest.setVariables(collection);
-		 * CreateRepositoryTest.setVariables(repository);
-		 * DeleteRepositoryTest.setVariables(repository);
-		 */
+		DeleteRepositoryTest.setVariables(repository);
 	}
+
 }

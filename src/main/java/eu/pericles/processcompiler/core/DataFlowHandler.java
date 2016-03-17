@@ -10,6 +10,7 @@ import eu.pericles.processcompiler.ecosystem.DataConnection;
 import eu.pericles.processcompiler.ecosystem.DataFlowNode;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
+import eu.pericles.processcompiler.exceptions.ProcessDataFlowException;
 
 /**
  * * Some important concepts about Data Flow Handler class:
@@ -67,20 +68,24 @@ public class DataFlowHandler {
 	 * @return bpmnProcesses
 	 *         - list of updated bpmn processes prepared to be process for
 	 *         aggregation
-	 * @throws Exception
+	 * @throws ProcessDataFlowException 
+	 * 
 	 */
-	public static List<BPMNProcess> processDataFlow(List<DataConnection> dataFlow, List<ValidatedProcess> sequenceSubprocesses)
-			throws Exception {
-		HashMap<DataFlowNode, Object> aggregatedConnections = getAggregatedConnections(dataFlow, sequenceSubprocesses);
-		for (DataConnection dataConnection : dataFlow) {
-			if (aggregatedConnections.containsKey(dataConnection.getSlotNode()))
-				updateResource(sequenceSubprocesses, aggregatedConnections, dataConnection);
-			if (isAggregatedProcessInputSlot(dataConnection))
-				updateInputSlot(sequenceSubprocesses, dataConnection);
-			if (isAggregatedProcessOutputSlot(dataConnection))
-				updateOutputSlot(sequenceSubprocesses, dataConnection);
+	public static List<BPMNProcess> processDataFlow(List<DataConnection> dataFlow, List<ValidatedProcess> sequenceSubprocesses) throws ProcessDataFlowException {
+		try {
+			HashMap<DataFlowNode, Object> aggregatedConnections = getAggregatedConnections(dataFlow, sequenceSubprocesses);
+			for (DataConnection dataConnection : dataFlow) {
+				if (aggregatedConnections.containsKey(dataConnection.getSlotNode()))
+					updateResource(sequenceSubprocesses, aggregatedConnections, dataConnection);
+				if (isAggregatedProcessInputSlot(dataConnection))
+					updateInputSlot(sequenceSubprocesses, dataConnection);
+				if (isAggregatedProcessOutputSlot(dataConnection))
+					updateOutputSlot(sequenceSubprocesses, dataConnection);
+			}
+			return getBPMNProcesses(sequenceSubprocesses);
+		} catch (Exception e) {
+			throw new ProcessDataFlowException(e.getMessage(), e);
 		}
-		return getBPMNProcesses(sequenceSubprocesses);
 	}
 
 	private static HashMap<DataFlowNode, Object> getAggregatedConnections(List<DataConnection> dataFlow,

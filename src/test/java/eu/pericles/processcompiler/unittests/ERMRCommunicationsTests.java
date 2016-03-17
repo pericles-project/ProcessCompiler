@@ -7,8 +7,6 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -29,12 +27,13 @@ import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
 import eu.pericles.processcompiler.ecosystem.Process;
 import eu.pericles.processcompiler.ecosystem.Sequence;
+import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.testutils.CreateEntities;
 
 /**
  * BPMN Files are stored in the Object Store under the Folder: Home/NoaCollection/IngestArtworkSoftware
  */
-public class GetEntitiesTests {
+public class ERMRCommunicationsTests {
 
 	static String repository = "NoaRepositoryTest";
 	static String ecosystem = "src/test/resources/ermr/communications/Ecosystem.txt";
@@ -57,7 +56,7 @@ public class GetEntitiesTests {
 			Response response = client.deleteTriples(repository);
 			//TODO Error in the ERMR design: this should be 204 NO CONTENT
 			assertEquals(200, response.getStatus());
-		} catch (KeyManagementException | NoSuchAlgorithmException e) {
+		} catch (ERMRClientException e) {
 			fail("deleteRepository(): " + e.getMessage());
 		}
 	}
@@ -209,7 +208,7 @@ public class GetEntitiesTests {
 			ERMRClientAPI client = new ERMRClientAPI();
 			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
 			assertEquals(201, response.getStatus());
-		} catch (KeyManagementException | NoSuchAlgorithmException e) {
+		} catch (ERMRClientException e) {
 			fail("setRepository(): " + e.getMessage());
 		}
 	}

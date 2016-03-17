@@ -2,15 +2,12 @@ package eu.pericles.processcompiler.unittests.ermr;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-
 import javax.ws.rs.core.Response;
 
 import org.junit.Test;
 
 import eu.pericles.processcompiler.communications.ermr.ERMRClientAPI;
+import eu.pericles.processcompiler.exceptions.ERMRClientException;
 
 public class UpdateDigitalObjectTest {
 
@@ -19,7 +16,7 @@ public class UpdateDigitalObjectTest {
 	static String mediaType;
 
 	@Test
-	public void updateDigitalObject() throws KeyManagementException, NoSuchAlgorithmException, IOException {
+	public void updateDigitalObject() throws ERMRClientException  {
 		Response response = new ERMRClientAPI().updateDigitalObject(digitalObjectPath, digitalObject, mediaType);
 		System.out.println("Update Digital Object: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(204, response.getStatus());

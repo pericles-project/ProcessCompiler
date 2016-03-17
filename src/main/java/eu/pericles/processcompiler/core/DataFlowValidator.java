@@ -1,15 +1,14 @@
 package eu.pericles.processcompiler.core;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
 import eu.pericles.processcompiler.communications.ermr.ERMRCommunications;
-import eu.pericles.processcompiler.communications.ermr.ERMRCommunications.ERMRException;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.DataConnection;
 import eu.pericles.processcompiler.ecosystem.DataFlowNode;
 import eu.pericles.processcompiler.ecosystem.Slot;
+import eu.pericles.processcompiler.exceptions.ERMRClientException;
 
 /**
  * Important concepts about Data Flow in an Aggregated Process:
@@ -40,25 +39,25 @@ import eu.pericles.processcompiler.ecosystem.Slot;
  * 
  * The validate() function returns a ValidationResult containing:
  * - when the validation is not valid: a message with the error/cause of
- * invalidation
+ * invalidation and the exceptio that caused it
  * - when the validation is valid: the valid message
  * 
  */
 
 public class DataFlowValidator implements Validator {
 
-	public static final int INITIAL_STEP = 0;
-	public static final int FINAL_STEP = 0;
+	final static int INITIAL_STEP = 0;
+	final static int FINAL_STEP = 0;
 
 	private String repository;
 	private AggregatedProcess process;
 	private ERMRCommunications ermrCommunications;
 	private ArrayList<DataFlowNode> availableResources;
 
-	public DataFlowValidator(String repository, AggregatedProcess aggregatedProcess) throws ERMRException {
+	public DataFlowValidator(ERMRCommunications ermrCommunications, String repository, AggregatedProcess aggregatedProcess) throws ERMRClientException {
 		this.repository = repository;
 		this.process = aggregatedProcess;
-		this.ermrCommunications = new ERMRCommunications();
+		this.ermrCommunications = ermrCommunications;
 	}
 
 	@Override
@@ -67,8 +66,14 @@ public class DataFlowValidator implements Validator {
 		try {
 			validateDataFlow();
 			result.setMessage(ValidationResult.VALID_MESSAGE);
-		} catch (Exception e) {
-			result.setMessage(e.getMessage());
+		} 
+		catch (ERMRClientException e) {
+			result.setMessage("Error when creating the ERMR client API: "+ e.getMessage());
+			result.setException(e);
+		}
+		catch (Exception e) {
+			result.setMessage("Error when validating a data flow: "+ e.getMessage());
+			result.setException(e);
 		}
 		return result;
 	}
@@ -109,7 +114,7 @@ public class DataFlowValidator implements Validator {
 			throw new Exception("The data type in data connection is not compatible");
 	}
 
-	private boolean existSlotNodeInDataConnection(DataConnection dataConnection) throws UnsupportedEncodingException {
+	private boolean existSlotNodeInDataConnection(DataConnection dataConnection) throws ERMRClientException {
 		List<String> slotNodes = getSlotNodesAtSequenceStep(dataConnection.getSlotNode().getSequenceStep());
 		for (String slotNode : slotNodes)
 			if (dataConnection.getSlot().equals(slotNode))
@@ -117,7 +122,7 @@ public class DataFlowValidator implements Validator {
 		return false;
 	}
 
-	private boolean existResourceNodeInDataConnection(DataConnection dataConnection) throws UnsupportedEncodingException {
+	private boolean existResourceNodeInDataConnection(DataConnection dataConnection) throws ERMRClientException {
 		List<String> resourceNodes = getResourceNodesAtSequenceStep(dataConnection.getResourceNode().getSequenceStep());
 		for (String resourceNode : resourceNodes)
 			if (dataConnection.getResource().equals(resourceNode))
@@ -139,15 +144,15 @@ public class DataFlowValidator implements Validator {
 	 * 
 	 * @param dataConnection
 	 * @return boolean
-	 * @throws UnsupportedEncodingException
+	 * @throws ERMRClientException
 	 */
-	private boolean isDataTypeCompatibleInDataConnection(DataConnection dataConnection) throws UnsupportedEncodingException {
+	private boolean isDataTypeCompatibleInDataConnection(DataConnection dataConnection) throws ERMRClientException {
 		String dataTypeSlot = ermrCommunications.getDataTypeURI(getRepository(), dataConnection.getSlot());
 		String dataTypeResource = ermrCommunications.getDataTypeURI(getRepository(), dataConnection.getResource());
 		return isSubclass(dataTypeSlot, dataTypeResource);
 	}
 
-	public boolean isSubclass(String parentClass, String childClass) throws UnsupportedEncodingException {
+	public boolean isSubclass(String parentClass, String childClass) throws ERMRClientException {
 		while (childClass != null) {
 			if (childClass.equals(parentClass))
 				return true;
@@ -156,7 +161,7 @@ public class DataFlowValidator implements Validator {
 		return false;
 	}
 
-	private List<String> getSlotNodesAtSequenceStep(int sequenceStep) throws UnsupportedEncodingException {
+	private List<String> getSlotNodesAtSequenceStep(int sequenceStep) throws ERMRClientException {
 		List<String> nodes;
 		if (sequenceStep == FINAL_STEP)
 			nodes = ermrCommunications.getOutputSlotURIList(getRepository(), getProcess().getId());
@@ -165,7 +170,7 @@ public class DataFlowValidator implements Validator {
 		return nodes;
 	}
 
-	private List<String> getResourceNodesAtSequenceStep(int sequenceStep) throws UnsupportedEncodingException {
+	private List<String> getResourceNodesAtSequenceStep(int sequenceStep) throws ERMRClientException {
 		List<String> nodes;
 		if (sequenceStep == INITIAL_STEP)
 			nodes = ermrCommunications.getInputSlotURIList(getRepository(), getProcess().getId());
@@ -185,7 +190,7 @@ public class DataFlowValidator implements Validator {
 		}
 	}
 
-	private void updateAvailableResourcesList(int sequenceStep) throws UnsupportedEncodingException {
+	private void updateAvailableResourcesList(int sequenceStep) throws ERMRClientException {
 		List<String> slots = ermrCommunications.getOutputSlotURIList(getRepository(), getSubprocessAtSequenceStep(sequenceStep));
 		for (String slot : slots) {
 			getAvailableResources().add(new DataFlowNode(sequenceStep, slot));
