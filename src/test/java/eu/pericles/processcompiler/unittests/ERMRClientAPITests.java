@@ -22,10 +22,6 @@ import eu.pericles.processcompiler.unittests.ermr.GetTriplesTest;
 import eu.pericles.processcompiler.unittests.ermr.QueryRepositoryTest;
 import eu.pericles.processcompiler.unittests.ermr.UpdateDigitalObjectTest;
 
-/**
- * BPMN Files are stored in the Object Store under the Folder: Home/NoaCollection/HelloWorld *
- */
-
 @RunWith(Suite.class)
 @SuiteClasses({ CreateCollectionTest.class, 
 	CreateDigitalObjectTest.class, GetDigitalObjectTest.class,

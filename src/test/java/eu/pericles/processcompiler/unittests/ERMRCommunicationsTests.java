@@ -31,10 +31,11 @@ import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.testutils.CreateEntities;
 
 /**
- * BPMN Files are stored in the Object Store under the Folder: Home/NoaCollection/IngestArtworkSoftware
+ * BPMN Files are stored in the Object Store under the Folder: NoaCollection/ERMRCommunications/
  */
 public class ERMRCommunicationsTests {
 
+	static String collection = "NoaCollection/ERMRCommunications/";
 	static String repository = "NoaRepositoryTest";
 	static String ecosystem = "src/test/resources/ermr/communications/Ecosystem.txt";
 	static String triplesMediaType = MediaType.TEXT_PLAIN;	
@@ -189,7 +190,7 @@ public class ERMRCommunicationsTests {
 	
 	@Test
 	public void getImplementationFile() {
-		String uri = "NoaCollection/IngestArtworkSoftware/VirusCheckProcess.bpmn2";
+		String uri = collection + "VirusCheckProcess.bpmn2";
 		try {
 			InputStream inputStream = new ERMRCommunications().getImplementationFile(uri);
 			InputStream expectedStream = new FileInputStream(new File("src/test/resources/ermr/communications/VirusCheckProcess.bpmn2"));
@@ -226,7 +227,7 @@ public class ERMRCommunicationsTests {
 		expectedProcess.setVersion("1");
 		expectedProcess.setImplementation(CreateEntities.createImplementation(new ArrayList<String>(Arrays.asList(
 				"<http://www.pericles-project.eu/ns/ecosystem#impIngestAWSW>", "1", "BPMN",
-				"https://c102-086.cloud.gwdg.de/api/cdmi/cdmi_objectid/nodefined",
+				"https://c102-086.cloud.gwdg.de/api/cdmi/NoaCollection/ERMRCommunications/IngestArtworkSoftware.bpmn2",
 				"sha256", "8c30fb10c930edc21ad11d0c6d1484430813cfd75375451bced7f3cbcd98c9e8"))));
 		expectedProcess.setInputs(new ArrayList<InputSlot>());
 		expectedProcess.getInputs().add(CreateEntities.createInputSlot(new ArrayList<String>(Arrays.asList(
@@ -257,7 +258,7 @@ public class ERMRCommunicationsTests {
 		expectedAggregatedProcess.setVersion("1");
 		expectedAggregatedProcess.setImplementation(CreateEntities.createImplementation(new ArrayList<String>(Arrays.asList(
 				"<http://www.pericles-project.eu/ns/ecosystem#impIngestAWSW>", "1", "BPMN",
-				"https://c102-086.cloud.gwdg.de/api/cdmi/cdmi_objectid/nodefined",
+				"https://c102-086.cloud.gwdg.de/api/cdmi/NoaCollection/ERMRCommunications/IngestArtworkSoftware.bpmn2",
 				"sha256", "8c30fb10c930edc21ad11d0c6d1484430813cfd75375451bced7f3cbcd98c9e8"))));
 		expectedAggregatedProcess.setInputs(new ArrayList<InputSlot>());
 		expectedAggregatedProcess.getInputs().add(CreateEntities.createInputSlot(new ArrayList<String>(Arrays.asList(

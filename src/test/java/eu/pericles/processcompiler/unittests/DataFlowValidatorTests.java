@@ -122,8 +122,8 @@ public class DataFlowValidatorTests {
 											+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>] [2 <http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>]}"
 											+ " {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}"));
 			processCompiler.validateDataFlow(repository, invalidProcess);
-		} catch (eu.pericles.processcompiler.exceptions.ValidationException e) {
-			assertEquals("The resource in data connection is not available", e.getMessage());
+		} catch (ValidationException e) {
+			assertEquals("Error when validating a data flow: The resource in data connection is not available", e.getMessage());
 		} catch (Exception e) {
 			fail("invalidDataFlowWithNoAvailableResource(): " + e.getMessage());
 		}
@@ -146,7 +146,7 @@ public class DataFlowValidatorTests {
 											+ " {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}"));
 			processCompiler.validateDataFlow(repository, invalidProcess);
 		} catch (ValidationException e) {
-			assertEquals("The resource in data connection doesn't exist", e.getMessage());
+			assertEquals("Error when validating a data flow: The resource in data connection doesn't exist", e.getMessage());
 		} catch (Exception e) {
 			fail("invalidDataFlowWithNoExistSlot(): " + e.getMessage());
 		}
@@ -169,7 +169,7 @@ public class DataFlowValidatorTests {
 											+ " {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}"));
 			processCompiler.validateDataFlow(repository, invalidProcess);
 		} catch (ValidationException e) {
-			assertEquals("The slot in data connection doesn't exist", e.getMessage());
+			assertEquals("Error when validating a data flow: The slot in data connection doesn't exist", e.getMessage());
 		} catch (Exception e) {
 			fail("invalidDataFlowWithNoExistSlot(): " + e.getMessage());
 		}
@@ -192,7 +192,7 @@ public class DataFlowValidatorTests {
 											+ " {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}"));
 			processCompiler.validateDataFlow(repository, invalidProcess);
 		} catch (ValidationException e) {
-			assertEquals("The data type in data connection is not compatible", e.getMessage());
+			assertEquals("Error when validating a data flow: The data type in data connection is not compatible", e.getMessage());
 		} catch (Exception e) {
 			fail("invalidDataFlowWithNoCompatibleDataType(): " + e.getMessage());
 		}

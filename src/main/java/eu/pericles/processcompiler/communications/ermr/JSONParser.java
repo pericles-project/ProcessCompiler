@@ -143,8 +143,13 @@ public class JSONParser {
 		return uriList;
 	}
 
+	// TODO Manage errors and empty responses as corresponded 
 	public static String parseGetURIResponse(Response response) {
-		return getValues(response).getJsonArray(0).getString(0).replace("\"", "");
+		JsonArray array = getValues(response);
+		if (array.isEmpty())
+			return null;
+		else
+			return array.getJsonArray(0).getString(0).replace("\"", "");
 	}
 
 	// -------- PRIVATE FUNCTIONS -------//

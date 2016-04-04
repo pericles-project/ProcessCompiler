@@ -87,8 +87,9 @@ public class ProcessCompiler {
 	 */
 	public List<DataConnection> validateDataFlow(String repository, AggregatedProcess aggregatedProcess) throws ValidationException, ERMRClientException {
 		ValidationResult validationResult = new DataFlowValidator(ermrCommunications, repository, aggregatedProcess).validate();
-		if (validationResult.isValid() == false)
+		if (validationResult.isValid() == false) {
 			throw new ValidationException(validationResult.getMessage(), validationResult.getException());
+		}
 		return aggregatedProcess.getSequence().getDataFlow();
 	}
 

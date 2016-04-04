@@ -12,7 +12,7 @@ public class PCException extends Exception {
 	private static final long serialVersionUID = 6072502108793503850L;
 
 	public PCException(String message, Exception e) {
-		super(message + e.getMessage());
+		super(message);
 	}
 
 }
