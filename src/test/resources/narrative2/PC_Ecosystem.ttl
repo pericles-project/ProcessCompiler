@@ -1,0 +1,226 @@
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dem:  <http://www.pericles-project.eu/ns/ecosystem#> .
+@prefix dva:  <http://www.pericles-project.eu/ns/dva#> .
+@prefix nar2: <http://www.pericles-project.eu/ns/nar2#> .
+
+############ AGGREGATED PROCESSES ###############
+
+#### Get All Metadata ####
+nar2:agpGetAllMD a dem:AggregatedProcess ;
+  dem:name "AggregatedProcess Get All Metadata" ;
+  dem:description "Aggregated process that extract metadata from video artwork files and combine it with additional metadata (from TMS records)" ;
+  dem:version "1" ;
+  dem:hasInputSlot nar2:isGetAllMD_DVA, nar2:isGetAllMD_Opt, nar2:isGetAllMD_ID ;
+  dem:hasOutputSlot nar2:osGetAllMD_URI ;
+  dem:hasSequence nar2:seqGetAllMD ;
+  dem:hasImplementation nar2:impGetAllMD .
+
+# Input & Output Slots
+nar2:isGetAllMD_DVA a dem:InputSlot ;
+  dem:name "InputSlot Digital Video Artwork" ;
+  dem:description "Input slot of the aggregated process Get All Metadata corresponding to the digital video artwork" ;
+  dem:version "1" ;
+  dem:type dva:DigitalVideoArtwork ;
+  dem:isOptional "false" .
+  
+ nar2:isGetAllMD_ID a dem:InputSlot ;
+  dem:name "InputSlot Identifier" ;
+  dem:description "Input slot of the aggregated process Get All Metadata corresponding to the metadata identifier at TMS" ;
+  dem:version "1" ;
+  dem:type dva:ID ;
+  dem:isOptional "false" .
+  
+nar2:isGetAllMD_Opt a dem:InputSlot ;
+  dem:name "InputSlot Options" ;
+  dem:description "Input slot of the aggregated process Get All Metadata corresponding to the extraction options" ;
+  dem:version "1" ;
+  dem:type xsd:string ;
+  dem:isOptional "false" .
+  
+nar2:osGetAllMD_URI a dem:OutputSlot ;
+  dem:name "OutputSlot Location" ;
+  dem:description "Output slot of the aggregated process Get All Metadata corresponding to the location where the metadata is stored" ;
+  dem:version "1" ;
+  dem:type dva:URI .
+    
+# Sequence
+nar2:seqGetAllMD a dem:Sequence ;
+  dem:processFlow  "<http://www.pericles-project.eu/ns/nar2#atpExtractMD> <http://www.pericles-project.eu/ns/nar2#atpGetMD> <http://www.pericles-project.eu/ns/nar2#atpUpdateMD> <http://www.pericles-project.eu/ns/nar2#atpStoreMD>" ;
+  dem:dataFlow "{[<http://www.pericles-project.eu/ns/nar2#isExtractMD_DVA> <http://www.pericles-project.eu/ns/nar2#isGetAllMD_DVA>] [<http://www.pericles-project.eu/ns/nar2#isExtractMD_Opt> <http://www.pericles-project.eu/ns/nar2#isGetAllMD_Opt>]} {[<http://www.pericles-project.eu/ns/nar2#isGetMD_ID> <http://www.pericles-project.eu/ns/nar2#isGetAllMD_ID>]} {[<http://www.pericles-project.eu/ns/nar2#isUpdateMD_oldMD> <http://www.pericles-project.eu/ns/nar2#osExtractMD_MD>] [<http://www.pericles-project.eu/ns/nar2#isUpdateMD_newMD> <http://www.pericles-project.eu/ns/nar2#osGetMD_MD>]} {[<http://www.pericles-project.eu/ns/nar2#isStoreMD_MD> <http://www.pericles-project.eu/ns/nar2#osUpdateMD_MD>] [<http://www.pericles-project.eu/ns/nar2#osGetAllMD_URI> <http://www.pericles-project.eu/ns/nar2#osStoreMD_URI>]}" .
+
+# Implementation
+nar2:impGetAllMD a dem:Implementation ;
+  dem:version "1" ;
+  dem:type "" ;
+  dem:location "" ;
+  dem:hasFixity nar2:fixGetAllMD .
+
+nar2:fixGetAllMD a dem:Fixity ;  
+  dem:checksum "" ;
+  dem:algorithm "" .
+####
+
+############ ATOMIC PROCESSES ###############
+
+#### Extract Metadata ####
+nar2:atpExtractMD a dem:AtomicProcess ;
+  dem:name "Extract Metadata" ;
+  dem:description "Atomic process that extract the metadata of a digital video artwork" ;
+  dem:version "1" ;
+  dem:hasInputSlot nar2:isExtractMD_DVA, nar2:isExtractMD_Opt ;
+  dem:hasOutputSlot nar2:osExtractMD_MD ;
+  dem:hasImplementation nar2:impExtractMD .
+
+# Input & Output Slots
+nar2:isExtractMD_DVA a dem:InputSlot ;
+  dem:name "InputSlot Digital Video Artwork" ;
+  dem:description "Input slot of the atomic process Extract Metadata corresponding to the digital video artwork from which metadata is extracted" ;
+  dem:version "1" ;
+  dem:type dva:DigitalVideoArtwork ;
+  dem:isOptional "false" .
+  
+nar2:isExtractMD_Opt a dem:InputSlot ;
+  dem:name "InputSlot Options" ;
+  dem:description "Input slot of the atomic process Extract Metadata corresponding to the extraction options" ;
+  dem:version "1" ;
+  dem:type xsd:string ;
+  dem:isOptional "false" .
+  
+nar2:osExtractMD_MD a dem:OutputSlot ;
+  dem:name "OutputSlot Metadata" ;
+  dem:description "Output slot of the atomic process Extract Metadata corresponding to the extracted metadata" ;
+  dem:version "1" ;
+  dem:type dva:Metadata .
+
+# Implementation
+nar2:impExtractMD a dem:Implementation ;
+  dem:version "1" ;
+  dem:type "BPMN" ;
+  dem:location "" ;
+  dem:hasFixity nar2:fixExtractMD .
+
+# Fixity
+nar2:fixExtractMD a dem:Fixity ;
+  dem:checksum "" ;
+  dem:algorithm "sha256" .
+####  
+  
+#### Get Metadata ####
+nar2:atpGetMD a dem:AtomicProcess ;
+  dem:name "Get Metadata" ;
+  dem:description "Atomic process that get a metadata record from TMS" ;
+  dem:version "1" ;
+  dem:hasInputSlot nar2:isGetMD_ID ;
+  dem:hasOutputSlot nar2:osGetMD_MD ;
+  dem:hasImplementation nar2:impGetMD .
+
+# Input & Output Slots
+nar2:isGetMD_ID a dem:InputSlot ;
+  dem:name "InputSlot Identifier" ;
+  dem:description "Input slot of the atomic process Get Metadata corresponding to the Identifier of the metadata record at TMS" ;
+  dem:version "1" ;
+  dem:type dva:ID ;
+  dem:isOptional "false" .
+  
+nar2:osGetMD_MD a dem:OutputSlot ;
+  dem:name "OutputSlot Metadata" ;
+  dem:description "Output slot of the atomic process Get Metadata corresponding to the metadata retrieved from TMS" ;
+  dem:version "1" ;
+  dem:type dva:Metadata .
+
+# Implementation
+nar2:impGetMD a dem:Implementation ;
+  dem:version "1" ;
+  dem:type "BPMN" ;
+  dem:location "" ;
+  dem:hasFixity nar2:fixGetMD .
+
+# Fixity
+nar2:fixGetMD a dem:Fixity ;
+  dem:checksum "" ;
+  dem:algorithm "sha256" .
+####  
+  
+#### Update Metadata ####
+nar2:atpUpdateMD a dem:AtomicProcess ;
+  dem:name "Update Metadata" ;
+  dem:description "Atomic process that Update a metadata entity with new metadata info" ;
+  dem:version "1" ;
+  dem:hasInputSlot nar2:isUpdateMD_oldMD, nar2:isUpdateMD_newMD ;
+  dem:hasOutputSlot nar2:osUpdateMD_updatedMD ;
+  dem:hasImplementation nar2:impUpdateMD .
+
+# Input & Output Slots
+nar2:isUpdateMD_oldMD a dem:InputSlot ;
+  dem:name "InputSlot old Metadata" ;
+  dem:description "Input slot of the atomic process Update Metadata corresponding to the old metadata" ;
+  dem:version "1" ;
+  dem:type dva:Metadata ;
+  dem:isOptional "false" .
+  
+nar2:isUpdateMD_newMD a dem:InputSlot ;
+  dem:name "InputSlot new Metadata" ;
+  dem:description "Input slot of the atomic process Update Metadata corresponding to the new metadata" ;
+  dem:version "1" ;
+  dem:type dva:Metadata ;
+  dem:isOptional "false" .
+  
+nar2:osUpdateMD_updatedMD a dem:OutputSlot ;
+  dem:name "OutputSlot Metadata" ;
+  dem:description "Output slot of the atomic process Update Metadata corresponding to the updated metadata" ;
+  dem:version "1" ;
+  dem:type dva:Metadata .
+
+# Implementation
+nar2:impUpdateMD a dem:Implementation ;
+  dem:version "1" ;
+  dem:type "BPMN" ;
+  dem:location "" ;
+  dem:hasFixity nar2:fixUpdateMD .
+
+# Fixity
+nar2:fixUpdateMD a dem:Fixity ;
+  dem:checksum "" ;
+  dem:algorithm "sha256" .
+####  
+  
+#### Store Metadata ####
+nar2:atpStoreMD a dem:AtomicProcess ;
+  dem:name "Store Metadata" ;
+  dem:description "Atomic process that store the metadata of a digital video artwork" ;
+  dem:version "1" ;
+  dem:hasInputSlot nar2:isStoreMD_MD ;
+  dem:hasOutputSlot nar2:osStoreMD_URI ;
+  dem:hasImplementation nar2:impStoreMD .
+
+# Input & Output Slots
+nar2:isStoreMD_MD a dem:InputSlot ;
+  dem:name "InputSlot Metadata" ;
+  dem:description "Input slot of the atomic process Store Metadata corresponding to the metadata to be stored" ;
+  dem:version "1" ;
+  dem:type dva:Metadata ;
+  dem:isOptional "false" .
+  
+nar2:osStoreMD_URI a dem:OutputSlot ;
+  dem:name "OutputSlot Location" ;
+  dem:description "Output slot of the atomic process Store Metadata corresponding to the location of the stored metadata" ;
+  dem:version "1" ;
+  dem:type dva:URI .
+
+# Implementation
+nar2:impStoreMD a dem:Implementation ;
+  dem:version "1" ;
+  dem:type "BPMN" ;
+  dem:location "" ;
+  dem:hasFixity nar2:fixStoreMD .
+
+# Fixity
+nar2:fixStoreMD a dem:Fixity ;
+  dem:checksum "" ;
+  dem:algorithm "sha256" .
+####  
+
+  

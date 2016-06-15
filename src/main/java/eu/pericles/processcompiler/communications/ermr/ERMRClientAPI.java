@@ -16,9 +16,9 @@ public class ERMRClientAPI {
 	Client client;
 	private String user = "pericles1";
 	private String password = "PASSWORD";
-	private String tripleStore = "https://141.5.102.86/api/triple";
-	private String objectStore = "https://141.5.102.86/api/cdmi";
-	private String findApi = "https://141.5.102.86/api/find";
+	private String tripleStore = "https://141.5.100.67/api/triple";//"https://141.5.102.86/api/triple";
+	private String objectStore = "https://141.5.100.67/api/cdmi";//"https://141.5.102.86/api/cdmi";
+	private String findApi = "https://141.5.100.67/api/find";//"https://141.5.102.86/api/find";
 	
 	public ERMRClientAPI() throws ERMRClientException {
 		client = createClient();

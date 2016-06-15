@@ -1,0 +1,301 @@
+<bpmn2:definitions 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+		xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+		xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+		xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+		xmlns:tns="http://www.jboss.org/drools" 
+		xmlns="http://www.jboss.org/drools" 
+		xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" 
+		id="_e3dbc09e-08f8-4608-9099-30933f8f6f12" 
+		expressionLanguage="http://www.mvel.org/2.0" 
+		targetNamespace="http://www.jboss.org/drools" 
+		typeLanguage="http://www.java.com/javaTypes">
+		
+  <bpmn2:itemDefinition id="_05ab144c-57b4-4531-b585-ad4f5c3cac12" structureRef="eu.pericles.entities.digitalvideoartwork" />
+  <bpmn2:itemDefinition id="_e7210496-a72c-4af7-a40a-903e6af8193f" structureRef="eu.pericles.entities.options" />
+  <bpmn2:itemDefinition id="_4c2e8035-8219-4c0d-bf23-c60cb6acb3b1" structureRef="eu.pericles.entities.metadata" />
+  <bpmn2:itemDefinition id="_02cd7730-e1c0-4ac5-b5d8-d0aa86140628" structureRef="eu.pericles.entities.id" />
+  <bpmn2:itemDefinition id="_1616b191-0d49-42c8-95ed-abdf84214cdf" structureRef="eu.pericles.entities.metadata" />
+  <bpmn2:itemDefinition id="_94238fea-c0fb-4f46-9bac-72981754543e" structureRef="eu.pericles.entities.metadata" />
+  <bpmn2:itemDefinition id="_68b03e62-a3ba-4ab8-a299-594c6234712c" structureRef="eu.pericles.entities.metadata" />
+  <bpmn2:itemDefinition id="_0701aa06-c53b-4dbe-9461-4ea8879a817b" structureRef="eu.pericles.entities.uri" />
+  
+  <!--    process    -->
+  
+  <bpmn2:process id="_11fac51c-12ab-4440-b827-762ac9ed56f7" tns:version="1" tns:packageName="eu.pericles.processcompiler.unittests.core.narrative2" tns:adHoc="false" name="ExtractMD" isExecutable="true" processType="Private">
+    
+    <bpmn2:dataObject id="_878b9775-f891-40fe-aab8-865b5f589f57" name="Digital Video Artwork" itemSubjectRef="_05ab144c-57b4-4531-b585-ad4f5c3cac12" />
+    <bpmn2:dataObject id="_9df1aa51-aa68-4a0a-b8bc-e03e1d1e557c" name="Options" itemSubjectRef="_e7210496-a72c-4af7-a40a-903e6af8193f" />
+    <bpmn2:dataObject id="_b35aa48e-9179-4545-9f2c-be8f1733615c" name="Metadata" itemSubjectRef="_4c2e8035-8219-4c0d-bf23-c60cb6acb3b1" />
+    <bpmn2:dataObject id="_ed937749-50f0-4928-969e-b16715e7f1e6" name="ID" itemSubjectRef="_02cd7730-e1c0-4ac5-b5d8-d0aa86140628" />   
+    <bpmn2:dataObject id="_42d43076-7537-40b1-af62-ecfef20976a7" name="Metadata" itemSubjectRef="_1616b191-0d49-42c8-95ed-abdf84214cdf" />    
+    <bpmn2:dataObject id="_95adc65e-d335-403a-bccd-192a56f8fda2" name="Updated MD" itemSubjectRef="_94238fea-c0fb-4f46-9bac-72981754543e" />
+    <bpmn2:dataObject id="_119f14b5-122d-42ba-afce-32d5a29e53dd" name="URI" itemSubjectRef="_0701aa06-c53b-4dbe-9461-4ea8879a817b" />
+    
+    <bpmn2:startEvent id="_ac58aadf-00c5-4f5f-b211-70274a6c4667" />    
+    
+    <bpmn2:scriptTask id="_d9fed70f-6b2e-4f12-a7b9-bd921d7ed178" name="Extract MD" scriptFormat="http://www.java.com/java">
+      <bpmn2:ioSpecification id="_66a2ffb0-9a7d-408b-b2d2-2d5d31c01e28">
+    	<bpmn2:dataInput id="_df8e4e6a-fd85-4d4a-a840-88bf7ecd6b97" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isGetAllMD_DVA&gt;" itemSubjectRef="_05ab144c-57b4-4531-b585-ad4f5c3cac12"/>
+    	<bpmn2:dataInput id="_6b6159ee-cc8d-416b-8129-8030822d318a" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isGetAllMD_Opt&gt;" itemSubjectRef="_e7210496-a72c-4af7-a40a-903e6af8193f"/>
+        <bpmn2:dataOutput id="_0a13ffb2-1d31-4b62-aa4a-f5ec9280668a" name="&lt;http://www.pericles-project.eu/ns/ecosystem#osExtractMD_MD&gt;" itemSubjectRef="_4c2e8035-8219-4c0d-bf23-c60cb6acb3b1"/>
+        <bpmn2:inputSet id="_f2ebd83b-20e2-4dba-bc66-430471b46551">
+          <bpmn2:dataInputRefs>_df8e4e6a-fd85-4d4a-a840-88bf7ecd6b97</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_6b6159ee-cc8d-416b-8129-8030822d318a</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_b9ee6786-3d6f-4acc-b0cc-7fa6c03c122c">
+          <bpmn2:dataOutputRefs>_0a13ffb2-1d31-4b62-aa4a-f5ec9280668a</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_781adad7-9dde-4a47-931b-deba50e53490">
+        <bpmn2:sourceRef>_878b9775-f891-40fe-aab8-865b5f589f57</bpmn2:sourceRef>
+        <bpmn2:targetRef>_df8e4e6a-fd85-4d4a-a840-88bf7ecd6b97</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_f6f97c37-1027-493b-8e32-7827421aec1e">
+        <bpmn2:sourceRef>_9df1aa51-aa68-4a0a-b8bc-e03e1d1e557c</bpmn2:sourceRef>
+        <bpmn2:targetRef>_6b6159ee-cc8d-416b-8129-8030822d318a</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_18b1b80a-b33c-43b8-b799-e39e9a02f1a1">
+        <bpmn2:sourceRef>_0a13ffb2-1d31-4b62-aa4a-f5ec9280668a</bpmn2:sourceRef>
+        <bpmn2:targetRef>_b35aa48e-9179-4545-9f2c-be8f1733615c</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:script>System.out.println("Executing Extract MD Process");</bpmn2:script>
+    </bpmn2:scriptTask>
+    
+    <bpmn2:scriptTask id="_f4affd06-227b-44f7-b163-bb55ed38bb73" name="Get MD" scriptFormat="http://www.java.com/java">
+      <bpmn2:ioSpecification id="_f17bd017-429f-4689-9c92-1a8fc1369082">
+    	<bpmn2:dataInput id="_733474e5-9c3a-4b94-beba-816c807b8133" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isGetAllMD_ID&gt;" itemSubjectRef="_02cd7730-e1c0-4ac5-b5d8-d0aa86140628"/>
+        <bpmn2:dataOutput id="_2d0bfb8b-6ab0-40c3-95bf-08b76e68a459" name="&lt;http://www.pericles-project.eu/ns/ecosystem#osGetMD_MD&gt;" itemSubjectRef="_1616b191-0d49-42c8-95ed-abdf84214cdf"/>
+        <bpmn2:inputSet id="_78ef3e78-28da-418f-8c1a-5675e981ecfe">
+          <bpmn2:dataInputRefs>_733474e5-9c3a-4b94-beba-816c807b8133</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_b9633937-10a8-47c4-9043-2da5ead8b2d0">
+          <bpmn2:dataOutputRefs>_2d0bfb8b-6ab0-40c3-95bf-08b76e68a459</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_4af7f14b-4e8a-4080-ac60-9625546d38d8">
+        <bpmn2:sourceRef>_ed937749-50f0-4928-969e-b16715e7f1e6</bpmn2:sourceRef>
+        <bpmn2:targetRef>_733474e5-9c3a-4b94-beba-816c807b8133</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_3551c57c-55aa-4e6a-9d58-b313997d16bf">
+        <bpmn2:sourceRef>_2d0bfb8b-6ab0-40c3-95bf-08b76e68a459</bpmn2:sourceRef>
+        <bpmn2:targetRef>_42d43076-7537-40b1-af62-ecfef20976a7</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:script>System.out.println("Executing Get MD Process");</bpmn2:script>
+    </bpmn2:scriptTask>
+    
+    <bpmn2:scriptTask id="_c3bfda60-e5bd-46f0-b20a-5a3dd2f8a466" name="Update MD" scriptFormat="http://www.java.com/java">
+      <bpmn2:ioSpecification id="_f489b807-0789-406f-9cff-56e869572c95">
+    	<bpmn2:dataInput id="_893ec15f-9ac0-4de1-ac81-3ab846065baa" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isUpdateMD_oldMD&gt;" itemSubjectRef="_94238fea-c0fb-4f46-9bac-72981754543e"/>
+    	<bpmn2:dataInput id="_8753b5d0-9cc5-4aa7-b365-79848015eb8e" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isUpdateMD_newMD&gt;" itemSubjectRef="_94238fea-c0fb-4f46-9bac-72981754543e"/>
+        <bpmn2:dataOutput id="_532bdfee-261c-4091-b7ab-b69303a9b81b" name="&lt;http://www.pericles-project.eu/ns/ecosystem#osUpdateMD_updatedMD&gt;" itemSubjectRef="_94238fea-c0fb-4f46-9bac-72981754543e"/>
+        <bpmn2:inputSet id="_7ebb9a97-f5fb-457a-9292-b8e6fd46ee40">
+          <bpmn2:dataInputRefs>_893ec15f-9ac0-4de1-ac81-3ab846065baa</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_8753b5d0-9cc5-4aa7-b365-79848015eb8e</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_e0b00954-4b6a-4a36-bbef-10ba35be012d">
+          <bpmn2:dataOutputRefs>_532bdfee-261c-4091-b7ab-b69303a9b81b</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_28b3992b-61ea-4312-8955-6a6695373052">
+        <bpmn2:sourceRef>_b35aa48e-9179-4545-9f2c-be8f1733615c</bpmn2:sourceRef>
+        <bpmn2:targetRef>_893ec15f-9ac0-4de1-ac81-3ab846065baa</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_40e672c4-edc2-4362-a509-47587cdc673a">
+        <bpmn2:sourceRef>_42d43076-7537-40b1-af62-ecfef20976a7</bpmn2:sourceRef>
+        <bpmn2:targetRef>_8753b5d0-9cc5-4aa7-b365-79848015eb8e</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_c20865f0-f190-4405-bf7d-7da2bd76a477">
+        <bpmn2:sourceRef>_532bdfee-261c-4091-b7ab-b69303a9b81b</bpmn2:sourceRef>
+        <bpmn2:targetRef>_95adc65e-d335-403a-bccd-192a56f8fda2</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:script>System.out.println("Executing Update MD Process");</bpmn2:script>
+    </bpmn2:scriptTask>
+    
+    <bpmn2:scriptTask id="_19819d6f-675d-47f9-947e-14a8efe90a42" name="Store MD" scriptFormat="http://www.java.com/java">
+      <bpmn2:ioSpecification id="_ba2bb1b5-9018-4a95-9871-89a8de6a759d">
+    	<bpmn2:dataInput id="_14ebde77-c072-4729-a9b8-35807a73e29d" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isStoreMD_MD&gt;" itemSubjectRef="_68b03e62-a3ba-4ab8-a299-594c6234712c"/>
+        <bpmn2:dataOutput id="_52fcab6b-5ff3-47d3-a238-bc8ae393d452" name="&lt;http://www.pericles-project.eu/ns/ecosystem#osGetAllMD_URI&gt;" itemSubjectRef="_0701aa06-c53b-4dbe-9461-4ea8879a817b"/>
+        <bpmn2:inputSet id="_83464d32-8384-4830-8826-b0fd66fa47ad">
+          <bpmn2:dataInputRefs>_14ebde77-c072-4729-a9b8-35807a73e29d</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_7a19d956-36a9-4c27-90c3-76e9faafee78">
+          <bpmn2:dataOutputRefs>_52fcab6b-5ff3-47d3-a238-bc8ae393d452</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_43864e73-60fc-48c9-8ac6-58366e8c3810">
+        <bpmn2:sourceRef>_95adc65e-d335-403a-bccd-192a56f8fda2</bpmn2:sourceRef>
+        <bpmn2:targetRef>_14ebde77-c072-4729-a9b8-35807a73e29d</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_95807627-d7fa-4b92-bfd0-85d1ca23f77f">
+        <bpmn2:sourceRef>_52fcab6b-5ff3-47d3-a238-bc8ae393d452</bpmn2:sourceRef>
+        <bpmn2:targetRef>_119f14b5-122d-42ba-afce-32d5a29e53dd</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:script>System.out.println("Executing Store MD Process);</bpmn2:script>
+    </bpmn2:scriptTask>
+    
+    <bpmn2:endEvent id="_e7827641-6940-4e23-9ebd-41cf1471d236" />
+    
+    <bpmn2:sequenceFlow id="_c1c82b7b-24a7-4caf-8e57-d1d0fce0e633" sourceRef="_ac58aadf-00c5-4f5f-b211-70274a6c4667" targetRef="_d9fed70f-6b2e-4f12-a7b9-bd921d7ed178"/>
+    <bpmn2:sequenceFlow id="_1d273d77-ac03-4889-b2c2-d832b6914690" sourceRef="_d9fed70f-6b2e-4f12-a7b9-bd921d7ed178" targetRef="_f4affd06-227b-44f7-b163-bb55ed38bb73"/>
+    <bpmn2:sequenceFlow id="_9e0abb33-569c-4989-aada-28d317e8b085" sourceRef="_f4affd06-227b-44f7-b163-bb55ed38bb73" targetRef="_c3bfda60-e5bd-46f0-b20a-5a3dd2f8a466"/>
+    <bpmn2:sequenceFlow id="_aa4c82c4-8b6e-4b13-909f-2e7c6f631c54" sourceRef="_c3bfda60-e5bd-46f0-b20a-5a3dd2f8a466" targetRef="_19819d6f-675d-47f9-947e-14a8efe90a42"/>
+    <bpmn2:sequenceFlow id="_494988c7-e9d6-4496-adc6-d2487d48f39a" sourceRef="_19819d6f-675d-47f9-947e-14a8efe90a42" targetRef="_e7827641-6940-4e23-9ebd-41cf1471d236"/>
+     
+  </bpmn2:process>
+  
+  <!--    diagram    -->
+  
+  <bpmndi:BPMNDiagram id="_8e761027-748a-4258-a5af-d80718c6b400">
+    <bpmndi:BPMNPlane id="_ed518245-6357-4003-be46-48723c9f1be4" bpmnElement="_11fac51c-12ab-4440-b827-762ac9ed56f7">
+    
+    <!-- process elements -->
+      <bpmndi:BPMNShape id="_f4f3c466-c6a2-46dd-aba1-707114937706" bpmnElement="_ac58aadf-00c5-4f5f-b211-70274a6c4667">
+        <dc:Bounds height="36.0" width="36.0" x="203.0" y="270.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_86a92f92-0509-4c7e-8e31-d138c02e0dae" bpmnElement="_d9fed70f-6b2e-4f12-a7b9-bd921d7ed178">
+        <dc:Bounds height="50.0" width="110.0" x="343.0" y="263.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_ad8d96b0-93ca-4f69-9c44-5d3643d92256" bpmnElement="_f4affd06-227b-44f7-b163-bb55ed38bb73">
+        <dc:Bounds height="50.0" width="110.0" x="343.0" y="263.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_fa3e1fbd-1fb5-4c51-a73a-f2837ae6e2ec" bpmnElement="_c3bfda60-e5bd-46f0-b20a-5a3dd2f8a466">
+        <dc:Bounds height="50.0" width="110.0" x="343.0" y="263.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_8d6b0dd7-0101-4477-91b5-254c832758c8" bpmnElement="_19819d6f-675d-47f9-947e-14a8efe90a42">
+        <dc:Bounds height="50.0" width="110.0" x="343.0" y="263.0"/>
+      </bpmndi:BPMNShape>      
+      <bpmndi:BPMNShape id="_b428edc6-098d-45d3-8c17-62731612ee55" bpmnElement="_e7827641-6940-4e23-9ebd-41cf1471d236">
+        <dc:Bounds height="36.0" width="36.0" x="570.0" y="270.0"/>
+      </bpmndi:BPMNShape>
+      
+    <!-- data elements -->  
+      <bpmndi:BPMNShape id="_3378ef07-a69d-492d-9173-e08dc19b30a2" bpmnElement="_878b9775-f891-40fe-aab8-865b5f589f57">
+        <dc:Bounds height="65.0" width="36.0" x="281.0" y="90.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_27632a9f-1d62-4df2-a50a-e4a7c287e5ce" bpmnElement="_9df1aa51-aa68-4a0a-b8bc-e03e1d1e557c">
+        <dc:Bounds height="65.0" width="36.0" x="380.0" y="90.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_83ee4dbf-d8cc-43ab-9bb7-1036fecdc27c" bpmnElement="_b35aa48e-9179-4545-9f2c-be8f1733615c">
+        <dc:Bounds height="65.0" width="36.0" x="380.0" y="380.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_1b360a58-5fe9-4b7a-bfc2-fd84cf800fe8" bpmnElement="_ed937749-50f0-4928-969e-b16715e7f1e6">
+        <dc:Bounds height="65.0" width="36.0" x="281.0" y="90.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_0af3c3b6-d376-4452-8fd3-ad1c81efe685" bpmnElement="_42d43076-7537-40b1-af62-ecfef20976a7">
+        <dc:Bounds height="65.0" width="36.0" x="380.0" y="380.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_09f23865-ccef-4bec-82c1-ff55a9379a87" bpmnElement="_95adc65e-d335-403a-bccd-192a56f8fda2">
+        <dc:Bounds height="65.0" width="36.0" x="380.0" y="380.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_ec6d9b28-66c5-4abb-871f-0b460a1f87b8" bpmnElement="_119f14b5-122d-42ba-afce-32d5a29e53dd">
+        <dc:Bounds height="65.0" width="36.0" x="380.0" y="380.0"/>
+      </bpmndi:BPMNShape>
+      
+    <!-- process connections -->  
+      <bpmndi:BPMNEdge id="_dce41452-3015-4607-94b3-6f035704e86f" bpmnElement="_c1c82b7b-24a7-4caf-8e57-d1d0fce0e633" sourceElement="_f4f3c466-c6a2-46dd-aba1-707114937706" targetElement="_86a92f92-0509-4c7e-8e31-d138c02e0dae">
+        <di:waypoint xsi:type="dc:Point" x="239.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="285.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="285.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="343.0" y="288.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_39eb4f3f-5f25-4ccf-9d19-8d4dff703130" bpmnElement="_1d273d77-ac03-4889-b2c2-d832b6914690" sourceElement="_86a92f92-0509-4c7e-8e31-d138c02e0dae" targetElement="_ad8d96b0-93ca-4f69-9c44-5d3643d92256">
+        <di:waypoint xsi:type="dc:Point" x="239.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="285.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="285.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="343.0" y="288.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_0331b300-4614-41c5-a1cf-59e5d9a0b4a2" bpmnElement="_9e0abb33-569c-4989-aada-28d317e8b085" sourceElement="_ad8d96b0-93ca-4f69-9c44-5d3643d92256" targetElement="_fa3e1fbd-1fb5-4c51-a73a-f2837ae6e2ec">
+        <di:waypoint xsi:type="dc:Point" x="239.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="285.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="285.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="343.0" y="288.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_65f9001a-ef01-4d11-8368-6cda94066a18" bpmnElement="_aa4c82c4-8b6e-4b13-909f-2e7c6f631c54" sourceElement="_fa3e1fbd-1fb5-4c51-a73a-f2837ae6e2ec" targetElement="_8d6b0dd7-0101-4477-91b5-254c832758c8">
+        <di:waypoint xsi:type="dc:Point" x="239.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="285.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="285.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="343.0" y="288.0"/>
+      </bpmndi:BPMNEdge>      
+      <bpmndi:BPMNEdge id="_105c3d76-0ab2-4f5d-a0e6-18c233d3c1e1" bpmnElement="_494988c7-e9d6-4496-adc6-d2487d48f39a" sourceElement="_8d6b0dd7-0101-4477-91b5-254c832758c8" targetElement="_b428edc6-098d-45d3-8c17-62731612ee55">
+        <di:waypoint xsi:type="dc:Point" x="453.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="505.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="505.0" y="288.0"/>
+        <di:waypoint xsi:type="dc:Point" x="570.0" y="288.0"/>
+      </bpmndi:BPMNEdge>
+      
+    <!-- data connections -->  
+      <bpmndi:BPMNEdge id="_b2e97090-8fdc-4cb7-b134-fe9181f958b1" bpmnElement="_781adad7-9dde-4a47-931b-deba50e53490">
+        <di:waypoint xsi:type="dc:Point" x="299.0" y="155.0"/>
+        <di:waypoint xsi:type="dc:Point" x="299.0" y="183.0"/>
+        <di:waypoint xsi:type="dc:Point" x="342.0" y="183.0"/>
+        <di:waypoint xsi:type="dc:Point" x="342.0" y="219.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="219.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="263.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_0dfe1555-5406-49eb-b6b1-af0093047f4f" bpmnElement="_f6f97c37-1027-493b-8e32-7827421aec1e">
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="155.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="203.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="203.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="263.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_36ac19ed-1f88-494e-b1b0-3d7a14317d35" bpmnElement="_18b1b80a-b33c-43b8-b799-e39e9a02f1a1">
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="313.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="343.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="343.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="380.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_4fef9c24-80cd-4ea7-a49a-bb982ddb2358" bpmnElement="_4af7f14b-4e8a-4080-ac60-9625546d38d8">
+        <di:waypoint xsi:type="dc:Point" x="299.0" y="155.0"/>
+        <di:waypoint xsi:type="dc:Point" x="299.0" y="183.0"/>
+        <di:waypoint xsi:type="dc:Point" x="342.0" y="183.0"/>
+        <di:waypoint xsi:type="dc:Point" x="342.0" y="219.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="219.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="263.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_ed3d387f-51b4-4bc0-badf-7c229e8a1cdb" bpmnElement="_3551c57c-55aa-4e6a-9d58-b313997d16bf">
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="313.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="343.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="343.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="380.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_e15c33e7-49b4-4330-8832-3f604c69e57d" bpmnElement="_28b3992b-61ea-4312-8955-6a6695373052">
+        <di:waypoint xsi:type="dc:Point" x="299.0" y="155.0"/>
+        <di:waypoint xsi:type="dc:Point" x="299.0" y="183.0"/>
+        <di:waypoint xsi:type="dc:Point" x="342.0" y="183.0"/>
+        <di:waypoint xsi:type="dc:Point" x="342.0" y="219.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="219.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="263.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_af467df0-c43d-48bc-afc3-1d2341c2bb2e" bpmnElement="_40e672c4-edc2-4362-a509-47587cdc673a">
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="155.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="203.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="203.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="263.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_9f21c52c-bff5-4f97-bdb9-aad8871755cd" bpmnElement="_c20865f0-f190-4405-bf7d-7da2bd76a477">
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="313.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="343.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="343.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="380.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_d8f53bae-082c-46a4-914e-ad207170789a" bpmnElement="_43864e73-60fc-48c9-8ac6-58366e8c3810">
+        <di:waypoint xsi:type="dc:Point" x="299.0" y="155.0"/>
+        <di:waypoint xsi:type="dc:Point" x="299.0" y="183.0"/>
+        <di:waypoint xsi:type="dc:Point" x="342.0" y="183.0"/>
+        <di:waypoint xsi:type="dc:Point" x="342.0" y="219.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="219.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="263.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_b9df19c1-ad3d-4291-ab46-3839ce4fabf8" bpmnElement="_95807627-d7fa-4b92-bfd0-85d1ca23f77f">
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="313.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="343.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="343.0"/>
+        <di:waypoint xsi:type="dc:Point" x="398.0" y="380.0"/>
+      </bpmndi:BPMNEdge>
+      
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  
+</bpmn2:definitions>

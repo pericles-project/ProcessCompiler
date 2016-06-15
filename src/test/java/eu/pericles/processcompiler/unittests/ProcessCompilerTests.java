@@ -24,6 +24,11 @@ import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.testutils.Utils;
 
+/**
+ * BPMN Files are stored in the Object Store under the Folders: 
+ * 		NoaCollection/BasicProcessAggregation/
+ * 		NoaCollection/ProcessAggregationWithData/
+ */
 @RunWith(Parameterized.class)
 public class ProcessCompilerTests {
 
