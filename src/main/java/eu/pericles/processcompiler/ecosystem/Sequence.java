@@ -45,10 +45,19 @@ public class Sequence {
 	 * DataFlowNode = "SequenceStep ProcessSlot"
 	 */
 
+	private String id;
 	private List<String> processFlow;
 	private List<DataConnection> dataFlow;
 
 	// --------------- GETTERS AND SETTERS ----------------//
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public List<String> getProcessFlow() {
 		return processFlow;
@@ -114,6 +123,7 @@ public class Sequence {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((dataFlow == null) ? 0 : dataFlow.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((processFlow == null) ? 0 : processFlow.hashCode());
 		return result;
 	}
@@ -131,6 +141,11 @@ public class Sequence {
 			if (other.dataFlow != null)
 				return false;
 		} else if (!dataFlow.equals(other.dataFlow))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
 			return false;
 		if (processFlow == null) {
 			if (other.processFlow != null)

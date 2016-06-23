@@ -105,11 +105,11 @@ public class DataFlowValidator implements Validator {
 
 	private void validateDataConnection(DataConnection dataConnection) throws Exception {
 		if (existSlotNodeInDataConnection(dataConnection) == false)
-			throw new Exception("The slot in data connection doesn't exist");
+			throw new Exception("The slot " + dataConnection.getSlotNode().getSequenceStep() + " " + dataConnection.getSlotNode().getProcessSlot() + " in data connection doesn't exist");
 		if (existResourceNodeInDataConnection(dataConnection) == false)
-			throw new Exception("The resource in data connection doesn't exist");
+			throw new Exception("The resource " + dataConnection.getResourceNode().getSequenceStep() + " " + dataConnection.getResourceNode().getProcessSlot() + " in data connection doesn't exist");
 		if (existResourceInDataConnection(dataConnection) == false)
-			throw new Exception("The resource in data connection is not available");
+			throw new Exception("The resource " + dataConnection.getResourceNode().getSequenceStep() + " " + dataConnection.getResourceNode().getProcessSlot() + " in data connection is not available");
 		if (isDataTypeCompatibleInDataConnection(dataConnection) == false)
 			throw new Exception("The data type in data connection is not compatible");
 	}

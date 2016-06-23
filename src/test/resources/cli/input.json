@@ -1,0 +1,124 @@
+{	
+	"cmd": "compile",
+	"params": {
+		"config_data": {
+			"user": "pericles1",
+			"password": "PASSWORD",
+			"tripleStore": "https://141.5.100.67/api/triple",
+			"objectStore": "https://141.5.100.67/api/cdmi",
+			"findApi": "https://141.5.100.67/api/find"
+		},
+		"repository": "NoaCLITest",
+		"output": "src/test/resources/cli/output.bpmn2",
+		"aggregated_process": {
+			"id": "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>" ,
+			"name": "Ingest Artwork Software" , 
+			"description": "Aggregated process that ingest an artwork software by doing the following: check for viruses, extract the metadata and encapsulate the artwork together with it" ,
+			"version": "1.0" ,
+			"input_slots": [
+				{
+					"id": "<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>" ,
+					"name": "InputSlot Artwork Software" ,
+					"description": "Input slot corresponding to the Artwork Software entity for the aggregated process Ingest Artwork Software" ,
+					"type": "<http://www.pericles-project.eu/ns/ecosystem#ArtworkSoftware>" ,
+					"optional": false ,
+				} ,
+				{
+					"id": "<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>" ,
+					"name": "InputSlot Package Format" ,
+					"description": "Input slot corresponding to the Package Format entity for the aggregated process Ingest Artwork Software" ,
+					"type": "<http://www.pericles-project.eu/ns/ecosystem#PackageFormat>",
+					"optional": false
+				} 
+			] ,
+			"output_slots": [
+				{
+					"id": "<http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>" ,
+					"name": "Output Package" ,
+					"description": "Output slot corresponding to the Package entity created as the result of the aggregated process Ingest Artwork Software" ,
+					"type": "<http://www.pericles-project.eu/ns/ecosystem#Package>"
+				}
+			] ,
+			"sequence": {
+				"id": "<http://www.pericles-project.eu/ns/ecosystem#seqIngestAWSW>",
+				"process_flow": [
+					"<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck>" ,
+					"<http://www.pericles-project.eu/ns/ecosystem#atpExtractMD>" ,
+					"<http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>"				
+				] ,
+				"data_flow": [
+					{ 
+						"input": {
+							"step": "1" ,
+							"slot": "<http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM>"
+						} ,
+						"resource": {
+							"step": "0" ,
+							"slot": "<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>"
+						}
+					} ,
+					{ 
+						"input": {
+							"step": "2" ,
+							"slot": "<http://www.pericles-project.eu/ns/ecosystem#isExtractMDDM>"
+						} ,
+						"resource": {
+							"step": "0" ,
+							"slot": "<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>"
+						}
+					} ,
+					{ 
+						"input": {
+							"step": "3" ,
+							"slot": "<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>"
+						} ,
+						"resource": {
+							"step": "0" ,
+							"slot": "<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>"
+						}
+					} ,
+					{ 
+						"input": {
+							"step": "3" ,
+							"slot": "<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>"
+						} ,
+						"resource": {
+							"step": "0" ,
+							"slot": "<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>"
+						}
+					} ,
+					{ 
+						"input": {
+							"step": "3" ,
+							"slot": "<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>"
+						} ,
+						"resource": {
+							"step": "2" ,
+							"slot": "<http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>"
+						}
+					} ,
+					{ 
+						"input": {
+							"step": "0" ,
+							"slot": "<http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>"
+						} ,
+						"resource": {
+							"step": "3" ,
+							"slot": "<http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>"
+						}
+					} 
+				]
+			},	
+			"implementation": {
+				"id": "<http://www.pericles-project.eu/ns/ecosystem#impIngestAWSW>",
+				"version": "1",
+				"type": "bpmn",
+				"location": "http://141.5.100.67/api/cdmi/NoaCollection/ProcessAggregationWithData/IngestAWSWProcess.bpmn2",
+				"fixity": {
+					"algorithm": "sha256",
+					"checksum": "63b327a38226a1cf45c7cfbd91f4b5d2cd347911af62d336e1d9a9eeaf458594"
+				}
+			}
+		}
+	}
+}
