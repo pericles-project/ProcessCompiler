@@ -31,7 +31,7 @@ public class CLITests {
 
 	@Test
 	public void compileAggregatedProcessTest() {
-		String[] args = {"processcompiler.jar", "src/test/resources/cli/inputCompile.json"};		
+		String[] args = {"processcompiler.jar", "compile", "src/test/resources/cli/inputCompile.json", "src/test/resources/cli/output.bpmn2"};		
 		CommandlineInterface.main(args);
 		
 		String result = outputStream.toString();
@@ -43,7 +43,7 @@ public class CLITests {
 	
 	@Test
 	public void validateAggregationTest() {
-		String[] args = {"processcompiler.jar", "src/test/resources/cli/inputValidateAggregation.json"};		
+		String[] args = {"processcompiler.jar", "validate_aggregation", "src/test/resources/cli/inputValidateAggregation.json"};		
 		CommandlineInterface.main(args);
 		
 		String result = outputStream.toString();
@@ -54,7 +54,7 @@ public class CLITests {
 	
 	@Test
 	public void validateImplementationTest() {
-		String[] args = {"processcompiler.jar", "src/test/resources/cli/inputValidateImplementation.json"};		
+		String[] args = {"processcompiler.jar", "validate_implementation", "src/test/resources/cli/inputValidateImplementation.json", "src/test/resources/cli/EncapsulateDOMDProcess.bpmn2"};		
 		CommandlineInterface.main(args);
 		
 		String result = outputStream.toString();

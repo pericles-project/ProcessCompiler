@@ -24,7 +24,7 @@ public class BPMNParser {
 		try {
 			return parse(new FileInputStream(new File(file)));
 		} catch (Exception e) {
-			throw new BPMNParseException("Error when parsing the BPMN file " + file, e);
+			throw new BPMNParseException("Error when parsing the BPMN file: " + file, e);
 		}
 	}
 
@@ -40,7 +40,7 @@ public class BPMNParser {
 			return getBPMNProcess();
 
 		} catch (Exception e) {
-			throw new BPMNParseException("Error when parsing the inputstream", e);
+			throw new BPMNParseException("Error when parsing the BPMN inputstream", e);
 		}
 	}
 

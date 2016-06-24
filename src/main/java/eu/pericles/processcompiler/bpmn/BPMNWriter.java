@@ -15,23 +15,36 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 import eu.pericles.processcompiler.bpmnx.FancyDefinitions;
 import eu.pericles.processcompiler.bpmnx.FancyObjectFactory;
+import eu.pericles.processcompiler.exceptions.BPMNWriteException;
 
 public class BPMNWriter {
 
 	private BPMNProcess bpmnProcess;
 	private FancyDefinitions definitions;
 
-	public void write(BPMNProcess process, String file) throws JAXBException,  FileNotFoundException, IOException {
+	public void write(BPMNProcess process, String file) throws BPMNWriteException {
 		setBpmnProcess(process);
 
-		FileOutputStream fos = new FileOutputStream(file);
-		marshal(fos);
-		fos.close();
+		try {
+			FileOutputStream fos = new FileOutputStream(file);
+			marshal(fos);
+			fos.close();
+		} catch (FileNotFoundException e) {
+			throw new BPMNWriteException("Error when writing a BPMN process - File Not Found: " + file, e);
+		} catch (JAXBException e) {
+			throw new BPMNWriteException("Error when writing a BPMN process - JAXB error (marshal) with file: " + file, e);
+		} catch (IOException e) {
+			throw new BPMNWriteException("Error when writing a BPMN process - IO problem with file: " + file, e);
+		}
 	}
 
-	public void write(BPMNProcess process, OutputStream target) throws JAXBException {
+	public void write(BPMNProcess process, OutputStream target) throws BPMNWriteException {
 		setBpmnProcess(process);
-		marshal(target);
+		try {
+			marshal(target);
+		} catch (JAXBException e) {
+			throw new BPMNWriteException("Error when writing a BPMN process - JAXB error (marshal)", e);
+		}
 	}
 
 	private void marshal(OutputStream fos) throws JAXBException {
