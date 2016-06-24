@@ -1,5 +1,5 @@
 {	
-	"cmd": "compile",
+	"cmd": "validate_aggregation",
 	"params": {
 		"config_data": {
 			"user": "pericles1",
@@ -9,9 +9,9 @@
 			"findApi": "https://141.5.100.67/api/find"
 		},
 		"repository": "NoaCLITest",
-		"output": "src/test/resources/cli/output.bpmn2",
 		"aggregated_process": {
 			"id": "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>" ,
+			"type": "<http://www.pericles-project.eu/ns/ecosystem#AggregatedProcess>" ,
 			"name": "Ingest Artwork Software" , 
 			"description": "Aggregated process that ingest an artwork software by doing the following: check for viruses, extract the metadata and encapsulate the artwork together with it" ,
 			"version": "1.0" ,

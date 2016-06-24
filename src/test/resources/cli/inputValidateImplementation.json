@@ -1,0 +1,52 @@
+{	
+	"cmd": "validate_implementation",
+	"params": {
+		"config_data": {
+			"user": "pericles1",
+			"password": "PASSWORD",
+			"tripleStore": "https://141.5.100.67/api/triple",
+			"objectStore": "https://141.5.100.67/api/cdmi",
+			"findApi": "https://141.5.100.67/api/find"
+		},
+		"repository": "NoaCLITest",
+		"process": {
+			"id": "<http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>" ,
+			"type": "<http://www.pericles-project.eu/ns/ecosystem#AtomicProcess>" ,
+			"name": "Encapsulate Digital Object and its Metadata" , 
+			"description": "Atomic process that encapsulate a digital object and its metadata together in a package of a specific format" ,
+			"version": "1" ,
+			"input_slots": [
+				{
+					"id": "<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>" ,
+					"name": "Digital Material InputSlot" ,
+					"description": "Input slot corresponding to the digital object" ,
+					"type": "<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>" ,
+					"optional": false ,
+				} ,
+				{
+					"id": "<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>" ,
+					"name": "Metadata InputSlot" ,
+					"description": "Input slot corresponding to the metadata" ,
+					"type": "<http://www.pericles-project.eu/ns/ecosystem#Metadata>",
+					"optional": false
+				} ,
+				{
+					"id": "<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>" ,
+					"name": "Package Format InputSlot" ,
+					"description": "Input slot corresponding to the package format used to encapsulate the digital object and its metadata" ,
+					"type": "<http://www.pericles-project.eu/ns/ecosystem#PackageFormat>",
+					"optional": false
+				} 
+			] ,
+			"output_slots": [
+				{
+					"id": "<http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>" ,
+					"name": "Output Package" ,
+					"description": "Output slot corresponding to the package resulting of encapsulate a digital object and its metadata" ,
+					"type": "<http://www.pericles-project.eu/ns/ecosystem#Package>"
+				}
+			] 
+		} ,
+		"bpmn_process": "src/test/resources/cli/EncapsulateDOMDProcess.bpmn2" 
+	}
+}

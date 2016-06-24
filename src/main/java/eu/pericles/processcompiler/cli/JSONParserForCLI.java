@@ -1,6 +1,8 @@
 package eu.pericles.processcompiler.cli;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,7 +11,10 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import eu.pericles.processcompiler.bpmn.BPMNParser;
+import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.DataConnection;
 import eu.pericles.processcompiler.ecosystem.DataFlowNode;
@@ -19,16 +24,17 @@ import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
 import eu.pericles.processcompiler.ecosystem.Process;
 import eu.pericles.processcompiler.ecosystem.Sequence;
+import eu.pericles.processcompiler.exceptions.BPMNParseException;
 
 public class JSONParserForCLI {
 	
-	public static JSONObject parseFile(String file) throws Exception {
+	public static JSONObject parseFile(String file) throws FileNotFoundException, IOException, ParseException  {
 		JSONParser parser = new JSONParser();
 		JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(file));
 		return jsonObject;
 	}
 
-	public static HashMap<String, String> parseConfigurationData(JSONObject jsonObject) throws Exception {
+	public static HashMap<String, String> parseConfigurationData(JSONObject jsonObject) {
 		HashMap<String, String> parameters = new HashMap<String, String>(); 
 		List<String> keys = Arrays.asList("user", "password", "tripleStore", "objectStore", "findApi", "repository");
 		for (String key : keys) 
@@ -37,7 +43,7 @@ public class JSONParserForCLI {
 		return parameters;
 	}
 
-	public static AggregatedProcess parseAggregatedProcess(JSONObject jsonObject) throws Exception {	
+	public static AggregatedProcess parseAggregatedProcess(JSONObject jsonObject) {	
 		AggregatedProcess aggregatedProcess = new AggregatedProcess(parseProcess(jsonObject));
 		aggregatedProcess.setSequence(parseSequence((JSONObject) jsonObject.get("sequence")));
 		return aggregatedProcess;
@@ -136,6 +142,11 @@ public class JSONParserForCLI {
 		fixity.setAlgorithm((String) jsonObject.get("algorithm"));
 		fixity.setChecksum((String) jsonObject.get("checksum"));
 		return fixity;
+	}
+
+	public static BPMNProcess parseBPMNProcess(String file) throws BPMNParseException {
+		BPMNProcess bpmnProcess = new BPMNParser().parse(file);
+		return bpmnProcess;
 	}
 
 }

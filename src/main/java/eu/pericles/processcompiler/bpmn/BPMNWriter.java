@@ -1,6 +1,8 @@
 package eu.pericles.processcompiler.bpmn;
 
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +21,7 @@ public class BPMNWriter {
 	private BPMNProcess bpmnProcess;
 	private FancyDefinitions definitions;
 
-	public void write(BPMNProcess process, String file) throws Exception {
+	public void write(BPMNProcess process, String file) throws JAXBException,  FileNotFoundException, IOException {
 		setBpmnProcess(process);
 
 		FileOutputStream fos = new FileOutputStream(file);
@@ -27,7 +29,7 @@ public class BPMNWriter {
 		fos.close();
 	}
 
-	public void write(BPMNProcess process, OutputStream target) throws Exception {
+	public void write(BPMNProcess process, OutputStream target) throws JAXBException {
 		setBpmnProcess(process);
 		marshal(target);
 	}

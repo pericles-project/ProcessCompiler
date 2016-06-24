@@ -29,6 +29,14 @@ public class ProcessCompiler {
 	public ProcessCompiler(HashMap<String, String> parameters) throws ERMRClientException {
 		ermrCommunications = new ERMRCommunications(parameters);
 	}
+	
+	public ValidationResult validateAggregation(String repository, AggregatedProcess aggregatedProcess) throws ERMRClientException {
+		return new DataFlowValidator(ermrCommunications, repository, aggregatedProcess).validate();
+	}
+	
+	public ValidationResult validateImplementation(Process process, BPMNProcess bpmnProcess)  {
+		return new ImplementationValidator(process, bpmnProcess).validate();
+	}
 
 	/**
 	 * Compile an AggregatedProcess, a model-based description of an Aggregated

@@ -39,7 +39,7 @@ import eu.pericles.processcompiler.exceptions.ERMRClientException;
  * 
  * The validate() function returns a ValidationResult containing:
  * - when the validation is not valid: a message with the error/cause of
- * invalidation and the exceptio that caused it
+ * invalidation and the exception that caused it
  * - when the validation is valid: the valid message
  * 
  */

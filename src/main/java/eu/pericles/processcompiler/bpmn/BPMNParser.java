@@ -28,17 +28,17 @@ public class BPMNParser {
 		}
 	}
 
-	public BPMNProcess parse(InputStream inputStream) throws BPMNParseException   {
+	public BPMNProcess parse(InputStream inputStream) throws BPMNParseException {
 		try {
-		setBPMNProcess(new BPMNProcess());
-		unmarshal(inputStream);
+			setBPMNProcess(new BPMNProcess());
+			unmarshal(inputStream);
 
-		parseAttributes();
-		parseImports();
-		parseRootElements();
-		parseDiagram();
-		return getBPMNProcess();
-		
+			parseAttributes();
+			parseImports();
+			parseRootElements();
+			parseDiagram();
+			return getBPMNProcess();
+
 		} catch (Exception e) {
 			throw new BPMNParseException("Error when parsing the inputstream", e);
 		}
