@@ -123,7 +123,7 @@ public class DataFlowValidatorTests {
 											+ " {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}"));
 			processCompiler.validateDataFlow(repository, invalidProcess);
 		} catch (ValidationException e) {
-			assertEquals("Error when validating a data flow: The resource in data connection is not available", e.getMessage());
+			assertEquals("Error when validating a data flow: The resource 2 <http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD> in data connection is not available", e.getMessage());
 		} catch (Exception e) {
 			fail("invalidDataFlowWithNoAvailableResource(): " + e.getMessage());
 		}
@@ -146,7 +146,7 @@ public class DataFlowValidatorTests {
 											+ " {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}"));
 			processCompiler.validateDataFlow(repository, invalidProcess);
 		} catch (ValidationException e) {
-			assertEquals("Error when validating a data flow: The resource in data connection doesn't exist", e.getMessage());
+			assertEquals("Error when validating a data flow: The resource 0 <http://www.pericles-project.eu/ns/ecosystem#XXXXXXX> in data connection doesn't exist", e.getMessage());
 		} catch (Exception e) {
 			fail("invalidDataFlowWithNoExistSlot(): " + e.getMessage());
 		}
@@ -169,7 +169,7 @@ public class DataFlowValidatorTests {
 											+ " {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}"));
 			processCompiler.validateDataFlow(repository, invalidProcess);
 		} catch (ValidationException e) {
-			assertEquals("Error when validating a data flow: The slot in data connection doesn't exist", e.getMessage());
+			assertEquals("Error when validating a data flow: The slot 2 <http://www.pericles-project.eu/ns/ecosystem#XXXXXXXX> in data connection doesn't exist", e.getMessage());
 		} catch (Exception e) {
 			fail("invalidDataFlowWithNoExistSlot(): " + e.getMessage());
 		}

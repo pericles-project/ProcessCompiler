@@ -30,7 +30,7 @@ import eu.pericles.processcompiler.unittests.ermr.UpdateDigitalObjectTest;
 	CreateRepositoryTest.class,
 	GetRepositoryTest.class, AddTriplesTest.class, GetTriplesTest.class,
 	QueryRepositoryTest.class, DeleteTriplesTest.class, 
-	DeleteRepositoryTest.class }) //FindTest.class
+	DeleteRepositoryTest.class })
 
 public class ERMRClientAPITests {
 	static String collection = "NoaCollectionTest_2/";
@@ -55,7 +55,6 @@ public class ERMRClientAPITests {
 		GetDigitalObjectTest.setVariables(digitalObjectPath, digitalObject);
 		UpdateDigitalObjectTest.setVariables(digitalObjectPath, digitalObject, digitalObjectMediaType);
 		GetCollectionTest.setVariables(collection);
-		//FindTest.setVaribles(findTerm, expectedFindResult);
 		DeleteDigitalObjectTest.setVariables(digitalObjectPath);
 		DeleteCollectionTest.setVariables(collection);
 	}

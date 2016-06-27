@@ -8,7 +8,7 @@
     <bpmn2:itemDefinition xmlns:tns="http://www.jboss.org/drools" structureRef="tns:eu.pericles.entities.metadata" id="_f88a467d-3602-4b38-951e-31df1832fed6"/>
     <bpmn2:itemDefinition xmlns:tns="http://www.jboss.org/drools" structureRef="tns:eu.pericles.entities.packageformat" id="_f4213e53-bb4a-442b-9f61-e5032b1c052d"/>
     <bpmn2:itemDefinition xmlns:tns="http://www.jboss.org/drools" structureRef="tns:eu.pericles.entities.package" id="_634475f1-e80e-4bad-b3c1-878955e6f396"/>
-    <bpmn2:process xmlns:tns="http://www.jboss.org/drools" processType="Private" isExecutable="true" name="Ingest Artwork Software" id="_bf96549a-7b98-45af-af77-0f715fe66566" tns:version="1" tns:packageName="eu.pericles.processcompiler.unittests.core.processaggregationwithdata" tns:adHoc="false">
+    <bpmn2:process xmlns:tns="http://www.jboss.org/drools" processType="Private" isExecutable="true" name="Ingest Artwork Software" id="_bf96549a-7b98-45af-af77-0f715fe66566" tns:packageName="eu.pericles.processcompiler.unittests.core.processaggregationwithdata" tns:version="1" tns:adHoc="false">
         <bpmn2:dataObject itemSubjectRef="tns:_576caad9-9d2d-4fad-aa08-f12073c92334" name="Digital Material" id="_3f7edde4-ea01-4c1d-9280-c48c0794733b"/>
         <bpmn2:startEvent id="_44728fc8-7c80-4fde-9fe6-bada4fda93b8"/>
         <bpmn2:scriptTask scriptFormat="http://www.java.com/java" name="Virus Check" id="_a5fbab4b-70cd-482c-9651-ca8a56387ce7">

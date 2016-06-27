@@ -1,7 +1,6 @@
 package eu.pericles.processcompiler.core;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import eu.pericles.processcompiler.bpmn.BPMNParser;
@@ -26,8 +25,8 @@ public class ProcessCompiler {
 		ermrCommunications = new ERMRCommunications();
 	}
 	
-	public ProcessCompiler(HashMap<String, String> parameters) throws ERMRClientException {
-		ermrCommunications = new ERMRCommunications(parameters);
+	public ProcessCompiler(String service) throws ERMRClientException {
+		ermrCommunications = new ERMRCommunications(service);
 	}
 	
 	public ValidationResult validateAggregation(String repository, AggregatedProcess aggregatedProcess) throws ERMRClientException {
@@ -196,6 +195,11 @@ public class ProcessCompiler {
 	 */
 	public BPMNProcess getBPMNProcess(String repository, String process) throws ERMRClientException, BPMNParseException {
 		BPMNProcess bpmnSubprocess = new BPMNParser().parse(ermrCommunications.getProcessImplementationFile(repository, process));
+		return bpmnSubprocess;
+	}
+	
+	public BPMNProcess getBPMNProcessFromImplementation(String repository, String implementation) throws ERMRClientException, BPMNParseException {
+		BPMNProcess bpmnSubprocess = new BPMNParser().parse(ermrCommunications.getImplementationFile(ermrCommunications.getImplementationEntity(repository, implementation).getLocation()));
 		return bpmnSubprocess;
 	}
 

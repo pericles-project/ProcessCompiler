@@ -2,7 +2,6 @@ package eu.pericles.processcompiler.communications.ermr;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -23,8 +22,8 @@ public class ERMRCommunications {
 		client = new ERMRClientAPI();
 	}
 
-	public ERMRCommunications(HashMap<String, String> parameters) throws ERMRClientException {
-		client = new ERMRClientAPI(parameters);
+	public ERMRCommunications(String service) throws ERMRClientException {
+		client = new ERMRClientAPI(service);
 	}
 
 	public ERMRClientAPI getClient() {
