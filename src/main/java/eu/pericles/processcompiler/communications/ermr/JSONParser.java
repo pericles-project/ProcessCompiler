@@ -1,5 +1,6 @@
 package eu.pericles.processcompiler.communications.ermr;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -159,7 +160,8 @@ public class JSONParser {
 	}
 
 	private static JsonObject getJSONObject(Response response) {
-		return Json.createReader(response.readEntity(InputStream.class)).readObject();
+		String json = response.readEntity(String.class);
+		return Json.createReader(new ByteArrayInputStream(json.getBytes())).readObject();
 	}
 
 }
