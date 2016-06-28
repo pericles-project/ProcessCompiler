@@ -1,6 +1,6 @@
 package eu.pericles.processcompiler.unittests;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -16,7 +16,7 @@ public class CLITests {
 	
 	private PrintStream defaultOutputStream;
 	private ByteArrayOutputStream outputStream;
-	
+	private String baseArgs = "-s https://pericles1:PASSWORD@141.5.100.67/api -r NoaCLITest ";
 	
 	@Before
 	public void changeOutputStream() {
@@ -32,9 +32,9 @@ public class CLITests {
 
 	@Test
 	public void compileAggregatedProcessByFileTest() {
-		String command = "compile https://pericles1:PASSWORD@141.5.100.67/api NoaCLITest -f src/test/resources/cli/inputCompile.json src/test/resources/cli/output.bpmn2";
+		String command = baseArgs + "compile -o src/test/resources/cli/output.bpmn2 src/test/resources/cli/inputCompile.json";
 		String[] args = command.split(" ");
-		CommandlineInterface.main(args);
+		assertEquals(0, new CommandlineInterface().call(args));
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
@@ -45,9 +45,9 @@ public class CLITests {
 	
 	@Test
 	public void compileAggregatedProcessByIDTest() {
-		String command = "compile https://pericles1:PASSWORD@141.5.100.67/api NoaCLITest -i <http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW> src/test/resources/cli/output.bpmn2";
+		String command = baseArgs + "compile -o src/test/resources/cli/output.bpmn2 <http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
 		String[] args = command.split(" ");
-		CommandlineInterface.main(args);
+		assertEquals(0, new CommandlineInterface().call(args));
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
@@ -58,9 +58,9 @@ public class CLITests {
 	
 	@Test
 	public void validateAggregationByFileTest() {
-		String command = "validate_aggregation https://pericles1:PASSWORD@141.5.100.67/api NoaCLITest -f src/test/resources/cli/inputValidateAggregation.json";
+		String command = baseArgs + "validate_aggregation src/test/resources/cli/inputValidateAggregation.json";
 		String[] args = command.split(" ");
-		CommandlineInterface.main(args);
+		assertEquals(0, new CommandlineInterface().call(args));
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
@@ -70,9 +70,9 @@ public class CLITests {
 	
 	@Test
 	public void validateAggregationByIDTest() {
-		String command = "validate_aggregation https://pericles1:PASSWORD@141.5.100.67/api NoaCLITest -i <http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
+		String command = baseArgs + "validate_aggregation <http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
 		String[] args = command.split(" ");
-		CommandlineInterface.main(args);
+		assertEquals(0, new CommandlineInterface().call(args));
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
@@ -82,9 +82,9 @@ public class CLITests {
 	
 	@Test
 	public void validateImplementationByFileTest() {
-		String command = "validate_implementation https://pericles1:PASSWORD@141.5.100.67/api NoaCLITest -f src/test/resources/cli/inputValidateImplementation.json -f src/test/resources/cli/EncapsulateDOMDProcess.bpmn2";
+		String command = baseArgs + "validate_implementation src/test/resources/cli/inputValidateImplementation.json src/test/resources/cli/EncapsulateDOMDProcess.bpmn2";
 		String[] args = command.split(" ");
-		CommandlineInterface.main(args);
+		assertEquals(0, new CommandlineInterface().call(args));
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
@@ -94,9 +94,9 @@ public class CLITests {
 	
 	@Test
 	public void validateImplementationByIDTest() {
-		String command = "validate_implementation https://pericles1:PASSWORD@141.5.100.67/api NoaCLITest -i <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> -i <http://www.pericles-project.eu/ns/ecosystem#impEncapsulateDOMD>";
+		String command = baseArgs + "validate_implementation <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> <http://www.pericles-project.eu/ns/ecosystem#impEncapsulateDOMD>";
 		String[] args = command.split(" ");
-		CommandlineInterface.main(args);
+		assertEquals(0, new CommandlineInterface().call(args));
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
