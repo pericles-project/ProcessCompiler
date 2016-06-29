@@ -1,5 +1,10 @@
 package eu.pericles.processcompiler.unittests;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -26,9 +31,14 @@ public class JBPMRunnableTests extends JbpmJUnitBaseTestCase {
 	static String repository = "NoaRepositoryTest";
 	static String triplesMediaType = MediaType.TEXT_PLAIN;
 	static String ecosystem = "src/test/resources/jbpm_runnable/Ecosystem.txt";
+	private PrintStream defaultOutputStream;
+	private ByteArrayOutputStream outputStream;
 	
 	@Before
 	public void setRepository() {
+		defaultOutputStream = System.out;
+		outputStream = new ByteArrayOutputStream();
+		System.setOut(new PrintStream(outputStream));
 		try {
 			ERMRClientAPI client = new ERMRClientAPI(service);
 			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
@@ -48,6 +58,7 @@ public class JBPMRunnableTests extends JbpmJUnitBaseTestCase {
 		} catch (ERMRClientException e) {
 			fail("deleteRepository(): " + e.getMessage());
 		}
+		System.setOut(defaultOutputStream);
 	}
 	
 	@Test
@@ -56,13 +67,68 @@ public class JBPMRunnableTests extends JbpmJUnitBaseTestCase {
 		RuntimeEngine engine = getRuntimeEngine(null);
 		KieSession ksession = engine.getKieSession();
 		
-		ProcessInstance processInstance = ksession.startProcess("_bf96549a-7b98-45af-af77-0f715fe66566");
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("_Digital_Material", "myDigitalMaterial");
+		
+		ProcessInstance processInstance = ksession.startProcess("_bf96549a-7b98-45af-af77-0f715fe66566", params);
 		// check whether the process instance has completed successfully
 		assertProcessInstanceCompleted(processInstance.getId(), ksession);
 		assertNodeTriggered(processInstance.getId(), "Virus Check");
 		
 		manager.disposeRuntimeEngine(engine);
 		manager.close();
+		
+		String output = outputStream.toString();
+		defaultOutputStream.println(output);
+		assertTrue(output.contains("Executing Virus Check Process to: myDigitalMaterial"));
+	}
+	
+	@Test
+	public void testExtractMDProcess() {
+		RuntimeManager manager = createRuntimeManager("jbpm_runnable/ExtractMetadataProcess.bpmn2");
+		RuntimeEngine engine = getRuntimeEngine(null);
+		KieSession ksession = engine.getKieSession();
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("_Digital_Object", "myDigitalObject");
+		
+		ProcessInstance processInstance = ksession.startProcess("_3b8e18d2-d35e-4d6d-898d-6a3f41e227e0", params);
+		// check whether the process instance has completed successfully
+		assertProcessInstanceCompleted(processInstance.getId(), ksession);
+		assertNodeTriggered(processInstance.getId(), "Extract MD");
+		
+		manager.disposeRuntimeEngine(engine);
+		manager.close();
+		
+		String output = outputStream.toString();
+		defaultOutputStream.println(output);
+		assertTrue(output.contains("Executing Extract Metadata Process to: myDigitalObject"));
+		assertTrue(output.contains("Creating Metadata: myMetadata"));
+	}
+	
+	@Test
+	public void testEncapsulateDOandMDProcess() {
+		RuntimeManager manager = createRuntimeManager("jbpm_runnable/EncapsulateDOMDProcess.bpmn2");
+		RuntimeEngine engine = getRuntimeEngine(null);
+		KieSession ksession = engine.getKieSession();
+		
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("_Digital_Object", "myDigitalObject");
+		params.put("_Metadata", "myMetadata");
+		params.put("_Package_Format", "myPackageFormat");
+		
+		ProcessInstance processInstance = ksession.startProcess("_99113fc4-116c-4351-a90d-168ee4f038b8", params);
+		// check whether the process instance has completed successfully
+		assertProcessInstanceCompleted(processInstance.getId(), ksession);
+		assertNodeTriggered(processInstance.getId(), "Encapsulate DO and MD");
+		
+		manager.disposeRuntimeEngine(engine);
+		manager.close();
+		
+		String output = outputStream.toString();
+		defaultOutputStream.println(output);
+		assertTrue(output.contains("Executing the encapsulate DO and MD process to: myDigitalObject and myMetadata"));
+		assertTrue(output.contains("Using the package format: myPackageFormat"));
 	}
 	
 	@Test
@@ -81,7 +147,11 @@ public class JBPMRunnableTests extends JbpmJUnitBaseTestCase {
 			RuntimeEngine engine = getRuntimeEngine(null);
 			KieSession ksession = engine.getKieSession();
 			
-			ProcessInstance processInstance = ksession.startProcess("_bf96549a-7b98-45af-af77-0f715fe66566");
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("_Digital_Material", "myArtwork.mov");
+			params.put("_Package_Format", "BagIt");
+			
+			ProcessInstance processInstance = ksession.startProcess("_bf96549a-7b98-45af-af77-0f715fe66566", params);
 			// check whether the process instance has completed successfully
 			assertProcessInstanceCompleted(processInstance.getId(), ksession);
 			assertNodeTriggered(processInstance.getId(), "Virus Check");
@@ -90,6 +160,14 @@ public class JBPMRunnableTests extends JbpmJUnitBaseTestCase {
 			
 			manager.disposeRuntimeEngine(engine);
 			manager.close();
+			
+			String output = outputStream.toString();
+			defaultOutputStream.println(output);
+			assertTrue(output.contains("Executing Virus Check Process to: myArtwork.mov"));
+			assertTrue(output.contains("Executing Extract Metadata Process to: myArtwork.mov"));
+			assertTrue(output.contains("Creating Metadata: myMetadata"));
+			assertTrue(output.contains("Executing the encapsulate DO and MD process to: myArtwork.mov and myMetadata"));
+			assertTrue(output.contains("Using the package format: BagIt"));
 			
 		} catch (Exception e) {
 			fail("compileAggregatedProcess(): " + e.getMessage());

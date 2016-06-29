@@ -19,7 +19,7 @@
   
   <bpmn2:process id="_bf96549a-7b98-45af-af77-0f715fe66566" tns:version="1" tns:packageName="eu.pericles.processcompiler.unittests.core.processaggregationwithdata" tns:adHoc="false" name="VirusCheckProcess" isExecutable="true" processType="Private">
   
-    <bpmn2:dataObject id="_3f7edde4-ea01-4c1d-9280-c48c0794733b" name="Digital Material" itemSubjectRef="_576caad9-9d2d-4fad-aa08-f12073c92334" />
+    <bpmn2:dataObject id="_3f7edde4-ea01-4c1d-9280-c48c0794733b" name="_Digital_Material" itemSubjectRef="_576caad9-9d2d-4fad-aa08-f12073c92334" />
     
     <bpmn2:startEvent id="_44728fc8-7c80-4fde-9fe6-bada4fda93b8" />    
     
@@ -38,7 +38,9 @@
         <bpmn2:sourceRef>_3f7edde4-ea01-4c1d-9280-c48c0794733b</bpmn2:sourceRef>
         <bpmn2:targetRef>_5038624e-d42f-44c6-98bf-7134892665ee</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
-      <bpmn2:script>System.out.println("Executing Virus Check Process" + kcontext.getVariable("&lt;http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM&gt;"));</bpmn2:script>
+      <bpmn2:script>
+      		System.out.println("Executing Virus Check Process to: " + kcontext.getVariable("_Digital_Material"));
+      </bpmn2:script>
     </bpmn2:scriptTask>
     
     <bpmn2:endEvent id="_b89887eb-517b-479f-b4db-f90343b1f0b7" />
