@@ -27,7 +27,7 @@ import net.sourceforge.argparse4j.inf.Subparser;
 public class CommandlineInterface {
 
 	public static enum Cmd {
-		COMPILE, VALIDATE_IMPL, VALUDATE_AGGR
+		COMPILE, VALIDATE_IMPL, VALIDATE_AGGR
 	}
 
 	public static void main(String[] args) {
@@ -54,16 +54,16 @@ public class CommandlineInterface {
 				.help("Either a json file on disk or the ID of an already defined aggregated process.");
 
 		Subparser vaParser = parser.addSubparsers().addParser("validate_aggregation").help("Validate an aggregation")
-				.setDefault("cmd", Cmd.VALUDATE_AGGR);
+				.setDefault("cmd", Cmd.VALIDATE_AGGR);
 		vaParser.addArgument("APROC")
 				.help("Either a json file on disk or the ID of an already defined aggregated process.");
 
 		Subparser viParser = parser.addSubparsers().addParser("validate_implementation")
 				.help("Validate an implementation").setDefault("cmd", Cmd.VALIDATE_IMPL);
-		viParser.addArgument("APROC")
-				.help("Either a json file on disk or the ID of an already defined aggregated process.");
+		viParser.addArgument("PROC")
+				.help("Either a json file on disk or the ID of an already defined process.");
 		viParser.addArgument("IMPL")
-				.help("Either a json file on disk or the ID of an already defined aggregated process.");
+				.help("Either a json file on disk or the ID of an already defined process.");
 
 		Namespace ns = null;
 		try {
@@ -93,7 +93,7 @@ public class CommandlineInterface {
 			return compile(ns);
 		case VALIDATE_IMPL:
 			return validateImplementation(ns);
-		case VALUDATE_AGGR:
+		case VALIDATE_AGGR:
 			return validateAggregation(ns);
 		default:
 			return 2;
@@ -137,14 +137,14 @@ public class CommandlineInterface {
 	private int validateImplementation(Namespace ns) {
 
 		try {
-			String aproc = ns.getString("APROC");
+			String proc = ns.getString("PROC");
 			String impl = ns.getString("IMPL");
 			Process process;
-			if (new File(aproc).exists()) {
-				JSONObject node = JSONParserForCLI.parseFile(aproc);
+			if (new File(proc).exists()) {
+				JSONObject node = JSONParserForCLI.parseFile(proc);
 				process = JSONParserForCLI.parseProcess((JSONObject) node.get("process"));
 			} else
-				process = compiler.getProcess(repo, aproc);
+				process = compiler.getProcess(repo, proc);
 
 			BPMNProcess bpmnProcess;
 

@@ -1,0 +1,88 @@
+<bpmn2:definitions 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+		xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+		xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+		xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+		xmlns:tns="http://www.jboss.org/drools" 
+		xmlns="http://www.jboss.org/drools" 
+		xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" 
+		id="_223e152f-97f6-4f9f-864b-cc6af31253ff" 
+		expressionLanguage="http://www.mvel.org/2.0" 
+		targetNamespace="http://www.jboss.org/drools" 
+		typeLanguage="http://www.java.com/javaTypes">
+  
+  <bpmn2:itemDefinition id="_576caad9-9d2d-4fad-aa08-f12073c92334" structureRef="eu.pericles.entities.digitalobject" />
+  <bpmn2:itemDefinition id="_00d91780-7dcc-432b-969a-bb1e6fd623fa" structureRef="eu.pericles.entities.file" />
+  
+  <!--    process    -->
+  
+  <bpmn2:process id="_bf96549a-7b98-45af-af77-0f715fe66566" tns:version="1" tns:packageName="eu.pericles.processcompiler.unittests.core.processaggregationwithdata" tns:adHoc="false" name="VirusCheckProcess" isExecutable="true" processType="Private">
+  
+    <bpmn2:dataObject id="_3f7edde4-ea01-4c1d-9280-c48c0794733b" name="Digital Material" itemSubjectRef="_576caad9-9d2d-4fad-aa08-f12073c92334" />
+    
+    <bpmn2:startEvent id="_44728fc8-7c80-4fde-9fe6-bada4fda93b8" />    
+    
+    <bpmn2:scriptTask id="_a5fbab4b-70cd-482c-9651-ca8a56387ce7" name="Virus Check" scriptFormat="http://www.java.com/java">
+      <bpmn2:ioSpecification id="_ca82a195-e37a-4b43-bb63-24a2a25a642a">
+        <bpmn2:dataInput id="_5038624e-d42f-44c6-98bf-7134892665ee" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM&gt;" itemSubjectRef="_576caad9-9d2d-4fad-aa08-f12073c92334"/>
+        <bpmn2:dataOutput id="_5948b4fc-a026-4909-b05b-426c0208dd5d" name="&lt;http://www.pericles-project.eu/ns/ecosystem#osVirusCheckRes&gt;" itemSubjectRef="_00d91780-7dcc-432b-969a-bb1e6fd623fa"/>
+        <bpmn2:inputSet id="_8efc0dab-a2b9-4251-9e70-78f427a2a2ed">
+          <bpmn2:dataInputRefs>_5038624e-d42f-44c6-98bf-7134892665ee</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_92a6c7c0-e586-477c-b61e-fa0f6235d0aa">
+          <bpmn2:dataOutputRefs>_5948b4fc-a026-4909-b05b-426c0208dd5d</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_1ed41379-a180-4c31-b7cd-4ee01ffa52a7">
+        <bpmn2:sourceRef>_3f7edde4-ea01-4c1d-9280-c48c0794733b</bpmn2:sourceRef>
+        <bpmn2:targetRef>_5038624e-d42f-44c6-98bf-7134892665ee</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:script>System.out.println("Executing Virus Check Process" + kcontext.getVariable("&lt;http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM&gt;"));</bpmn2:script>
+    </bpmn2:scriptTask>
+    
+    <bpmn2:endEvent id="_b89887eb-517b-479f-b4db-f90343b1f0b7" />
+    
+    <bpmn2:sequenceFlow id="_3a48aea5-7b81-43dd-82e9-7f819c038f3d" sourceRef="_44728fc8-7c80-4fde-9fe6-bada4fda93b8" targetRef="_a5fbab4b-70cd-482c-9651-ca8a56387ce7"/>
+    <bpmn2:sequenceFlow id="_37e834d2-c727-474d-9b12-8748c97e432f" sourceRef="_a5fbab4b-70cd-482c-9651-ca8a56387ce7" targetRef="_b89887eb-517b-479f-b4db-f90343b1f0b7"/>
+  
+  </bpmn2:process>
+  
+  <!--    diagram    -->
+  
+  <bpmndi:BPMNDiagram id="_854498e3-1e63-4162-9fcb-cfd0fcd39ffd">
+    <bpmndi:BPMNPlane id="_2a096d31-0058-4309-93dc-16ebc7c008bb" bpmnElement="_bf96549a-7b98-45af-af77-0f715fe66566">    
+      <bpmndi:BPMNShape id="_4ad29cb4-826b-413e-b391-53e29bea1233" bpmnElement="_44728fc8-7c80-4fde-9fe6-bada4fda93b8">
+        <dc:Bounds height="0.0" width="0.0" x="45.0" y="45.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_1b7266dd-6285-4081-a71d-98c027355591" bpmnElement="_a5fbab4b-70cd-482c-9651-ca8a56387ce7">
+        <dc:Bounds height="50.0" width="110.0" x="185.0" y="35.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_89307b24-4a91-476a-b66c-2fe029a95d06" bpmnElement="_b89887eb-517b-479f-b4db-f90343b1f0b7">
+        <dc:Bounds height="36.0" width="36.0" x="412.0" y="42.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_055129d4-407b-4e78-ac1c-5c492f90fb3e" bpmnElement="_3f7edde4-ea01-4c1d-9280-c48c0794733b">
+        <dc:Bounds height="50.0" width="50.0" x="185.0" y="150.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_297a70e4-e521-4c2b-9eeb-e0f0461f62bf" bpmnElement="_3a48aea5-7b81-43dd-82e9-7f819c038f3d" sourceElement="_4ad29cb4-826b-413e-b391-53e29bea1233" targetElement="_1b7266dd-6285-4081-a71d-98c027355591">
+        <di:waypoint xsi:type="dc:Point" x="81.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="127.0" y="63.0"/>
+        <di:waypoint xsi:type="dc:Point" x="127.0" y="60.0"/>
+        <di:waypoint xsi:type="dc:Point" x="185.0" y="60.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_aa0c86ee-088b-495d-bdd8-75e6f09fb67e" bpmnElement="_37e834d2-c727-474d-9b12-8748c97e432f" sourceElement="_1b7266dd-6285-4081-a71d-98c027355591" targetElement="_89307b24-4a91-476a-b66c-2fe029a95d06">
+        <di:waypoint xsi:type="dc:Point" x="295.0" y="60.0"/>
+        <di:waypoint xsi:type="dc:Point" x="347.0" y="60.0"/>
+        <di:waypoint xsi:type="dc:Point" x="347.0" y="60.0"/>
+        <di:waypoint xsi:type="dc:Point" x="412.0" y="60.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_ce40e063-5cdd-4634-b38d-14001accb4bf" bpmnElement="_1ed41379-a180-4c31-b7cd-4ee01ffa52a7">
+        <di:waypoint xsi:type="dc:Point" x="203.0" y="150.0"/>
+        <di:waypoint xsi:type="dc:Point" x="203.0" y="121.0"/>
+        <di:waypoint xsi:type="dc:Point" x="240.0" y="121.0"/>
+        <di:waypoint xsi:type="dc:Point" x="240.0" y="85.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+  
+</bpmn2:definitions>

@@ -99,7 +99,7 @@ nar2:osExtractMD_MD a dem:OutputSlot ;
 nar2:impExtractMD a dem:Implementation ;
   dem:version "1" ;
   dem:type "BPMN" ;
-  dem:location "" ;
+  dem:location "NoaCollection/Narrative2/ExtractMD.bpmn2" ;
   dem:hasFixity nar2:fixExtractMD .
 
 # Fixity
@@ -135,7 +135,7 @@ nar2:osGetMD_MD a dem:OutputSlot ;
 nar2:impGetMD a dem:Implementation ;
   dem:version "1" ;
   dem:type "BPMN" ;
-  dem:location "" ;
+  dem:location "NoaCollection/Narrative2/GetMD.bpmn2" ;
   dem:hasFixity nar2:fixGetMD .
 
 # Fixity
@@ -178,7 +178,7 @@ nar2:osUpdateMD_updatedMD a dem:OutputSlot ;
 nar2:impUpdateMD a dem:Implementation ;
   dem:version "1" ;
   dem:type "BPMN" ;
-  dem:location "" ;
+  dem:location "NoaCollection/Narrative2/UpdateMD.bpmn2" ;
   dem:hasFixity nar2:fixUpdateMD .
 
 # Fixity
@@ -214,7 +214,7 @@ nar2:osStoreMD_URI a dem:OutputSlot ;
 nar2:impStoreMD a dem:Implementation ;
   dem:version "1" ;
   dem:type "BPMN" ;
-  dem:location "" ;
+  dem:location "NoaCollection/Narrative2/StoreMD.bpmn2" ;
   dem:hasFixity nar2:fixStoreMD .
 
 # Fixity
