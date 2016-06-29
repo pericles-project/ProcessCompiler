@@ -1,10 +1,15 @@
 package eu.pericles.processcompiler.cli;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 
-import org.json.simple.JSONObject;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import eu.pericles.processcompiler.bpmn.BPMNParser;
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.bpmn.BPMNWriter;
 import eu.pericles.processcompiler.core.ProcessCompiler;
@@ -14,7 +19,6 @@ import eu.pericles.processcompiler.ecosystem.Process;
 import eu.pericles.processcompiler.exceptions.BPMNParseException;
 import eu.pericles.processcompiler.exceptions.BPMNWriteException;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
-import eu.pericles.processcompiler.exceptions.JSONFileParseException;
 import eu.pericles.processcompiler.exceptions.ProcessDataFlowException;
 import eu.pericles.processcompiler.exceptions.ProcessProcessFlowException;
 import eu.pericles.processcompiler.exceptions.ValidationException;
@@ -25,6 +29,28 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 
 public class CommandlineInterface {
+
+	static ObjectMapper om = new ObjectMapper();
+
+	public static class ConfigBean {
+		public ConfigBean() {
+		}
+		
+		@JsonProperty("process")
+		public Process process;
+
+		@JsonProperty("aggregated_process")
+		public AggregatedProcess aggregatedProcess;
+		
+		@JsonAnySetter
+		public void set(String key, Object value) {
+			System.err.println("Unknown property: " + key);
+			
+		}
+
+		@JsonProperty("repository")
+		public String unusedRepositoryStuff;
+	}
 
 	public static enum Cmd {
 		COMPILE, VALIDATE_IMPL, VALIDATE_AGGR
@@ -106,9 +132,8 @@ public class CommandlineInterface {
 			String input = ns.getString("APROC");
 			AggregatedProcess aggregatedProcess;
 			if (new File(input).exists()) {
-				JSONObject node = JSONParserForCLI.parseFile(input);
-				aggregatedProcess = JSONParserForCLI
-						.parseAggregatedProcess((JSONObject) node.get("aggregated_process"));
+				ConfigBean config = parseConfig(new File(input));
+				aggregatedProcess = config.aggregatedProcess;
 			} else
 				aggregatedProcess = compiler.getAggregatedProcess(repo, input);
 
@@ -126,12 +151,16 @@ public class CommandlineInterface {
 		} catch (ERMRClientException e) {
 			System.out.println("500 Internal Server Error");
 			System.out.println("ERMR (Triplestore) is not available: " + e.getMessage());
-		} catch (JSONFileParseException e) {
+		} catch (IOException e) {
 			System.out.println("400 Bad Request");
 			System.out.println("Error when parsing input file: " + e.getMessage());
 		}
 
 		return 2;
+	}
+
+	private ConfigBean parseConfig(File src) throws IOException {
+		return om.readValue(src, ConfigBean.class);
 	}
 
 	private int validateImplementation(Namespace ns) {
@@ -141,15 +170,15 @@ public class CommandlineInterface {
 			String impl = ns.getString("IMPL");
 			Process process;
 			if (new File(proc).exists()) {
-				JSONObject node = JSONParserForCLI.parseFile(proc);
-				process = JSONParserForCLI.parseProcess((JSONObject) node.get("process"));
+				ConfigBean config = parseConfig(new File(proc));
+				process = config.process;
 			} else
 				process = compiler.getProcess(repo, proc);
 
 			BPMNProcess bpmnProcess;
 
 			if (new File(impl).exists()) {
-				bpmnProcess = JSONParserForCLI.parseBPMNProcess(impl);
+				bpmnProcess = new BPMNParser().parse(impl);
 			} else
 				bpmnProcess = compiler.getBPMNProcessFromImplementation(repo, impl);
 
@@ -169,7 +198,7 @@ public class CommandlineInterface {
 		} catch (BPMNParseException e) {
 			System.out.println("400 Bad Request");
 			System.out.println("Error when parsing BPMN file: " + e.getMessage());
-		} catch (JSONFileParseException e) {
+		} catch (IOException e) {
 			System.out.println("400 Bad Request");
 			System.out.println("Error when parsing input file: " + e.getMessage());
 		}
@@ -181,9 +210,8 @@ public class CommandlineInterface {
 			String input = ns.getString("APROC");
 			AggregatedProcess aggregatedProcess;
 			if (new File(input).exists()) {
-				JSONObject node = JSONParserForCLI.parseFile(input);
-				aggregatedProcess = JSONParserForCLI
-						.parseAggregatedProcess((JSONObject) node.get("aggregated_process"));
+				ConfigBean config = parseConfig(new File(input));
+				aggregatedProcess = config.aggregatedProcess;
 			} else
 				aggregatedProcess = compiler.getAggregatedProcess(repo, input);
 
@@ -203,7 +231,7 @@ public class CommandlineInterface {
 		} catch (BPMNParseException | ValidationException | ProcessDataFlowException | ProcessProcessFlowException e) {
 			System.out.println("404 Not Found");
 			System.out.println("Error when compiling BPMN file: " + e.getMessage());
-		} catch (JSONFileParseException e) {
+		} catch (IOException e) {
 			System.out.println("400 Bad Request");
 			System.out.println("Error when parsing input file: " + e.getMessage());
 		} catch (BPMNWriteException e) {

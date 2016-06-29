@@ -5,6 +5,9 @@ public class DataFlowNode {
 	private int sequenceStep;
 	private String processSlot;
 	
+	public DataFlowNode() {
+	}
+	
 	public DataFlowNode(int step, String slot) {
 		sequenceStep = step;
 		this.processSlot = slot;

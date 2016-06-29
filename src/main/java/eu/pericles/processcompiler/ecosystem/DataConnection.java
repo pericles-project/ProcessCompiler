@@ -5,6 +5,9 @@ public class DataConnection {
 	private DataFlowNode resourceNode;
 	private DataFlowNode slotNode;
 	
+	public DataConnection() {
+	}
+	
 	public DataConnection(DataFlowNode slotNode, DataFlowNode resourceNode) {
 		this.slotNode = slotNode;
 		this.resourceNode = resourceNode;

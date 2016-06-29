@@ -34,7 +34,7 @@ public class CLITests {
 	public void compileAggregatedProcessByFileTest() {
 		String command = baseArgs + "compile -o src/test/resources/cli/output.bpmn2 src/test/resources/cli/inputCompile.json";
 		String[] args = command.split(" ");
-		assertEquals(0, new CommandlineInterface().call(args));
+		assertCall(args, 0);
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
@@ -47,7 +47,7 @@ public class CLITests {
 	public void compileAggregatedProcessByIDTest() {
 		String command = baseArgs + "compile -o src/test/resources/cli/output.bpmn2 <http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
 		String[] args = command.split(" ");
-		assertEquals(0, new CommandlineInterface().call(args));
+		assertCall(args, 0);
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
@@ -60,7 +60,7 @@ public class CLITests {
 	public void validateAggregationByFileTest() {
 		String command = baseArgs + "validate_aggregation src/test/resources/cli/inputValidateAggregation.json";
 		String[] args = command.split(" ");
-		assertEquals(0, new CommandlineInterface().call(args));
+		assertCall(args, 0);
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
@@ -72,7 +72,7 @@ public class CLITests {
 	public void validateAggregationByIDTest() {
 		String command = baseArgs + "validate_aggregation <http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
 		String[] args = command.split(" ");
-		assertEquals(0, new CommandlineInterface().call(args));
+		assertCall(args, 0);
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
@@ -80,11 +80,18 @@ public class CLITests {
 		assertTrue(result.contains("Valid aggregation"));
 	}
 	
+	private void assertCall(String[] args, int code) {
+		int status = new CommandlineInterface().call(args);
+		if(status != code)
+			System.out.println(outputStream.toString());
+		assertEquals(code,  status);
+	}
+
 	@Test
 	public void validateImplementationByFileTest() {
 		String command = baseArgs + "validate_implementation src/test/resources/cli/inputValidateImplementation.json src/test/resources/cli/EncapsulateDOMDProcess.bpmn2";
 		String[] args = command.split(" ");
-		assertEquals(0, new CommandlineInterface().call(args));
+		assertCall(args, 0);
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
@@ -96,7 +103,7 @@ public class CLITests {
 	public void validateImplementationByIDTest() {
 		String command = baseArgs + "validate_implementation <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> <http://www.pericles-project.eu/ns/ecosystem#impEncapsulateDOMD>";
 		String[] args = command.split(" ");
-		assertEquals(0, new CommandlineInterface().call(args));
+		assertCall(args, 0);
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);

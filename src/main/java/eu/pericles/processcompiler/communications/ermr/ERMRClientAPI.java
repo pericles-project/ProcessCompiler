@@ -72,7 +72,7 @@ public class ERMRClientAPI {
 	}
 
 	public Response getRepository(String repository) {
-		return getTripleStoreBuilder(tripleStore, repository).get();
+		return getTripleStoreBuilder(tripleStore, repository).accept(MediaType.APPLICATION_JSON_TYPE).get();
 	}
 
 	public Response deleteRepository(String repository) {
@@ -88,7 +88,7 @@ public class ERMRClientAPI {
 	}
 
 	public Response getDigitalObject(String digitalObjectPath) {
-		return getObjectStoreBuilder(objectStore, digitalObjectPath).get();
+		return getObjectStoreBuilder(objectStore, digitalObjectPath).accept(MediaType.APPLICATION_JSON).get();
 	}
 
 	public Response updateDigitalObject(String digitalObjectPath, String digitalObject, String mediaType) {
@@ -104,10 +104,10 @@ public class ERMRClientAPI {
 	}
 
 	public Response getTriples(String repository) {
-		return getTripleStoreBuilder(tripleStore, repository + "/statements").get();
+		return getTripleStoreBuilder(tripleStore, repository + "/statements").accept(MediaType.APPLICATION_JSON).get();
 	}
 
 	public Response query(String repository, String query) {
-		return getClient().target(tripleStore.toString() + "/" + repository + "?query=" + query).request().get();
+		return getClient().target(tripleStore.toString() + "/" + repository + "?query=" + query).request().accept(MediaType.APPLICATION_JSON).get();
 	}
 }
