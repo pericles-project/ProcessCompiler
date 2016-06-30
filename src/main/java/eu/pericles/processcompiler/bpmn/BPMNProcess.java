@@ -47,7 +47,12 @@ public class BPMNProcess {
 	public void addBPMNProcess(BPMNProcess bpmnProcess) {
 		this.addItemDefinitions(bpmnProcess.getItemDefinitions());
 		this.addFlowElements(bpmnProcess.getFlowElements());
-		this.addDiagramElements(bpmnProcess.getDiagramElements());
+		if (bpmnProcess.hasDiagram())
+			this.addDiagramElements(bpmnProcess.getDiagramElements());
+	}
+
+	public boolean hasDiagram() {
+		return (this.getDiagram() != null);
 	}
 
 	// -------------- ADD FUNCTIONS -------------//
@@ -65,8 +70,8 @@ public class BPMNProcess {
 	}
 
 	public void addItemDefinitions(List<TItemDefinition> itemDefinitions) {
-		for (TItemDefinition diagramElement : itemDefinitions) {
-			getItemDefinitions().add(diagramElement);
+		for (TItemDefinition itemDefinition : itemDefinitions) {
+			getItemDefinitions().add(itemDefinition);
 		}
 	}
 
@@ -156,9 +161,11 @@ public class BPMNProcess {
 	 * @throws Exception
 	 */
 	public void deleteProcessElement(JAXBElement<? extends TFlowElement> element) throws Exception {
-		JAXBElement<? extends DiagramElement> diagramEndEvent = findDiagramElementByFlowElement(element);
+		if (this.hasDiagram()) {
+			JAXBElement<? extends DiagramElement> diagramEndEvent = findDiagramElementByFlowElement(element);
+			getDiagramElements().remove(diagramEndEvent);
+		}
 		getFlowElements().remove(element);
-		getDiagramElements().remove(diagramEndEvent);
 	}
 
 	// -------------- GET FUNCTIONS -------------//

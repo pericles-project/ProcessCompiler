@@ -60,19 +60,34 @@ public class ProcessFlowHandler {
 	 * @return aggregatedBPMNProcess
 	 *         - BPMNProcess resulting of aggregating the processes specified in
 	 *         the process flow (executed in the same order)
-	 * @throws ProcessProcessFlowException 
+	 * @throws ProcessProcessFlowException
 	 * 
 	 */
-	public static BPMNProcess processProcessFlow(AggregatedProcess aggregatedProcess, List<BPMNProcess> bpmnProcesses) throws ProcessProcessFlowException {
+	public static BPMNProcess processProcessFlow(AggregatedProcess aggregatedProcess, List<BPMNProcess> bpmnProcesses)
+			throws ProcessProcessFlowException {
 		try {
-		BPMNProcess aggregatedBPMNProcess = initialiseAggregatedBPMNProcess(aggregatedProcess, bpmnProcesses.get(0));
-		for (int process = 1; process < bpmnProcesses.size(); process++) {
-			aggregateBPMNProcessToAggregatedBPMNProcess(aggregatedBPMNProcess, bpmnProcesses.get(process));
-		}
-		return aggregatedBPMNProcess;
+			if (isSubprocessDiagramMissing(bpmnProcesses))
+				removeAllDiagrams(bpmnProcesses);
+			BPMNProcess aggregatedBPMNProcess = initialiseAggregatedBPMNProcess(aggregatedProcess, bpmnProcesses.get(0));
+			for (int process = 1; process < bpmnProcesses.size(); process++) {
+				aggregateBPMNProcessToAggregatedBPMNProcess(aggregatedBPMNProcess, bpmnProcesses.get(process));
+			}
+			return aggregatedBPMNProcess;
 		} catch (Exception e) {
-			throw new ProcessProcessFlowException(e.getMessage(),e);
+			throw new ProcessProcessFlowException(e.getMessage(), e);
 		}
+	}
+
+	private static boolean isSubprocessDiagramMissing(List<BPMNProcess> bpmnProcesses) {
+		for (BPMNProcess bpmnProcess : bpmnProcesses)
+			if (bpmnProcess.hasDiagram() == false)
+				return true;
+		return false;
+	}
+
+	private static void removeAllDiagrams(List<BPMNProcess> bpmnProcesses) {
+		for (BPMNProcess bpmnProcess : bpmnProcesses)
+			bpmnProcess.setDiagram(null);
 	}
 
 	private static BPMNProcess initialiseAggregatedBPMNProcess(AggregatedProcess aggregatedProcess, BPMNProcess bpmnProcess)
@@ -151,7 +166,10 @@ public class ProcessFlowHandler {
 	}
 
 	private static DiagramElement findDiagramElement(BPMNProcess bpmnProcess, Object flowElement) throws Exception {
-		return bpmnProcess.findDiagramElementByFlowElement(flowElement).getValue();
+		if (bpmnProcess.hasDiagram())
+			return bpmnProcess.findDiagramElementByFlowElement(flowElement).getValue();
+		else
+			return null;
 	}
 
 	/**
@@ -191,7 +209,10 @@ public class ProcessFlowHandler {
 	private static void updateSourceOfSequenceFlowToPreviousFlowElement(AggregationParameters parameters,
 			JAXBElement<? extends TFlowElement> sequenceFlow) throws Exception {
 		((TSequenceFlow) sequenceFlow.getValue()).setSourceRef(parameters.previousFlowElement);
-		JAXBElement<? extends DiagramElement> diagramSequenceFlow = parameters.bpmnProcess.findDiagramElementByFlowElement(sequenceFlow);
-		((BPMNEdge) diagramSequenceFlow.getValue()).setSourceElement(new QName(parameters.previousDiagramElement.getId()));
+		if (parameters.bpmnProcess.hasDiagram()) {
+			JAXBElement<? extends DiagramElement> diagramSequenceFlow = parameters.bpmnProcess
+					.findDiagramElementByFlowElement(sequenceFlow);
+			((BPMNEdge) diagramSequenceFlow.getValue()).setSourceElement(new QName(parameters.previousDiagramElement.getId()));
+		}
 	}
 }
