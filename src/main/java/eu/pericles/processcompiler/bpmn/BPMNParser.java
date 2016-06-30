@@ -82,7 +82,7 @@ public class BPMNParser {
 	}
 
 	private void parseDiagram() {
-		getBPMNProcess().setDiagram(getDefinitions().getDiagram());
+			getBPMNProcess().setDiagram(getDefinitions().getDiagram());
 	}
 
 	// ------------------- GETTERS AND SETTERS ----------------------//

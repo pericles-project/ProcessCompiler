@@ -1,0 +1,56 @@
+<bpmn2:definitions 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+		xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+		xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+		xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+		xmlns:tns="http://www.jboss.org/drools" 
+		xmlns="http://www.jboss.org/drools" 
+		xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" 
+		id="_019c1579-689e-447b-9d4d-c20d56c60249" 
+		expressionLanguage="http://www.mvel.org/2.0" 
+		targetNamespace="http://www.jboss.org/drools" 
+		typeLanguage="http://www.java.com/javaTypes">
+		
+  <bpmn2:itemDefinition id="_18d83a35-5221-4cfb-bdd2-3f02b1a6ceac" structureRef="eu.pericles.entities.digitalobject" />
+  <bpmn2:itemDefinition id="_32688bc1-4861-405e-a947-8d4d252c698e" structureRef="eu.pericles.entities.metadata" />
+  
+  <!--    process    -->
+  
+  <bpmn2:process id="_3b8e18d2-d35e-4d6d-898d-6a3f41e227e0" tns:version="1" tns:packageName="eu.pericles.processcompiler.unittests.core.processaggregationwithdata" tns:adHoc="false" name="ExtractMetadataProcess" isExecutable="true" processType="Private">
+    
+    <bpmn2:dataObject id="_9e4241fb-f1ab-4307-b3c5-26089f7ab0db" name="Digital Material" itemSubjectRef="_18d83a35-5221-4cfb-bdd2-3f02b1a6ceac" />
+    <bpmn2:dataObject id="_549a617e-89e3-4e1f-a291-978ec1c98c20" name="Metadata" itemSubjectRef="_32688bc1-4861-405e-a947-8d4d252c698e" />
+    
+    <bpmn2:startEvent id="_a02f97aa-232f-494d-abcd-c86a9127ce47" />    
+    
+    <bpmn2:scriptTask id="_34c3adda-607f-4300-95ae-00cb468c70f5" name="Extract MD" scriptFormat="http://www.java.com/java">
+      <bpmn2:ioSpecification id="_31af33eb-e631-4360-a65f-55c1f1a27eea">
+    	<bpmn2:dataInput id="_6c3b3d47-d6db-41ae-b816-eb622da2740a" name="&lt;http://www.pericles-project.eu/ns/ecosystem#isExtractMDDM&gt;" itemSubjectRef="_18d83a35-5221-4cfb-bdd2-3f02b1a6ceac"/>
+        <bpmn2:dataOutput id="_fec7c44f-df6a-418a-b424-a49faf7c4694" name="&lt;http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD&gt;" itemSubjectRef="_32688bc1-4861-405e-a947-8d4d252c698e"/>
+        <bpmn2:inputSet id="_424b7aab-7a82-4cfa-b3e1-a909bfe0bf9a">
+          <bpmn2:dataInputRefs>_6c3b3d47-d6db-41ae-b816-eb622da2740a</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_8a5c84a4-be27-4572-ba69-f2b988303134">
+          <bpmn2:dataOutputRefs>_fec7c44f-df6a-418a-b424-a49faf7c4694</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_5c1f3b3c-9a55-45a1-ab15-0c93c560f8a9">
+        <bpmn2:sourceRef>_9e4241fb-f1ab-4307-b3c5-26089f7ab0db</bpmn2:sourceRef>
+        <bpmn2:targetRef>_6c3b3d47-d6db-41ae-b816-eb622da2740a</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_5f345253-9f70-4932-8658-ef8cf95c4b71">
+        <bpmn2:sourceRef>_fec7c44f-df6a-418a-b424-a49faf7c4694</bpmn2:sourceRef>
+        <bpmn2:targetRef>_549a617e-89e3-4e1f-a291-978ec1c98c20</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:script>System.out.println("Executing Extract Metadata Process");</bpmn2:script>
+    </bpmn2:scriptTask>
+    
+    <bpmn2:endEvent id="_e216a4fa-afaa-4baa-b733-9c0cc4a861f3" />
+    
+    <bpmn2:sequenceFlow id="_075d8c7a-b39a-44f6-95a4-34924c1782c7" sourceRef="_a02f97aa-232f-494d-abcd-c86a9127ce47" targetRef="_34c3adda-607f-4300-95ae-00cb468c70f5"/>
+    <bpmn2:sequenceFlow id="_bea5f602-4295-4c1f-a594-2d0999cd0a17" sourceRef="_34c3adda-607f-4300-95ae-00cb468c70f5" targetRef="_e216a4fa-afaa-4baa-b733-9c0cc4a861f3"/>
+  
+  </bpmn2:process>
+
+</bpmn2:definitions>

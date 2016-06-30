@@ -113,7 +113,8 @@ public class FancyDefinitions extends Definitions {
 
 	public BPMNDiagram getDiagram() {
 		if (getBPMNDiagrams().isEmpty()) {
-			throw new RuntimeException("The file doesn't contain a BPMN Diagram");
+			//throw new RuntimeException("The file doesn't contain a BPMN Diagram");
+			return null;
 		}
 		else if (getBPMNDiagrams().size() == 1) {
 			return getBPMNDiagrams().get(0);

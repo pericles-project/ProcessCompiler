@@ -21,10 +21,10 @@
   
   <bpmn2:process id="_99113fc4-116c-4351-a90d-168ee4f038b8" tns:version="1" tns:packageName="eu.pericles.processcompiler.unittests.core.processaggregationwithdata" tns:adHoc="false" name="EncapsulatDOMDProcess" isExecutable="true" processType="Private">
     
-    <bpmn2:dataObject id="_9bfa891c-1c1d-4ea2-9046-ea6685af96d2" name="Digital Object" itemSubjectRef="_03aafcb1-b7a9-4133-93e1-22a07f2fb66b" />
-    <bpmn2:dataObject id="_bd0a0504-ea17-4d26-9282-3e4db3eeb333" name="Metadata" itemSubjectRef="_f88a467d-3602-4b38-951e-31df1832fed6" />
-    <bpmn2:dataObject id="_3545d1fa-de3d-4ac2-943f-f5eb0f90b695" name="Package Format" itemSubjectRef="_f4213e53-bb4a-442b-9f61-e5032b1c052d" />
-    <bpmn2:dataObject id="_4667f420-f6d9-4017-bf01-f2a6f4f32730" name="Package" itemSubjectRef="_634475f1-e80e-4bad-b3c1-878955e6f396" />
+    <bpmn2:dataObject id="_9bfa891c-1c1d-4ea2-9046-ea6685af96d2" name="_Digital_Object" itemSubjectRef="_03aafcb1-b7a9-4133-93e1-22a07f2fb66b" />
+    <bpmn2:dataObject id="_bd0a0504-ea17-4d26-9282-3e4db3eeb333" name="_Metadata" itemSubjectRef="_f88a467d-3602-4b38-951e-31df1832fed6" />
+    <bpmn2:dataObject id="_3545d1fa-de3d-4ac2-943f-f5eb0f90b695" name="_Package_Format" itemSubjectRef="_f4213e53-bb4a-442b-9f61-e5032b1c052d" />
+    <bpmn2:dataObject id="_4667f420-f6d9-4017-bf01-f2a6f4f32730" name="_Package" itemSubjectRef="_634475f1-e80e-4bad-b3c1-878955e6f396" />
     
     <bpmn2:startEvent id="_74d2cd8a-b9d2-4ef7-8f6b-853acff3c7a1" />    
     
@@ -59,7 +59,12 @@
         <bpmn2:sourceRef>_bdc5fa79-5eab-4870-bb5d-b9d4a624204b</bpmn2:sourceRef>
         <bpmn2:targetRef>_4667f420-f6d9-4017-bf01-f2a6f4f32730</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
-      <bpmn2:script>System.out.println("Executing Encapsulate DO and MD Process");</bpmn2:script>
+      <bpmn2:script>
+      		System.out.println("Executing the encapsulate DO and MD process to: " + kcontext.getVariable("_Digital_Object") + " and " + kcontext.getVariable("_Metadata"));
+      		System.out.println("Using the package format: " + kcontext.getVariable("_Package_Format"));
+      		kcontext.setVariable("_Package", "myPackage");
+      		System.out.println("Creating the package: " + kcontext.getVariable("_Package"));
+      </bpmn2:script>
     </bpmn2:scriptTask>
     
     <bpmn2:endEvent id="_3a6ed65f-47ef-42b4-95a4-ae10fd42e923" />

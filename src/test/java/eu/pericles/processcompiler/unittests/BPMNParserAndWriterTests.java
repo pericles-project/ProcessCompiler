@@ -17,7 +17,7 @@ import eu.pericles.processcompiler.testutils.Utils;
 @RunWith(Parameterized.class)
 public class BPMNParserAndWriterTests {
 	
-	static String[] folders = {"helloworld", "completeprocess", "serviceprocess", "viruscheck"};
+	static String[] folders = {"helloworld", "completeprocess", "serviceprocess", "viruscheck", "onlyprocess"};
 	private String path;
 	
     public BPMNParserAndWriterTests(String folder) {

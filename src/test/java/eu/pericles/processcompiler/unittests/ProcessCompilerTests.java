@@ -28,13 +28,14 @@ import eu.pericles.processcompiler.testutils.Utils;
  * BPMN Files are stored in the Object Store under the Folders: 
  * 		NoaCollection/BasicProcessAggregation/
  * 		NoaCollection/ProcessAggregationWithData/
+ * 		NoaCollection/AggregationWithoutDiagrams/
  */
 @RunWith(Parameterized.class)
 public class ProcessCompilerTests {
 
 	static String repository = "NoaRepositoryTest";
 	static String triplesMediaType = MediaType.TEXT_PLAIN;
-	static String[] folders = {"basicprocessaggregation", "processaggregationwithdata"};
+	static String[] folders = {"basicprocessaggregation", "processaggregationwithdata", "aggregationwithoutdiagrams"};
 	private String ecosystem;
 	private String path;
 	
@@ -64,8 +65,7 @@ public class ProcessCompilerTests {
 		try {
 			ERMRClientAPI client = new ERMRClientAPI();
 			Response response = client.deleteTriples(repository);
-			//TODO Error in the ERMR design: this should be 204 NO CONTENT
-			assertEquals(200, response.getStatus());
+			assertEquals(204, response.getStatus());
 		} catch (ERMRClientException e) {
 			fail("deleteRepository(): " + e.getMessage());
 		}

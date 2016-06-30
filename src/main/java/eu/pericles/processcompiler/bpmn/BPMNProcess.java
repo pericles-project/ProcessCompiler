@@ -14,6 +14,7 @@ import org.omg.spec.bpmn._20100524.model.DataOutput;
 import org.omg.spec.bpmn._20100524.model.DataOutputAssociation;
 import org.omg.spec.bpmn._20100524.model.Import;
 import org.omg.spec.bpmn._20100524.model.TActivity;
+import org.omg.spec.bpmn._20100524.model.TDataObject;
 import org.omg.spec.bpmn._20100524.model.TDataStore;
 import org.omg.spec.bpmn._20100524.model.TError;
 import org.omg.spec.bpmn._20100524.model.TEscalation;
@@ -22,6 +23,7 @@ import org.omg.spec.bpmn._20100524.model.TInterface;
 import org.omg.spec.bpmn._20100524.model.TItemDefinition;
 import org.omg.spec.bpmn._20100524.model.TMessage;
 import org.omg.spec.bpmn._20100524.model.TProcess;
+import org.omg.spec.bpmn._20100524.model.TScriptTask;
 import org.omg.spec.bpmn._20100524.model.TSignal;
 import org.omg.spec.dd._20100524.di.DiagramElement;
 
@@ -45,10 +47,15 @@ public class BPMNProcess {
 	public void addBPMNProcess(BPMNProcess bpmnProcess) {
 		this.addItemDefinitions(bpmnProcess.getItemDefinitions());
 		this.addFlowElements(bpmnProcess.getFlowElements());
-		this.addDiagramElements(bpmnProcess.getDiagramElements());
+		if (bpmnProcess.hasDiagram())
+			this.addDiagramElements(bpmnProcess.getDiagramElements());
 	}
-	
-	//-------------- ADD FUNCTIONS -------------//
+
+	public boolean hasDiagram() {
+		return (this.getDiagram() != null);
+	}
+
+	// -------------- ADD FUNCTIONS -------------//
 
 	public void addFlowElements(List<JAXBElement<? extends TFlowElement>> flowElements) {
 		for (JAXBElement<? extends TFlowElement> flowElement : flowElements) {
@@ -63,13 +70,13 @@ public class BPMNProcess {
 	}
 
 	public void addItemDefinitions(List<TItemDefinition> itemDefinitions) {
-		for (TItemDefinition diagramElement : itemDefinitions) {
-			getItemDefinitions().add(diagramElement);
+		for (TItemDefinition itemDefinition : itemDefinitions) {
+			getItemDefinitions().add(itemDefinition);
 		}
 	}
 
-	//-------------- FIND FUNCTIONS -------------//
-	
+	// -------------- FIND FUNCTIONS -------------//
+
 	public JAXBElement<? extends TFlowElement> findFlowElement(Object element) throws Exception {
 		for (JAXBElement<? extends TFlowElement> flowElement : getFlowElements()) {
 			if (flowElement.getValue().equals(element))
@@ -108,36 +115,44 @@ public class BPMNProcess {
 		}
 		throw new Exception("There is not a diagram element corresponding to the element " + bpmnElement.getValue().getId());
 	}
-	
-	//-------------- UPDATE FUNCTIONS -------------//
+
+	// -------------- UPDATE FUNCTIONS -------------//
 
 	public void updateSourceOfDataInputAssociations(Object oldResource, Object newResource) {
 		for (DataInputAssociation inputAssociation : getDataInputAssociations())
 			if (inputAssociation.getSourceReves().get(0).getValue().equals(oldResource))
 				inputAssociation.getSourceReves().get(0).setValue(newResource);
 	}
-	
+
 	public void updateNameOfDataInput(String oldName, String newName) {
 		for (DataInput dataInput : getDataInputs()) {
 			if (dataInput.getName().equals(oldName))
 				dataInput.setName(newName);
 		}
 	}
-	
+
 	public void updateNameOfDataOutput(String oldName, String newName) {
 		for (DataOutput dataOutput : getDataOutputs()) {
 			if (dataOutput.getName().equals(oldName))
 				dataOutput.setName(newName);
 		}
 	}
-	
-	//-------------- DELETE FUNCTIONS -------------//
+
+	public void updateScriptTasksWithNewResources(TDataObject oldResource, TDataObject newResource) {
+		for (TScriptTask scriptTask : getScriptTasks()) {
+			String script = scriptTask.getScript().getContent().get(0).toString();
+			String newScript = script.replaceAll(oldResource.getName(), newResource.getName());
+			scriptTask.getScript().getContent().set(0, newScript);
+		}
+	}
+
+	// -------------- DELETE FUNCTIONS -------------//
 
 	public void deleteProcessElement(Object object) throws Exception {
-		JAXBElement<? extends TFlowElement> element  = findFlowElement(object);
+		JAXBElement<? extends TFlowElement> element = findFlowElement(object);
 		deleteProcessElement(element);
 	}
-	
+
 	/**
 	 * Deletes an element of the BPMNProcess, that means, the specified flow
 	 * element and its corresponded diagram element
@@ -146,12 +161,14 @@ public class BPMNProcess {
 	 * @throws Exception
 	 */
 	public void deleteProcessElement(JAXBElement<? extends TFlowElement> element) throws Exception {
-		JAXBElement<? extends DiagramElement> diagramEndEvent = findDiagramElementByFlowElement(element);
+		if (this.hasDiagram()) {
+			JAXBElement<? extends DiagramElement> diagramEndEvent = findDiagramElementByFlowElement(element);
+			getDiagramElements().remove(diagramEndEvent);
+		}
 		getFlowElements().remove(element);
-		getDiagramElements().remove(diagramEndEvent);
 	}
 
-	//-------------- GET FUNCTIONS -------------//
+	// -------------- GET FUNCTIONS -------------//
 
 	public List<JAXBElement<? extends TFlowElement>> getFlowElements() {
 		return getProcess().getFlowElements();
@@ -166,6 +183,14 @@ public class BPMNProcess {
 		for (JAXBElement<? extends TFlowElement> element : getFlowElements())
 			if (TActivity.class.isAssignableFrom(element.getValue().getClass()))
 				activities.add((TActivity) element.getValue());
+		return activities;
+	}
+
+	public List<TScriptTask> getScriptTasks() {
+		List<TScriptTask> activities = new ArrayList<TScriptTask>();
+		for (JAXBElement<? extends TFlowElement> element : getFlowElements())
+			if (TScriptTask.class.isAssignableFrom(element.getValue().getClass()))
+				activities.add((TScriptTask) element.getValue());
 		return activities;
 	}
 

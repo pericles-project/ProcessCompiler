@@ -19,8 +19,8 @@
   
   <bpmn2:process id="_3b8e18d2-d35e-4d6d-898d-6a3f41e227e0" tns:version="1" tns:packageName="eu.pericles.processcompiler.unittests.core.processaggregationwithdata" tns:adHoc="false" name="ExtractMetadataProcess" isExecutable="true" processType="Private">
     
-    <bpmn2:dataObject id="_9e4241fb-f1ab-4307-b3c5-26089f7ab0db" name="Digital Material" itemSubjectRef="_18d83a35-5221-4cfb-bdd2-3f02b1a6ceac" />
-    <bpmn2:dataObject id="_549a617e-89e3-4e1f-a291-978ec1c98c20" name="Metadata" itemSubjectRef="_32688bc1-4861-405e-a947-8d4d252c698e" />
+    <bpmn2:dataObject id="_9e4241fb-f1ab-4307-b3c5-26089f7ab0db" name="_Digital_Object" itemSubjectRef="_18d83a35-5221-4cfb-bdd2-3f02b1a6ceac" />
+    <bpmn2:dataObject id="_549a617e-89e3-4e1f-a291-978ec1c98c20" name="_Metadata" itemSubjectRef="_32688bc1-4861-405e-a947-8d4d252c698e" />
     
     <bpmn2:startEvent id="_a02f97aa-232f-494d-abcd-c86a9127ce47" />    
     
@@ -43,7 +43,11 @@
         <bpmn2:sourceRef>_fec7c44f-df6a-418a-b424-a49faf7c4694</bpmn2:sourceRef>
         <bpmn2:targetRef>_549a617e-89e3-4e1f-a291-978ec1c98c20</bpmn2:targetRef>
       </bpmn2:dataOutputAssociation>
-      <bpmn2:script>System.out.println("Executing Extract Metadata Process");</bpmn2:script>
+      <bpmn2:script>
+      		System.out.println("Executing Extract Metadata Process to: " + kcontext.getVariable("_Digital_Object"));
+      		kcontext.setVariable("_Metadata", "myMetadata");
+      		System.out.println("Creating Metadata: " + kcontext.getVariable("_Metadata"));
+      </bpmn2:script>
     </bpmn2:scriptTask>
     
     <bpmn2:endEvent id="_e216a4fa-afaa-4baa-b733-9c0cc4a861f3" />

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.omg.spec.bpmn._20100524.model.TDataObject;
+
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.ecosystem.DataConnection;
 import eu.pericles.processcompiler.ecosystem.DataFlowNode;
@@ -155,6 +157,7 @@ public class DataFlowHandler {
 		Object oldResource = getIndividualInputConnections(sequenceSubprocesses).get(dataConnection.getSlotNode());
 		Object newResource = aggregatedConnections.get(dataConnection.getSlotNode());
 		bpmnProcess.updateSourceOfDataInputAssociations(oldResource, newResource);
+		bpmnProcess.updateScriptTasksWithNewResources((TDataObject) oldResource, (TDataObject) newResource);
 		bpmnProcess.deleteProcessElement(oldResource);
 	}
 
