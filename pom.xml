@@ -110,6 +110,11 @@
 			<version>2.22.1</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.camunda.bpm.model</groupId>
+			<artifactId>camunda-bpmn-model</artifactId>
+			<version>7.4.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
