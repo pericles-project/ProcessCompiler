@@ -51,7 +51,7 @@ public class ProcessAssembler {
 	
 	private AtomicInteger idCounter = new AtomicInteger(1);
 
-	public ProcessAssembler() {
+	public ProcessAssembler(String[] args) {
 
 		model = Bpmn.createEmptyModel();
 
@@ -64,11 +64,12 @@ public class ProcessAssembler {
 		endEvent = addElement(process, EndEvent.class);
 
 		CallActivity callActivity = addElement(process, CallActivity.class);
+		callActivity.setCalledElement(args[0]);
 		addSequenceFlow(process, startEvent, callActivity);
 		addSequenceFlow(process, callActivity, endEvent);
 
-		Property p = addInput("inputName", "inputType");
-		mapInput(callActivity, p, "localName");
+		Property p = addInput(args[1], args[2]);
+		mapInput(callActivity, p, args[3]);
 
 		System.out.println(Bpmn.convertToString(model));
 	}
@@ -78,7 +79,7 @@ public class ProcessAssembler {
 	}
 
 	public static void main(String[] args) {
-		new ProcessAssembler();
+		new ProcessAssembler(args);
 	}
 
 	private Property addInput(String name, String type) {
