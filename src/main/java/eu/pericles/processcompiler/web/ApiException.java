@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonAutoDetect(getterVisibility=Visibility.NONE)
 public class ApiException extends Exception {
 	
+	private static final long serialVersionUID = 2007265540281911347L;
+
 	@JsonProperty
 	public int status = 500;
 

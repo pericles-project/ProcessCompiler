@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
 
 import org.omg.spec.bpmn._20100524.di.BPMNDiagram;
 import org.omg.spec.bpmn._20100524.di.BPMNEdge;
@@ -26,6 +27,8 @@ import org.omg.spec.bpmn._20100524.model.TProcess;
 import org.omg.spec.bpmn._20100524.model.TScriptTask;
 import org.omg.spec.bpmn._20100524.model.TSignal;
 import org.omg.spec.dd._20100524.di.DiagramElement;
+
+import eu.pericles.processcompiler.exceptions.BPMNFileException;
 
 public class BPMNProcess {
 
@@ -76,33 +79,41 @@ public class BPMNProcess {
 	}
 
 	// -------------- FIND FUNCTIONS -------------//
+	
+	public TItemDefinition findItemDefinitionByName(QName name) throws BPMNFileException {
+		for (TItemDefinition itemDef : getItemDefinitions())
+			if (itemDef.getId().equals(name.getLocalPart())) {
+				return itemDef;
+			}
+		throw new BPMNFileException("There is not item definition with id: " + name.getLocalPart());
+	}
 
-	public JAXBElement<? extends TFlowElement> findFlowElement(Object element) throws Exception {
+	public JAXBElement<? extends TFlowElement> findFlowElement(Object element) throws BPMNFileException {
 		for (JAXBElement<? extends TFlowElement> flowElement : getFlowElements()) {
 			if (flowElement.getValue().equals(element))
 				return flowElement;
 		}
-		throw new Exception("There is not a flow element corresponding to the element: " + element.toString());
+		throw new BPMNFileException("There is not a flow element corresponding to the element: " + element.toString());
 	}
 
-	public List<JAXBElement<? extends TFlowElement>> findFlowElementsByClass(String className) throws Exception {
+	public List<JAXBElement<? extends TFlowElement>> findFlowElementsByClass(String className) throws BPMNFileException {
 		List<JAXBElement<? extends TFlowElement>> elements = new ArrayList<JAXBElement<? extends TFlowElement>>();
 		for (JAXBElement<? extends TFlowElement> element : getFlowElements()) {
 			if (element.getDeclaredType().getSimpleName().equals(className))
 				elements.add(element);
 		}
 		if (elements.isEmpty())
-			throw new Exception("There is not flow elements of class: " + className);
+			throw new BPMNFileException("There is not flow elements of class: " + className);
 		return elements;
 	}
 
-	public JAXBElement<? extends DiagramElement> findDiagramElementByFlowElement(Object flowElement) throws Exception {
+	public JAXBElement<? extends DiagramElement> findDiagramElementByFlowElement(Object flowElement) throws BPMNFileException {
 		JAXBElement<? extends TFlowElement> element = findFlowElement(flowElement);
 		return findDiagramElementByFlowElement(element);
 	}
 
 	public JAXBElement<? extends DiagramElement> findDiagramElementByFlowElement(JAXBElement<? extends TFlowElement> bpmnElement)
-			throws Exception {
+			throws BPMNFileException {
 		for (JAXBElement<? extends DiagramElement> element : getDiagramElements()) {
 			// The function getBpmnElement() returns the QName (prefix + ID).
 			// Use getLocalPart() to get the same ID as the BPMNElement
@@ -113,7 +124,7 @@ public class BPMNProcess {
 				if (((BPMNEdge) element.getValue()).getBpmnElement().getLocalPart().equals(bpmnElement.getValue().getId()))
 					return element;
 		}
-		throw new Exception("There is not a diagram element corresponding to the element " + bpmnElement.getValue().getId());
+		throw new BPMNFileException("There is not a diagram element corresponding to the element " + bpmnElement.getValue().getId());
 	}
 
 	// -------------- UPDATE FUNCTIONS -------------//
@@ -148,7 +159,7 @@ public class BPMNProcess {
 
 	// -------------- DELETE FUNCTIONS -------------//
 
-	public void deleteProcessElement(Object object) throws Exception {
+	public void deleteProcessElement(Object object) throws BPMNFileException {
 		JAXBElement<? extends TFlowElement> element = findFlowElement(object);
 		deleteProcessElement(element);
 	}
@@ -158,9 +169,9 @@ public class BPMNProcess {
 	 * element and its corresponded diagram element
 	 * 
 	 * @param element
-	 * @throws Exception
+	 * @throws BPMNFileException
 	 */
-	public void deleteProcessElement(JAXBElement<? extends TFlowElement> element) throws Exception {
+	public void deleteProcessElement(JAXBElement<? extends TFlowElement> element) throws BPMNFileException {
 		if (this.hasDiagram()) {
 			JAXBElement<? extends DiagramElement> diagramEndEvent = findDiagramElementByFlowElement(element);
 			getDiagramElements().remove(diagramEndEvent);
@@ -192,6 +203,14 @@ public class BPMNProcess {
 			if (TScriptTask.class.isAssignableFrom(element.getValue().getClass()))
 				activities.add((TScriptTask) element.getValue());
 		return activities;
+	}
+	
+	public List<TDataObject> getDataObjects() {
+		List<TDataObject> dataObjects = new ArrayList<TDataObject>();
+		for (JAXBElement<? extends TFlowElement> element : getFlowElements())
+			if (TDataObject.class.isAssignableFrom(element.getValue().getClass()))
+				dataObjects.add((TDataObject) element.getValue());
+		return dataObjects;
 	}
 
 	public List<DataInput> getDataInputs() {

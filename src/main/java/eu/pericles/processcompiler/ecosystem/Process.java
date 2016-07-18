@@ -1,5 +1,6 @@
 package eu.pericles.processcompiler.ecosystem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Process {
@@ -62,6 +63,12 @@ public class Process {
 	}
 	public void setOutputs(List<OutputSlot> outputs) {
 		this.outputs = outputs;
+	}
+	public List<Slot> getSlots() {
+		List<Slot> slots = new ArrayList<Slot>();
+		slots.addAll(inputs);
+		slots.addAll(outputs);
+		return slots;
 	}
 	public Implementation getImplementation() {
 		return implementation;

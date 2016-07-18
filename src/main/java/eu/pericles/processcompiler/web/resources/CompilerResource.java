@@ -1,18 +1,12 @@
 package eu.pericles.processcompiler.web.resources;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.OutputStream;
-import java.util.List;
 
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.bpmn.BPMNWriter;
-import eu.pericles.processcompiler.cli.CommandlineInterface.ConfigBean;
 import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.exceptions.BPMNParseException;
@@ -52,9 +46,9 @@ public class CompilerResource extends BaseResource {
 			BPMNProcess bpmnProcess = compiler.compileAggregatedProcess(request.store, request.process);
 			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 			new BPMNWriter().write(bpmnProcess, buffer);
-			CompileResult r = new CompileResult();
-			r.bpmn2 = buffer.toString();
-			return r;
+			CompileResult result = new CompileResult();
+			result.bpmn2 = buffer.toString();
+			return result;
 		} catch (ERMRClientException e) {
 			throw new ApiException(500, e);
 		} catch (ValidationException e) {

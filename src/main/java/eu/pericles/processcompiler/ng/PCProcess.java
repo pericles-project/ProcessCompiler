@@ -2,12 +2,12 @@ package eu.pericles.processcompiler.ng;
 
 import java.util.List;
 
-public class AssembledProcess {
+public class PCProcess {
 	private String id;
 	private String name;
 	private String type;
-	private List<DataObject> dataObjects;
-	private List<Subprocess> subprocesses;
+	private List<PCDataObject> dataObjects;
+	private List<PCSubprocess> subprocesses;
 
 	public String getId() {
 		return id;
@@ -33,19 +33,19 @@ public class AssembledProcess {
 		this.type = type;
 	}
 
-	public List<DataObject> getDataObjects() {
+	public List<PCDataObject> getDataObjects() {
 		return dataObjects;
 	}
 
-	public void setDataObjects(List<DataObject> dataObjects) {
+	public void setDataObjects(List<PCDataObject> dataObjects) {
 		this.dataObjects = dataObjects;
 	}
 
-	public List<Subprocess> getSubprocesses() {
+	public List<PCSubprocess> getSubprocesses() {
 		return subprocesses;
 	}
 
-	public void setSubprocesses(List<Subprocess> subprocesses) {
+	public void setSubprocesses(List<PCSubprocess> subprocesses) {
 		this.subprocesses = subprocesses;
 	}
 

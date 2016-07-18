@@ -28,10 +28,10 @@ import org.kie.api.runtime.manager.RuntimeManagerFactory;
 import org.kie.api.runtime.process.ProcessInstance;
 
 import antlr.collections.List;
-import eu.pericles.processcompiler.ng.AssembledProcess;
-import eu.pericles.processcompiler.ng.DataObject;
-import eu.pericles.processcompiler.ng.ProcessAssembler;
-import eu.pericles.processcompiler.ng.Subprocess;
+import eu.pericles.processcompiler.ng.PCProcess;
+import eu.pericles.processcompiler.ng.PCDataObject;
+import eu.pericles.processcompiler.ng.ProcessCompiler;
+import eu.pericles.processcompiler.ng.PCSubprocess;
 
 public class ProcessAssemblerTests extends JbpmJUnitBaseTestCase {
 
@@ -113,18 +113,18 @@ public class ProcessAssemblerTests extends JbpmJUnitBaseTestCase {
 
 	@Test
 	public void testAssembledProcessIsRunnable() {
-		ArrayList<DataObject> dataObjects = new ArrayList<DataObject>();
-		dataObjects.add(new DataObject("isIngestDO", "Digital Object", "java.lang.String"));
-		dataObjects.add(new DataObject("osIngestMD", "Metadata", "java.lang.String"));
+		ArrayList<PCDataObject> dataObjects = new ArrayList<PCDataObject>();
+		dataObjects.add(new PCDataObject("isIngestDO", "Digital Object", "java.lang.String"));
+		dataObjects.add(new PCDataObject("osIngestMD", "Metadata", "java.lang.String"));
 		
-		HashMap<DataObject, DataObject> dataInputMap = new HashMap<DataObject, DataObject>();
-		dataInputMap.put(new DataObject("isIngestDO", "Digital Object", "java.lang.String"), new DataObject("isExtractMDDO", "Digital Object", "java.lang.String") );
-		HashMap<DataObject, DataObject> dataOutputMap = new HashMap<DataObject, DataObject>();
-		dataOutputMap.put(new DataObject("osIngestMD", "Metadata", "java.lang.String"), new DataObject("osExtractMDMD", "Metadata", "java.lang.String") );
-		ArrayList<Subprocess> subprocesses = new ArrayList<Subprocess>();
-		subprocesses.add(new Subprocess("assembler.atpExtractMD", dataInputMap, dataOutputMap));
+		HashMap<PCDataObject, PCDataObject> dataInputMap = new HashMap<PCDataObject, PCDataObject>();
+		dataInputMap.put(new PCDataObject("isIngestDO", "Digital Object", "java.lang.String"), new PCDataObject("isExtractMDDO", "Digital Object", "java.lang.String") );
+		HashMap<PCDataObject, PCDataObject> dataOutputMap = new HashMap<PCDataObject, PCDataObject>();
+		dataOutputMap.put(new PCDataObject("osIngestMD", "Metadata", "java.lang.String"), new PCDataObject("osExtractMDMD", "Metadata", "java.lang.String") );
+		ArrayList<PCSubprocess> subprocesses = new ArrayList<PCSubprocess>();
+		subprocesses.add(new PCSubprocess("assembler.atpExtractMD", dataInputMap, dataOutputMap));
 		
-		AssembledProcess assembledProcess = new AssembledProcess();
+		PCProcess assembledProcess = new PCProcess();
 		assembledProcess.setId("assembler.aggregatedProcess");
 		assembledProcess.setName("Aggregated Process");
 		assembledProcess.setType("Private");
@@ -132,7 +132,7 @@ public class ProcessAssemblerTests extends JbpmJUnitBaseTestCase {
 		assembledProcess.setSubprocesses(subprocesses);
 		
 		try {
-			new ProcessAssembler().assemble(assembledProcess, "src/test/resources/assembler/output.bpmn");
+			new ProcessCompiler().compile(assembledProcess, "src/test/resources/assembler/output.bpmn");
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}

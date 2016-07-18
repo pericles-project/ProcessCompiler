@@ -9,6 +9,7 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 public class ApiApplication extends ResourceConfig {
 	
+	@SuppressWarnings("rawtypes")
 	public ApiApplication() {
 		packages(getClass().getPackage().getName());
 		property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
