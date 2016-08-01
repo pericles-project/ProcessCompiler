@@ -1,4 +1,4 @@
-package eu.pericles.processcompiler.communications.ermr;
+package eu.pericles.processcompiler.ng.ermr;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -6,12 +6,11 @@ import java.util.List;
 
 import javax.ws.rs.core.Response;
 
-import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
-import eu.pericles.processcompiler.ecosystem.Implementation;
-import eu.pericles.processcompiler.ecosystem.InputSlot;
-import eu.pericles.processcompiler.ecosystem.OutputSlot;
-import eu.pericles.processcompiler.ecosystem.ProcessBase;
-import eu.pericles.processcompiler.ecosystem.Sequence;
+import eu.pericles.processcompiler.ng.ecosystem.AggregatedProcess;
+import eu.pericles.processcompiler.ng.ecosystem.Implementation;
+import eu.pericles.processcompiler.ng.ecosystem.InputSlot;
+import eu.pericles.processcompiler.ng.ecosystem.OutputSlot;
+import eu.pericles.processcompiler.ng.ecosystem.ProcessBase;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 
 public class ERMRCommunications {
@@ -34,22 +33,29 @@ public class ERMRCommunications {
 
 	public AggregatedProcess getAggregatedProcessEntity(String repository, String uri) throws ERMRClientException {
 		AggregatedProcess aggregatedProcess = new AggregatedProcess(getProcessEntity(repository, uri));
-		aggregatedProcess.setSequence(getProcessSequence(repository, uri));
+		aggregatedProcess.setProcessFlow(getProcessFlow(repository, uri));
+		aggregatedProcess.setDataFlow(getDataFlow(repository, uri));
 		return aggregatedProcess;
+	}
+
+	public String getProcessFlow(String repository, String uri) throws ERMRClientException {
+		Response response = client.query(repository, SPARQLQuery.createQueryGetProcessFlow(uri));
+		return JSONParser.parseGetProcessFlowResponse(response);
+	}
+
+	public String getDataFlow(String repository, String uri) throws ERMRClientException {
+		Response response = client.query(repository, SPARQLQuery.createQueryGetDataFlow(uri));
+		return JSONParser.parseGetDataFlowResponse(response);
 	}
 
 	public ProcessBase getProcessEntity(String repository, String uri) throws ERMRClientException {
 		ProcessBase process = getProcessAttributes(repository, uri);
-		process.setInputs(getProcessInputSlots(repository, uri));
-		process.setOutputs(getProcessOutputSlots(repository, uri));
-		process.setImplementation(getProcessImplementation(repository, uri));
+		process.setInputSlots(getProcessInputSlots(repository, uri));
+		process.setOutputSlots(getProcessOutputSlots(repository, uri));
+		if (getImplementationURI(repository, uri) != null)
+			process.setImplementation(getProcessImplementation(repository, uri));
 
 		return process;
-	}
-
-	public String getProcessType(String repository, String uri) throws ERMRClientException {
-		Response response = client.query(repository, SPARQLQuery.createQueryGetEntityTypeURI(uri));
-		return JSONParser.parseGetProcessTypeResponse(response);
 	}
 
 	public ProcessBase getProcessAttributes(String repository, String uri) throws ERMRClientException {
@@ -88,15 +94,6 @@ public class ERMRCommunications {
 	public Implementation getImplementationEntity(String repository, String uri) throws ERMRClientException {
 		Response response = client.query(repository, SPARQLQuery.createQueryGetImplementationEntity(uri));
 		return JSONParser.parseGetImplementationEntityResponse(response, uri);
-	}
-
-	public Sequence getProcessSequence(String repository, String uri) throws ERMRClientException {
-		return getSequenceEntity(repository, getSequenceURI(repository, uri));
-	}
-
-	public Sequence getSequenceEntity(String repository, String uri) throws ERMRClientException {
-		Response response = client.query(repository, SPARQLQuery.createQueryGetSequenceEntity(uri));
-		return JSONParser.parseGetSequenceEntityResponse(response, uri);
 	}
 
 	public InputStream getProcessImplementationFile(String repository, String uri) throws ERMRClientException {

@@ -25,7 +25,7 @@ import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.Implementation;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
-import eu.pericles.processcompiler.ecosystem.Process;
+import eu.pericles.processcompiler.ecosystem.ProcessBase;
 import eu.pericles.processcompiler.ecosystem.Sequence;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.testutils.CreateEntities;
@@ -41,7 +41,7 @@ public class ERMRCommunicationsTests {
 	static String ecosystem = "src/test/resources/ermr/communications/Ecosystem.txt";
 	static String triplesMediaType = MediaType.TEXT_PLAIN;
 	private AggregatedProcess expectedAggregatedProcess;
-	private Process expectedProcess;
+	private ProcessBase expectedProcess;
 
 	// ------------------------------- TESTS
 	// ----------------------------------//
@@ -135,7 +135,7 @@ public class ERMRCommunicationsTests {
 	public void getProcessAttributes() {
 		String uri = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
 		try {
-			Process process = new ERMRCommunications().getProcessAttributes(repository, uri);
+			ProcessBase process = new ERMRCommunications().getProcessAttributes(repository, uri);
 			assertEquals(expectedAggregatedProcess.getId(), process.getId());
 			assertEquals(expectedAggregatedProcess.getName(), process.getName());
 			assertEquals(expectedAggregatedProcess.getDescription(), process.getDescription());
@@ -149,7 +149,7 @@ public class ERMRCommunicationsTests {
 	public void getProcessEntity() {
 		String uri = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
 		try {
-			Process process = new ERMRCommunications().getProcessEntity(repository, uri);
+			ProcessBase process = new ERMRCommunications().getProcessEntity(repository, uri);
 			assertEquals(expectedProcess, process);
 		} catch (Exception e) {
 			fail("getProcessEntity(): " + e.getMessage());
@@ -222,7 +222,7 @@ public class ERMRCommunicationsTests {
 	}
 
 	private void setExpectedProcess() {
-		expectedProcess = new Process();
+		expectedProcess = new ProcessBase();
 		expectedProcess.setId("<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>");
 		expectedProcess.setName("Ingest Artwork Software");
 		expectedProcess.setDescription(

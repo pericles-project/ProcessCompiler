@@ -1,13 +1,21 @@
 package eu.pericles.processcompiler.ng;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import eu.pericles.processcompiler.bpmn.BPMNProcess;
+import eu.pericles.processcompiler.exceptions.PCException;
+import eu.pericles.processcompiler.ng.ecosystem.InputSlot;
+import eu.pericles.processcompiler.ng.ecosystem.OutputSlot;
+import eu.pericles.processcompiler.ng.ecosystem.Slot;
+
 public class PCProcess {
+
 	private String id;
 	private String name;
-	private String type;
-	private List<PCDataObject> dataObjects;
-	private List<PCSubprocess> subprocesses;
+	private List<InputSlot> inputSlots = new ArrayList<>();;
+	private List<OutputSlot> outputSlots = new ArrayList<>();;
+	private BPMNProcess bpmnProcess;
 
 	public String getId() {
 		return id;
@@ -25,28 +33,42 @@ public class PCProcess {
 		this.name = name;
 	}
 
-	public String getType() {
-		return type;
+	public List<InputSlot> getInputSlots() {
+		return inputSlots;
 	}
 
-	public void setType(String type) {
-		this.type = type;
+	public void setInputSlots(List<InputSlot> inputSlots) {
+		this.inputSlots = inputSlots;
 	}
 
-	public List<PCDataObject> getDataObjects() {
-		return dataObjects;
+	public List<OutputSlot> getOutputSlots() {
+		return outputSlots;
 	}
 
-	public void setDataObjects(List<PCDataObject> dataObjects) {
-		this.dataObjects = dataObjects;
+	public void setOutputSlots(List<OutputSlot> outputSlots) {
+		this.outputSlots = outputSlots;
 	}
 
-	public List<PCSubprocess> getSubprocesses() {
-		return subprocesses;
+	public BPMNProcess getBpmnProcess() {
+		return bpmnProcess;
 	}
 
-	public void setSubprocesses(List<PCSubprocess> subprocesses) {
-		this.subprocesses = subprocesses;
+	public void setBpmnProcess(BPMNProcess bpmnProcess) {
+		this.bpmnProcess = bpmnProcess;
+	}
+	
+	public List<Slot> getSlots() {
+		List<Slot> slots = new ArrayList<Slot>();
+		slots.addAll(this.inputSlots);
+		slots.addAll(this.outputSlots);
+		return slots;
+	}
+
+	public Slot findSlotByID(String slotId) throws PCException {
+		for (Slot slot : getSlots())
+			if (slot.getId().equals(slotId))
+				return slot;
+		throw new PCException("Slot " + slotId + " doesn't exist");
 	}
 
 }

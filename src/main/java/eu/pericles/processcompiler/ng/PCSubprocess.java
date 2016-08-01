@@ -5,14 +5,14 @@ import java.util.HashMap;
 public class PCSubprocess {
 	
 	private String id;
-	private HashMap<PCDataObject, PCDataObject> dataInputMap;
-	private HashMap<PCDataObject, PCDataObject> dataOutputMap;
+	private HashMap<String, String> dataInputMap = new HashMap<>();
+	private HashMap<String, String> dataOutputMap = new HashMap<>();
 	
-	public PCSubprocess(String id, HashMap<PCDataObject, PCDataObject> dataInputMap, HashMap<PCDataObject, PCDataObject> dataOutputMap) {
+	/*public PCSubprocess(String id, HashMap<PCDataObject, PCDataObject> dataInputMap, HashMap<PCDataObject, PCDataObject> dataOutputMap) {
 		this.id = id;
 		this.dataInputMap = dataInputMap;
 		this.dataOutputMap = dataOutputMap;
-	}
+	}*/
 
 	public String getId() {
 		return id;
@@ -22,19 +22,19 @@ public class PCSubprocess {
 		this.id = processID;
 	}
 
-	public HashMap<PCDataObject, PCDataObject> getDataInputMap() {
+	public HashMap<String, String> getDataInputMap() {
 		return dataInputMap;
 	}
 
-	public void setDataInputMap(HashMap<PCDataObject, PCDataObject> dataInputMap) {
+	public void setDataInputMap(HashMap<String, String> dataInputMap) {
 		this.dataInputMap = dataInputMap;
 	}
 
-	public HashMap<PCDataObject, PCDataObject> getDataOutputMap() {
+	public HashMap<String, String> getDataOutputMap() {
 		return dataOutputMap;
 	}
 
-	public void setDataOutputMap(HashMap<PCDataObject, PCDataObject> dataOutputMap) {
+	public void setDataOutputMap(HashMap<String, String> dataOutputMap) {
 		this.dataOutputMap = dataOutputMap;
 	}
 

@@ -10,7 +10,7 @@ import eu.pericles.processcompiler.core.ImplementationValidator.ImplementationVa
 import eu.pericles.processcompiler.core.Validator.ValidationResult;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.DataConnection;
-import eu.pericles.processcompiler.ecosystem.Process;
+import eu.pericles.processcompiler.ecosystem.ProcessBase;
 import eu.pericles.processcompiler.exceptions.BPMNParseException;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.exceptions.ProcessDataFlowException;
@@ -33,7 +33,7 @@ public class ProcessCompiler {
 		return new DataFlowValidator(ermrCommunications, repository, aggregatedProcess).validate();
 	}
 	
-	public ValidationResult validateImplementation(Process process, BPMNProcess bpmnProcess)  {
+	public ValidationResult validateImplementation(ProcessBase process, BPMNProcess bpmnProcess)  {
 		return new ImplementationValidator(process, bpmnProcess).validate();
 	}
 
@@ -118,7 +118,7 @@ public class ProcessCompiler {
 	 * @throws ValidationException
 	 * 		- when an error occurs during the process validation
 	 */
-	public ValidatedProcess validateProcess(Process process, BPMNProcess bpmnProcess) throws ValidationException {
+	public ValidatedProcess validateProcess(ProcessBase process, BPMNProcess bpmnProcess) throws ValidationException {
 		ImplementationValidationResult validationResult = new ImplementationValidator(process, bpmnProcess).validate();
 		if (validationResult.isValid() == false)
 			throw new ValidationException(validationResult.getMessage(), validationResult.getException());
@@ -144,7 +144,7 @@ public class ProcessCompiler {
 	public List<ValidatedProcess> validateAndGetProcesses(String repository, AggregatedProcess aggregatedProcess) throws ValidationException, ERMRClientException, BPMNParseException {
 		List<ValidatedProcess> validatedProcesses = new ArrayList<ValidatedProcess>();
 		for (String processID : aggregatedProcess.getSequence().getProcessFlow()) {
-			Process process = getProcess(repository, processID);
+			ProcessBase process = getProcess(repository, processID);
 			BPMNProcess bpmnProcess = getBPMNProcess(repository, processID);
 			ValidatedProcess validatedProcess = validateProcess(process, bpmnProcess);
 			validatedProcesses.add(validatedProcess);
@@ -162,7 +162,7 @@ public class ProcessCompiler {
 	 * @throws ERMRClientException 
 	 * 		- when an error occurs when communicating with the ERMR
 	 */
-	public Process getProcess(String repository, String processID) throws ERMRClientException  {
+	public ProcessBase getProcess(String repository, String processID) throws ERMRClientException  {
 		return ermrCommunications.getProcessEntity(repository, processID);
 	}
 	

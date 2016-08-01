@@ -14,7 +14,7 @@ import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.core.ImplementationValidator;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
-import eu.pericles.processcompiler.ecosystem.Process;
+import eu.pericles.processcompiler.ecosystem.ProcessBase;
 import eu.pericles.processcompiler.testutils.CreateEntities;
 
 public class ImplementationValidatorTests {
@@ -24,7 +24,7 @@ public class ImplementationValidatorTests {
 	@Test
 	public void validProcessImplementation() {
 		try {
-			Process process = this.createProcess();
+			ProcessBase process = this.createProcess();
 			String file = "src/test/resources/core/implementationvalidation/ValidImplementation.bpmn2";
 			BPMNProcess bpmnProcess = new BPMNParser().parse(file);
 			boolean validationResult = new ImplementationValidator(process, bpmnProcess).validate().isValid();
@@ -37,7 +37,7 @@ public class ImplementationValidatorTests {
 	@Test
 	public void inputSlotMissing() {
 		try {
-			Process process = this.createProcess();
+			ProcessBase process = this.createProcess();
 			String file = "src/test/resources/core/implementationvalidation/InputSlotMissing.bpmn2";
 			BPMNProcess bpmnProcess = new BPMNParser().parse(file);
 			boolean validationResult = new ImplementationValidator(process, bpmnProcess).validate().isValid();
@@ -50,7 +50,7 @@ public class ImplementationValidatorTests {
 	@Test
 	public void inputSlotWithDifferentResources() {
 		try {
-			Process process = this.createProcess();
+			ProcessBase process = this.createProcess();
 			String file = "src/test/resources/core/implementationvalidation/InputSlotWithDifferentResources.bpmn2";
 			BPMNProcess bpmnProcess = new BPMNParser().parse(file);
 			boolean validationResult = new ImplementationValidator(process, bpmnProcess).validate().isValid();
@@ -63,7 +63,7 @@ public class ImplementationValidatorTests {
 	@Test
 	public void inputAssociationMissing() {
 		try {
-			Process process = this.createProcess();
+			ProcessBase process = this.createProcess();
 			String file = "src/test/resources/core/implementationvalidation/InputAssociationMissing.bpmn2";
 			BPMNProcess bpmnProcess = new BPMNParser().parse(file);
 			boolean validationResult = new ImplementationValidator(process, bpmnProcess).validate().isValid();
@@ -75,8 +75,8 @@ public class ImplementationValidatorTests {
 
 	// ----------------------- HELP FUNCTIONS ----------------------------------
 
-	private Process createProcess() {
-		Process process = new Process();
+	private ProcessBase createProcess() {
+		ProcessBase process = new ProcessBase();
 		process.setId("<http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>");
 		process.setName("Encapsulate Digital Object and its Metadata");
 		process.setDescription("Atomic process that encapsulate a digital object and its metadata together in a package of a specific format");

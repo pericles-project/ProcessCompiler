@@ -3,7 +3,7 @@ package eu.pericles.processcompiler.ecosystem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AggregatedProcess extends Process {
+public class AggregatedProcess extends ProcessBase {
 	
 	private Sequence sequence;
 	
@@ -11,7 +11,7 @@ public class AggregatedProcess extends Process {
 		super();
 	}
 	
-	public AggregatedProcess(Process process) {
+	public AggregatedProcess(ProcessBase process) {
 		super(process);
 	}
 	

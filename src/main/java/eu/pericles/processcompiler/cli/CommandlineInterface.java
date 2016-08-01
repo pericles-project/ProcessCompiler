@@ -15,7 +15,7 @@ import eu.pericles.processcompiler.bpmn.BPMNWriter;
 import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.core.Validator.ValidationResult;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
-import eu.pericles.processcompiler.ecosystem.Process;
+import eu.pericles.processcompiler.ecosystem.ProcessBase;
 import eu.pericles.processcompiler.exceptions.BPMNParseException;
 import eu.pericles.processcompiler.exceptions.BPMNWriteException;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
@@ -37,7 +37,7 @@ public class CommandlineInterface {
 		}
 		
 		@JsonProperty("process")
-		public Process process;
+		public ProcessBase process;
 
 		@JsonProperty("aggregated_process")
 		public AggregatedProcess aggregatedProcess;
@@ -168,7 +168,7 @@ public class CommandlineInterface {
 		try {
 			String proc = ns.getString("PROC");
 			String impl = ns.getString("IMPL");
-			Process process;
+			ProcessBase process;
 			if (new File(proc).exists()) {
 				ConfigBean config = parseConfig(new File(proc));
 				process = config.process;

@@ -1,4 +1,4 @@
-package eu.pericles.processcompiler.unittests;
+package eu.pericles.processcompiler.ng.unittests;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -9,8 +9,6 @@ import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import org.jbpm.process.core.context.variable.VariableScope;
-import org.jbpm.process.instance.context.variable.VariableScopeInstance;
 import org.jbpm.ruleflow.instance.RuleFlowProcessInstance;
 import org.jbpm.test.JBPMHelper;
 import org.jbpm.test.JbpmJUnitBaseTestCase;
@@ -27,11 +25,10 @@ import org.kie.api.runtime.manager.RuntimeManager;
 import org.kie.api.runtime.manager.RuntimeManagerFactory;
 import org.kie.api.runtime.process.ProcessInstance;
 
-import antlr.collections.List;
-import eu.pericles.processcompiler.ng.PCProcess;
+import eu.pericles.processcompiler.ng.CompiledProcess;
 import eu.pericles.processcompiler.ng.PCDataObject;
-import eu.pericles.processcompiler.ng.ProcessCompiler;
 import eu.pericles.processcompiler.ng.PCSubprocess;
+import eu.pericles.processcompiler.ng.ProcessCompiler;
 
 public class ProcessAssemblerTests extends JbpmJUnitBaseTestCase {
 
@@ -40,7 +37,9 @@ public class ProcessAssemblerTests extends JbpmJUnitBaseTestCase {
 	private ByteArrayOutputStream outputStream;
 	private KieSession ksession;
 	private RuntimeEngine engine;
-	private RuntimeManager manager;
+	private RuntimeManager manager;	
+	private String service = "https://pericles1:PASSWORD@141.5.100.67/api";
+
 
 	@Before
 	public void setRepository() {
@@ -117,14 +116,18 @@ public class ProcessAssemblerTests extends JbpmJUnitBaseTestCase {
 		dataObjects.add(new PCDataObject("isIngestDO", "Digital Object", "java.lang.String"));
 		dataObjects.add(new PCDataObject("osIngestMD", "Metadata", "java.lang.String"));
 		
-		HashMap<PCDataObject, PCDataObject> dataInputMap = new HashMap<PCDataObject, PCDataObject>();
-		dataInputMap.put(new PCDataObject("isIngestDO", "Digital Object", "java.lang.String"), new PCDataObject("isExtractMDDO", "Digital Object", "java.lang.String") );
-		HashMap<PCDataObject, PCDataObject> dataOutputMap = new HashMap<PCDataObject, PCDataObject>();
-		dataOutputMap.put(new PCDataObject("osIngestMD", "Metadata", "java.lang.String"), new PCDataObject("osExtractMDMD", "Metadata", "java.lang.String") );
+		HashMap<String, String> dataInputMap = new HashMap<String, String>();
+		dataInputMap.put("isIngestDO", "isExtractMDDO");
+		HashMap<String, String> dataOutputMap = new HashMap<String, String>();
+		dataOutputMap.put("osIngestMD", "osExtractMDMD");
 		ArrayList<PCSubprocess> subprocesses = new ArrayList<PCSubprocess>();
-		subprocesses.add(new PCSubprocess("assembler.atpExtractMD", dataInputMap, dataOutputMap));
+		PCSubprocess pcSubprocess = new PCSubprocess();
+		pcSubprocess.setId("assembler.atpExtractMD");
+		pcSubprocess.setDataInputMap(dataInputMap);
+		pcSubprocess.setDataOutputMap(dataOutputMap);
+		subprocesses.add(pcSubprocess);
 		
-		PCProcess assembledProcess = new PCProcess();
+		CompiledProcess assembledProcess = new CompiledProcess();
 		assembledProcess.setId("assembler.aggregatedProcess");
 		assembledProcess.setName("Aggregated Process");
 		assembledProcess.setType("Private");
@@ -132,7 +135,7 @@ public class ProcessAssemblerTests extends JbpmJUnitBaseTestCase {
 		assembledProcess.setSubprocesses(subprocesses);
 		
 		try {
-			new ProcessCompiler().compile(assembledProcess, "src/test/resources/assembler/output.bpmn");
+			new ProcessCompiler(service).compile(assembledProcess, "src/test/resources/assembler/output.bpmn");
 		} catch (Exception e) {
 			fail(e.getMessage());
 		}

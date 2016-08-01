@@ -1,29 +1,29 @@
-package eu.pericles.processcompiler.ecosystem;
+package eu.pericles.processcompiler.ng.ecosystem;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Process {
+public class ProcessBase {
 	
 	private String id;
 	private String version;
 	private String name;
 	private String description;
-	private List<InputSlot> inputs;
-	private List<OutputSlot> outputs;
+	private List<InputSlot> inputSlots;
+	private List<OutputSlot> outputSlots;
 	private Implementation implementation;
 	
-	public Process() {
+	public ProcessBase() {
 		super();
 	}
 	
-	public Process(Process process) {
+	public ProcessBase(ProcessBase process) {
 		setId(process.getId());
 		setVersion(process.getVersion());
 		setName(process.getName());
 		setDescription(process.getDescription());
-		setInputs(process.getInputs());
-		setOutputs(process.getOutputs());
+		setInputSlots(process.getInputSlots());
+		setOutputSlots(process.getOutputSlots());
 		setImplementation(process.getImplementation());
 	}
 	
@@ -52,22 +52,22 @@ public class Process {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public List<InputSlot> getInputs() {
-		return inputs;
+	public List<InputSlot> getInputSlots() {
+		return inputSlots;
 	}
-	public void setInputs(List<InputSlot> inputs) {
-		this.inputs = inputs;
+	public void setInputSlots(List<InputSlot> inputs) {
+		this.inputSlots = inputs;
 	}
-	public List<OutputSlot> getOutputs() {
-		return outputs;
+	public List<OutputSlot> getOutputSlots() {
+		return outputSlots;
 	}
-	public void setOutputs(List<OutputSlot> outputs) {
-		this.outputs = outputs;
+	public void setOutputSlots(List<OutputSlot> outputs) {
+		this.outputSlots = outputs;
 	}
 	public List<Slot> getSlots() {
 		List<Slot> slots = new ArrayList<Slot>();
-		slots.addAll(inputs);
-		slots.addAll(outputs);
+		slots.addAll(inputSlots);
+		slots.addAll(outputSlots);
 		return slots;
 	}
 	public Implementation getImplementation() {
@@ -86,9 +86,9 @@ public class Process {
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((implementation == null) ? 0 : implementation.hashCode());
-		result = prime * result + ((inputs == null) ? 0 : inputs.hashCode());
+		result = prime * result + ((inputSlots == null) ? 0 : inputSlots.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((outputs == null) ? 0 : outputs.hashCode());
+		result = prime * result + ((outputSlots == null) ? 0 : outputSlots.hashCode());
 		result = prime * result + ((version == null) ? 0 : version.hashCode());
 		return result;
 	}
@@ -101,7 +101,7 @@ public class Process {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Process other = (Process) obj;
+		ProcessBase other = (ProcessBase) obj;
 		if (description == null) {
 			if (other.description != null)
 				return false;
@@ -117,20 +117,20 @@ public class Process {
 				return false;
 		} else if (!implementation.equals(other.implementation))
 			return false;
-		if (inputs == null) {
-			if (other.inputs != null)
+		if (inputSlots == null) {
+			if (other.inputSlots != null)
 				return false;
-		} else if (!inputs.equals(other.inputs))
+		} else if (!inputSlots.equals(other.inputSlots))
 			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (outputs == null) {
-			if (other.outputs != null)
+		if (outputSlots == null) {
+			if (other.outputSlots != null)
 				return false;
-		} else if (!outputs.equals(other.outputs))
+		} else if (!outputSlots.equals(other.outputSlots))
 			return false;
 		if (version == null) {
 			if (other.version != null)

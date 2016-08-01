@@ -1,9 +1,7 @@
-package eu.pericles.processcompiler.communications.ermr;
+package eu.pericles.processcompiler.ng.ermr;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,14 +11,11 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.ws.rs.core.Response;
 
-import eu.pericles.processcompiler.ecosystem.Fixity;
-import eu.pericles.processcompiler.ecosystem.Implementation;
-import eu.pericles.processcompiler.ecosystem.InputSlot;
-import eu.pericles.processcompiler.ecosystem.OutputSlot;
-import eu.pericles.processcompiler.ecosystem.ProcessBase;
-import eu.pericles.processcompiler.ecosystem.Sequence;
-import eu.pericles.processcompiler.ecosystem.DataFlowNode;
-import eu.pericles.processcompiler.ecosystem.DataConnection;
+import eu.pericles.processcompiler.ng.ecosystem.Fixity;
+import eu.pericles.processcompiler.ng.ecosystem.Implementation;
+import eu.pericles.processcompiler.ng.ecosystem.InputSlot;
+import eu.pericles.processcompiler.ng.ecosystem.OutputSlot;
+import eu.pericles.processcompiler.ng.ecosystem.ProcessBase;
 
 public class JSONParser {
 
@@ -80,7 +75,7 @@ public class JSONParser {
 
 		return outputSlot;
 	}
-
+/*
 	public static Sequence parseGetSequenceEntityResponse(Response response, String uri) {
 		JsonArray values = getValues(response).getJsonArray(0);
 
@@ -120,7 +115,7 @@ public class JSONParser {
 		String[] values = sequenceSlotString.substring(1, sequenceSlotString.length() - 1).split("\\s\\s*");
 		return new DataFlowNode(Integer.parseInt(values[0]), values[1]);
 	}
-
+*/
 	public static String parseGetProcessTypeResponse(Response response) {
 		String type = getValues(response).getJsonArray(0).getString(0);
 
@@ -130,6 +125,20 @@ public class JSONParser {
 		type = matcher.group().substring(1, matcher.group().length() - 1);
 
 		return type;
+	}
+	
+	public static String parseGetProcessFlowResponse(Response response) {
+		return parseGetURIResponse(response);
+	}
+
+	public static String parseGetDataFlowResponse(Response response) {
+		JsonArray array = getValues(response);
+		if (array.isEmpty())
+			return null;
+		else {
+			String dataFlow = array.getJsonArray(0).getString(0);
+			return dataFlow.substring(1, dataFlow.length()-1).replace("\\", "");
+		}
 	}
 
 	// ---------- PARSE URIs ---------//

@@ -1,0 +1,46 @@
+<bpmn2:definitions 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+		xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+		xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+		xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+		xmlns:tns="http://www.pericles-project.eu/ns/ecosystem#" 
+		xmlns="http://www.jboss.org/drools" 
+		xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" 
+		id="_da473e24-9a67-47f3-95b9-156e327c466c" 
+		expressionLanguage="http://www.mvel.org/2.0" 
+		targetNamespace="http://www.jboss.org/drools" 
+		typeLanguage="http://www.java.com/javaTypes">
+
+  <bpmn2:itemDefinition id="itemDefDO" structureRef="tns:DigitalObject" />
+  <bpmn2:itemDefinition id="itemDefMD" structureRef="tns:Metadata" />
+  <bpmn2:itemDefinition id="itemDefPF" structureRef="tns:PackageFormat" />
+  <bpmn2:itemDefinition id="itemDefP" structureRef="tns:Package" />
+  
+  <!--    process    -->
+  
+  <bpmn2:process id="assembler.atpEncapsulateDOMD" name="Encapsulate DO and MD" isExecutable="true" processType="Private" >
+    
+    <bpmn2:dataObject id="isEncapsulateDOMDDO" name="Digital Object" itemSubjectRef="itemDefDO" />
+    <bpmn2:dataObject id="isEncapsulateDOMDMD" name="Metadata" itemSubjectRef="itemDefMD" />
+    <bpmn2:dataObject id="isEncapsulateDOMDPF" name="Package Format" itemSubjectRef="itemDefPF" />
+    <bpmn2:dataObject id="osEncapsulateDOMDP" name="Package" itemSubjectRef="itemDefP" />
+    
+    <bpmn2:startEvent id="_Start_Event" />    
+    
+    <bpmn2:scriptTask id="_Script_Task" name="Encapsulate DO and MD Task" scriptFormat="http://www.java.com/java">
+      <bpmn2:script>
+      		System.out.println("Executing Encapsulate process to DO: " + kcontext.getVariable("isEncapsulateDOMDDO") + " and MD: " + kcontext.getVariable("isEncapsulateDOMDMD"));
+      		kcontext.setVariable("osEncapsulateDOMDP", "newPackage");
+      		System.out.println("Package with format " + kcontext.getVariable("isEncapsulateDOMDPF") + " created: " + kcontext.getVariable("osEncapsulateDOMDP"));
+      </bpmn2:script>
+    </bpmn2:scriptTask>
+    
+    <bpmn2:endEvent id="_End_Event" />
+    
+    <bpmn2:sequenceFlow id="_Sequence_Flow_1" sourceRef="_Start_Event" targetRef="_Script_Task"/>
+    <bpmn2:sequenceFlow id="_Sequence_Flow_2" sourceRef="_Script_Task" targetRef="_End_Event"/>
+  
+  </bpmn2:process>
+  
+</bpmn2:definitions>

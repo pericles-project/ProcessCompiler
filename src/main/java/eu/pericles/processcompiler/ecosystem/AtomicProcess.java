@@ -2,7 +2,7 @@ package eu.pericles.processcompiler.ecosystem;
 
 import java.util.List;
 
-public class AtomicProcess extends Process {
+public class AtomicProcess extends ProcessBase {
 
 	private List<Operator> operators;
 	

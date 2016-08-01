@@ -12,7 +12,7 @@ import org.omg.spec.bpmn._20100524.model.DataOutputAssociation;
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
-import eu.pericles.processcompiler.ecosystem.Process;
+import eu.pericles.processcompiler.ecosystem.ProcessBase;
 
 /**
  * The Implementation Validator validates a BPMN Process with the RDF-based
@@ -35,7 +35,7 @@ import eu.pericles.processcompiler.ecosystem.Process;
  * 
  */
 public class ImplementationValidator implements Validator {
-	private Process process;
+	private ProcessBase process;
 	private BPMNProcess bpmnProcess;
 
 	public static class ImplementationValidationResult extends ValidationResult {
@@ -59,7 +59,7 @@ public class ImplementationValidator implements Validator {
 		}
 	}
 
-	public ImplementationValidator(Process process, BPMNProcess bpmnProcess) {
+	public ImplementationValidator(ProcessBase process, BPMNProcess bpmnProcess) {
 		this.setProcess(process);
 		this.setBPMNProcess(bpmnProcess);
 	}
@@ -228,11 +228,11 @@ public class ImplementationValidator implements Validator {
 
 	// --------------- GETTERS AND SETTERS ----------------//
 
-	public Process getProcess() {
+	public ProcessBase getProcess() {
 		return process;
 	}
 
-	public void setProcess(Process process) {
+	public void setProcess(ProcessBase process) {
 		this.process = process;
 	}
 
