@@ -140,5 +140,16 @@ public class ERMRCommunications {
 		Response response = client.query(repository, SPARQLQuery.createQueryGetDataTypeURI(uri));
 		return JSONParser.parseGetURIResponse(response);
 	}
+	
+	// ---------- CHECK FUNCTIONS ------------//
+	
+	public boolean isSubclass(String repository, String parentClass, String childClass) throws ERMRClientException {
+		while (childClass != null) {
+			if (childClass.equals(parentClass))
+				return true;
+			childClass = getParentEntityURI(repository, childClass);
+		}
+		return false;
+	}
 
 }

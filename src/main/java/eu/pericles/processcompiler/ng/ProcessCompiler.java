@@ -14,6 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javassist.bytecode.LineNumberAttribute.Pc;
+
 import org.apache.commons.io.FileUtils;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
@@ -79,6 +81,8 @@ import eu.pericles.processcompiler.ng.ermr.ERMRCommunications;
 public class ProcessCompiler {
 
 	private ERMRCommunications ermrCommunications;
+	private CompiledProcess compiledProcess;
+	private int aggregatedProcess;
 	private BpmnModelInstance model;
 	private Definitions definitions;
 	private Process process;
@@ -87,9 +91,8 @@ public class ProcessCompiler {
 	private FlowNode previousElement;
 	private HashMap<String, String> dataItemDefConnections = new HashMap<String, String>();
 	private HashMap<Pair, PCDataObject> dataMap = new HashMap<Pair, PCDataObject>();
-	static ObjectMapper mapper = new ObjectMapper();
-
 	private AtomicInteger idCounter = new AtomicInteger(1);
+	static ObjectMapper mapper = new ObjectMapper();
 
 	public class ValidationResult {
 		boolean valid;
@@ -167,18 +170,16 @@ public class ProcessCompiler {
 		ermrCommunications = new ERMRCommunications(service);
 	}
 
-	public String getRandomId(Class<?> forElement) {
-		return forElement.getSimpleName() + "_" + String.valueOf(idCounter.getAndIncrement());
-	}
-
-	public String getRandomId(String id) {
-		return id + "_" + String.valueOf(idCounter.getAndIncrement());
-	}
-
 	public ValidationResult validateImplementation(ProcessBase process, BPMNProcess bpmnProcess) throws BPMNFileException {
-		for (Slot slot : process.getSlots()) {
-			if (existValidSlot(slot, bpmnProcess) == false)
-				return new ValidationResult(false, "Slot: " + slot.getId() + " is missing or invalid in BPMN file");
+		PCProcess pcProcess = new PCProcess().copy(process);
+		pcProcess.setBpmnProcess(bpmnProcess);
+		return validateImplementation(pcProcess);
+	}
+
+	private ValidationResult validateImplementation(PCProcess pcProcess) throws BPMNFileException {
+		for (Slot slot : pcProcess.getSlots()) {
+			if (existValidSlot(slot, pcProcess.getBpmnProcess()) == false)
+				return new ValidationResult(false, "Slot " + slot.getId() + " in process " + pcProcess.getId() + " is missing or invalid in BPMN file");
 		}
 		return new ValidationResult(true, "OK");
 	}
@@ -194,73 +195,114 @@ public class ProcessCompiler {
 		return valid;
 	}
 
-	public ValidationResult validateAggregation(String repository, AggregatedProcess aggregatedProcess) throws ERMRClientException {
-		// List<ProcessBase> subprocesses = getSubprocesses(repository,
-		// aggregatedProcess);
+	public ValidationResult validateAggregation(String repository, AggregatedProcess aggregatedProcess) throws JsonParseException,
+			JsonMappingException, IOException, PCException {
+		PCAggregatedProcess pcAggregatedProcess = createPCAggregatedProcess(repository, aggregatedProcess);
+		return validatePCAggregatedProcess(repository, pcAggregatedProcess);
+	}
+
+	private ValidationResult validatePCAggregatedProcess(String repository, PCAggregatedProcess pcAggregatedProcess) throws PCException {
+		for (PCProcess pcProcess : pcAggregatedProcess.getSubprocesses()) {
+			ValidationResult result = validateImplementation(pcProcess);
+			if (!result.isValid()) 
+				throw new PCException("NOT VALID PROCESS FLOW: " + result.getMessage());
+		}
+		ValidationResult result = validateDataConnections(repository,pcAggregatedProcess);
+		if (!result.isValid())
+		 throw new PCException("NOT VALID DATA FLOW:" + result.getMessage());
 		return new ValidationResult(true, "OK");
 	}
 
-	private List<PCProcess> getSubprocesses(String repository, AggregatedProcess aggregatedProcess) throws ERMRClientException,
-			BPMNParseException {
-		List<PCProcess> subprocesses = new ArrayList<PCProcess>();
-		List<String> subprocessIDs = Arrays.asList(aggregatedProcess.getProcessFlow().split("\\s\\s*"));
-		for (String subprocessID : subprocessIDs) {
-			ProcessBase process = ermrCommunications.getProcessEntity(repository, subprocessID);
-			subprocesses.add(createPCProcess(repository, process));
-		}
-		return subprocesses;
-	}
-
-	public PCProcess createPCProcess(String repository, ProcessBase process) throws BPMNParseException {
-		PCProcess pcProcess = new PCProcess();
-		pcProcess.setId(process.getId());
-		pcProcess.setName(process.getName());
-		pcProcess.setInputSlots(process.getInputSlots());
-		pcProcess.setOutputSlots(process.getOutputSlots());
-		pcProcess
-				.setBpmnProcess(new BPMNParser().parse(ermrCommunications.getImplementationFile(process.getImplementation().getLocation())));
+	public PCProcess createPCProcess(String repository, ProcessBase process) throws PCException {
+		PCProcess pcProcess = new PCProcess().copy(process);
+		BPMNProcess bpmnProcess = new BPMNParser().parse(ermrCommunications
+				.getImplementationFile(process.getImplementation().getLocation()));
+		pcProcess.setBpmnProcess(bpmnProcess);
 		return pcProcess;
 	}
 
-	public PCAggregatedProcess createPCAggregatedProcess(String repository, AggregatedProcess aggregatedProcess)
-			throws ERMRClientException, BPMNParseException, JsonParseException, JsonMappingException, IOException {
-		PCAggregatedProcess pcAggregatedProcess = new PCAggregatedProcess();
-		pcAggregatedProcess.setId(aggregatedProcess.getId());
-		pcAggregatedProcess.setName(aggregatedProcess.getName());
-		pcAggregatedProcess.setInputSlots(aggregatedProcess.getInputSlots());
-		pcAggregatedProcess.setOutputSlots(aggregatedProcess.getOutputSlots());
-		pcAggregatedProcess.setSubprocesses(getSubprocesses(repository, aggregatedProcess));
+	public PCAggregatedProcess createPCAggregatedProcess(String repository, AggregatedProcess aggregatedProcess) throws PCException, JsonParseException, JsonMappingException, IOException  {
+		PCAggregatedProcess pcAggregatedProcess = (PCAggregatedProcess) new PCAggregatedProcess().copy(aggregatedProcess);
+		List<String> subprocessIDs = Arrays.asList(aggregatedProcess.getProcessFlow().split("\\s\\s*"));
+		for (String subprocessID : subprocessIDs) {
+			ProcessBase process = ermrCommunications.getProcessEntity(repository, subprocessID);
+			pcAggregatedProcess.getSubprocesses().add(createPCProcess(repository, process));
+		}
 		List<PCDataConnection> connections = mapper.readValue(aggregatedProcess.getDataFlow(), mapper.getTypeFactory()
 				.constructCollectionType(List.class, PCDataConnection.class));
 		pcAggregatedProcess.setDataConnections(connections);
 		return pcAggregatedProcess;
 	}
 
-	public CompiledProcess createCompiledProcess(PCAggregatedProcess pcAggregatedProcess) throws PCException {
-		int aggregatedProcess = pcAggregatedProcess.getSubprocesses().size();
-		CompiledProcess compiledProcess = new CompiledProcess();
+	private ValidationResult validateDataConnections(String repository, PCAggregatedProcess pcAggregatedProcess) {
+		int agpStep = pcAggregatedProcess.getSubprocesses().size();
+		List<PCProcess> processes = new ArrayList<PCProcess>();
+		processes.addAll(pcAggregatedProcess.getSubprocesses());
+		processes.add(pcAggregatedProcess);
+		for (PCDataConnection connection : pcAggregatedProcess.getDataConnections()) {
+			try {
+				Slot source = processes.get(connection.getSourceProcess()).findSlotByID(connection.getSourceSlot());
+				Slot target = processes.get(connection.getTargetProcess()).findSlotByID(connection.getTargetSlot());
+				String sourceType = ermrCommunications.getDataTypeURI(repository, source.getId());
+				String targetType = ermrCommunications.getDataTypeURI(repository, target.getId());
+				if (!ermrCommunications.isSubclass(repository, targetType, sourceType))
+					return new ValidationResult(false, "INVALID TYPE in data connection with source " + source.getId() + " and target "
+							+ target.getId());
+			} catch (PCException e) {
+				return new ValidationResult(false, e.getMessage());
+			}
+		}
+		List<Pair> availableResources = new ArrayList<Pair>();
+		for (InputSlot inputSlot : pcAggregatedProcess.getInputSlots())
+			availableResources.add(new Pair(agpStep, inputSlot.getId()));
+		for (int step = 0; step <= agpStep; step++) {
+			for (PCDataConnection connection : pcAggregatedProcess.getDataConnectionsByTarget(step)) {
+				if (!availableResources.contains(new Pair(connection.getSourceProcess(), connection.getSourceSlot())))
+					return new ValidationResult(false, "NOT AVAILABLE SOURCE (" + connection.getSourceProcess() + ","
+							+ connection.getSourceSlot() + ")");
+			}
+			for (OutputSlot outputSlot : processes.get(step).getOutputSlots())
+				availableResources.add(new Pair(step, outputSlot.getId()));
+		}
+		return new ValidationResult(true, "OK");
+	}
+
+	public CompiledProcess createCompiledProcess(String repository, PCAggregatedProcess pcAggregatedProcess) throws PCException {
+		aggregatedProcess = pcAggregatedProcess.getSubprocesses().size();
+		compiledProcess = new CompiledProcess();
 		compiledProcess.setId(getLocalPart(pcAggregatedProcess.getId()));
 		compiledProcess.setName(pcAggregatedProcess.getName());
-		compiledProcess.setType("Private");
+		for (PCProcess pcProcess : pcAggregatedProcess.getSubprocesses()) {
+			ValidationResult result = validateImplementation(pcProcess);
+			if (result.isValid()) {
+				PCSubprocess pcSubprocess = new PCSubprocess();
+				pcSubprocess.setId(pcProcess.getBpmnProcess().getId());
+				compiledProcess.getSubprocesses().add(pcSubprocess);
+			} else
+				throw new PCException("NOT VALID process " + process.getId() + " implementation: " + result.getMessage());
+		}
+		ValidationResult result = validateDataConnections(repository,
+		pcAggregatedProcess);
+		if (!result.isValid())
+		 throw new PCException("NOT VALID data flow:" + result.getMessage());
 		for (Slot slot : pcAggregatedProcess.getSlots()) {
-			compiledProcess.getDataObjects().add(new PCDataObject(getLocalPart(slot.getId()), slot.getName(), getLocalPart(slot.getType())));
-			dataMap.put(new Pair(aggregatedProcess, slot.getId()), compiledProcess.getDataObjects().get(compiledProcess.getDataObjects().size() - 1));
+			compiledProcess.getDataObjects()
+					.add(new PCDataObject(getLocalPart(slot.getId()), slot.getName(), getLocalPart(slot.getType())));
+			dataMap.put(new Pair(aggregatedProcess, slot.getId()),
+					compiledProcess.getDataObjects().get(compiledProcess.getDataObjects().size() - 1));
 		}
 		for (PCDataConnection connection : pcAggregatedProcess.getDataConnections()) {
 			if (!dataMap.containsKey(new Pair(connection.getSourceProcess(), connection.getSourceSlot())))
 				if (!dataMap.containsKey(new Pair(connection.getTargetProcess(), connection.getTargetSlot()))) {
 					Slot slot = pcAggregatedProcess.getSubprocesses().get(connection.getSourceProcess())
 							.findSlotByID(connection.getSourceSlot());
-					compiledProcess.getDataObjects()
-							.add(new PCDataObject(getRandomId(getLocalPart(slot.getId())), slot.getName(), getLocalPart(slot.getType())));
+					compiledProcess.getDataObjects().add(
+							new PCDataObject(getRandomId(getLocalPart(slot.getId())), slot.getName(), getLocalPart(slot.getType())));
 					dataMap.put(new Pair(connection.getSourceProcess(), connection.getSourceSlot()),
 							compiledProcess.getDataObjects().get(compiledProcess.getDataObjects().size() - 1));
 				}
 		}
 		for (int subprocess = 0; subprocess < pcAggregatedProcess.getSubprocesses().size(); subprocess++) {
-			compiledProcess.getSubprocesses().add(new PCSubprocess());
-			compiledProcess.getSubprocesses().get(subprocess)
-					.setId(pcAggregatedProcess.getSubprocesses().get(subprocess).getBpmnProcess().getProcess().getId());
 			for (PCDataConnection connection : pcAggregatedProcess.getDataConnectionsByTarget(subprocess)) {
 				if (dataMap.containsKey(new Pair(connection.getSourceProcess(), connection.getSourceSlot()))) {
 					compiledProcess
@@ -285,136 +327,25 @@ public class ProcessCompiler {
 			compiledProcess.getSubprocesses().get(connection.getSourceProcess()).getDataOutputMap()
 					.put(getLocalPart(connection.getTargetSlot()), getLocalPart(connection.getSourceSlot()));
 		}
-		
+
 		return compiledProcess;
 	}
 
-	/*
-	 * public CompiledProcess createCompiledProcess(PCAggregatedProcess
-	 * pcAggregatedProcess) throws PCException {
-	 * //TODO better control of resources created and linked (output data
-	 * connected to output slots of aggregated process)
-	 * CompiledProcess compiledProcess = new CompiledProcess();
-	 * compiledProcess.setId(getLocalPart(pcAggregatedProcess.getId()));
-	 * compiledProcess.setName(pcAggregatedProcess.getName());
-	 * compiledProcess.setType("Public");
-	 * System.out.println("Add input slots of aggregated process");
-	 * List<PCDataObject> dataObjects = new ArrayList<PCDataObject>();
-	 * for (InputSlot inputSlot : pcAggregatedProcess.getInputSlots()) {
-	 * dataObjects.add(new PCDataObject(getLocalPart(inputSlot.getId()),
-	 * inputSlot.getName(), getLocalPart(inputSlot.getType())));
-	 * cdoMap.put(new Pair(0, inputSlot.getId()),
-	 * dataObjects.get(dataObjects.size() - 1));
-	 * System.out.println("KEY: 0," + inputSlot.getId());
-	 * }
-	 * System.out.println("Process data inputs of subprocesses");
-	 * for (int step = 1; step <= pcAggregatedProcess.getSubprocesses().size();
-	 * step++) {
-	 * System.out.println("Step: " + step);
-	 * compiledProcess.getSubprocesses().add(new PCSubprocess());
-	 * compiledProcess.getSubprocesses().get(step - 1)
-	 * .setId(pcAggregatedProcess.getSubprocesses().get(step -
-	 * 1).getBpmnProcess().getProcess().getId());
-	 * System.out.println("data connections by target");
-	 * for (PCDataConnection connection :
-	 * pcAggregatedProcess.getDataConnectionsByTarget(step)) {
-	 * System.out.println(connection.getTargetSlot());
-	 * System.out.println("Has KEY?: " + connection.getSourceProcess() + " " +
-	 * connection.getSourceSlot());
-	 * if (cdoMap.containsKey(new Pair(connection.getSourceProcess(),
-	 * connection.getSourceSlot()))) {
-	 * System.out.println("YES");
-	 * InputSlot inputSlot = pcAggregatedProcess.getSubprocesses().get(step -
-	 * 1).findInputSlotByID(connection.getTargetSlot());
-	 * System.out.println(inputSlot.getId());
-	 * compiledProcess
-	 * .getSubprocesses()
-	 * .get(step - 1)
-	 * .getDataInputMap()
-	 * .put(cdoMap.get(new Pair(connection.getSourceProcess(),
-	 * connection.getSourceSlot())),
-	 * new PCDataObject(getLocalPart(inputSlot.getId()), inputSlot.getName(),
-	 * getLocalPart(inputSlot.getType())));
-	 * } else
-	 * throw new PCException("Bad data flow definition");
-	 * }
-	 * System.out.println("Add output slots of subprocesses");
-	 * for (OutputSlot outputSlot :
-	 * pcAggregatedProcess.getSubprocesses().get(step - 1).getOutputSlots()) {
-	 * System.out.println("Output Slot: " + outputSlot.getId());
-	 * dataObjects
-	 * .add(new PCDataObject(getRandomId(getLocalPart(outputSlot.getId())),
-	 * outputSlot.getName(), getLocalPart(outputSlot.getType())));
-	 * cdoMap.put(new Pair(step, outputSlot.getId()),
-	 * dataObjects.get(dataObjects.size() - 1));
-	 * }
-	 * }
-	 * System.out.println("Add output slots of aggregated process");
-	 * for (OutputSlot outputSlot : pcAggregatedProcess.getOutputSlots()) {
-	 * System.out.println("Output Slot: " + outputSlot.getId());
-	 * dataObjects.add(new PCDataObject(getLocalPart(outputSlot.getId()),
-	 * outputSlot.getName(), getLocalPart(outputSlot.getType())));
-	 * cdoMap.put(new Pair(0, outputSlot.getId()),
-	 * dataObjects.get(dataObjects.size() - 1));
-	 * }
-	 * System.out.println("Process data outputs of subprocesses");
-	 * for (int step = 1; step <= pcAggregatedProcess.getSubprocesses().size();
-	 * step++) {
-	 * System.out.println("Step: " + step);
-	 * for (PCDataConnection connection :
-	 * pcAggregatedProcess.getDataConnectionsBySource(step)) {
-	 * if (cdoMap.containsKey(new Pair(connection.getSourceProcess(),
-	 * connection.getSourceSlot()))) {
-	 * OutputSlot outputSlot = pcAggregatedProcess.getSubprocesses().get(step -
-	 * 1)
-	 * .findOutputSlotByID(connection.getSourceSlot());
-	 * System.out.println("Output Slot: " + outputSlot.getId());
-	 * compiledProcess
-	 * .getSubprocesses()
-	 * .get(step - 1)
-	 * .getDataOutputMap()
-	 * .put(cdoMap.get(new Pair(connection.getSourceProcess(),
-	 * connection.getSourceSlot())),
-	 * new PCDataObject(getLocalPart(outputSlot.getId()), outputSlot.getName(),
-	 * getLocalPart(outputSlot.getType())));
-	 * } else
-	 * throw new PCException("Bad data flow definition");
-	 * }
-	 * }
-	 * compiledProcess.setDataObjects(dataObjects);
-	 * return compiledProcess;
-	 * }
-	 */
-
-	private String getLocalPart(String fullName) throws PCException {
-		Pattern word = Pattern.compile("#(.*?)>");
-		Matcher match = word.matcher(fullName);
-		if (match.find())
-			return match.group(1);
-		else
-			throw new PCException("Bad name structure");
-	}
-
-	public void compile(CompiledProcess pcProcess, String outputFile) throws IOException {
-		System.out.println("Create Process Framework");
-		createProcessFramework(pcProcess);
-		for (PCDataObject pcDataObject : pcProcess.getDataObjects())
+	public void compile(CompiledProcess compiledProcess, String outputFile) throws IOException {
+		createProcessFramework(compiledProcess);
+		for (PCDataObject pcDataObject : compiledProcess.getDataObjects())
 			addDataObject(pcDataObject);
-		for (PCSubprocess pcSubprocess : pcProcess.getSubprocesses())
+		for (PCSubprocess pcSubprocess : compiledProcess.getSubprocesses())
 			addSubprocess(pcSubprocess);
 		addSequenceFlow(process, previousElement, endEvent);
 
-		System.out.println("Print BPMN file");
-		String bpmnProcess = Bpmn.convertToString(model);
-		System.out.println(bpmnProcess);
-		System.out.println("End");
 		if (outputFile != null)
 			FileUtils.writeStringToFile(new File(outputFile), Bpmn.convertToString(model));
 		else
 			System.out.println(Bpmn.convertToString(model));
 	}
 
-	private void createProcessFramework(CompiledProcess pcProcess) {
+	private void createProcessFramework(CompiledProcess compiledProcess) {
 		model = Bpmn.createEmptyModel();
 
 		definitions = model.newInstance(Definitions.class);
@@ -422,9 +353,9 @@ public class ProcessCompiler {
 		definitions.setId(getRandomId(Definitions.class));
 		model.setDefinitions(definitions);
 
-		process = addElement(definitions, pcProcess.getId(), Process.class);
-		process.setName(pcProcess.getName());
-		process.setAttributeValue("processType", pcProcess.getType());
+		process = addElement(definitions, compiledProcess.getId(), Process.class);
+		process.setName(compiledProcess.getName());
+		process.setAttributeValue("processType", "Private");
 
 		startEvent = addElement(process, StartEvent.class);
 		endEvent = addElement(process, EndEvent.class);
@@ -432,7 +363,6 @@ public class ProcessCompiler {
 	}
 
 	private void addDataObject(PCDataObject pcDataObject) {
-		System.out.println("Add Data Object: " + pcDataObject.getId());
 		ItemDefinition itemDefinition = addElement(definitions, ItemDefinition.class);
 		itemDefinition.setStructureRef(pcDataObject.getType());
 		DataObject dataObject = addElement(process, DataObject.class);
@@ -443,11 +373,9 @@ public class ProcessCompiler {
 	}
 
 	private void addSubprocess(PCSubprocess pcSubprocess) {
-		System.out.println("Add Subprocess: " + pcSubprocess.getId());
 		CallActivity callActivity = addElement(process, CallActivity.class);
 		addSequenceFlow(process, previousElement, callActivity);
 		previousElement = callActivity;
-
 		callActivity.setCalledElement(pcSubprocess.getId());
 		mapData(callActivity, pcSubprocess.getDataInputMap(), pcSubprocess.getDataOutputMap());
 	}
@@ -461,7 +389,6 @@ public class ProcessCompiler {
 		Iterator<Entry<String, String>> it = dataInputMap.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, String> inputConnection = (Map.Entry<String, String>) it.next();
-			System.out.println("Input Connection: " + inputConnection.getKey() + " " + inputConnection.getValue());
 			DataInput input = addElement(callActivity.getIoSpecification(), DataInput.class);
 			input.setName(inputConnection.getValue());
 			input.setAttributeValue("itemSubjectRef", dataItemDefConnections.get(inputConnection.getKey()));
@@ -475,7 +402,6 @@ public class ProcessCompiler {
 		it = dataOutputMap.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, String> outputConnection = (Map.Entry<String, String>) it.next();
-			System.out.println("Output Connection: " + outputConnection.getKey() + " " + outputConnection.getValue());
 			DataOutput output = addElement(callActivity.getIoSpecification(), DataOutput.class);
 			output.setName(outputConnection.getValue());
 			output.setAttributeValue("itemSubjectRef", dataItemDefConnections.get(outputConnection.getKey()));
@@ -522,41 +448,21 @@ public class ProcessCompiler {
 		return addElement(parentElement, getRandomId(elementClass), elementClass);
 	}
 
-	/*
-	 * 
-	 * private org.camunda.bpm.model.bpmn.instance.DataObject addInput(String
-	 * name, String type) {
-	 * ItemDefinition itemDef = addElement(definitions, ItemDefinition.class);
-	 * itemDef.setStructureRef(type);
-	 * org.camunda.bpm.model.bpmn.instance.DataObject dataObject =
-	 * addElement(process,
-	 * org.camunda.bpm.model.bpmn.instance.DataObject.class);
-	 * dataObject.setName(name);
-	 * return dataObject;
-	 * }
-	 * 
-	 * private void mapInput(CallActivity task, Property src, String name) {
-	 * 
-	 * if (task.getIoSpecification() == null) {
-	 * addElement(task, IoSpecification.class);
-	 * addElement(task.getIoSpecification(), InputSet.class);
-	 * addElement(task.getIoSpecification(), OutputSet.class);
-	 * }
-	 * 
-	 * DataInput input = addElement(task.getIoSpecification(), DataInput.class);
-	 * input.setName(name);
-	 * 
-	 * InputSet is = task.getIoSpecification().getInputSets().iterator().next();
-	 * addElement(is, null, DataInputRefs.class).setTextContent(input.getId());
-	 * 
-	 * if (task.getDataInputAssociations().isEmpty())
-	 * addElement(task, DataInputAssociation.class);
-	 * 
-	 * DataInputAssociation dias =
-	 * task.getDataInputAssociations().iterator().next();
-	 * addElement(dias, null, SourceRef.class).setTextContent(src.getId());
-	 * addElement(dias, null, TargetRef.class).setTextContent(input.getId());
-	 * 
-	 * }
-	 */
+	private String getRandomId(Class<?> forElement) {
+		return forElement.getSimpleName() + "_" + String.valueOf(idCounter.getAndIncrement());
+	}
+
+	private String getRandomId(String id) {
+		return id + "_" + String.valueOf(idCounter.getAndIncrement());
+	}
+
+	private String getLocalPart(String fullName) throws PCException {
+		Pattern word = Pattern.compile("#(.*?)>");
+		Matcher match = word.matcher(fullName);
+		if (match.find())
+			return match.group(1);
+		else
+			throw new PCException("Bad name structure");
+	}
+
 }

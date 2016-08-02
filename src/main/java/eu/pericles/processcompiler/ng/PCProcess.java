@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
+import eu.pericles.processcompiler.ng.ecosystem.ProcessBase;
 import eu.pericles.processcompiler.exceptions.PCException;
 import eu.pericles.processcompiler.ng.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ng.ecosystem.OutputSlot;
@@ -16,6 +17,14 @@ public class PCProcess {
 	private List<InputSlot> inputSlots = new ArrayList<>();;
 	private List<OutputSlot> outputSlots = new ArrayList<>();;
 	private BPMNProcess bpmnProcess;
+	
+	public PCProcess copy(ProcessBase process) {
+		this.id = process.getId();
+		this.name = process.getName();
+		this.inputSlots = process.getInputSlots();
+		this.outputSlots = process.getOutputSlots();
+		return this;
+	}
 
 	public String getId() {
 		return id;

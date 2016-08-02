@@ -120,7 +120,7 @@ public class PCCompilationTests {
 			System.out.println("createPCAggregatedProcess()");
 			PCAggregatedProcess pcAggregatedProcess = compiler.createPCAggregatedProcess(repository, aggregatedProcess);
 			System.out.println("createCompiledProcess()");
-			CompiledProcess compiledProcess = compiler.createCompiledProcess(pcAggregatedProcess);
+			CompiledProcess compiledProcess = compiler.createCompiledProcess(repository, pcAggregatedProcess);
 			printCompiledProcess(compiledProcess);
 			compiler.compile(compiledProcess, "src/test/resources/ng/CompiledProcess.bpmn");
 		} catch (Exception e) {
