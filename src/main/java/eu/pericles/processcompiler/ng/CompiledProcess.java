@@ -3,6 +3,9 @@ package eu.pericles.processcompiler.ng;
 import java.util.ArrayList;
 import java.util.List;
 
+import eu.pericles.processcompiler.exceptions.PCException;
+import eu.pericles.processcompiler.ng.ProcessCompiler.ValidationResult;
+
 public class CompiledProcess {
 	private String id;
 	private String name;
@@ -49,5 +52,4 @@ public class CompiledProcess {
 	public void setSubprocesses(List<PCSubprocess> subprocesses) {
 		this.subprocesses = subprocesses;
 	}
-
 }

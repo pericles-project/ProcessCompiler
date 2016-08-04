@@ -2,6 +2,8 @@ package eu.pericles.processcompiler.ng;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import eu.pericles.processcompiler.ng.PCPair;
+
 public class PCDataConnection {
 	
 	@JsonProperty("sourceProcess")
@@ -30,6 +32,14 @@ public class PCDataConnection {
 
 	public String getTargetSlot() {
 		return targetSlot;
+	}
+	
+	public PCPair getSource() {
+		return new PCPair(this.sourceProcess, this.sourceSlot);
+	}
+	
+	public PCPair getTarget() {
+		return new PCPair(this.targetProcess, this.targetSlot);
 	}
 	
 }

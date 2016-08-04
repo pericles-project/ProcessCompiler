@@ -36,7 +36,7 @@ public class BPMNParser {
 			parseAttributes();
 			parseImports();
 			parseRootElements();
-			parseDiagram();
+			//parseDiagram();
 			return getBPMNProcess();
 
 		} catch (Exception e) {
@@ -60,10 +60,10 @@ public class BPMNParser {
 	}
 
 	private void parseAttributes() {
-		getBPMNProcess().setId(getDefinitions().getId());
+		getBPMNProcess().setId(getDefinitions().getProcess().getId());
 		getBPMNProcess().setTargetNamespace(getDefinitions().getTargetNamespace());
-		getBPMNProcess().setExpressionLanguage(getDefinitions().getExpressionLanguage());
-		getBPMNProcess().setTypeLanguage(getDefinitions().getTypeLanguage());
+		//getBPMNProcess().setExpressionLanguage(getDefinitions().getExpressionLanguage());
+		//getBPMNProcess().setTypeLanguage(getDefinitions().getTypeLanguage());
 	}
 
 	private void parseImports() {
@@ -73,12 +73,12 @@ public class BPMNParser {
 	private void parseRootElements() {
 		getBPMNProcess().setProcess(getDefinitions().getProcess());
 		getBPMNProcess().setItemDefinitions(getDefinitions().getItemDefinitions());
-		getBPMNProcess().setErrors(getDefinitions().getErrors());
-		getBPMNProcess().setEscalations(getDefinitions().getEscalations());
-		getBPMNProcess().setMessages(getDefinitions().getMessages());
-		getBPMNProcess().setSignals(getDefinitions().getSignals());
-		getBPMNProcess().setInterfaces(getDefinitions().getInterfaces());
-		getBPMNProcess().setDataStores(getDefinitions().getDataStores());
+		//getBPMNProcess().setErrors(getDefinitions().getErrors());
+		//getBPMNProcess().setEscalations(getDefinitions().getEscalations());
+		//getBPMNProcess().setMessages(getDefinitions().getMessages());
+		//getBPMNProcess().setSignals(getDefinitions().getSignals());
+		//getBPMNProcess().setInterfaces(getDefinitions().getInterfaces());
+		//getBPMNProcess().setDataStores(getDefinitions().getDataStores());
 	}
 
 	private void parseDiagram() {

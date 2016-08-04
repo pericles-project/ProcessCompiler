@@ -1,0 +1,152 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ecosystem: <http://www.pericles-project.eu/ns/ecosystem#> .
+  
+#### Ingest Artwork Software - Aggregated Process ####
+
+ecosystem:agpIngestAWSW a ecosystem:AggregatedProcess ;
+  ecosystem:name "Ingest Artwork Software" ;
+  ecosystem:description "Aggregated process that ingest an artwork software by doing the following: check for viruses, extract the metadata and encapsulate the artwork together with it" ;
+  ecosystem:version "1" ;
+  ecosystem:hasInputSlot ecosystem:isIngestAWSWAW, ecosystem:isIngestAWSWPF ;
+  ecosystem:hasOutputSlot ecosystem:osIngestAWSWP ;
+  ecosystem:processFlow "<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>";
+  ecosystem:dataFlow "[{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 0, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDO>\"} , {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 1, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isExtractMDDO>\"}, {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>\"} ,{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>\"} , {\"sourceProcess\": 1, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>\"} , {\"sourceProcess\": 2, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>\", \"targetProcess\": 3, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>\"}]" .
+
+ecosystem:isIngestAWSWAW a ecosystem:InputSlot ;
+  ecosystem:name "InputSlot Artwork Software" ;
+  ecosystem:description "Input slot corresponding to the Artwork Software entity for the aggregated process Ingest Artwork Software" ;
+  ecosystem:version "1" ;
+  ecosystem:type ecosystem:ArtworkSoftware ;
+  ecosystem:isOptional "false" .
+
+ecosystem:isIngestAWSWPF a ecosystem:InputSlot ;
+  ecosystem:name "InputSlot Package Format" ;
+  ecosystem:description "Input slot corresponding to the Package Format entity for the aggregated process Ingest Artwork Software" ;
+  ecosystem:version "1" ;
+  ecosystem:type ecosystem:PackageFormat ;
+  ecosystem:isOptional "false" .
+
+ecosystem:osIngestAWSWP a ecosystem:OutputSlot ;
+  ecosystem:name "OutputSlot Package" ;
+  ecosystem:description "Output slot corresponding to the Package entity created as the result of the aggregated process Ingest Artwork Software" ;
+  ecosystem:version "1" ;
+  ecosystem:type ecosystem:Package .
+
+#### Virus Check - Atomic Process ####
+
+ecosystem:atpVirusCheck a ecosystem:AtomicProcess ;
+  ecosystem:name "Virus Check" ;
+  ecosystem:description "Atomic process that check for viruses a digital material" ;
+  ecosystem:version "1" ;
+  ecosystem:hasInputSlot ecosystem:isVirusCheckDO ;
+  ecosystem:hasImplementation ecosystem:impVirusCheck .
+
+ecosystem:isVirusCheckDO a ecosystem:InputSlot ;
+  ecosystem:name "InputSlot Digital Object" ;
+  ecosystem:description "Input slot corresponding to the digital object to be checked for viruses" ;
+  ecosystem:version "1" ;
+  ecosystem:type ecosystem:DigitalObject ;
+  ecosystem:isOptional "false" .
+
+ecosystem:impVirusCheck a ecosystem:Implementation ;
+  ecosystem:version "1" ;
+  ecosystem:type "BPMN" ;
+  ecosystem:location "NoaCollection/IngestSBA/VirusCheck.bpmn" ;
+  ecosystem:hasFixity ecosystem:fixVirusCheck .
+
+ecosystem:fixVirusCheck a ecosystem:Fixity ;
+  ecosystem:checksum "d04bfc93b0df23bb79179a1616df6fc8bd857ca8a863b487a20fc46bc5129c46" ;
+  ecosystem:algorithm "sha256" .
+  
+#### Extract Metadata - Atomic Process ####
+
+ecosystem:atpExtractMD a ecosystem:AtomicProcess ;
+  ecosystem:name "Extract Metadata" ;
+  ecosystem:description "Atomic process that extract the metadata of a digital object" ;
+  ecosystem:version "1" ;
+  ecosystem:hasInputSlot ecosystem:isExtractMDDO ;
+  ecosystem:hasOutputSlot ecosystem:osExtractMDMD ;
+  ecosystem:hasImplementation ecosystem:impExtractMD .
+
+ecosystem:isExtractMDDO a ecosystem:InputSlot ;
+  ecosystem:name "InputSlot Digital Material" ;
+  ecosystem:description "Input slot corresponding to the digital material from which metadata is extracted" ;
+  ecosystem:version "1" ;
+  ecosystem:type ecosystem:DigitalObject ;
+  ecosystem:isOptional "false" .
+  
+ecosystem:osExtractMDMD a ecosystem:OutputSlot ;
+  ecosystem:name "OutputSlot Metadata" ;
+  ecosystem:description "Output slot corresponding to the extracted metadata" ;
+  ecosystem:version "1" ;
+  ecosystem:type ecosystem:Metadata .
+
+ecosystem:impExtractMD a ecosystem:Implementation ;
+  ecosystem:version "1" ;
+  ecosystem:type "BPMN" ;
+  ecosystem:location "NoaCollection/IngestSBA/ExtractMD.bpmn" ;
+  ecosystem:hasFixity ecosystem:fixExtractMD .
+
+ecosystem:fixExtractMD a ecosystem:Fixity ;
+  ecosystem:checksum "7c30fb10c930edc21ad11d0c6d1484430813cfd75375451bced7f3cbcd98c9e3" ;
+  ecosystem:algorithm "sha256" .
+  
+#### Encapsulate Metadata and Digital Material - Atomic Process ####
+
+ecosystem:atpEncapsulateDOMD a ecosystem:AtomicProcess ;
+  ecosystem:name "Encapsulate Digital Object and its Metadata" ;
+  ecosystem:description "Atomic process that encapsulate a digital object and its metadata together in a package of a specific format" ;
+  ecosystem:version "1" ;
+  ecosystem:hasInputSlot ecosystem:isEncapsulateDOMDDO, ecosystem:isEncapsulateDOMDMD, ecosystem:isEncapsulateDOMDPF ;
+  ecosystem:hasOutputSlot ecosystem:osEncapsulateDOMDP ;
+  ecosystem:hasImplementation ecosystem:impEncapsulateDOMD .
+
+ecosystem:isEncapsulateDOMDDO a ecosystem:InputSlot ;
+  ecosystem:name "InputSlot Digital Object" ;
+  ecosystem:description "Input slot corresponding to the digital object" ;
+  ecosystem:version "1" ;
+  ecosystem:type ecosystem:DigitalObject ;
+  ecosystem:isOptional "false" .
+  
+ecosystem:isEncapsulateDOMDMD a ecosystem:InputSlot ;
+  ecosystem:name "InputSlot Metadata" ;
+  ecosystem:description "Input slot corresponding to the metadata" ;
+  ecosystem:version "1" ;
+  ecosystem:type ecosystem:Metadata ;
+  ecosystem:isOptional "false" .
+  
+ecosystem:isEncapsulateDOMDPF a ecosystem:InputSlot ;
+  ecosystem:name "InputSlot Package Format" ;
+  ecosystem:description "Input slot corresponding to the package format used to encapsulate the digital object and its metadata" ;
+  ecosystem:version "1" ;
+  ecosystem:type ecosystem:PackageFormat ;
+  ecosystem:isOptional "false" .
+  
+ecosystem:osEncapsulateDOMDP a ecosystem:OutputSlot ;
+  ecosystem:name "OutputSlot Package" ;
+  ecosystem:description "Output slot corresponding to the package resulting of encapsulate a digital object and its metadata" ;
+  ecosystem:version "1" ;
+  ecosystem:type ecosystem:Package .
+
+ecosystem:impEncapsulateDOMD a ecosystem:Implementation ;
+  ecosystem:version "1" ;
+  ecosystem:type "BPMN" ;
+  ecosystem:location "NoaCollection/IngestSBA/EncapsulateDOMD.bpmn" ;
+  ecosystem:hasFixity ecosystem:fixEncapsulateDOMD .
+
+ecosystem:fixEncapsulateDOMD a ecosystem:Fixity ;
+  ecosystem:checksum "ad0dec12cb47c4b3856929f803c6d40d76fffd3cf90681bf9a7bf65d63ca7f80" ;
+  ecosystem:algorithm "sha256" .
+  
+ecosystem:DigitalObject a owl:Class .
+ecosystem:Metadata a owl:Class .
+ecosystem:Format a owl:Class .
+
+ecosystem:ArtworkSoftware rdfs:subClassOf ecosystem:DigitalObject .
+ecosystem:File rdfs:subClassOf ecosystem:DigitalObject .
+ecosystem:Package rdfs:subClassOf ecosystem:DigitalObject .
+ecosystem:PackageFormat rdfs:subClassOf ecosystem:Format .
+

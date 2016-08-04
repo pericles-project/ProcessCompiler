@@ -8,11 +8,9 @@ public class PCSubprocess {
 	private HashMap<String, String> dataInputMap = new HashMap<>();
 	private HashMap<String, String> dataOutputMap = new HashMap<>();
 	
-	/*public PCSubprocess(String id, HashMap<PCDataObject, PCDataObject> dataInputMap, HashMap<PCDataObject, PCDataObject> dataOutputMap) {
+	public PCSubprocess(String id) {
 		this.id = id;
-		this.dataInputMap = dataInputMap;
-		this.dataOutputMap = dataOutputMap;
-	}*/
+	}
 
 	public String getId() {
 		return id;

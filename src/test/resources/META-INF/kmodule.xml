@@ -1,5 +1,5 @@
 <kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
 
-  <kbase name="kbase" packages="assembler"/>
+  <kbase name="kbase" packages="jbpm, ingest_sba"/>
 
 </kmodule>
