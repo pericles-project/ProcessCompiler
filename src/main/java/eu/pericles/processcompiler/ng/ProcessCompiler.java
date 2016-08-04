@@ -47,6 +47,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import eu.pericles.processcompiler.bpmn.BPMNParser;
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.exceptions.BPMNFileException;
+import eu.pericles.processcompiler.exceptions.BPMNParseException;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.exceptions.PCException;
 import eu.pericles.processcompiler.ng.ecosystem.AggregatedProcess;
@@ -109,6 +110,19 @@ public class ProcessCompiler {
 		ermrCommunications = new ERMRCommunications(service);
 	}
 
+	public AggregatedProcess getAggregatedProcess(String repository, String uri) throws ERMRClientException {
+		return ermrCommunications.getAggregatedProcessEntity(repository, uri);
+	}
+
+	public ProcessBase getProcess(String repository, String uri) throws ERMRClientException {
+		return ermrCommunications.getProcessEntity(repository, uri);
+	}
+
+	public BPMNProcess getBPMNProcess(String repository, String uri) throws ERMRClientException, BPMNParseException {
+		return new BPMNParser().parse(ermrCommunications.getImplementationFile(ermrCommunications.getImplementationEntity(repository, uri)
+				.getLocation()));
+	}
+
 	public ValidationResult validateImplementation(ProcessBase process, BPMNProcess bpmnProcess) throws BPMNFileException {
 		PCProcess pcProcess = new PCProcess().copy(process);
 		pcProcess.setBpmnProcess(bpmnProcess);
@@ -116,7 +130,7 @@ public class ProcessCompiler {
 	}
 
 	public ValidationResult validateAggregation(String repository, AggregatedProcess aggregatedProcess) throws JsonParseException,
-			JsonMappingException, IOException, PCException {
+			JsonMappingException, IOException, ERMRClientException, BPMNParseException, BPMNFileException {
 		PCAggregatedProcess pcAggProcess = createPCAggregatedProcess(repository, aggregatedProcess);
 		return validatePCAggregatedProcess(repository, pcAggProcess);
 	}
@@ -127,7 +141,7 @@ public class ProcessCompiler {
 		compile(compiledProcess, outputFile);
 	}
 
-	private PCProcess createPCProcess(String repository, ProcessBase process) throws PCException {
+	private PCProcess createPCProcess(String repository, ProcessBase process) throws BPMNParseException {
 		PCProcess pcProcess = new PCProcess().copy(process);
 		BPMNProcess bpmnProcess = new BPMNParser().parse(ermrCommunications
 				.getImplementationFile(process.getImplementation().getLocation()));
@@ -135,8 +149,8 @@ public class ProcessCompiler {
 		return pcProcess;
 	}
 
-	private PCAggregatedProcess createPCAggregatedProcess(String repository, AggregatedProcess aggregatedProcess) throws PCException,
-			JsonParseException, JsonMappingException, IOException {
+	private PCAggregatedProcess createPCAggregatedProcess(String repository, AggregatedProcess aggregatedProcess)
+			throws JsonParseException, JsonMappingException, IOException, ERMRClientException, BPMNParseException {
 		PCAggregatedProcess pcAggProcess = (PCAggregatedProcess) new PCAggregatedProcess().copy(aggregatedProcess);
 		List<String> subprocessIDs = Arrays.asList(aggregatedProcess.getProcessFlow().split("\\s\\s*"));
 		for (String subprocessID : subprocessIDs) {
@@ -169,15 +183,15 @@ public class ProcessCompiler {
 		return valid;
 	}
 
-	private ValidationResult validatePCAggregatedProcess(String repository, PCAggregatedProcess pcAggProcess) throws PCException {
+	private ValidationResult validatePCAggregatedProcess(String repository, PCAggregatedProcess pcAggProcess) throws BPMNFileException {
 		for (PCProcess pcProcess : pcAggProcess.getSubprocesses()) {
 			ValidationResult result = validateImplementation(pcProcess);
 			if (!result.isValid())
-				throw new PCException(result.getMessage());
+				return new ValidationResult(false, "NOT VALID PROCESS FLOW: " + result.getMessage());
 		}
 		ValidationResult result = validateDataConnections(repository, pcAggProcess);
 		if (!result.isValid())
-			throw new PCException("NOT VALID DATA FLOW:" + result.getMessage());
+			return new ValidationResult(false, "NOT VALID DATA FLOW:" + result.getMessage());
 		return new ValidationResult(true, "OK");
 	}
 

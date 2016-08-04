@@ -1,8 +1,0 @@
-[
-    "/NoaCollectionTest/DigitalObject.bpmn2",
-    "/NoaCollection/IngestArtworkSoftware/ExtractMetadataProcess.bpmn2",
-    "/NoaCollection/HelloWorld.bpmn2",
-    "/NoaCollection/IngestArtworkSoftware/EncapsulateDOMDProcess.bpmn2",
-    "/NoaCollection/HelloWorld/Input.bpmn2",
-    "/NoaCollection/IngestArtworkSoftware/VirusCheckProcess.bpmn2"
-]

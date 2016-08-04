@@ -1,8 +1,5 @@
 package eu.pericles.processcompiler.ng.unittests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
@@ -35,25 +32,27 @@ import eu.pericles.processcompiler.ng.ermr.ERMRClientAPI;
 import eu.pericles.processcompiler.ng.ermr.ERMRCommunications;
 
 /**
- * Location of process files is specified in src/test/resources/META-INF/kmodule.xml
- *
+ * Folders to look at for executable processes are specified in
+ * src/test/resources/META-INF/kmodule.xml
  */
 public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
-	
+
 	private static boolean dataSourceExists = false;
 	private PrintStream defaultOutputStream;
 	private ByteArrayOutputStream outputStream;
 	private KieSession ksession;
 	private RuntimeEngine engine;
-	private RuntimeManager manager;	
-	
+	private RuntimeManager manager;
+
 	private String service = "https://pericles1:PASSWORD@141.5.100.67/api";
-	static String collection = "NoaCollection/IngestSBA/";
+	static String collection = "NoaCollection/Test/";
 	static String repository = "NoaRepositoryTest";
 	static String ecosystem = "src/test/resources/ingest_sba/Ecosystem_Compilation.ttl";
 	static String triplesMediaType = "text/turtle";
 	static String doMediaType = MediaType.APPLICATION_XML;
 	static String doPath = "src/test/resources/ingest_sba/";
+	
+	private String[] digObjects = {"VirusCheck.bpmn", "ExtractMD.bpmn", "EncapsulateDOMD.bpmn"};
 
 	@Before
 	public void setRepository() {
@@ -61,12 +60,10 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 			ERMRClientAPI client = new ERMRClientAPI();
 			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
 			assertEquals(201, response.getStatus());
-			response = new ERMRClientAPI().createDigitalObject(collection + "VirusCheck.bpmn", doPath + "VirusCheck.bpmn", doMediaType);
-			assertEquals(201, response.getStatus());
-			response = new ERMRClientAPI().createDigitalObject(collection + "ExtractMD.bpmn", doPath + "ExtractMD.bpmn", doMediaType);
-			assertEquals(201, response.getStatus());
-			response = new ERMRClientAPI().createDigitalObject(collection + "EncapsulateDOMD.bpmn", doPath + "EncapsulateDOMD.bpmn", doMediaType);
-			assertEquals(201, response.getStatus());
+			for (int i=0; i<digObjects.length; i++) {
+				response = new ERMRClientAPI().createDigitalObject(collection + digObjects[i], doPath + digObjects[i], doMediaType);
+				assertEquals(201, response.getStatus());
+			}
 		} catch (ERMRClientException e) {
 			fail("setRepository(): " + e.getMessage());
 		}
@@ -78,12 +75,10 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 			ERMRClientAPI client = new ERMRClientAPI();
 			Response response = client.deleteTriples(repository);
 			assertEquals(204, response.getStatus());
-			response = new ERMRClientAPI().deleteDigitalObject(collection + "VirusCheck.bpmn");
+			for (int i=0; i<digObjects.length; i++) {
+			response = new ERMRClientAPI().deleteDigitalObject(collection + digObjects[i]);
 			assertEquals(204, response.getStatus());
-			response = new ERMRClientAPI().deleteDigitalObject(collection + "ExtractMD.bpmn");
-			assertEquals(204, response.getStatus());
-			response = new ERMRClientAPI().deleteDigitalObject(collection + "EncapsulateDOMD.bpmn");
-			assertEquals(204, response.getStatus());
+			}
 		} catch (ERMRClientException e) {
 			fail("deleteRepository(): " + e.getMessage());
 		}
@@ -97,7 +92,7 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 		manager = createRuntimeManager(kbase);
 		engine = manager.getRuntimeEngine(null);
 		ksession = engine.getKieSession();
-		
+
 		defaultOutputStream = System.out;
 		outputStream = new ByteArrayOutputStream();
 		System.setOut(new PrintStream(outputStream));
@@ -109,7 +104,7 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 		manager.close();
 		System.setOut(defaultOutputStream);
 	}
-	
+
 	// ----------------------------- TESTS ----------------------------------
 
 	@Test
@@ -126,7 +121,7 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 		assertTrue(output.contains("Executing Extract Metadata process to: myDO"));
 		assertTrue(output.contains("Metadata created: newMD"));
 	}
-	
+
 	@Test
 	public void testCompiledBPMNFile() {
 		try {
@@ -135,7 +130,7 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 			AggregatedProcess aggregatedProcess = new ERMRCommunications().getAggregatedProcessEntity(repository, uri);
 			ProcessCompiler compiler = new ProcessCompiler(service);
 			compiler.compile(repository, aggregatedProcess, outputFile);
-			
+
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("isIngestAWSWAW", "myDO");
 			params.put("isIngestAWSWPF", "myPF");
@@ -151,7 +146,7 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 			assertTrue(output.contains("Metadata created: newMD"));
 			assertTrue(output.contains("Executing Encapsulate process to DO: myDO and MD: newMD"));
 			assertTrue(output.contains("Package with format myPF created: newPackage"));
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Exception in compileTest()");

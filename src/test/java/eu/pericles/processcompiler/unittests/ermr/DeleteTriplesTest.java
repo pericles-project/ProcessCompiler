@@ -16,10 +16,7 @@ public class DeleteTriplesTest {
 	public void deleteTriples() throws ERMRClientException  {
 		Response response = new ERMRClientAPI().deleteTriples(repository);
 		System.out.println("Delete Triples: " + response.getStatus() + " " + response.getStatusInfo());
-		//TODO Error with ERMR communications: this should be 204 NO CONTENT
-		assertEquals(200, response.getStatus());
-		if (response.getStatus() != 200)
-			System.out.println(response);
+		assertEquals(204, response.getStatus());
 	}
 	
 	public static void setVariables(String repository2) {

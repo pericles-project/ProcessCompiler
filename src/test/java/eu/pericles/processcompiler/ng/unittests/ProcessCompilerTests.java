@@ -29,12 +29,14 @@ import eu.pericles.processcompiler.ng.ermr.ERMRCommunications;
 public class ProcessCompilerTests {
 
 	private String service = "https://pericles1:PASSWORD@141.5.100.67/api";
-	static String collection = "NoaCollection/IngestSBA/";
+	static String collection = "NoaCollection/Test/";
 	static String repository = "NoaRepositoryTest";
 	static String ecosystem = "src/test/resources/ingest_sba/Ecosystem_Compilation.ttl";
 	static String triplesMediaType = "text/turtle";
 	static String doMediaType = MediaType.APPLICATION_XML;
 	static String doPath = "src/test/resources/ingest_sba/";
+	
+	private String[] digObjects = {"VirusCheck.bpmn", "ExtractMD.bpmn", "EncapsulateDOMD.bpmn"};
 
 	@Before
 	public void setRepository() {
@@ -42,12 +44,10 @@ public class ProcessCompilerTests {
 			ERMRClientAPI client = new ERMRClientAPI();
 			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
 			assertEquals(201, response.getStatus());
-			response = new ERMRClientAPI().createDigitalObject(collection + "VirusCheck.bpmn", doPath + "VirusCheck.bpmn", doMediaType);
-			assertEquals(201, response.getStatus());
-			response = new ERMRClientAPI().createDigitalObject(collection + "ExtractMD.bpmn", doPath + "ExtractMD.bpmn", doMediaType);
-			assertEquals(201, response.getStatus());
-			response = new ERMRClientAPI().createDigitalObject(collection + "EncapsulateDOMD.bpmn", doPath + "EncapsulateDOMD.bpmn", doMediaType);
-			assertEquals(201, response.getStatus());
+			for (int i=0; i<digObjects.length; i++) {
+				response = new ERMRClientAPI().createDigitalObject(collection + digObjects[i], doPath + digObjects[i], doMediaType);
+				assertEquals(201, response.getStatus());
+			}
 		} catch (ERMRClientException e) {
 			fail("setRepository(): " + e.getMessage());
 		}
@@ -59,12 +59,10 @@ public class ProcessCompilerTests {
 			ERMRClientAPI client = new ERMRClientAPI();
 			Response response = client.deleteTriples(repository);
 			assertEquals(204, response.getStatus());
-			response = new ERMRClientAPI().deleteDigitalObject(collection + "VirusCheck.bpmn");
+			for (int i=0; i<digObjects.length; i++) {
+			response = new ERMRClientAPI().deleteDigitalObject(collection + digObjects[i]);
 			assertEquals(204, response.getStatus());
-			response = new ERMRClientAPI().deleteDigitalObject(collection + "ExtractMD.bpmn");
-			assertEquals(204, response.getStatus());
-			response = new ERMRClientAPI().deleteDigitalObject(collection + "EncapsulateDOMD.bpmn");
-			assertEquals(204, response.getStatus());
+			}
 		} catch (ERMRClientException e) {
 			fail("deleteRepository(): " + e.getMessage());
 		}

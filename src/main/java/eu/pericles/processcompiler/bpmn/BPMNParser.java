@@ -16,7 +16,7 @@ import eu.pericles.processcompiler.bpmnx.FancyObjectFactory;
 import eu.pericles.processcompiler.exceptions.BPMNParseException;
 
 public class BPMNParser {
-
+	
 	private BPMNProcess bpmnProcess;
 	private FancyDefinitions definitions;
 
@@ -32,13 +32,14 @@ public class BPMNParser {
 		try {
 			setBPMNProcess(new BPMNProcess());
 			unmarshal(inputStream);
-
-			parseAttributes();
-			parseImports();
-			parseRootElements();
-			//parseDiagram();
+			
+			getBPMNProcess().setId(getDefinitions().getProcess().getId());
+			getBPMNProcess().setTargetNamespace(getDefinitions().getTargetNamespace());
+			getBPMNProcess().setImports(getDefinitions().getImports());
+			getBPMNProcess().setItemDefinitions(getDefinitions().getItemDefinitions());
+			getBPMNProcess().setProcess(getDefinitions().getProcess());
+			
 			return getBPMNProcess();
-
 		} catch (Exception e) {
 			throw new BPMNParseException("Error when parsing the BPMN inputstream", e);
 		}
@@ -47,7 +48,6 @@ public class BPMNParser {
 	private void unmarshal(InputStream inputStream) throws JAXBException {
 		JAXBElement<FancyDefinitions> feed = createUnmarshaller().unmarshal(new StreamSource(new InputStreamReader(inputStream)),
 				FancyDefinitions.class);
-
 		setDefinitions(feed.getValue());
 	}
 
@@ -57,32 +57,6 @@ public class BPMNParser {
 				org.omg.spec.bpmn._20100524.di.ObjectFactory.class, org.omg.spec.dd._20100524.di.ObjectFactory.class,
 				org.omg.spec.dd._20100524.dc.ObjectFactory.class);
 		return jc.createUnmarshaller();
-	}
-
-	private void parseAttributes() {
-		getBPMNProcess().setId(getDefinitions().getProcess().getId());
-		getBPMNProcess().setTargetNamespace(getDefinitions().getTargetNamespace());
-		//getBPMNProcess().setExpressionLanguage(getDefinitions().getExpressionLanguage());
-		//getBPMNProcess().setTypeLanguage(getDefinitions().getTypeLanguage());
-	}
-
-	private void parseImports() {
-		getBPMNProcess().setImports(getDefinitions().getImports());
-	}
-
-	private void parseRootElements() {
-		getBPMNProcess().setProcess(getDefinitions().getProcess());
-		getBPMNProcess().setItemDefinitions(getDefinitions().getItemDefinitions());
-		//getBPMNProcess().setErrors(getDefinitions().getErrors());
-		//getBPMNProcess().setEscalations(getDefinitions().getEscalations());
-		//getBPMNProcess().setMessages(getDefinitions().getMessages());
-		//getBPMNProcess().setSignals(getDefinitions().getSignals());
-		//getBPMNProcess().setInterfaces(getDefinitions().getInterfaces());
-		//getBPMNProcess().setDataStores(getDefinitions().getDataStores());
-	}
-
-	private void parseDiagram() {
-			getBPMNProcess().setDiagram(getDefinitions().getDiagram());
 	}
 
 	// ------------------- GETTERS AND SETTERS ----------------------//

@@ -16,7 +16,7 @@ public class DeleteRepositoryTest {
 	public void deleteRepository() throws ERMRClientException  {
 		Response response = new ERMRClientAPI().deleteRepository(repository);
 		System.out.println("Delete Repository: " + response.getStatus() + " " + response.getStatusInfo());
-		assertEquals(200, response.getStatus());
+		assertEquals(204, response.getStatus());
 	}
 	
 	public static void setVariables(String repository2) {

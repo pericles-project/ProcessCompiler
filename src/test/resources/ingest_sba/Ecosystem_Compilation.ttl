@@ -18,21 +18,18 @@ ecosystem:agpIngestAWSW a ecosystem:AggregatedProcess ;
 ecosystem:isIngestAWSWAW a ecosystem:InputSlot ;
   ecosystem:name "InputSlot Artwork Software" ;
   ecosystem:description "Input slot corresponding to the Artwork Software entity for the aggregated process Ingest Artwork Software" ;
-  ecosystem:version "1" ;
   ecosystem:type ecosystem:ArtworkSoftware ;
   ecosystem:isOptional "false" .
 
 ecosystem:isIngestAWSWPF a ecosystem:InputSlot ;
   ecosystem:name "InputSlot Package Format" ;
   ecosystem:description "Input slot corresponding to the Package Format entity for the aggregated process Ingest Artwork Software" ;
-  ecosystem:version "1" ;
   ecosystem:type ecosystem:PackageFormat ;
   ecosystem:isOptional "false" .
 
 ecosystem:osIngestAWSWP a ecosystem:OutputSlot ;
   ecosystem:name "OutputSlot Package" ;
   ecosystem:description "Output slot corresponding to the Package entity created as the result of the aggregated process Ingest Artwork Software" ;
-  ecosystem:version "1" ;
   ecosystem:type ecosystem:Package .
 
 #### Virus Check - Atomic Process ####
@@ -47,14 +44,13 @@ ecosystem:atpVirusCheck a ecosystem:AtomicProcess ;
 ecosystem:isVirusCheckDO a ecosystem:InputSlot ;
   ecosystem:name "InputSlot Digital Object" ;
   ecosystem:description "Input slot corresponding to the digital object to be checked for viruses" ;
-  ecosystem:version "1" ;
   ecosystem:type ecosystem:DigitalObject ;
   ecosystem:isOptional "false" .
 
 ecosystem:impVirusCheck a ecosystem:Implementation ;
   ecosystem:version "1" ;
   ecosystem:type "BPMN" ;
-  ecosystem:location "NoaCollection/IngestSBA/VirusCheck.bpmn" ;
+  ecosystem:location "NoaCollection/Test/VirusCheck.bpmn" ;
   ecosystem:hasFixity ecosystem:fixVirusCheck .
 
 ecosystem:fixVirusCheck a ecosystem:Fixity ;
@@ -74,20 +70,18 @@ ecosystem:atpExtractMD a ecosystem:AtomicProcess ;
 ecosystem:isExtractMDDO a ecosystem:InputSlot ;
   ecosystem:name "InputSlot Digital Material" ;
   ecosystem:description "Input slot corresponding to the digital material from which metadata is extracted" ;
-  ecosystem:version "1" ;
   ecosystem:type ecosystem:DigitalObject ;
   ecosystem:isOptional "false" .
   
 ecosystem:osExtractMDMD a ecosystem:OutputSlot ;
   ecosystem:name "OutputSlot Metadata" ;
   ecosystem:description "Output slot corresponding to the extracted metadata" ;
-  ecosystem:version "1" ;
   ecosystem:type ecosystem:Metadata .
 
 ecosystem:impExtractMD a ecosystem:Implementation ;
   ecosystem:version "1" ;
   ecosystem:type "BPMN" ;
-  ecosystem:location "NoaCollection/IngestSBA/ExtractMD.bpmn" ;
+  ecosystem:location "NoaCollection/Test/ExtractMD.bpmn" ;
   ecosystem:hasFixity ecosystem:fixExtractMD .
 
 ecosystem:fixExtractMD a ecosystem:Fixity ;
@@ -107,34 +101,30 @@ ecosystem:atpEncapsulateDOMD a ecosystem:AtomicProcess ;
 ecosystem:isEncapsulateDOMDDO a ecosystem:InputSlot ;
   ecosystem:name "InputSlot Digital Object" ;
   ecosystem:description "Input slot corresponding to the digital object" ;
-  ecosystem:version "1" ;
   ecosystem:type ecosystem:DigitalObject ;
   ecosystem:isOptional "false" .
   
 ecosystem:isEncapsulateDOMDMD a ecosystem:InputSlot ;
   ecosystem:name "InputSlot Metadata" ;
   ecosystem:description "Input slot corresponding to the metadata" ;
-  ecosystem:version "1" ;
   ecosystem:type ecosystem:Metadata ;
   ecosystem:isOptional "false" .
   
 ecosystem:isEncapsulateDOMDPF a ecosystem:InputSlot ;
   ecosystem:name "InputSlot Package Format" ;
   ecosystem:description "Input slot corresponding to the package format used to encapsulate the digital object and its metadata" ;
-  ecosystem:version "1" ;
   ecosystem:type ecosystem:PackageFormat ;
   ecosystem:isOptional "false" .
   
 ecosystem:osEncapsulateDOMDP a ecosystem:OutputSlot ;
   ecosystem:name "OutputSlot Package" ;
   ecosystem:description "Output slot corresponding to the package resulting of encapsulate a digital object and its metadata" ;
-  ecosystem:version "1" ;
   ecosystem:type ecosystem:Package .
 
 ecosystem:impEncapsulateDOMD a ecosystem:Implementation ;
   ecosystem:version "1" ;
   ecosystem:type "BPMN" ;
-  ecosystem:location "NoaCollection/IngestSBA/EncapsulateDOMD.bpmn" ;
+  ecosystem:location "NoaCollection/Test/EncapsulateDOMD.bpmn" ;
   ecosystem:hasFixity ecosystem:fixEncapsulateDOMD .
 
 ecosystem:fixEncapsulateDOMD a ecosystem:Fixity ;
