@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.commons.io.FileUtils;
+
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
@@ -202,12 +204,12 @@ public class CommandlineInterface {
 				aggregatedProcess = config.aggregatedProcess;
 			} else
 				aggregatedProcess = compiler.getAggregatedProcess(repo, input);
-			
-			String file = null;
-			if (ns.get("FILE") != null)
-				file = ns.<String>get("FILE");
 
-			compiler.compile(repo, aggregatedProcess, file);
+			String result = compiler.compile(repo, aggregatedProcess);
+			if (ns.get("FILE") != null)
+				FileUtils.writeStringToFile(new File(ns.<String>get("FILE")), result);
+			else
+				System.out.println(result);
 
 			System.out.println("201 Created");
 			return 0;

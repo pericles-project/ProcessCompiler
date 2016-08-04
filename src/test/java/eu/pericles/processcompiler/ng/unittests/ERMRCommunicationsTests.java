@@ -35,6 +35,7 @@ import eu.pericles.processcompiler.ng.testutils.CreateEntities;
  */
 public class ERMRCommunicationsTests {
 
+	static String service = "https://pericles1:PASSWORD@141.5.100.67/api";
 	static String collection = "NoaCollection/ERMRCommunications/";
 	static String repository = "NoaRepositoryTest";
 	static String ecosystem = "src/test/resources/ng/Ecosystem_ERMRCommunications.txt";
@@ -43,20 +44,31 @@ public class ERMRCommunicationsTests {
 	private ProcessBase expectedProcess;
 
 	@Before
-	public void prepareTests() {
-		setRepository();
-		setExpectedResults();
+	public void setRepository() {
+		try {
+			ERMRClientAPI client = new ERMRClientAPI(service);
+			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
+			assertEquals(201, response.getStatus());
+		} catch (ERMRClientException e) {
+			fail("setRepository(): " + e.getMessage());
+		}
 	}
 
 	@After
 	public void deleteRepository() {
 		try {
-			ERMRClientAPI client = new ERMRClientAPI();
+			ERMRClientAPI client = new ERMRClientAPI(service);
 			Response response = client.deleteTriples(repository);
 			assertEquals(204, response.getStatus());
 		} catch (ERMRClientException e) {
 			fail("deleteRepository(): " + e.getMessage());
 		}
+	}
+	
+	@Before
+	public void createExpectedEntities() {
+		setExpectedProcess();
+		setExpectedAggregatedProcess();
 	}
 
 	// -- TESTS --//
@@ -202,21 +214,6 @@ public class ERMRCommunicationsTests {
 	}
 
 	// -- HELP FUNCTIONS: create expected entities and results --//
-
-	public void setRepository() {
-		try {
-			ERMRClientAPI client = new ERMRClientAPI();
-			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
-			assertEquals(201, response.getStatus());
-		} catch (ERMRClientException e) {
-			fail("setRepository(): " + e.getMessage());
-		}
-	}
-
-	public void setExpectedResults() {
-		setExpectedProcess();
-		setExpectedAggregatedProcess();
-	}
 
 	private void setExpectedProcess() {
 		expectedProcess = new ProcessBase();

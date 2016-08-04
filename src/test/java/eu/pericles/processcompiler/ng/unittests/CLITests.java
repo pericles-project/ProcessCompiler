@@ -135,7 +135,7 @@ public class CLITests {
 		defaultOutputStream.println(result);
 		assertTrue(result.contains("201 Created"));
 		
-		Utils.fileContentEquals(testPath + "output.bpmn", testPath + "expected.bpmn");
+		Utils.fileContentEquals(testPath + "output.bpmn", doPath + "IngestAWSW.bpmn");
 	}
 	
 	@Test
@@ -148,7 +148,7 @@ public class CLITests {
 		defaultOutputStream.println(result);
 		assertTrue(result.contains("201 Created"));
 		
-		Utils.fileContentEquals(testPath + "output.bpmn", testPath + "expected.bpmn");
+		Utils.fileContentEquals(testPath + "output.bpmn", doPath + "IngestAWSW.bpmn");
 	}
 	
 	private void assertCall(String[] args, int code) {

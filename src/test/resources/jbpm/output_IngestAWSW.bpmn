@@ -11,7 +11,7 @@
     <dataObject id="isIngestAWSWPF" itemSubjectRef="ItemDefinition_7" name="InputSlot Package Format"/>
     <dataObject id="osIngestAWSWP" itemSubjectRef="ItemDefinition_9" name="OutputSlot Package"/>
     <dataObject id="osExtractMDMD_1" itemSubjectRef="ItemDefinition_11" name="OutputSlot Metadata"/>
-    <callActivity calledElement="_da473e24-9a67-47f3-95b9-156e327c466c" id="CallActivity_13">
+    <callActivity calledElement="atpVirusCheck" id="CallActivity_13">
       <incoming>StartEvent_3-CallActivity_13</incoming>
       <outgoing>CallActivity_13-CallActivity_19</outgoing>
       <ioSpecification id="IoSpecification_14">
@@ -27,7 +27,7 @@
       </dataInputAssociation>
     </callActivity>
     <sequenceFlow id="StartEvent_3-CallActivity_13" sourceRef="StartEvent_3" targetRef="CallActivity_13"/>
-    <callActivity calledElement="_da473e24-9a67-47f3-95b9-156e327c466c" id="CallActivity_19">
+    <callActivity calledElement="atpExtractMD" id="CallActivity_19">
       <incoming>CallActivity_13-CallActivity_19</incoming>
       <outgoing>CallActivity_19-CallActivity_27</outgoing>
       <ioSpecification id="IoSpecification_20">
@@ -50,7 +50,7 @@
       </dataOutputAssociation>
     </callActivity>
     <sequenceFlow id="CallActivity_13-CallActivity_19" sourceRef="CallActivity_13" targetRef="CallActivity_19"/>
-    <callActivity calledElement="_da473e24-9a67-47f3-95b9-156e327c466c" id="CallActivity_27">
+    <callActivity calledElement="atpEncapsulateDOMD" id="CallActivity_27">
       <incoming>CallActivity_19-CallActivity_27</incoming>
       <outgoing>CallActivity_27-EndEvent_4</outgoing>
       <ioSpecification id="IoSpecification_28">

@@ -1,6 +1,7 @@
 package eu.pericles.processcompiler.ng.unittests;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +11,7 @@ import javax.persistence.Persistence;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.io.FileUtils;
 import org.jbpm.test.JBPMHelper;
 import org.jbpm.test.JbpmJUnitBaseTestCase;
 import org.junit.After;
@@ -57,7 +59,7 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 	@Before
 	public void setRepository() {
 		try {
-			ERMRClientAPI client = new ERMRClientAPI();
+			ERMRClientAPI client = new ERMRClientAPI(service);
 			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
 			assertEquals(201, response.getStatus());
 			for (int i=0; i<digObjects.length; i++) {
@@ -72,7 +74,7 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 	@After
 	public void deleteRepository() {
 		try {
-			ERMRClientAPI client = new ERMRClientAPI();
+			ERMRClientAPI client = new ERMRClientAPI(service);
 			Response response = client.deleteTriples(repository);
 			assertEquals(204, response.getStatus());
 			for (int i=0; i<digObjects.length; i++) {
@@ -126,10 +128,11 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 	public void testCompiledBPMNFile() {
 		try {
 			String uri = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
-			String outputFile = "src/test/resources/ingest_sba/CompiledProcess.bpmn";
+			String outputFile = "src/test/resources/jbpm/output_IngestAWSW.bpmn";
 			AggregatedProcess aggregatedProcess = new ERMRCommunications().getAggregatedProcessEntity(repository, uri);
 			ProcessCompiler compiler = new ProcessCompiler(service);
-			compiler.compile(repository, aggregatedProcess, outputFile);
+			String result = compiler.compile(repository, aggregatedProcess);
+			FileUtils.writeStringToFile(new File(outputFile), result);
 
 			Map<String, Object> params = new HashMap<String, Object>();
 			params.put("isIngestAWSWAW", "myDO");

@@ -1,6 +1,5 @@
 package eu.pericles.processcompiler.ng;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +12,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.impl.instance.DataInputRefs;
@@ -135,10 +133,10 @@ public class ProcessCompiler {
 		return validatePCAggregatedProcess(repository, pcAggProcess);
 	}
 
-	public void compile(String repository, AggregatedProcess aggregatedProcess, String outputFile) throws JsonParseException,
+	public String compile(String repository, AggregatedProcess aggregatedProcess) throws JsonParseException,
 			JsonMappingException, PCException, IOException {
 		CompiledProcess compiledProcess = createCompiledProcess(repository, createPCAggregatedProcess(repository, aggregatedProcess));
-		compile(compiledProcess, outputFile);
+		return compile(compiledProcess);
 	}
 
 	private PCProcess createPCProcess(String repository, ProcessBase process) throws BPMNParseException {
@@ -277,7 +275,7 @@ public class ProcessCompiler {
 		return compiledProcess;
 	}
 
-	private void compile(CompiledProcess compiledProcess, String outputFile) throws IOException {
+	private String compile(CompiledProcess compiledProcess) throws IOException {
 		createProcessFramework(compiledProcess);
 		for (PCDataObject pcDataObject : compiledProcess.getDataObjects())
 			addDataObject(pcDataObject);
@@ -285,10 +283,7 @@ public class ProcessCompiler {
 			addSubprocess(pcSubprocess);
 		addSequenceFlow(process, previousElement, endEvent);
 
-		if (outputFile != null)
-			FileUtils.writeStringToFile(new File(outputFile), Bpmn.convertToString(model));
-		else
-			System.out.println(Bpmn.convertToString(model));
+		return Bpmn.convertToString(model);
 	}
 
 	private void createProcessFramework(CompiledProcess compiledProcess) {

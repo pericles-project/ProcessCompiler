@@ -5,9 +5,12 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.io.File;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,13 +25,9 @@ import eu.pericles.processcompiler.ng.ecosystem.ProcessBase;
 import eu.pericles.processcompiler.ng.ermr.ERMRClientAPI;
 import eu.pericles.processcompiler.ng.ermr.ERMRCommunications;
 
-/**
- * BPMN Files are stored in the Object Store under the Folder:
- * NoaCollection/Compilation/
- */
 public class ProcessCompilerTests {
 
-	private String service = "https://pericles1:PASSWORD@141.5.100.67/api";
+	static String service = "https://pericles1:PASSWORD@141.5.100.67/api";
 	static String collection = "NoaCollection/Test/";
 	static String repository = "NoaRepositoryTest";
 	static String ecosystem = "src/test/resources/ingest_sba/Ecosystem_Compilation.ttl";
@@ -41,7 +40,7 @@ public class ProcessCompilerTests {
 	@Before
 	public void setRepository() {
 		try {
-			ERMRClientAPI client = new ERMRClientAPI();
+			ERMRClientAPI client = new ERMRClientAPI(service);
 			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
 			assertEquals(201, response.getStatus());
 			for (int i=0; i<digObjects.length; i++) {
@@ -56,7 +55,7 @@ public class ProcessCompilerTests {
 	@After
 	public void deleteRepository() {
 		try {
-			ERMRClientAPI client = new ERMRClientAPI();
+			ERMRClientAPI client = new ERMRClientAPI(service);
 			Response response = client.deleteTriples(repository);
 			assertEquals(204, response.getStatus());
 			for (int i=0; i<digObjects.length; i++) {
@@ -118,10 +117,11 @@ public class ProcessCompilerTests {
 	public void compileTest() {
 		try {
 			String uri = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
-			String outputFile = "src/test/resources/ng/CompiledProcess.bpmn";
+			String expected = FileUtils.readFileToString(new File("src/test/resources/ingest_sba/IngestAWSW.bpmn"));
 			AggregatedProcess aggregatedProcess = new ERMRCommunications().getAggregatedProcessEntity(repository, uri);
 			ProcessCompiler compiler = new ProcessCompiler(service);
-			compiler.compile(repository, aggregatedProcess, outputFile);
+			String result = compiler.compile(repository, aggregatedProcess);
+			assertEquals(expected, result);
 		} catch (Exception e) {
 			e.printStackTrace();
 			fail("Exception in compileTest()");
