@@ -1,11 +1,10 @@
 package eu.pericles.processcompiler.ecosystem;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class AggregatedProcess extends ProcessBase {
 	
-	private Sequence sequence;
+	private String processFlow;
+	private String dataFlow;
 	
 	public AggregatedProcess() {
 		super();
@@ -15,26 +14,22 @@ public class AggregatedProcess extends ProcessBase {
 		super(process);
 	}
 	
-	public List<DataConnection> getDataConnectionsAtSequenceStep(int sequenceStep) {
-		List<DataConnection> dataConnections = new ArrayList<DataConnection>();
-		for (DataConnection dataConnection : getSequence().getDataFlow()) {
-			if (isDataConnectionAtSequenceStep(dataConnection, sequenceStep))
-				dataConnections.add(dataConnection);
-		}
-		return dataConnections;
-	}
-	private boolean isDataConnectionAtSequenceStep(DataConnection dataConnection, int sequenceStep) {
-		return (dataConnection.getSlotNode().getSequenceStep() == sequenceStep);
-	}
-
 	//--------------- GETTERS AND SETTERS ----------------//
 
-	public Sequence getSequence() {
-		return sequence;
+	public String getProcessFlow() {
+		return processFlow;
 	}
 
-	public void setSequence(Sequence sequence) {
-		this.sequence = sequence;
+	public void setProcessFlow(String processFlow) {
+		this.processFlow = processFlow;
+	}
+
+	public String getDataFlow() {
+		return dataFlow;
+	}
+
+	public void setDataFlow(String dataFlow) {
+		this.dataFlow = dataFlow;
 	}
 	
 	//--------------- HASHCODE AND EQUALS ----------------//
@@ -43,7 +38,8 @@ public class AggregatedProcess extends ProcessBase {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((sequence == null) ? 0 : sequence.hashCode());
+		result = prime * result + ((dataFlow == null) ? 0 : dataFlow.hashCode());
+		result = prime * result + ((processFlow == null) ? 0 : processFlow.hashCode());
 		return result;
 	}
 
@@ -56,10 +52,15 @@ public class AggregatedProcess extends ProcessBase {
 		if (getClass() != obj.getClass())
 			return false;
 		AggregatedProcess other = (AggregatedProcess) obj;
-		if (sequence == null) {
-			if (other.sequence != null)
+		if (dataFlow == null) {
+			if (other.dataFlow != null)
 				return false;
-		} else if (!sequence.equals(other.sequence))
+		} else if (!dataFlow.equals(other.dataFlow))
+			return false;
+		if (processFlow == null) {
+			if (other.processFlow != null)
+				return false;
+		} else if (!processFlow.equals(other.processFlow))
 			return false;
 		return true;
 	}

@@ -23,51 +23,71 @@ import eu.pericles.processcompiler.unittests.ermr.QueryRepositoryTest;
 import eu.pericles.processcompiler.unittests.ermr.UpdateDigitalObjectTest;
 
 @RunWith(Suite.class)
-@SuiteClasses({ CreateCollectionTest.class, 
-	CreateDigitalObjectTest.class, GetDigitalObjectTest.class,
-	UpdateDigitalObjectTest.class, DeleteDigitalObjectTest.class,
-	GetCollectionTest.class, DeleteCollectionTest.class,
-	CreateRepositoryTest.class,
-	GetRepositoryTest.class, AddTriplesTest.class, GetTriplesTest.class,
-	QueryRepositoryTest.class, DeleteTriplesTest.class, 
-	DeleteRepositoryTest.class })
-
+@SuiteClasses({ ERMRClientAPITests.ObjectStoreTests.class, ERMRClientAPITests.TripleStoreTests.class,
+		ERMRClientAPITests.RDFTripleStoreTests.class })
 public class ERMRClientAPITests {
 	static String collection = "NoaCollectionTest_2/";
 	static String repository = "NoaRepositoryTest_2";
 	static String digitalObjectPath = collection + "HelloWorld.bpmn2";
-	static String digitalObject = "src/test/resources/ermr/basicrequests/HelloWorld.bpmn2";
-	static String triples = "src/test/resources/ermr/basicrequests/Triples.txt";
-	static String rdfTriples = "src/test/resources/ermr/basicrequests/RDFTriples.xml";
-	static String expectedTriples = "src/test/resources/ermr/basicrequests/ExpectedTriples.txt";
-	static String expectedFindResult = "src/test/resources/ermr/basicrequests/ExpectedFindResult.txt";
-	static String expectedQueryResult = "src/test/resources/ermr/basicrequests/ExpectedQueryResult.txt";
-	static String findTerm = "bpmn2";
+	static String digitalObject = "src/test/resources/ermr/HelloWorld.bpmn2";
+	static String triples = "src/test/resources/ermr/Triples.txt";
+	static String rdfTriples = "src/test/resources/ermr/RDFTriples.ttl";
+	static String expectedTriples = "src/test/resources/ermr/ExpectedTriples.txt";
+	static String expectedQueryResult = "src/test/resources/ermr/ExpectedQueryResult.txt";
 	static String query = "select%20?s%20?p%20?o%20%7B?s%20?p%20?o%7D";
-	static String digitalObjectMediaType = MediaType.APPLICATION_XML;
+	static String doType = MediaType.APPLICATION_XML;
 	static String textPlain = MediaType.TEXT_PLAIN;
-	static String rdfXml = "application/rdf+xml";
+	static String ttl = "text/turtle";
 
-	@BeforeClass
-	static public void objectStoreTests() {
-		CreateCollectionTest.setVariables(collection);
-		CreateDigitalObjectTest.setVariables(digitalObjectPath, digitalObject, digitalObjectMediaType);
-		GetDigitalObjectTest.setVariables(digitalObjectPath, digitalObject);
-		UpdateDigitalObjectTest.setVariables(digitalObjectPath, digitalObject, digitalObjectMediaType);
-		GetCollectionTest.setVariables(collection);
-		DeleteDigitalObjectTest.setVariables(digitalObjectPath);
-		DeleteCollectionTest.setVariables(collection);
+	@RunWith(Suite.class)
+	@SuiteClasses({ CreateCollectionTest.class, CreateDigitalObjectTest.class, GetDigitalObjectTest.class, UpdateDigitalObjectTest.class,
+			DeleteDigitalObjectTest.class, GetCollectionTest.class, DeleteCollectionTest.class })
+	static public class ObjectStoreTests {
+		
+		@BeforeClass
+		static public void objectStoreTests() {
+			CreateCollectionTest.setVariables(collection);
+			CreateDigitalObjectTest.setVariables(digitalObjectPath, digitalObject, doType);
+			GetDigitalObjectTest.setVariables(digitalObjectPath, digitalObject);
+			UpdateDigitalObjectTest.setVariables(digitalObjectPath, digitalObject, doType);
+			GetCollectionTest.setVariables(collection);
+			DeleteDigitalObjectTest.setVariables(digitalObjectPath);
+			DeleteCollectionTest.setVariables(collection);
+		}
 	}
-	
-	@BeforeClass
-	static public void tripleStoreTests() {
-		CreateRepositoryTest.setVariables(repository);
-		AddTriplesTest.setVariables(repository, triples, textPlain);
-		GetRepositoryTest.setVariables(repository);
-		QueryRepositoryTest.setVariables(repository, query, expectedQueryResult);
-		GetTriplesTest.setVariables(repository, expectedTriples);
-		DeleteTriplesTest.setVariables(repository);
-		DeleteRepositoryTest.setVariables(repository);
+
+	@RunWith(Suite.class)
+	@SuiteClasses({ CreateRepositoryTest.class, GetRepositoryTest.class, AddTriplesTest.class, GetTriplesTest.class,
+			QueryRepositoryTest.class, DeleteTriplesTest.class, DeleteRepositoryTest.class })
+	static public class TripleStoreTests {
+		
+		@BeforeClass
+		static public void tripleStoreTests() {
+			CreateRepositoryTest.setVariables(repository);
+			AddTriplesTest.setVariables(repository, triples, textPlain);
+			GetRepositoryTest.setVariables(repository);
+			QueryRepositoryTest.setVariables(repository, query, expectedQueryResult);
+			GetTriplesTest.setVariables(repository, expectedTriples);
+			DeleteTriplesTest.setVariables(repository);
+			DeleteRepositoryTest.setVariables(repository);
+		}
+	}
+
+	@RunWith(Suite.class)
+	@SuiteClasses({ CreateRepositoryTest.class, GetRepositoryTest.class, AddTriplesTest.class, GetTriplesTest.class,
+			QueryRepositoryTest.class, DeleteTriplesTest.class, DeleteRepositoryTest.class })
+	static public class RDFTripleStoreTests {
+		
+		@BeforeClass
+		static public void rdfTripleStoreTests() {
+			CreateRepositoryTest.setVariables(repository);
+			AddTriplesTest.setVariables(repository, rdfTriples, ttl);
+			GetRepositoryTest.setVariables(repository);
+			QueryRepositoryTest.setVariables(repository, query, expectedQueryResult);
+			GetTriplesTest.setVariables(repository, expectedTriples);
+			DeleteTriplesTest.setVariables(repository);
+			DeleteRepositoryTest.setVariables(repository);
+		}
 	}
 
 }

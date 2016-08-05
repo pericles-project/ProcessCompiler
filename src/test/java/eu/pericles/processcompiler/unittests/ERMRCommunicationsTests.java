@@ -19,57 +19,75 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import eu.pericles.processcompiler.communications.ermr.ERMRClientAPI;
-import eu.pericles.processcompiler.communications.ermr.ERMRCommunications;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.Implementation;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
 import eu.pericles.processcompiler.ecosystem.ProcessBase;
-import eu.pericles.processcompiler.ecosystem.Sequence;
+import eu.pericles.processcompiler.ermr.ERMRClientAPI;
+import eu.pericles.processcompiler.ermr.ERMRCommunications;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
-import eu.pericles.processcompiler.testutils.CreateEntities;
+import eu.pericles.processcompiler.testutils.Utils;
 
-/**
- * BPMN Files are stored in the Object Store under the Folder:
- * NoaCollection/ERMRCommunications/
- */
 public class ERMRCommunicationsTests {
 
-	static String collection = "NoaCollection/ERMRCommunications/";
+	static String service = "https://pericles1:PASSWORD@141.5.100.67/api";
+	static String collection = "NoaCollection/Test/";
 	static String repository = "NoaRepositoryTest";
-	static String ecosystem = "src/test/resources/ermr/communications/Ecosystem.txt";
-	static String triplesMediaType = MediaType.TEXT_PLAIN;
+	static String ecosystem = "src/test/resources/ingest_sba/Ecosystem_Compilation.ttl";
+	static String triplesMediaType = "text/turtle";
+	static String doMediaType = MediaType.APPLICATION_XML;
+	static String doPath = "src/test/resources/ingest_sba/";
+
+	private String[] digObjects = { "VirusCheck.bpmn", "ExtractMD.bpmn", "EncapsulateDOMD.bpmn" };
+
 	private AggregatedProcess expectedAggregatedProcess;
 	private ProcessBase expectedProcess;
 
-	// ------------------------------- TESTS
-	// ----------------------------------//
-
 	@Before
-	public void prepareTests() {
-		setRepository();
-		setExpectedResults();
+	public void setRepository() {
+		try {
+			ERMRClientAPI client = new ERMRClientAPI(service);
+			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
+			assertEquals(201, response.getStatus());
+			for (int i = 0; i < digObjects.length; i++) {
+				response = new ERMRClientAPI().createDigitalObject(collection + digObjects[i], doPath + digObjects[i], doMediaType);
+				assertEquals(201, response.getStatus());
+			}
+		} catch (ERMRClientException e) {
+			fail("setRepository(): " + e.getMessage());
+		}
 	}
 
 	@After
 	public void deleteRepository() {
 		try {
-			ERMRClientAPI client = new ERMRClientAPI();
+			ERMRClientAPI client = new ERMRClientAPI(service);
 			Response response = client.deleteTriples(repository);
-			// TODO Error in the ERMR design: this should be 204 NO CONTENT
 			assertEquals(204, response.getStatus());
+			for (int i = 0; i < digObjects.length; i++) {
+				response = new ERMRClientAPI().deleteDigitalObject(collection + digObjects[i]);
+				assertEquals(204, response.getStatus());
+			}
 		} catch (ERMRClientException e) {
 			fail("deleteRepository(): " + e.getMessage());
 		}
 	}
 
+	@Before
+	public void createExpectedEntities() {
+		setExpectedProcess();
+		setExpectedAggregatedProcess();
+	}
+
+	// -- TESTS --//
+
 	@Test
 	public void getImplementationEntity() {
-		String uri = "<http://www.pericles-project.eu/ns/ecosystem#impIngestAWSW>";
+		String uri = "<http://www.pericles-project.eu/ns/ecosystem#impExtractMD>";
 		try {
 			Implementation implementation = new ERMRCommunications().getImplementationEntity(repository, uri);
-			assertEquals(expectedAggregatedProcess.getImplementation(), implementation);
+			assertEquals(expectedProcess.getImplementation(), implementation);
 		} catch (Exception e) {
 			fail("getImplementation(): " + e.getMessage());
 		}
@@ -80,7 +98,7 @@ public class ERMRCommunicationsTests {
 		String uri = "<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>";
 		try {
 			InputSlot inputSlot = new ERMRCommunications().getInputSlotEntity(repository, uri);
-			assertEquals(expectedAggregatedProcess.getInputs().get(0), inputSlot);
+			assertEquals(expectedAggregatedProcess.getInputSlots().get(0), inputSlot);
 		} catch (Exception e) {
 			fail("getInputSlot(): " + e.getMessage());
 		}
@@ -91,7 +109,7 @@ public class ERMRCommunicationsTests {
 		String uri = "<http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>";
 		try {
 			OutputSlot outputSlot = new ERMRCommunications().getOutputSlotEntity(repository, uri);
-			assertEquals(expectedAggregatedProcess.getOutputs().get(0), outputSlot);
+			assertEquals(expectedAggregatedProcess.getOutputSlots().get(0), outputSlot);
 		} catch (Exception e) {
 			fail("getOutputSlot(): " + e.getMessage());
 		}
@@ -122,10 +140,10 @@ public class ERMRCommunicationsTests {
 
 	@Test
 	public void getImplementationURI() {
-		String uri = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
+		String uri = "<http://www.pericles-project.eu/ns/ecosystem#atpExtractMD>";
 		try {
 			String implementationURI = new ERMRCommunications().getImplementationURI(repository, uri);
-			assertEquals(expectedAggregatedProcess.getImplementation().getId(), implementationURI);
+			assertEquals(expectedProcess.getImplementation().getId(), implementationURI);
 		} catch (Exception e) {
 			fail("getImplementationURI(): " + e.getMessage());
 		}
@@ -147,7 +165,7 @@ public class ERMRCommunicationsTests {
 
 	@Test
 	public void getProcessEntity() {
-		String uri = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
+		String uri = "<http://www.pericles-project.eu/ns/ecosystem#atpExtractMD>";
 		try {
 			ProcessBase process = new ERMRCommunications().getProcessEntity(repository, uri);
 			assertEquals(expectedProcess, process);
@@ -157,10 +175,25 @@ public class ERMRCommunicationsTests {
 	}
 
 	@Test
-	public void getSequenceEntity() throws ERMRClientException {
-		String uri = "<http://www.pericles-project.eu/ns/ecosystem#seqIngestAWSW>";
-		Sequence sequence = new ERMRCommunications().getSequenceEntity(repository, uri);
-		assertEquals(expectedAggregatedProcess.getSequence(), sequence);
+	public void getProcessFlow() {
+		String uriAGP = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
+		try {
+			String type = new ERMRCommunications().getProcessFlow(repository, uriAGP);
+			assertEquals(expectedAggregatedProcess.getProcessFlow(), type);
+		} catch (Exception e) {
+			fail("getProcessType(): " + e.getMessage());
+		}
+	}
+
+	@Test
+	public void getDataFlow() {
+		String uriAGP = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
+		try {
+			String type = new ERMRCommunications().getDataFlow(repository, uriAGP);
+			assertEquals(expectedAggregatedProcess.getDataFlow(), type);
+		} catch (Exception e) {
+			fail("getProcessType(): " + e.getMessage());
+		}
 	}
 
 	@Test
@@ -175,133 +208,78 @@ public class ERMRCommunicationsTests {
 	}
 
 	@Test
-	public void getProcessType() {
-		String uriAGP = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
-		// String uriATP =
-		// "<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck>";
-		try {
-			String type = new ERMRCommunications().getProcessType(repository, uriAGP);
-			assertEquals(expectedAggregatedProcess.getClass().getSimpleName(), type);
-		} catch (Exception e) {
-			fail("getProcessType(): " + e.getMessage());
-		}
-	}
-
-	@Test
 	public void getImplementationFile() {
-		String uri = collection + "VirusCheckProcess.bpmn2";
+		String uri = collection + "VirusCheck.bpmn";
 		try {
 			InputStream inputStream = new ERMRCommunications().getImplementationFile(uri);
-			InputStream expectedStream = new FileInputStream(
-					new File("src/test/resources/ermr/communications/VirusCheckProcess.bpmn2"));
-			// Utils.writeInputStream(expectedStream,
-			// "/home/noa/expectedStream.txt");
-			// Utils.writeInputStream(inputStream, "/home/noa/inputStream.txt");
+			InputStream expectedStream = new FileInputStream(new File("src/test/resources/ingest_sba/VirusCheck.bpmn"));
 			assertTrue(IOUtils.contentEquals(expectedStream, inputStream));
 		} catch (Exception e) {
 			fail("getImplementationFile(): " + e.getMessage());
 		}
 	}
 
-	// ------------------------------- HELP FUNCTIONS: create expected entities
-	// and results ----------------------------------//
-
-	public void setRepository() {
-		try {
-			ERMRClientAPI client = new ERMRClientAPI();
-			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
-			assertEquals(201, response.getStatus());
-		} catch (ERMRClientException e) {
-			fail("setRepository(): " + e.getMessage());
-		}
-	}
-
-	public void setExpectedResults() {
-		setExpectedProcess();
-		setExpectedAggregatedProcess();
-	}
+	// -- HELP FUNCTIONS: create expected entities and results --//
 
 	private void setExpectedProcess() {
 		expectedProcess = new ProcessBase();
-		expectedProcess.setId("<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>");
-		expectedProcess.setName("Ingest Artwork Software");
-		expectedProcess.setDescription(
-				"Aggregated process that ingest an artwork software by doing the following: check for viruses, extract the metadata and encapsulate the artwork together with it");
+		expectedProcess.setId("<http://www.pericles-project.eu/ns/ecosystem#atpExtractMD>");
+		expectedProcess.setName("Extract Metadata");
+		expectedProcess.setDescription("Atomic process that extract the metadata of a digital object");
 		expectedProcess.setVersion("1");
-		expectedProcess.setImplementation(CreateEntities.createImplementation(new ArrayList<String>(
-				Arrays.asList("<http://www.pericles-project.eu/ns/ecosystem#impIngestAWSW>", "1", "BPMN",
-						"https://c102-086.cloud.gwdg.de/api/cdmi/NoaCollection/ERMRCommunications/IngestArtworkSoftware.bpmn2",
-						"sha256", "8c30fb10c930edc21ad11d0c6d1484430813cfd75375451bced7f3cbcd98c9e8"))));
-		expectedProcess.setInputs(new ArrayList<InputSlot>());
-		expectedProcess.getInputs()
-				.add(CreateEntities
-						.createInputSlot(
-								new ArrayList<String>(
-										Arrays.asList("<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>",
-												"InputSlot Artwork Software",
-												"Input slot corresponding to the Artwork Software entity for the aggregated process Ingest Artwork Software",
-												"<http://www.pericles-project.eu/ns/ecosystem#ArtworkSoftware>")),
-								false));
-		expectedProcess.getInputs()
-				.add(CreateEntities
-						.createInputSlot(
-								new ArrayList<String>(
-										Arrays.asList("<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>",
-												"InputSlot Package Format",
-												"Input slot corresponding to the Package Format entity for the aggregated process Ingest Artwork Software",
-												"<http://www.pericles-project.eu/ns/ecosystem#PackageFormat>")),
-								false));
-		expectedProcess.setOutputs(new ArrayList<OutputSlot>());
-		expectedProcess.getOutputs()
-				.add(CreateEntities.createOutputSlot(new ArrayList<String>(Arrays.asList(
-						"<http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>", "OutputSlot Package",
-						"Output slot corresponding to the Package entity created as the result of the aggregated process Ingest Artwork Software",
-						"<http://www.pericles-project.eu/ns/ecosystem#Package>"))));
+		expectedProcess.setImplementation(Utils.createImplementation(new ArrayList<String>(Arrays.asList(
+				"<http://www.pericles-project.eu/ns/ecosystem#impExtractMD>", "1", "BPMN", "NoaCollection/Test/ExtractMD.bpmn", "sha256",
+				"7c30fb10c930edc21ad11d0c6d1484430813cfd75375451bced7f3cbcd98c9e3"))));
+		expectedProcess.setInputSlots(new ArrayList<InputSlot>());
+		expectedProcess.getInputSlots().add(
+				Utils.createInputSlot(
+						new ArrayList<String>(Arrays.asList("<http://www.pericles-project.eu/ns/ecosystem#isExtractMDDO>",
+								"InputSlot Digital Material",
+								"Input slot corresponding to the digital material from which metadata is extracted",
+								"<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>")), false));
+		expectedProcess.setOutputSlots(new ArrayList<OutputSlot>());
+		expectedProcess.getOutputSlots().add(
+				Utils.createOutputSlot(new ArrayList<String>(Arrays.asList("<http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>",
+						"OutputSlot Metadata", "Output slot corresponding to the extracted metadata",
+						"<http://www.pericles-project.eu/ns/ecosystem#Metadata>"))));
 	}
 
 	private void setExpectedAggregatedProcess() {
 		expectedAggregatedProcess = new AggregatedProcess();
 		expectedAggregatedProcess.setId("<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>");
 		expectedAggregatedProcess.setName("Ingest Artwork Software");
-		expectedAggregatedProcess.setDescription(
-				"Aggregated process that ingest an artwork software by doing the following: check for viruses, extract the metadata and encapsulate the artwork together with it");
+		expectedAggregatedProcess
+				.setDescription("Aggregated process that ingest an artwork software by doing the following: check for viruses, extract the metadata and encapsulate the artwork together with it");
 		expectedAggregatedProcess.setVersion("1");
-		expectedAggregatedProcess.setImplementation(CreateEntities.createImplementation(new ArrayList<String>(
-				Arrays.asList("<http://www.pericles-project.eu/ns/ecosystem#impIngestAWSW>", "1", "BPMN",
-						"https://c102-086.cloud.gwdg.de/api/cdmi/NoaCollection/ERMRCommunications/IngestArtworkSoftware.bpmn2",
-						"sha256", "8c30fb10c930edc21ad11d0c6d1484430813cfd75375451bced7f3cbcd98c9e8"))));
-		expectedAggregatedProcess.setInputs(new ArrayList<InputSlot>());
-		expectedAggregatedProcess.getInputs()
-				.add(CreateEntities
-						.createInputSlot(
-								new ArrayList<String>(
-										Arrays.asList("<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>",
-												"InputSlot Artwork Software",
-												"Input slot corresponding to the Artwork Software entity for the aggregated process Ingest Artwork Software",
-												"<http://www.pericles-project.eu/ns/ecosystem#ArtworkSoftware>")),
-								false));
-		expectedAggregatedProcess.getInputs()
-				.add(CreateEntities
-						.createInputSlot(
-								new ArrayList<String>(
-										Arrays.asList("<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>",
-												"InputSlot Package Format",
-												"Input slot corresponding to the Package Format entity for the aggregated process Ingest Artwork Software",
-												"<http://www.pericles-project.eu/ns/ecosystem#PackageFormat>")),
-								false));
-		expectedAggregatedProcess.setOutputs(new ArrayList<OutputSlot>());
-		expectedAggregatedProcess.getOutputs()
-				.add(CreateEntities.createOutputSlot(new ArrayList<String>(Arrays.asList(
-						"<http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>", "OutputSlot Package",
-						"Output slot corresponding to the Package entity created as the result of the aggregated process Ingest Artwork Software",
-						"<http://www.pericles-project.eu/ns/ecosystem#Package>"))));
-		expectedAggregatedProcess.setSequence(CreateEntities.createSequence(
-				"<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>",
-				"{[1 <http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDM>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]}"
-						+ " {[2 <http://www.pericles-project.eu/ns/ecosystem#isExtracMDDM>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]}"
-						+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>]}"
-						+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>] [0 <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>]}"
-						+ " {[3 <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>] [2 <http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>]}"
-						+ " {[0 <http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>] [3 <http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>]}"));
+		expectedAggregatedProcess.setInputSlots(new ArrayList<InputSlot>());
+		expectedAggregatedProcess
+				.getInputSlots()
+				.add(Utils.createInputSlot(
+						new ArrayList<String>(
+								Arrays.asList(
+										"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>",
+										"InputSlot Artwork Software",
+										"Input slot corresponding to the Artwork Software entity for the aggregated process Ingest Artwork Software",
+										"<http://www.pericles-project.eu/ns/ecosystem#ArtworkSoftware>")), false));
+		expectedAggregatedProcess.getInputSlots().add(
+				Utils.createInputSlot(
+						new ArrayList<String>(Arrays.asList("<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>",
+								"InputSlot Package Format",
+								"Input slot corresponding to the Package Format entity for the aggregated process Ingest Artwork Software",
+								"<http://www.pericles-project.eu/ns/ecosystem#PackageFormat>")), false));
+		expectedAggregatedProcess.setOutputSlots(new ArrayList<OutputSlot>());
+		expectedAggregatedProcess
+				.getOutputSlots()
+				.add(Utils.createOutputSlot(new ArrayList<String>(
+						Arrays.asList(
+								"<http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>",
+								"OutputSlot Package",
+								"Output slot corresponding to the Package entity created as the result of the aggregated process Ingest Artwork Software",
+								"<http://www.pericles-project.eu/ns/ecosystem#Package>"))));
+		expectedAggregatedProcess
+				.setProcessFlow("<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>");
+		expectedAggregatedProcess
+				.setDataFlow("[{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 0, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDO>\"} , {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 1, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isExtractMDDO>\"}, {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>\"} ,{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>\"} , {\"sourceProcess\": 1, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>\"} , {\"sourceProcess\": 2, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>\", \"targetProcess\": 3, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>\"}]");
 	}
+
 }

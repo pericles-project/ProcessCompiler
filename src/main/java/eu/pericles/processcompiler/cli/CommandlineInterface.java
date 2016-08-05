@@ -18,14 +18,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import eu.pericles.processcompiler.bpmn.BPMNParser;
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
+import eu.pericles.processcompiler.core.ProcessCompiler;
+import eu.pericles.processcompiler.core.ProcessCompiler.ValidationResult;
+import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
+import eu.pericles.processcompiler.ecosystem.ProcessBase;
 import eu.pericles.processcompiler.exceptions.BPMNFileException;
 import eu.pericles.processcompiler.exceptions.BPMNParseException;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.exceptions.PCException;
-import eu.pericles.processcompiler.ng.ProcessCompiler;
-import eu.pericles.processcompiler.ng.ProcessCompiler.ValidationResult;
-import eu.pericles.processcompiler.ng.ecosystem.AggregatedProcess;
-import eu.pericles.processcompiler.ng.ecosystem.ProcessBase;
 
 public class CommandlineInterface {
 

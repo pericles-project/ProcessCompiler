@@ -5,7 +5,7 @@ import static org.junit.Assert.fail;
 
 import org.junit.Test;
 
-import eu.pericles.processcompiler.communications.ermr.SPARQLQuery;
+import eu.pericles.processcompiler.ermr.SPARQLQuery;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 
 public class SPARQLQueriesTests {

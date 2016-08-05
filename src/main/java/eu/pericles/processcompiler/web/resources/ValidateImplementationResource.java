@@ -4,11 +4,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
+import eu.pericles.processcompiler.core.ProcessCompiler;
+import eu.pericles.processcompiler.core.ProcessCompiler.ValidationResult;
+import eu.pericles.processcompiler.ecosystem.ProcessBase;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.exceptions.PCException;
-import eu.pericles.processcompiler.ng.ProcessCompiler;
-import eu.pericles.processcompiler.ng.ProcessCompiler.ValidationResult;
-import eu.pericles.processcompiler.ng.ecosystem.ProcessBase;
 import eu.pericles.processcompiler.web.ApiException;
 
 @Path("/validate_implementation")

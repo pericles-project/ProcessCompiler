@@ -1,33 +1,57 @@
 package eu.pericles.processcompiler.testutils;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.jbpm.test.JBPMHelper;
 import org.junit.Assert;
-import org.kie.api.KieBase;
-import org.kie.api.runtime.manager.RuntimeEnvironmentBuilder;
-import org.kie.api.runtime.manager.RuntimeManager;
-import org.kie.api.runtime.manager.RuntimeManagerFactory;
+
+import eu.pericles.processcompiler.ecosystem.Fixity;
+import eu.pericles.processcompiler.ecosystem.Implementation;
+import eu.pericles.processcompiler.ecosystem.InputSlot;
+import eu.pericles.processcompiler.ecosystem.OutputSlot;
 
 public class Utils {
+	
+	public static Implementation createImplementation(List<String> values) {
+		Implementation implementation = new Implementation();
+		implementation.setId(values.get(0));
+		implementation.setVersion(values.get(1));
+		implementation.setType(values.get(2));
+		implementation.setLocation(values.get(3));
+		implementation.setFixity(new Fixity());
+		implementation.getFixity().setAlgorithm(values.get(4));
+		implementation.getFixity().setChecksum(values.get(5));
+		
+		return implementation;
+	}
+	
+	public static InputSlot createInputSlot(List<String> values, boolean optional) {
+		InputSlot inputSlot = new InputSlot();
+		inputSlot.setId(values.get(0));
+		inputSlot.setName(values.get(1));
+		inputSlot.setDescription(values.get(2));
+		inputSlot.setType(values.get(3));
+		inputSlot.setOptional(optional);
+		
+		return inputSlot;
+	}
+	
+	public static OutputSlot createOutputSlot(List<String> values) {
+		OutputSlot outputSlot = new OutputSlot();
+		outputSlot.setId(values.get(0));
+		outputSlot.setName(values.get(1));
+		outputSlot.setDescription(values.get(2));
+		outputSlot.setType(values.get(3));
+		
+		return outputSlot;
+	}
 
 	public static boolean fileContentEquals(String outputFileName, String testFileName) {
 		try {
@@ -42,20 +66,10 @@ public class Utils {
 	}
 	
 	public static void replaceUUIDsInFile(String path) throws IOException {
-		String content = readFile(path);
+		String content = FileUtils.readFileToString(new File(path));
 		Map<String, String> map = getUUIDMap(content);
 		content = replaceUUIDs(content, map);
-		writeFile(path,content);
-	}
-	
-	public static String readFile(String path) throws IOException {
-		byte[] encoded = Files.readAllBytes(Paths.get(path));
-		return new String(encoded, StandardCharsets.UTF_8);
-	}
-	
-	public static void writeFile(String path, String content) throws IOException {
-		byte[] encoded = content.getBytes();
-		Files.write(Paths.get(path), encoded, StandardOpenOption.WRITE);
+		FileUtils.writeStringToFile(new File(path), content);
 	}
 	
 	public static Map<String, String> getUUIDMap(String sequence) {
@@ -78,13 +92,6 @@ public class Utils {
 			replacedSequence = matcher.replaceAll(map.get(oldUUID));
 		}
 		return replacedSequence;
-	}
-	
-	public static void writeInputStream(InputStream is, String outputFile) throws IOException {
-		OutputStream os = new FileOutputStream(new File(outputFile));
-		IOUtils.copy(is,os);
-		is.close();
-		os.close();
 	}
 
 }

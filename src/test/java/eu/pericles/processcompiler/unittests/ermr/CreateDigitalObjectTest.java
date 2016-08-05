@@ -8,7 +8,7 @@ import javax.ws.rs.core.Response;
 
 import org.junit.Test;
 
-import eu.pericles.processcompiler.communications.ermr.ERMRClientAPI;
+import eu.pericles.processcompiler.ermr.ERMRClientAPI;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 
 public class CreateDigitalObjectTest {
