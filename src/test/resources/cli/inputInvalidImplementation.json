@@ -1,0 +1,39 @@
+{
+	"process": {
+		"id": "<http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>",
+		"name": "Encapsulate Digital Object and its Metadata",
+		"description": "Atomic process that encapsulate a digital object and its metadata together in a package of a specific format",
+		"version": "1",
+		"inputSlots": [
+			{
+				"id": "<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>",
+				"name": "InputSlot Digital Material",
+				"description": "Input slot corresponding to the digital object",
+				"type": "<http://www.pericles-project.eu/ns/ecosystem#DigitalObject>",
+				"optional": false
+			},
+			{
+				"id": "<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>",
+				"name": "InputSlot Metadata",
+				"description": "Input slot corresponding to the metadata",
+				"type": "<http://www.pericles-project.eu/ns/ecosystem#Metadata>",
+				"optional": false
+			},
+			{
+				"id": "<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>",
+				"name": "InputSlot Package Format",
+				"description": "Input slot corresponding to the package format used to encapsulate the digital object and its metadata",
+				"type": "<http://www.pericles-project.eu/ns/ecosystem#File>",
+				"optional": false
+			}
+		],
+		"outputSlots": [
+			{
+				"id": "<http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>",
+				"name": "OutputSlot Package",
+				"description": "Output slot corresponding to the package resulting of encapsulate a digital object and its metadata",
+				"type": "<http://www.pericles-project.eu/ns/ecosystem#Package>"
+			}
+		]
+	}
+}

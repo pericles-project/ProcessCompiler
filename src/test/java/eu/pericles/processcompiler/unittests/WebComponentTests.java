@@ -1,6 +1,7 @@
 package eu.pericles.processcompiler.unittests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -38,6 +39,7 @@ public class WebComponentTests extends JerseyTest {
 	static String triplesMediaType = "text/turtle";
 	static String doMediaType = MediaType.APPLICATION_XML;
 	static String doPath = "src/test/resources/ingest_sba/";
+	static String testPath = "src/test/resources/cli/";
 	
 	private String[] digObjects = {"VirusCheck.bpmn", "ExtractMD.bpmn", "EncapsulateDOMD.bpmn"};
 
@@ -75,9 +77,96 @@ public class WebComponentTests extends JerseyTest {
 	protected Application configure() {
 		return new ApiApplication();
 	}
+	
+	@Test
+	public void validateImplementationByIDTest() {
+		ValidateImplementationRequest vImplementationRequest = new ValidateImplementationRequest();
+		vImplementationRequest.ermr = service;
+		vImplementationRequest.store = repository;
+		vImplementationRequest.id = "<http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>";
+		vImplementationRequest.implementation = "<http://www.pericles-project.eu/ns/ecosystem#impEncapsulateDOMD>";
+		
+		Response response = target("validate_implementation").request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(vImplementationRequest));
+		assertEquals(200, response.getStatus());
+		ValidateImplementationResult vImplementationResult = response.readEntity(ValidateImplementationResult.class);
+		assertTrue(vImplementationResult.valid);
+		assertEquals("OK\nValid implementation", vImplementationResult.message);
+	}
+	
+	@Test
+	public void validateImplementationByFileTest() {
+		ValidateImplementationRequest vImplementationRequest = new ValidateImplementationRequest();
+		vImplementationRequest.ermr = service;
+		vImplementationRequest.store = repository;
+		vImplementationRequest.id = testPath + "inputValidImplementation.json";
+		vImplementationRequest.implementation = doPath + "EncapsulateDOMD.bpmn";
+		
+		Response response = target("validate_implementation").request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(vImplementationRequest));
+		assertEquals(200, response.getStatus());
+		ValidateImplementationResult vImplementationResult = response.readEntity(ValidateImplementationResult.class);
+		assertTrue(vImplementationResult.valid);
+		assertEquals("OK\nValid implementation", vImplementationResult.message);
+	}
+	
+	@Test
+	public void invalidImplementationTest() {
+		ValidateImplementationRequest vImplementationRequest = new ValidateImplementationRequest();
+		vImplementationRequest.ermr = service;
+		vImplementationRequest.store = repository;
+		vImplementationRequest.id = testPath + "inputInvalidImplementation.json";
+		vImplementationRequest.implementation = doPath + "EncapsulateDOMD.bpmn";
+		
+		Response response = target("validate_implementation").request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(vImplementationRequest));
+		assertEquals(200, response.getStatus());
+		ValidateImplementationResult vImplementationResult = response.readEntity(ValidateImplementationResult.class);
+		assertFalse(vImplementationResult.valid);
+		assertEquals("OK\nInvalid implementation\nNOT VALID IMPLEMENTATION: Slot <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF> in process <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> has wrong data type in the BPMN file", vImplementationResult.message);
+	}
+	
+	@Test
+	public void validateAggregationByIDTest() {
+		ValidateAggregationRequest vAggregationRequest = new ValidateAggregationRequest();
+		vAggregationRequest.ermr = service;
+		vAggregationRequest.store = repository;
+		vAggregationRequest.id = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
+		
+		Response response = target("validate_aggregation").request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(vAggregationRequest));
+		assertEquals(200, response.getStatus());
+		ValidateAggregationResult vAggregationResult = response.readEntity(ValidateAggregationResult.class);
+		assertTrue(vAggregationResult.valid);
+		assertEquals("OK\nValid aggregation", vAggregationResult.message);
+	}
+	
+	@Test
+	public void validateAggregationByFileTest() {
+		ValidateAggregationRequest vAggregationRequest = new ValidateAggregationRequest();
+		vAggregationRequest.ermr = service;
+		vAggregationRequest.store = repository;
+		vAggregationRequest.id = testPath + "inputValidAggregation.json";
+		
+		Response response = target("validate_aggregation").request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(vAggregationRequest));
+		assertEquals(200, response.getStatus());
+		ValidateAggregationResult vAggregationResult = response.readEntity(ValidateAggregationResult.class);
+		assertTrue(vAggregationResult.valid);
+		assertEquals("OK\nValid aggregation", vAggregationResult.message);
+	}
+	
+	@Test
+	public void invalidAggregationTest() {
+		ValidateAggregationRequest vAggregationRequest = new ValidateAggregationRequest();
+		vAggregationRequest.ermr = service;
+		vAggregationRequest.store = repository;
+		vAggregationRequest.id = testPath + "inputInvalidAggregation.json";
+		
+		Response response = target("validate_aggregation").request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(vAggregationRequest));
+		assertEquals(200, response.getStatus());
+		ValidateAggregationResult vAggregationResult = response.readEntity(ValidateAggregationResult.class);
+		assertFalse(vAggregationResult.valid);
+		assertEquals("OK\nInvalid aggregation\nNOT VALID DATA FLOW: NOT VALID TYPE in data connection with source <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF> and target <http://www.pericles-project.eu/ns/ecosystem#isExtractMDDO>", vAggregationResult.message);
+	}
 
 	@Test
-	public void compileTest() {
+	public void compileByIDTest() {
 		CompileRequest compileRequest = new CompileRequest();
 		compileRequest.ermr = service;
 		compileRequest.store = repository;
@@ -94,33 +183,34 @@ public class WebComponentTests extends JerseyTest {
 			System.out.println("Error when reading file: " + e.getMessage());
 		}
 	}
-	
+
 	@Test
-	public void validateAggregationTest() {
-		ValidateAggregationRequest vAggregationRequest = new ValidateAggregationRequest();
-		vAggregationRequest.ermr = service;
-		vAggregationRequest.store = repository;
-		vAggregationRequest.id = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
-		
-		Response response = target("validate_aggregation").request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(vAggregationRequest));
+	public void compileByFileTest() {
+		CompileRequest compileRequest = new CompileRequest();
+		compileRequest.ermr = service;
+		compileRequest.store = repository;
+		compileRequest.id = testPath + "inputValidAggregation.json";
+
+		Response response = target("compile").request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(compileRequest));
 		assertEquals(200, response.getStatus());
-		ValidateAggregationResult vAggregationResult = response.readEntity(ValidateAggregationResult.class);
-		assertTrue(vAggregationResult.valid);
-		assertEquals("OK", vAggregationResult.message);
+		CompileResult result = response.readEntity(CompileResult.class);
+		assertNotNull(result.bpmn);
+		try {
+			String expected = FileUtils.readFileToString(new File(doPath + "IngestAWSW.bpmn"));
+			assertEquals(expected, result.bpmn);
+		} catch (IOException e) {
+			System.out.println("Error when reading file: " + e.getMessage());
+		}
 	}
 	
 	@Test
-	public void validateImplementationTest() {
-		ValidateImplementationRequest vImplementationRequest = new ValidateImplementationRequest();
-		vImplementationRequest.ermr = service;
-		vImplementationRequest.store = repository;
-		vImplementationRequest.id = "<http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>";
-		vImplementationRequest.implementation = "<http://www.pericles-project.eu/ns/ecosystem#impEncapsulateDOMD>";
-		
-		Response response = target("validate_implementation").request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(vImplementationRequest));
-		assertEquals(200, response.getStatus());
-		ValidateImplementationResult vImplementationResult = response.readEntity(ValidateImplementationResult.class);
-		assertTrue(vImplementationResult.valid);
-		assertEquals("OK", vImplementationResult.message);
+	public void invalidCompilationTest() {
+		CompileRequest compileRequest = new CompileRequest();
+		compileRequest.ermr = service;
+		compileRequest.store = repository;
+		compileRequest.id = testPath + "inputInvalidAggregation.json";
+
+		Response response = target("compile").request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(compileRequest));
+		assertEquals(400, response.getStatus());
 	}
 }

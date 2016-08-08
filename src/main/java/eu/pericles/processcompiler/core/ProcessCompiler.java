@@ -53,6 +53,7 @@ import eu.pericles.processcompiler.ermr.ERMRCommunications;
 import eu.pericles.processcompiler.exceptions.BPMNFileException;
 import eu.pericles.processcompiler.exceptions.BPMNParseException;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
+import eu.pericles.processcompiler.exceptions.JSONParserException;
 import eu.pericles.processcompiler.exceptions.PCException;
 
 /**
@@ -108,15 +109,15 @@ public class ProcessCompiler {
 		ermrCommunications = new ERMRCommunications(service);
 	}
 
-	public AggregatedProcess getAggregatedProcess(String repository, String uri) throws ERMRClientException {
+	public AggregatedProcess getAggregatedProcess(String repository, String uri) throws ERMRClientException, JSONParserException {
 		return ermrCommunications.getAggregatedProcessEntity(repository, uri);
 	}
 
-	public ProcessBase getProcess(String repository, String uri) throws ERMRClientException {
+	public ProcessBase getProcess(String repository, String uri) throws ERMRClientException, JSONParserException {
 		return ermrCommunications.getProcessEntity(repository, uri);
 	}
 
-	public BPMNProcess getBPMNProcess(String repository, String uri) throws ERMRClientException, BPMNParseException {
+	public BPMNProcess getBPMNProcess(String repository, String uri) throws ERMRClientException, BPMNParseException, JSONParserException {
 		return new BPMNParser().parse(ermrCommunications.getImplementationFile(ermrCommunications.getImplementationEntity(repository, uri)
 				.getLocation()));
 	}
@@ -129,8 +130,12 @@ public class ProcessCompiler {
 
 	public ValidationResult validateAggregation(String repository, AggregatedProcess aggregatedProcess) throws JsonParseException,
 			JsonMappingException, IOException, ERMRClientException, BPMNParseException, BPMNFileException {
-		PCAggregatedProcess pcAggProcess = createPCAggregatedProcess(repository, aggregatedProcess);
-		return validatePCAggregatedProcess(repository, pcAggProcess);
+		try {
+			PCAggregatedProcess pcAggProcess = createPCAggregatedProcess(repository, aggregatedProcess);
+			return validatePCAggregatedProcess(repository, pcAggProcess);
+		} catch (JSONParserException e) {
+			return new ValidationResult(false,"NOT VALID PROCESS FLOW: " + e.getMessage());
+		}
 	}
 
 	public String compile(String repository, AggregatedProcess aggregatedProcess) throws JsonParseException,
@@ -139,7 +144,7 @@ public class ProcessCompiler {
 		return compile(compiledProcess);
 	}
 
-	private PCProcess createPCProcess(String repository, ProcessBase process) throws BPMNParseException {
+	private PCProcess createPCProcess(String repository, ProcessBase process) throws BPMNParseException, JSONParserException {
 		PCProcess pcProcess = new PCProcess().copy(process);
 		BPMNProcess bpmnProcess = new BPMNParser().parse(ermrCommunications
 				.getImplementationFile(process.getImplementation().getLocation()));
@@ -148,7 +153,7 @@ public class ProcessCompiler {
 	}
 
 	private PCAggregatedProcess createPCAggregatedProcess(String repository, AggregatedProcess aggregatedProcess)
-			throws JsonParseException, JsonMappingException, IOException, ERMRClientException, BPMNParseException {
+			throws JsonParseException, JsonMappingException, IOException, ERMRClientException, BPMNParseException, JSONParserException {
 		PCAggregatedProcess pcAggProcess = (PCAggregatedProcess) new PCAggregatedProcess().copy(aggregatedProcess);
 		List<String> subprocessIDs = Arrays.asList(aggregatedProcess.getProcessFlow().split("\\s\\s*"));
 		for (String subprocessID : subprocessIDs) {
@@ -199,7 +204,7 @@ public class ProcessCompiler {
 		}
 		ValidationResult result = validateDataConnections(repository, pcAggProcess);
 		if (!result.isValid())
-			return new ValidationResult(false, "NOT VALID DATA FLOW:" + result.getMessage());
+			return new ValidationResult(false, "NOT VALID DATA FLOW: " + result.getMessage());
 		return new ValidationResult(true, "OK");
 	}
 

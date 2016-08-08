@@ -1,8 +1,12 @@
 package eu.pericles.processcompiler.web.resources;
 
+import java.io.File;
+import java.io.IOException;
+
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
+import eu.pericles.processcompiler.bpmn.BPMNParser;
 import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.core.ProcessCompiler.ValidationResult;
@@ -36,21 +40,32 @@ public class ValidateImplementationResource extends BaseResource {
 		assertTrue(request.id != null, "The 'id' field is required.");
 		assertTrue(request.implementation != null, "The 'implementation' field is required.");
 
-		ProcessCompiler compiler;
 		try {
-			compiler = new ProcessCompiler(request.ermr);
-			if (request.process == null)
+			ProcessCompiler compiler = new ProcessCompiler(request.ermr);
+			if (new File(request.id).exists()) {
+				ConfigBean config = parseConfig(new File(request.id));
+				request.process = config.process;
+			} else
 				request.process = compiler.getProcess(request.store, request.id);
-			if (request.bpmnProcess == null)
+			if (new File(request.implementation).exists()) {
+				request.bpmnProcess = new BPMNParser().parse(request.implementation);
+			} else
 				request.bpmnProcess = compiler.getBPMNProcess(request.store, request.implementation);
+			
 			ValidateImplementationResult result = new ValidateImplementationResult();
 			ValidationResult vResult = compiler.validateImplementation(request.process, request.bpmnProcess);
 			result.valid = vResult.isValid();
-			result.message = vResult.getMessage();
+			result.valid = vResult.isValid();
+			if (result.valid)
+				result.message = "OK\nValid implementation";
+			else 
+				result.message = "OK\nInvalid implementation\n" + vResult.getMessage();
 			return result;
 		} catch (ERMRClientException e) {
 			throw new ApiException(500, e);
 		} catch (PCException e) {
+			throw new ApiException(400, e);
+		} catch (IOException e) {
 			throw new ApiException(400, e);
 		}
 	}

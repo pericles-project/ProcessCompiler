@@ -1,5 +1,6 @@
 package eu.pericles.processcompiler.web.resources;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.ws.rs.PUT;
@@ -32,10 +33,12 @@ public class CompilerResource extends BaseResource {
 		assertTrue(request.store != null, "The 'store' field is required.");
 		assertTrue(request.id != null, "The 'id' field is required.");
 
-		ProcessCompiler compiler;
 		try {
-			compiler = new ProcessCompiler(request.ermr);
-			if (request.process == null)
+			ProcessCompiler compiler = new ProcessCompiler(request.ermr);
+			if (new File(request.id).exists()) {
+				ConfigBean config = parseConfig(new File(request.id));
+				request.process = config.aggregatedProcess;
+			} else
 				request.process = compiler.getAggregatedProcess(request.store, request.id);
 			CompileResult result = new CompileResult();
 			result.bpmn = compiler.compile(request.store, request.process);

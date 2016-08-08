@@ -1,5 +1,6 @@
 package eu.pericles.processcompiler.web.resources;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.ws.rs.PUT;
@@ -34,15 +35,20 @@ public class ValidateAggregationResource extends BaseResource {
 		assertTrue(request.store != null, "The 'store' field is required.");
 		assertTrue(request.id != null, "The 'id' field is required.");
 
-		ProcessCompiler compiler;
 		try {
-			compiler = new ProcessCompiler(request.ermr);
-			if (request.process == null)
+			ProcessCompiler compiler = new ProcessCompiler(request.ermr);
+			if (new File(request.id).exists()) {
+				ConfigBean config = parseConfig(new File(request.id));
+				request.process = config.aggregatedProcess;
+			} else
 				request.process = compiler.getAggregatedProcess(request.store, request.id);
 			ValidateAggregationResult result = new ValidateAggregationResult();
 			ValidationResult vResult = compiler.validateAggregation(request.store, request.process);
 			result.valid = vResult.isValid();
-			result.message = vResult.getMessage();
+			if (result.valid)
+				result.message = "OK\nValid aggregation";
+			else 
+				result.message = "OK\nInvalid aggregation\n" + vResult.getMessage();
 			return result;
 		} catch (ERMRClientException e) {
 			throw new ApiException(500, e);

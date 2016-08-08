@@ -21,6 +21,9 @@ public class CLITests {
 	
 	private PrintStream defaultOutputStream;
 	private ByteArrayOutputStream outputStream;
+	private PrintStream defaultErrorStream;
+	private ByteArrayOutputStream errorStream;
+	
 	private String baseArgs = "-s https://pericles1:PASSWORD@141.5.100.67/api -r NoaRepositoryTest ";
 	
 	static String collection = "NoaCollection/Test/";
@@ -68,17 +71,32 @@ public class CLITests {
 		defaultOutputStream = System.out;
 		outputStream = new ByteArrayOutputStream();
 		System.setOut(new PrintStream(outputStream));
+		defaultErrorStream = System.err;
+		errorStream = new ByteArrayOutputStream();
+		System.setErr(new PrintStream(errorStream));
 	}
 	
 	@After
 	public void restoreDefaultOutputStream() {
 		System.setOut(defaultOutputStream);
-		defaultOutputStream.println(outputStream);
+		System.setErr(defaultErrorStream);
+	}
+	
+	@Test
+	public void invalidArgumentsTest() {
+		String command = baseArgs + "validate_implementation";
+		String[] args = command.split(" ");
+		assertCall(args, 2);
+		
+		String result = errorStream.toString();
+		defaultErrorStream.println(result);
+		assertTrue(result.contains("usage: modelcompiler -s URL -r REPO validate_implementation [-h] PROC IMPL"));
+		assertTrue(result.contains("modelcompiler: error: too few arguments"));
 	}
 
 	@Test
 	public void validateImplementationByFileTest() {
-		String command = baseArgs + "validate_implementation " + testPath + "inputValidateImplementation.json " + doPath + "EncapsulateDOMD.bpmn";
+		String command = baseArgs + "validate_implementation " + testPath + "inputValidImplementation.json " + doPath + "EncapsulateDOMD.bpmn";
 		String[] args = command.split(" ");
 		assertCall(args, 0);
 		
@@ -87,7 +105,6 @@ public class CLITests {
 		assertTrue(result.contains("200 OK"));
 		assertTrue(result.contains("Valid implementation"));
 	}
-	
 	
 	@Test
 	public void validateImplementationByIDTest() {
@@ -102,8 +119,20 @@ public class CLITests {
 	}
 	
 	@Test
+	public void invalidImplementationTest() {
+		String command = baseArgs + "validate_implementation " + testPath + "inputInvalidImplementation.json " + doPath + "EncapsulateDOMD.bpmn";
+		String[] args = command.split(" ");
+		assertCall(args, 1);
+		
+		String result = outputStream.toString();
+		defaultOutputStream.println(result);
+		assertTrue(result.contains("200 OK"));
+		assertTrue(result.contains("Invalid implementation"));
+	}
+	
+	@Test
 	public void validateAggregationByFileTest() {
-		String command = baseArgs + "validate_aggregation " + testPath + "inputValidateAggregation.json";
+		String command = baseArgs + "validate_aggregation " + testPath + "inputValidAggregation.json";
 		String[] args = command.split(" ");
 		assertCall(args, 0);
 		
@@ -124,10 +153,22 @@ public class CLITests {
 		assertTrue(result.contains("200 OK"));
 		assertTrue(result.contains("Valid aggregation"));
 	} 
+	
+	@Test
+	public void invalidAggregationTest() {
+		String command = baseArgs + "validate_aggregation " + testPath + "inputInvalidAggregation.json";
+		String[] args = command.split(" ");
+		assertCall(args, 1);
+		
+		String result = outputStream.toString();
+		defaultOutputStream.println(result);
+		assertTrue(result.contains("200 OK"));
+		assertTrue(result.contains("Invalid aggregation"));
+	}
 
 	@Test
 	public void compileAggregatedProcessByFileTest() {
-		String command = baseArgs + "compile -o " + testPath + "output.bpmn " + testPath + "inputCompile.json";
+		String command = baseArgs + "compile -o " + testPath + "output.bpmn " + testPath + "inputValidAggregation.json";
 		String[] args = command.split(" ");
 		assertCall(args, 0);
 		
@@ -149,6 +190,17 @@ public class CLITests {
 		assertTrue(result.contains("201 Created"));
 		
 		Utils.fileContentEquals(testPath + "output.bpmn", doPath + "IngestAWSW.bpmn");
+	}
+
+	@Test
+	public void invalidCompilationTest() {
+		String command = baseArgs + "compile -o " + testPath + "output.bpmn " + testPath + "inputInvalidAggregation.json";
+		String[] args = command.split(" ");
+		assertCall(args, 1);
+		
+		String result = outputStream.toString();
+		defaultOutputStream.println(result);
+		assertTrue(result.contains("400 Bad Request"));
 	}
 	
 	private void assertCall(String[] args, int code) {

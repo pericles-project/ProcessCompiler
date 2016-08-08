@@ -1,0 +1,34 @@
+{
+	"aggregated_process": {
+		"id": "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>",
+		"name": "Ingest Artwork Software",
+		"description": "Aggregated process that ingest an artwork software by doing the following: check for viruses, extract the metadata and encapsulate the artwork together with it",
+		"version": "1",
+		"inputSlots": [
+			{
+				"id": "<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>",
+				"name": "InputSlot Artwork Software",
+				"description": "Input slot corresponding to the Artwork Software entity for the aggregated process Ingest Artwork Software",
+				"type": "<http://www.pericles-project.eu/ns/ecosystem#ArtworkSoftware>",
+				"optional": false
+			},
+			{
+				"id": "<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>",
+				"name": "InputSlot Package Format",
+				"description": "Input slot corresponding to the Package Format entity for the aggregated process Ingest Artwork Software",
+				"type": "<http://www.pericles-project.eu/ns/ecosystem#PackageFormat>",
+				"optional": false
+			}
+		],
+		"outputSlots": [
+			{
+				"id": "<http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>",
+				"name": "OutputSlot Package",
+				"description": "Output slot corresponding to the Package entity created as the result of the aggregated process Ingest Artwork Software",
+				"type": "<http://www.pericles-project.eu/ns/ecosystem#Package>"
+			}
+		],
+		"processFlow": "<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>",
+		"dataFlow": "[{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 0, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDO>\"} , {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>\", \"targetProcess\": 1, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isExtractMDDO>\"}, {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>\"} ,{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>\"} , {\"sourceProcess\": 1, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>\"} , {\"sourceProcess\": 2, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>\", \"targetProcess\": 3, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>\"}]"
+	}
+}
