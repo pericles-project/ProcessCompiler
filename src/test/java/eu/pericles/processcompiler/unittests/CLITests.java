@@ -28,7 +28,7 @@ public class CLITests {
 	
 	static String collection = "NoaCollection/Test/";
 	static String repository = "NoaRepositoryTest";
-	static String ecosystem = "src/test/resources/ingest_sba/Ecosystem_Compilation.ttl";
+	static String ecosystem = "src/test/resources/ingest_sba/Ecosystem.ttl";
 	static String triplesMediaType = "text/turtle";
 	static String doMediaType = MediaType.APPLICATION_XML;
 	static String doPath = "src/test/resources/ingest_sba/";
@@ -102,8 +102,9 @@ public class CLITests {
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
+		assertEquals("200 OK\nVALID IMPLEMENTATION",result);
 		assertTrue(result.contains("200 OK"));
-		assertTrue(result.contains("Valid implementation"));
+		assertTrue(result.contains("VALID IMPLEMENTATION"));
 	}
 	
 	@Test
@@ -115,7 +116,7 @@ public class CLITests {
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
 		assertTrue(result.contains("200 OK"));
-		assertTrue(result.contains("Valid implementation"));
+		assertTrue(result.contains("VALID IMPLEMENTATION"));
 	}
 	
 	@Test
@@ -127,7 +128,7 @@ public class CLITests {
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
 		assertTrue(result.contains("200 OK"));
-		assertTrue(result.contains("Invalid implementation"));
+		assertTrue(result.contains("INVALID IMPLEMENTATION"));
 	}
 	
 	@Test
@@ -139,7 +140,7 @@ public class CLITests {
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
 		assertTrue(result.contains("200 OK"));
-		assertTrue(result.contains("Valid aggregation"));
+		assertTrue(result.contains("VALID AGGREGATION"));
 	}
 	
 	@Test
@@ -151,7 +152,7 @@ public class CLITests {
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
 		assertTrue(result.contains("200 OK"));
-		assertTrue(result.contains("Valid aggregation"));
+		assertTrue(result.contains("VALID AGGREGATION"));
 	} 
 	
 	@Test
@@ -163,7 +164,7 @@ public class CLITests {
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
 		assertTrue(result.contains("200 OK"));
-		assertTrue(result.contains("Invalid aggregation"));
+		assertTrue(result.contains("INVALID AGGREGATION"));
 	}
 
 	@Test

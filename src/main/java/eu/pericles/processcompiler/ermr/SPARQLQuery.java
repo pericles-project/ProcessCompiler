@@ -11,7 +11,7 @@ public class SPARQLQuery {
 		try {
 			return URLEncoder.encode(query, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			throw new ERMRClientException("Error creating SPARQL query", e);
+			throw new ERMRClientException("Error creating SPARQL query: " + e.getMessage());
 		}
 	}
 	

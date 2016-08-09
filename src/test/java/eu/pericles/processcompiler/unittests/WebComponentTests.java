@@ -35,7 +35,7 @@ public class WebComponentTests extends JerseyTest {
 	static String service = "https://pericles1:PASSWORD@141.5.100.67/api";
 	static String collection = "NoaCollection/Test/";
 	static String repository = "NoaRepositoryTest";
-	static String ecosystem = "src/test/resources/ingest_sba/Ecosystem_Compilation.ttl";
+	static String ecosystem = "src/test/resources/ingest_sba/Ecosystem.ttl";
 	static String triplesMediaType = "text/turtle";
 	static String doMediaType = MediaType.APPLICATION_XML;
 	static String doPath = "src/test/resources/ingest_sba/";
@@ -90,7 +90,7 @@ public class WebComponentTests extends JerseyTest {
 		assertEquals(200, response.getStatus());
 		ValidateImplementationResult vImplementationResult = response.readEntity(ValidateImplementationResult.class);
 		assertTrue(vImplementationResult.valid);
-		assertEquals("OK\nValid implementation", vImplementationResult.message);
+		assertEquals("OK\nVALID IMPLEMENTATION", vImplementationResult.message);
 	}
 	
 	@Test
@@ -105,7 +105,7 @@ public class WebComponentTests extends JerseyTest {
 		assertEquals(200, response.getStatus());
 		ValidateImplementationResult vImplementationResult = response.readEntity(ValidateImplementationResult.class);
 		assertTrue(vImplementationResult.valid);
-		assertEquals("OK\nValid implementation", vImplementationResult.message);
+		assertEquals("OK\nVALID IMPLEMENTATION", vImplementationResult.message);
 	}
 	
 	@Test
@@ -120,7 +120,7 @@ public class WebComponentTests extends JerseyTest {
 		assertEquals(200, response.getStatus());
 		ValidateImplementationResult vImplementationResult = response.readEntity(ValidateImplementationResult.class);
 		assertFalse(vImplementationResult.valid);
-		assertEquals("OK\nInvalid implementation\nNOT VALID IMPLEMENTATION: Slot <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF> in process <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> has wrong data type in the BPMN file", vImplementationResult.message);
+		assertEquals("OK\nINVALID IMPLEMENTATION: Slot <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF> is wrong or missing in the BPMN file", vImplementationResult.message);
 	}
 	
 	@Test
@@ -134,7 +134,7 @@ public class WebComponentTests extends JerseyTest {
 		assertEquals(200, response.getStatus());
 		ValidateAggregationResult vAggregationResult = response.readEntity(ValidateAggregationResult.class);
 		assertTrue(vAggregationResult.valid);
-		assertEquals("OK\nValid aggregation", vAggregationResult.message);
+		assertEquals("OK\nVALID AGGREGATION", vAggregationResult.message);
 	}
 	
 	@Test
@@ -148,7 +148,7 @@ public class WebComponentTests extends JerseyTest {
 		assertEquals(200, response.getStatus());
 		ValidateAggregationResult vAggregationResult = response.readEntity(ValidateAggregationResult.class);
 		assertTrue(vAggregationResult.valid);
-		assertEquals("OK\nValid aggregation", vAggregationResult.message);
+		assertEquals("OK\nVALID AGGREGATION", vAggregationResult.message);
 	}
 	
 	@Test
@@ -162,7 +162,7 @@ public class WebComponentTests extends JerseyTest {
 		assertEquals(200, response.getStatus());
 		ValidateAggregationResult vAggregationResult = response.readEntity(ValidateAggregationResult.class);
 		assertFalse(vAggregationResult.valid);
-		assertEquals("OK\nInvalid aggregation\nNOT VALID DATA FLOW: NOT VALID TYPE in data connection with source <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF> and target <http://www.pericles-project.eu/ns/ecosystem#isExtractMDDO>", vAggregationResult.message);
+		assertEquals("OK\nINVALID AGGREGATION: Invalid data type in connection (<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>,<http://www.pericles-project.eu/ns/ecosystem#isExtractMDDO>)", vAggregationResult.message);
 	}
 
 	@Test

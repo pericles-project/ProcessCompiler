@@ -30,7 +30,7 @@ public class ProcessCompilerTests {
 	static String service = "https://pericles1:PASSWORD@141.5.100.67/api";
 	static String collection = "NoaCollection/Test/";
 	static String repository = "NoaRepositoryTest";
-	static String ecosystem = "src/test/resources/ingest_sba/Ecosystem_Compilation.ttl";
+	static String ecosystem = "src/test/resources/ingest_sba/Ecosystem.ttl";
 	static String triplesMediaType = "text/turtle";
 	static String doMediaType = MediaType.APPLICATION_XML;
 	static String doPath = "src/test/resources/ingest_sba/";
@@ -78,7 +78,7 @@ public class ProcessCompilerTests {
 					.getImplementation().getLocation()));
 			ValidationResult validationResult = new ProcessCompiler(service).validateImplementation(process, bpmnProcess);
 			assertTrue(validationResult.isValid());
-			assertEquals("OK", validationResult.getMessage());
+			assertEquals("VALID IMPLEMENTATION", validationResult.getMessage());
 		} catch (Exception e) {
 			fail("vimp_valid(): " + e.getMessage());
 		}
@@ -95,7 +95,7 @@ public class ProcessCompilerTests {
 			ValidationResult validationResult = new ProcessCompiler(service).validateImplementation(process, bpmnProcess);
 			assertFalse(validationResult.isValid());
 			assertEquals(
-					"NOT VALID IMPLEMENTATION: Slot <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDXX> in process <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> is wrong or missing in the BPMN file",
+					"INVALID IMPLEMENTATION: Slot <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDXX> is wrong or missing in the BPMN file",
 					validationResult.getMessage());
 		} catch (Exception e) {
 			fail("vimp_inputSlotMissing(): " + e.getMessage());
@@ -113,7 +113,7 @@ public class ProcessCompilerTests {
 			ValidationResult validationResult = new ProcessCompiler(service).validateImplementation(process, bpmnProcess);
 			assertFalse(validationResult.isValid());
 			assertEquals(
-					"NOT VALID IMPLEMENTATION: Slot <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD> in process <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> has wrong data type in the BPMN file",
+					"INVALID IMPLEMENTATION: Slot <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD> is wrong or missing in the BPMN file",
 					validationResult.getMessage());
 		} catch (Exception e) {
 			fail("vimp_inputSlotDifferentType(): " + e.getMessage());
@@ -127,7 +127,7 @@ public class ProcessCompilerTests {
 			AggregatedProcess aggregatedProcess = new ERMRCommunications().getAggregatedProcessEntity(repository, uri);
 			ValidationResult validationResult = new ProcessCompiler(service).validateAggregation(repository, aggregatedProcess);
 			assertTrue(validationResult.isValid());
-			assertEquals("OK", validationResult.getMessage());
+			assertEquals("VALID AGGREGATION", validationResult.getMessage());
 		} catch (Exception e) {
 			fail("vagg_valid()");
 		}
@@ -141,7 +141,7 @@ public class ProcessCompilerTests {
 			aggregatedProcess.setProcessFlow("<http://www.pericles-project.eu/ns/ecosystem#atpVirusCheck> <http://www.pericles-project.eu/ns/ecosystem#atpExtractMD> <http://www.pericles-project.eu/ns/ecosystem#atpStoreFile>");
 			ValidationResult validationResult = new ProcessCompiler(service).validateAggregation(repository, aggregatedProcess);
 			assertFalse(validationResult.isValid());
-			assertEquals("NOT VALID PROCESS FLOW: PROCESS <http://www.pericles-project.eu/ns/ecosystem#atpStoreFile> is bad defined or missing", validationResult.getMessage());
+			assertEquals("INVALID AGGREGATION: Process <http://www.pericles-project.eu/ns/ecosystem#atpStoreFile> is bad defined or missing", validationResult.getMessage());
 		} catch (Exception e) {
 			fail("vagg_subprocessMissing(): " + e.getMessage());
 		}
@@ -155,7 +155,7 @@ public class ProcessCompilerTests {
 			aggregatedProcess.setDataFlow("[{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 0, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isVirusCheckFile>\"} , {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 1, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isExtractMDDO>\"}, {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>\"} ,{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>\"} , {\"sourceProcess\": 1, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>\"} , {\"sourceProcess\": 2, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>\", \"targetProcess\": 3, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>\"}]");
 			ValidationResult validationResult = new ProcessCompiler(service).validateAggregation(repository, aggregatedProcess);
 			assertFalse(validationResult.isValid());
-			assertEquals("NOT VALID DATA FLOW: Slot <http://www.pericles-project.eu/ns/ecosystem#isVirusCheckFile> doesn't exist", validationResult.getMessage());
+			assertEquals("INVALID AGGREGATION: Slot <http://www.pericles-project.eu/ns/ecosystem#isVirusCheckFile> doesn't exist", validationResult.getMessage());
 		} catch (Exception e) {
 			fail("vagg_slotMissing(): " + e.getMessage());
 		}
@@ -170,7 +170,7 @@ public class ProcessCompilerTests {
 			aggregatedProcess.setDataFlow("[{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 0, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDO>\"} , {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isExtractMDDO>\"}, {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 1, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>\"} ,{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>\", \"targetProcess\": 1, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>\"} , {\"sourceProcess\": 2, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>\", \"targetProcess\": 1, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>\"} , {\"sourceProcess\": 1, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>\", \"targetProcess\": 3, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>\"}]");
 			ValidationResult validationResult = new ProcessCompiler(service).validateAggregation(repository, aggregatedProcess);
 			assertFalse(validationResult.isValid());
-			assertEquals("NOT VALID DATA FLOW: NOT AVAILABLE SOURCE (2,<http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>)", validationResult.getMessage());
+			assertEquals("INVALID AGGREGATION: Not available source (2,<http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>)", validationResult.getMessage());
 		} catch (Exception e) {
 			fail("vagg_resourceNotAvailable(): " + e.getMessage());
 		}
@@ -184,7 +184,7 @@ public class ProcessCompilerTests {
 			aggregatedProcess.setDataFlow("[{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 0, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isVirusCheckDO>\"} , {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 1, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isExtractMDDO>\"}, {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>\"} ,{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF>\"} , {\"sourceProcess\": 1, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osExtractMDMD>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDDO>\"} , {\"sourceProcess\": 2, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osEncapsulateDOMDP>\", \"targetProcess\": 3, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ecosystem#osIngestAWSWP>\"}]");
 			ValidationResult validationResult = new ProcessCompiler(service).validateAggregation(repository, aggregatedProcess);
 			assertFalse(validationResult.isValid());
-			assertEquals("NOT VALID DATA FLOW: NOT VALID TYPE in data connection with source <http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW> and target <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>", validationResult.getMessage());
+			assertEquals("INVALID AGGREGATION: Invalid data type in connection (<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWAW>,<http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDMD>)", validationResult.getMessage());
 		} catch (Exception e) {
 			fail("vagg_incompatibleConnection(): " + e.getMessage());
 		}

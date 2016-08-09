@@ -13,22 +13,22 @@ import javax.xml.transform.stream.StreamSource;
 
 import eu.pericles.processcompiler.bpmnx.FancyDefinitions;
 import eu.pericles.processcompiler.bpmnx.FancyObjectFactory;
-import eu.pericles.processcompiler.exceptions.BPMNParseException;
+import eu.pericles.processcompiler.exceptions.BPMNParserException;
 
 public class BPMNParser {
 	
 	private BPMNProcess bpmnProcess;
 	private FancyDefinitions definitions;
 
-	public BPMNProcess parse(String file) throws BPMNParseException {
+	public BPMNProcess parse(String file) throws BPMNParserException {
 		try {
 			return parse(new FileInputStream(new File(file)));
 		} catch (Exception e) {
-			throw new BPMNParseException("Error when parsing the BPMN file: " + file, e);
+			throw new BPMNParserException("Error when parsing the BPMN file " + file + ": " + e.getMessage());
 		}
 	}
 
-	public BPMNProcess parse(InputStream inputStream) throws BPMNParseException {
+	public BPMNProcess parse(InputStream inputStream) throws BPMNParserException {
 		try {
 			setBPMNProcess(new BPMNProcess());
 			unmarshal(inputStream);
@@ -41,7 +41,7 @@ public class BPMNParser {
 			
 			return getBPMNProcess();
 		} catch (Exception e) {
-			throw new BPMNParseException("Error when parsing the BPMN inputstream", e);
+			throw new BPMNParserException("Unmarshalling error");
 		}
 	}
 

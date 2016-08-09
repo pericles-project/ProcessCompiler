@@ -12,7 +12,7 @@ import org.omg.spec.bpmn._20100524.model.TFlowElement;
 import org.omg.spec.bpmn._20100524.model.TItemDefinition;
 import org.omg.spec.bpmn._20100524.model.TProcess;
 
-import eu.pericles.processcompiler.exceptions.BPMNFileException;
+import eu.pericles.processcompiler.exceptions.PCException;
 
 public class BPMNProcess {
 
@@ -39,12 +39,12 @@ public class BPMNProcess {
 		}
 	}
 
-	public TItemDefinition findItemDefinitionByName(QName name) throws BPMNFileException {
+	public TItemDefinition findItemDefinitionByName(QName name) throws PCException {
 		for (TItemDefinition itemDef : getItemDefinitions())
 			if (itemDef.getId().equals(name.getLocalPart())) {
 				return itemDef;
 			}
-		throw new BPMNFileException("There is not item definition with id: " + name.getLocalPart());
+		throw new PCException("There is not item definition with id: " + name.getLocalPart());
 	}
 
 	public List<JAXBElement<? extends TFlowElement>> getFlowElements() {

@@ -1,6 +1,7 @@
 package eu.pericles.processcompiler.ermr;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class JSONParser {
 			return process;
 
 		} catch (Exception e) {
-			throw new JSONParserException("PROCESS " + uri + " is bad defined or missing", e);
+			throw new JSONParserException("Process " + uri + " is bad defined or missing");
 		}
 	}
 
@@ -52,7 +53,7 @@ public class JSONParser {
 			return implementation;
 
 		} catch (Exception e) {
-			throw new JSONParserException("IMPLEMENTATION " + uri + " is bad defined or missing", e);
+			throw new JSONParserException("Implementation " + uri + " is bad defined or missing");
 		}
 	}
 
@@ -73,7 +74,7 @@ public class JSONParser {
 			return inputSlot;
 
 		} catch (Exception e) {
-			throw new JSONParserException("INPUT SLOT " + uri + " is bad defined or missing", e);
+			throw new JSONParserException("Input slot " + uri + " is bad defined or missing");
 		}
 	}
 
@@ -90,7 +91,7 @@ public class JSONParser {
 			return outputSlot;
 
 		} catch (Exception e) {
-			throw new JSONParserException("OUTPUT SLOT " + uri + " is bad defined or missing", e);
+			throw new JSONParserException("Output slot " + uri + " is bad defined or missing");
 		}
 	}
 
@@ -105,6 +106,16 @@ public class JSONParser {
 		else {
 			String dataFlow = array.getJsonArray(0).getString(0);
 			return dataFlow.substring(1, dataFlow.length() - 1).replace("\\", "");
+		}
+	}
+	
+	public static InputStream parseGetImplementationFile(Response response, String uri) throws JSONParserException {
+		
+		try {
+			InputStream istream = response.readEntity(InputStream.class);
+			return istream;
+		} catch (Exception e) {
+			throw new JSONParserException("Implementation file " + uri + " is bad defined or missing");
 		}
 	}
 

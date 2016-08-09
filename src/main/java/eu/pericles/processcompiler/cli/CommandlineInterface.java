@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import org.apache.commons.io.FileUtils;
-
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
+
+import org.apache.commons.io.FileUtils;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,8 +22,7 @@ import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.core.ProcessCompiler.ValidationResult;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.ProcessBase;
-import eu.pericles.processcompiler.exceptions.BPMNFileException;
-import eu.pericles.processcompiler.exceptions.BPMNParseException;
+import eu.pericles.processcompiler.exceptions.BPMNParserException;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.exceptions.JSONParserException;
 import eu.pericles.processcompiler.exceptions.PCException;
@@ -135,27 +134,20 @@ public class CommandlineInterface {
 				aggregatedProcess = compiler.getAggregatedProcess(repo, input);
 
 			ValidationResult result = compiler.validateAggregation(repo, aggregatedProcess);
-
+			
 			System.out.println("200 OK");
-			if (result.isValid()) {
-				System.out.println("Valid aggregation");
+			System.out.println(result.getMessage());
+			if (result.isValid()) 
 				return 0;
-			} else {
-				System.out.println("Invalid aggregation: " + result.getMessage());
+			else 
 				return 1;
-			}
-
 		} catch (ERMRClientException e) {
 			System.out.println("500 Internal Server Error");
 			System.out.println("ERMR (Triplestore) is not available: " + e.getMessage());
-		} catch (BPMNParseException | BPMNFileException | IOException e) {
+		} catch (IOException | JSONParserException e) {
 			System.out.println("400 Bad Request");
-			System.out.println("Error when parsing input file: " + e.getMessage());
-		} catch (JSONParserException e) {
-			System.out.println("400 Bad Request");
-			System.out.println("Error when validating: " + e.getMessage());
-		}
-
+			System.out.println(e.getMessage());
+		} 
 		return 2;
 	}
 
@@ -180,23 +172,18 @@ public class CommandlineInterface {
 			ValidationResult result = compiler.validateImplementation(process, bpmnProcess);
 
 			System.out.println("200 OK");
-			if (result.isValid()) {
-				System.out.println("Valid implementation");
+			System.out.println(result.getMessage());
+			if (result.isValid()) 
 				return 0;
-			} else {
-				System.out.println("Invalid implementation: " + result.getMessage());
+			else 
 				return 1;
-			}
 		} catch (ERMRClientException e) {
 			System.out.println("500 Internal Server Error");
 			System.out.println("ERMR (Triplestore) is not available: " + e.getMessage());
-		} catch (BPMNParseException | BPMNFileException | IOException e) {
+		} catch (BPMNParserException | IOException | JSONParserException e) {
 			System.out.println("400 Bad Request");
-			System.out.println("Error when parsing BPMN file: " + e.getMessage());
-		} catch (JSONParserException e) {
-			System.out.println("400 Bad Request");
-			System.out.println("Error when validating: " + e.getMessage());
-		}
+			System.out.println(e.getMessage());
+		} 
 		return 2;
 	}
 
@@ -225,10 +212,10 @@ public class CommandlineInterface {
 		} catch (IOException e) {
 			System.out.println("400 Bad Request");
 			System.out.println("Error when writing output file: " + e.getMessage());
-		} catch (PCException e) {
+		} catch (PCException | JSONParserException e) {
 			System.out.println("400 Bad Request");
 			System.out.println("Error when compiling process: " + e.getMessage());
-		}
+		} 
 		return 1;
 	}
 	

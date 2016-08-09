@@ -1,21 +1,10 @@
 package eu.pericles.processcompiler.exceptions;
 
-/**
- * Process Compiler Exception, used as base class for all exceptions returned by
- * the Process Compiler.
- * 
- * @author noa
- *
- */
-public class PCException extends Exception {
+public class PCException  extends BaseException {
 
-	private static final long serialVersionUID = 6072502108793503850L;
+	private static final long serialVersionUID = -4567443600758679993L;
 
 	public PCException(String message) {
-		super(message);
-	}
-	
-	public PCException(String message, Exception e) {
 		super(message);
 	}
 

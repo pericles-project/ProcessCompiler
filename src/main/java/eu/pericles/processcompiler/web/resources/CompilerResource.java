@@ -9,7 +9,7 @@ import javax.ws.rs.Path;
 import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
-import eu.pericles.processcompiler.exceptions.PCException;
+import eu.pericles.processcompiler.exceptions.BaseException;
 import eu.pericles.processcompiler.web.ApiException;
 
 @Path("/compile")
@@ -47,7 +47,7 @@ public class CompilerResource extends BaseResource {
 			throw new ApiException(500, e);
 		} catch (IOException e) {
 			throw new ApiException(400, e);
-		} catch (PCException e) {
+		} catch (BaseException e) {
 			throw new ApiException(400, e);
 		}
 	}

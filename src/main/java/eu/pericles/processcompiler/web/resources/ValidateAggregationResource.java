@@ -10,7 +10,7 @@ import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.core.ProcessCompiler.ValidationResult;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
-import eu.pericles.processcompiler.exceptions.PCException;
+import eu.pericles.processcompiler.exceptions.BaseException;
 import eu.pericles.processcompiler.web.ApiException;
 
 @Path("/validate_aggregation")
@@ -45,16 +45,13 @@ public class ValidateAggregationResource extends BaseResource {
 			ValidateAggregationResult result = new ValidateAggregationResult();
 			ValidationResult vResult = compiler.validateAggregation(request.store, request.process);
 			result.valid = vResult.isValid();
-			if (result.valid)
-				result.message = "OK\nValid aggregation";
-			else 
-				result.message = "OK\nInvalid aggregation\n" + vResult.getMessage();
+			result.message = "OK\n" + vResult.getMessage();
 			return result;
 		} catch (ERMRClientException e) {
 			throw new ApiException(500, e);
 		} catch (IOException e) {
 			throw new ApiException(400, e);
-		} catch (PCException e) {
+		} catch (BaseException e) {
 			throw new ApiException(400, e);
 		}
 	}

@@ -28,7 +28,7 @@ public class ERMRClientAPI {
 			Client client = AllTrustingClient.getAllTrustingClient();
 			return client;
 		} catch (Exception e) {
-			throw new ERMRClientException("Error when creating the ERMR client API", e);
+			throw new ERMRClientException("Error when creating the ERMR client API: " + e.getMessage());
 		}
 	}
 

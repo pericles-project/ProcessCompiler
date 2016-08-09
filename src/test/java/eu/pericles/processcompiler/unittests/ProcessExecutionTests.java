@@ -49,7 +49,7 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 	private String service = "https://pericles1:PASSWORD@141.5.100.67/api";
 	static String collection = "NoaCollection/Test/";
 	static String repository = "NoaRepositoryTest";
-	static String ecosystem = "src/test/resources/ingest_sba/Ecosystem_Compilation.ttl";
+	static String ecosystem = "src/test/resources/ingest_sba/Ecosystem.ttl";
 	static String triplesMediaType = "text/turtle";
 	static String doMediaType = MediaType.APPLICATION_XML;
 	static String doPath = "src/test/resources/ingest_sba/";

@@ -12,7 +12,7 @@ import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.core.ProcessCompiler.ValidationResult;
 import eu.pericles.processcompiler.ecosystem.ProcessBase;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
-import eu.pericles.processcompiler.exceptions.PCException;
+import eu.pericles.processcompiler.exceptions.BaseException;
 import eu.pericles.processcompiler.web.ApiException;
 
 @Path("/validate_implementation")
@@ -55,15 +55,11 @@ public class ValidateImplementationResource extends BaseResource {
 			ValidateImplementationResult result = new ValidateImplementationResult();
 			ValidationResult vResult = compiler.validateImplementation(request.process, request.bpmnProcess);
 			result.valid = vResult.isValid();
-			result.valid = vResult.isValid();
-			if (result.valid)
-				result.message = "OK\nValid implementation";
-			else 
-				result.message = "OK\nInvalid implementation\n" + vResult.getMessage();
+			result.message = "OK\n" + vResult.getMessage();
 			return result;
 		} catch (ERMRClientException e) {
 			throw new ApiException(500, e);
-		} catch (PCException e) {
+		} catch (BaseException e) {
 			throw new ApiException(400, e);
 		} catch (IOException e) {
 			throw new ApiException(400, e);
