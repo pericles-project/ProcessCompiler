@@ -203,7 +203,7 @@ public class CommandlineInterface {
 			else
 				System.out.println(result);
 
-			System.out.println("201 Created");
+			System.out.println("200 OK");
 			return 0;
 
 		} catch (ERMRClientException e) {

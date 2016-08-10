@@ -90,8 +90,7 @@ public class CLITests {
 		
 		String result = errorStream.toString();
 		defaultErrorStream.println(result);
-		assertTrue(result.contains("usage: modelcompiler -s URL -r REPO validate_implementation [-h] PROC IMPL"));
-		assertTrue(result.contains("modelcompiler: error: too few arguments"));
+		assertEquals("usage: modelcompiler -s URL -r REPO validate_implementation [-h] PROC IMPL\nmodelcompiler: error: too few arguments\n",result);
 	}
 
 	@Test
@@ -102,9 +101,7 @@ public class CLITests {
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
-		assertEquals("200 OK\nVALID IMPLEMENTATION",result);
-		assertTrue(result.contains("200 OK"));
-		assertTrue(result.contains("VALID IMPLEMENTATION"));
+		assertEquals("200 OK\nVALID IMPLEMENTATION\n",result);
 	}
 	
 	@Test
@@ -115,8 +112,7 @@ public class CLITests {
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
-		assertTrue(result.contains("200 OK"));
-		assertTrue(result.contains("VALID IMPLEMENTATION"));
+		assertEquals("200 OK\nVALID IMPLEMENTATION\n",result);
 	}
 	
 	@Test
@@ -127,8 +123,7 @@ public class CLITests {
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
-		assertTrue(result.contains("200 OK"));
-		assertTrue(result.contains("INVALID IMPLEMENTATION"));
+		assertEquals("200 OK\nINVALID IMPLEMENTATION: Slot <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF> is wrong or missing in the BPMN file\n",result);
 	}
 	
 	@Test
@@ -139,8 +134,7 @@ public class CLITests {
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
-		assertTrue(result.contains("200 OK"));
-		assertTrue(result.contains("VALID AGGREGATION"));
+		assertEquals("200 OK\nVALID AGGREGATION\n",result);
 	}
 	
 	@Test
@@ -151,8 +145,7 @@ public class CLITests {
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
-		assertTrue(result.contains("200 OK"));
-		assertTrue(result.contains("VALID AGGREGATION"));
+		assertEquals("200 OK\nVALID AGGREGATION\n",result);
 	} 
 	
 	@Test
@@ -163,8 +156,7 @@ public class CLITests {
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
-		assertTrue(result.contains("200 OK"));
-		assertTrue(result.contains("INVALID AGGREGATION"));
+		assertEquals("200 OK\nINVALID AGGREGATION: Invalid data type in connection (<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>,<http://www.pericles-project.eu/ns/ecosystem#isExtractMDDO>)\n",result);
 	}
 
 	@Test
@@ -175,7 +167,7 @@ public class CLITests {
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
-		assertTrue(result.contains("201 Created"));
+		assertTrue(result.contains("200 OK"));
 		
 		Utils.fileContentEquals(testPath + "output.bpmn", doPath + "IngestAWSW.bpmn");
 	}
@@ -188,7 +180,7 @@ public class CLITests {
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
-		assertTrue(result.contains("201 Created"));
+		assertTrue(result.contains("200 OK"));
 		
 		Utils.fileContentEquals(testPath + "output.bpmn", doPath + "IngestAWSW.bpmn");
 	}
