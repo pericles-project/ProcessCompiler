@@ -198,8 +198,10 @@ public class CommandlineInterface {
 				aggregatedProcess = compiler.getAggregatedProcess(repo, input);
 
 			String result = compiler.compile(repo, aggregatedProcess);
-			if (ns.get("FILE") != null)
-				FileUtils.writeStringToFile(new File(ns.<String>get("FILE")), result);
+			
+			String file = ns.<String>get("o");
+			if (file != null)
+				FileUtils.writeStringToFile(new File(file), result);
 			else
 				System.out.println(result);
 
