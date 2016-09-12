@@ -11,6 +11,10 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import net.sourceforge.argparse4j.inf.Subparser;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.glassfish.jersey.servlet.ServletContainer;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -26,6 +30,8 @@ import eu.pericles.processcompiler.exceptions.BPMNParserException;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.exceptions.JSONParserException;
 import eu.pericles.processcompiler.exceptions.PCException;
+import eu.pericles.processcompiler.web.ApiApplication;
+import eu.pericles.processcompiler.web.ApiApplication.ERMRConfig;
 
 public class CommandlineInterface {
 
@@ -35,7 +41,7 @@ public class CommandlineInterface {
 	private ProcessCompiler compiler;
 
 	public static enum Cmd {
-		COMPILE, VALIDATE_IMPL, VALIDATE_AGGR
+		COMPILE, VALIDATE_IMPL, VALIDATE_AGGR, SERVER
 	}
 
 	public static class ConfigBean {
@@ -76,6 +82,10 @@ public class CommandlineInterface {
 		cmdParser.addArgument("APROC")
 				.help("Either a json file on disk or the ID of an already defined aggregated process.");
 
+		Subparser srvParser = parser.addSubparsers().addParser("server").help("Start a server process")
+				.setDefault("cmd", Cmd.SERVER);
+		srvParser.addArgument("-p").metavar("PORT").setDefault(8080).type(Integer.class).help("Network port (always localhost)");
+		
 		Subparser vaParser = parser.addSubparsers().addParser("validate_aggregation").help("Validate an aggregation")
 				.setDefault("cmd", Cmd.VALIDATE_AGGR);
 		vaParser.addArgument("APROC")
@@ -118,9 +128,32 @@ public class CommandlineInterface {
 			return validateImplementation(ns);
 		case VALIDATE_AGGR:
 			return validateAggregation(ns);
+		case SERVER:
+			return startServer(ns);
 		default:
 			return 2;
 		}
+	}
+
+	private int startServer(Namespace ns) {
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/");
+ 
+        Server jettyServer = new Server(ns.getInt("p"));
+        jettyServer.setHandler(context);
+        
+        context.addServlet(new ServletHolder(new ServletContainer(new ApiApplication(new ERMRConfig(ermr.toString(), repo)))),  "/*");
+ 
+        try {
+            jettyServer.start();
+            jettyServer.join();
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	return 1;
+        } finally {
+            jettyServer.destroy();
+        }
+        return 0;
 	}
 
 	private int validateAggregation(Namespace ns) {

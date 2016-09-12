@@ -12,14 +12,13 @@ import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.exceptions.BaseException;
 import eu.pericles.processcompiler.web.ApiException;
+import eu.pericles.processcompiler.web.resources.BaseResource.BaseRequestBean;
 
 @Path("/validate_aggregation")
 public class ValidateAggregationResource extends BaseResource {
 
-	public static class ValidateAggregationRequest {
+	public static class ValidateAggregationRequest extends BaseRequestBean {
 		public String id;
-		public String ermr;
-		public String store;
 		public AggregatedProcess process;
 	}
 

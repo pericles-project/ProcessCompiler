@@ -14,15 +14,14 @@ import eu.pericles.processcompiler.ecosystem.ProcessBase;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.exceptions.BaseException;
 import eu.pericles.processcompiler.web.ApiException;
+import eu.pericles.processcompiler.web.resources.BaseResource.BaseRequestBean;
 
 @Path("/validate_implementation")
 public class ValidateImplementationResource extends BaseResource {
 
-	public static class ValidateImplementationRequest {
+	public static class ValidateImplementationRequest extends BaseRequestBean {
 		public String id;
 		public String implementation;
-		public String ermr;
-		public String store;
 		public ProcessBase process;
 		public BPMNProcess bpmnProcess;
 	}

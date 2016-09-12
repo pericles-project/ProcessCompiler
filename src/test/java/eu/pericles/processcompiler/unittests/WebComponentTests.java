@@ -23,6 +23,7 @@ import org.junit.Test;
 import eu.pericles.processcompiler.ermr.ERMRClientAPI;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.web.ApiApplication;
+import eu.pericles.processcompiler.web.ApiApplication.ERMRConfig;
 import eu.pericles.processcompiler.web.resources.CompilerResource.CompileRequest;
 import eu.pericles.processcompiler.web.resources.CompilerResource.CompileResult;
 import eu.pericles.processcompiler.web.resources.ValidateAggregationResource.ValidateAggregationRequest;
@@ -75,7 +76,7 @@ public class WebComponentTests extends JerseyTest {
 
 	@Override
 	protected Application configure() {
-		return new ApiApplication();
+		return new ApiApplication(new ERMRConfig(service, repository));
 	}
 	
 	@Test

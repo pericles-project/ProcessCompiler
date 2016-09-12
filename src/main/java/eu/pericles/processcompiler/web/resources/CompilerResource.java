@@ -6,19 +6,22 @@ import java.io.IOException;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
+import com.google.inject.Inject;
+
 import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.exceptions.BaseException;
+import eu.pericles.processcompiler.web.ApiApplication.ERMRConfig;
 import eu.pericles.processcompiler.web.ApiException;
 
 @Path("/compile")
 public class CompilerResource extends BaseResource {
+	 
 
-	public static class CompileRequest {
+
+	public static class CompileRequest extends BaseRequestBean {
 		public String id;
-		public String ermr;
-		public String store;
 		public AggregatedProcess process;
 	}
 
