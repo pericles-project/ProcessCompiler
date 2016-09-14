@@ -3,8 +3,10 @@ package eu.pericles.processcompiler.web.resources;
 import java.io.File;
 import java.io.IOException;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 import com.google.inject.Inject;
 
@@ -16,9 +18,9 @@ import eu.pericles.processcompiler.web.ApiApplication.ERMRConfig;
 import eu.pericles.processcompiler.web.ApiException;
 
 @Path("/compile")
+@Consumes("application/json")
+@Produces("application/json")
 public class CompilerResource extends BaseResource {
-	 
-
 
 	public static class CompileRequest extends BaseRequestBean {
 		public String id;

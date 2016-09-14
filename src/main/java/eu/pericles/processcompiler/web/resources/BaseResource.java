@@ -3,11 +3,12 @@ package eu.pericles.processcompiler.web.resources;
 import java.io.File;
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
 
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.ProcessBase;
@@ -34,7 +35,7 @@ public class BaseResource {
 	}
 
 	@Inject
-	ERMRConfig defaultConfig;
+	protected ERMRConfig defaultConfig;
 
 	protected void assertEntity(BaseRequestBean obj) throws ApiException {
 		if (obj == null) {

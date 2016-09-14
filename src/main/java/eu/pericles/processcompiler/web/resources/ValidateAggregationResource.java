@@ -3,8 +3,10 @@ package eu.pericles.processcompiler.web.resources;
 import java.io.File;
 import java.io.IOException;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 
 import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.core.ProcessCompiler.ValidationResult;
@@ -15,6 +17,8 @@ import eu.pericles.processcompiler.web.ApiException;
 import eu.pericles.processcompiler.web.resources.BaseResource.BaseRequestBean;
 
 @Path("/validate_aggregation")
+@Consumes("application/json")
+@Produces("application/json")
 public class ValidateAggregationResource extends BaseResource {
 
 	public static class ValidateAggregationRequest extends BaseRequestBean {

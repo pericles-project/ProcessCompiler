@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response;
 
 import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.test.JerseyTest;
+import org.glassfish.jersey.test.TestProperties;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,6 +77,8 @@ public class WebComponentTests extends JerseyTest {
 
 	@Override
 	protected Application configure() {
+		set(TestProperties.LOG_TRAFFIC, true);
+		set(TestProperties.DUMP_ENTITY, true);
 		return new ApiApplication(new ERMRConfig(service, repository));
 	}
 	
