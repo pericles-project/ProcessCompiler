@@ -1,6 +1,8 @@
 package eu.pericles.processcompiler.unittests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -15,7 +17,6 @@ import org.junit.Test;
 import eu.pericles.processcompiler.cli.CommandlineInterface;
 import eu.pericles.processcompiler.ermr.ERMRClientAPI;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
-import eu.pericles.processcompiler.testutils.Utils;
 
 public class CLITests {
 	
@@ -168,8 +169,6 @@ public class CLITests {
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
 		assertTrue(result.contains("200 OK"));
-		
-		Utils.fileContentEquals(testPath + "output.bpmn", doPath + "IngestAWSW.bpmn");
 	}
 	
 	@Test
@@ -181,8 +180,6 @@ public class CLITests {
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
 		assertTrue(result.contains("200 OK"));
-		
-		Utils.fileContentEquals(testPath + "output.bpmn", doPath + "IngestAWSW.bpmn");
 	}
 
 	@Test

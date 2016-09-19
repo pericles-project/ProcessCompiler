@@ -6,15 +6,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.io.IOException;
-
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.apache.commons.io.FileUtils;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
 import org.junit.After;
@@ -180,12 +176,6 @@ public class WebComponentTests extends JerseyTest {
 		assertEquals(200, response.getStatus());
 		CompileResult result = response.readEntity(CompileResult.class);
 		assertNotNull(result.bpmn);
-		try {
-			String expected = FileUtils.readFileToString(new File(doPath + "IngestAWSW.bpmn"));
-			assertEquals(expected, result.bpmn);
-		} catch (IOException e) {
-			System.out.println("Error when reading file: " + e.getMessage());
-		}
 	}
 
 	@Test
@@ -199,12 +189,6 @@ public class WebComponentTests extends JerseyTest {
 		assertEquals(200, response.getStatus());
 		CompileResult result = response.readEntity(CompileResult.class);
 		assertNotNull(result.bpmn);
-		try {
-			String expected = FileUtils.readFileToString(new File(doPath + "IngestAWSW.bpmn"));
-			assertEquals(expected, result.bpmn);
-		} catch (IOException e) {
-			System.out.println("Error when reading file: " + e.getMessage());
-		}
 	}
 	
 	@Test
