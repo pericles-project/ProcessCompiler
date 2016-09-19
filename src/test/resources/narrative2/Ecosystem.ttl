@@ -4,7 +4,7 @@
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
 @prefix dem:  <http://www.pericles-project.eu/ns/ecosystem#> .
 @prefix dva:  <http://www.pericles-project.eu/ns/dva#> .
-@prefix nar2: <http://www.pericles-project.eu/ns/nar2#> .
+@prefix nar2: <http://www.pericles-project.eu/ns/narrative2#> .
 
 ############ AGGREGATED PROCESSES ###############
 
