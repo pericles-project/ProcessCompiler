@@ -2,6 +2,7 @@ package eu.pericles.processcompiler.web.resources;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
@@ -40,8 +41,8 @@ public class ValidateAggregationResource extends BaseResource {
 
 		try {
 			ProcessCompiler compiler = new ProcessCompiler(request.ermr);
-			if (new File(request.id).exists()) {
-				ConfigBean config = parseConfig(new File(request.id));
+			if (Files.exists(getRelativeFile(request.id))) {
+				ConfigBean config = parseConfig(getRelativeFile(request.id).toFile());
 				request.process = config.aggregatedProcess;
 			} else
 				request.process = compiler.getAggregatedProcess(request.store, request.id);

@@ -28,10 +28,13 @@ public class ApiException extends Exception {
 	}
 
 	public ApiException(int i, Exception e) {
-		this(i, e.getMessage() != null ? e.getMessage() : e.getClass().getName());
+		super(e.getMessage() != null ? e.getMessage() : e.getClass().getName(), e);
+		status = i;
+		error = new ErrorInfo(getMessage());
 	}
 
 	public ApiException(int i, String msg) {
+		super(msg);
 		status = i;
 		error = new ErrorInfo(msg);
 	}

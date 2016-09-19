@@ -2,10 +2,14 @@ package eu.pericles.processcompiler.web.resources;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,6 +21,7 @@ import eu.pericles.processcompiler.web.ApiException;
 
 public class BaseResource {
 	static ObjectMapper om = new ObjectMapper();
+	static final Logger log = LoggerFactory.getLogger(BaseResource.class);
 
 	public static class ConfigBean {
 		public ConfigBean() {
@@ -36,6 +41,24 @@ public class BaseResource {
 
 	@Inject
 	protected ERMRConfig defaultConfig;
+	
+	// Resolve a string path against the current working directory.
+	protected Path getRelativeFile(String path) {
+		Path p = Paths.get(path).normalize();
+		if(p.isAbsolute()) {
+			p = p.relativize(p.getRoot());
+		}
+		Path wd = Paths.get(".").toAbsolutePath().normalize(); 
+		p = wd.resolve(p).normalize();
+		
+		if(!p.startsWith(wd)) {
+			log.warn("Path {} is not within {}.", path, wd);
+			return null;
+		}
+		
+		return p;
+	}
+	
 
 	protected void assertEntity(BaseRequestBean obj) throws ApiException {
 		if (obj == null) {
