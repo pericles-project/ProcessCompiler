@@ -55,8 +55,8 @@
       <outgoing>CallActivity_27-EndEvent_4</outgoing>
       <ioSpecification id="IoSpecification_28">
         <dataInput id="DataInput_31" itemSubjectRef="ItemDefinition_11" name="isEncapsulateDOMDMD"/>
-        <dataInput id="DataInput_33" itemSubjectRef="ItemDefinition_7" name="isEncapsulateDOMDPF"/>
-        <dataInput id="DataInput_35" itemSubjectRef="ItemDefinition_5" name="isEncapsulateDOMDDO"/>
+        <dataInput id="DataInput_33" itemSubjectRef="ItemDefinition_5" name="isEncapsulateDOMDDO"/>
+        <dataInput id="DataInput_35" itemSubjectRef="ItemDefinition_7" name="isEncapsulateDOMDPF"/>
         <dataOutput id="DataOutput_37" itemSubjectRef="ItemDefinition_9" name="osEncapsulateDOMDP"/>
         <inputSet id="InputSet_29">
           <dataInputRefs>DataInput_31</dataInputRefs>
@@ -72,11 +72,11 @@
         <targetRef>DataInput_31</targetRef>
       </dataInputAssociation>
       <dataInputAssociation id="DataInputAssociation_34">
-        <sourceRef>isIngestAWSWPF</sourceRef>
+        <sourceRef>isIngestAWSWAW</sourceRef>
         <targetRef>DataInput_33</targetRef>
       </dataInputAssociation>
       <dataInputAssociation id="DataInputAssociation_36">
-        <sourceRef>isIngestAWSWAW</sourceRef>
+        <sourceRef>isIngestAWSWPF</sourceRef>
         <targetRef>DataInput_35</targetRef>
       </dataInputAssociation>
       <dataOutputAssociation id="DataOutputAssociation_38">
