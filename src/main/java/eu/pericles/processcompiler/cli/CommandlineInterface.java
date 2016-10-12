@@ -12,6 +12,7 @@ import net.sourceforge.argparse4j.inf.Subparser;
 
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -137,12 +138,18 @@ public class CommandlineInterface {
 
 	private int startServer(Namespace ns) {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setContextPath("/");
- 
         Server jettyServer = new Server(ns.getInt("p"));
         jettyServer.setHandler(context);
+
+        context.setContextPath("/");
+        context.setResourceBase(getClass().getClassLoader().getResource("WEB-INF").toExternalForm());
+        ServletHolder x = context.addServlet(DefaultServlet.class, "/demo/*");
+        x.setInitParameter("pathInfoOnly", "true");
         
-        context.addServlet(new ServletHolder(new ServletContainer(new ApiApplication(new ERMRConfig(ermr.toString(), repo)))),  "/*");
+        ERMRConfig ermrc = new ERMRConfig(ermr.toString(), repo);
+        ApiApplication rest = new ApiApplication(ermrc);
+        ServletContainer jerseyc = new ServletContainer(rest);
+        context.addServlet(new ServletHolder(jerseyc),  "/*");
  
         try {
             jettyServer.start();
@@ -155,7 +162,7 @@ public class CommandlineInterface {
         }
         return 0;
 	}
-
+	
 	private int validateAggregation(Namespace ns) {
 		try {
 			String input = ns.getString("APROC");
