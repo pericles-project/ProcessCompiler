@@ -25,7 +25,7 @@ public class SPARQLQueriesTests {
 	@Test
 	public void createQueryGetImplementationEntity() {
 		String uri = "<http://www.pericles-project.eu/ns/ecosystem#impVirusCheck>";
-		String expectedQuery = "PREFIX+ecosystem%3A%3Chttp%3A%2F%2Fwww.pericles-project.eu%2Fns%2Fecosystem%23%3E++SELECT+DISTINCT+%3Fversion+%3Ftype+%3Flocation+%3Fchecksum+%3Falgorithm+WHERE+%7B+%3Chttp%3A%2F%2Fwww.pericles-project.eu%2Fns%2Fecosystem%23impVirusCheck%3E+ecosystem%3Aversion+%3Fversion+.+%3Chttp%3A%2F%2Fwww.pericles-project.eu%2Fns%2Fecosystem%23impVirusCheck%3E+ecosystem%3Atype+%3Ftype+.+%3Chttp%3A%2F%2Fwww.pericles-project.eu%2Fns%2Fecosystem%23impVirusCheck%3E+ecosystem%3Alocation+%3Flocation+.+%3Chttp%3A%2F%2Fwww.pericles-project.eu%2Fns%2Fecosystem%23impVirusCheck%3E+ecosystem%3AhasFixity+%3Ffixity+.+%3Ffixity+ecosystem%3Achecksum+%3Fchecksum+.+%3Ffixity+ecosystem%3Aalgorithm+%3Falgorithm+.++%7D";
+		String expectedQuery = "PREFIX+ecosystem%3A%3Chttp%3A%2F%2Fwww.pericles-project.eu%2Fns%2Fecosystem%23%3E++SELECT+DISTINCT+%3Fversion+%3Ftype+%3Flocation+%3Fchecksum+WHERE+%7B+%3Chttp%3A%2F%2Fwww.pericles-project.eu%2Fns%2Fecosystem%23impVirusCheck%3E+ecosystem%3Aversion+%3Fversion+.+%3Chttp%3A%2F%2Fwww.pericles-project.eu%2Fns%2Fecosystem%23impVirusCheck%3E+ecosystem%3Atype+%3Ftype+.+%3Chttp%3A%2F%2Fwww.pericles-project.eu%2Fns%2Fecosystem%23impVirusCheck%3E+ecosystem%3Alocation+%3Flocation+.+%3Chttp%3A%2F%2Fwww.pericles-project.eu%2Fns%2Fecosystem%23impVirusCheck%3E+ecosystem%3Achecksum+%3Fchecksum+.++%7D";
 		try {
 			String query = SPARQLQuery.createQueryGetImplementationEntity(uri);
 			assertEquals(expectedQuery, query);

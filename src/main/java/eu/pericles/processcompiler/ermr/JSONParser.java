@@ -10,7 +10,6 @@ import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.ws.rs.core.Response;
 
-import eu.pericles.processcompiler.ecosystem.Fixity;
 import eu.pericles.processcompiler.ecosystem.Implementation;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
@@ -44,11 +43,9 @@ public class JSONParser {
 			Implementation implementation = new Implementation();
 			implementation.setId(uri);
 			implementation.setVersion(values.getString(0).replace("\"", ""));
-			implementation.setType(values.getString(1).replace("\"", ""));
+			implementation.setImplementationType(values.getString(1).replace("\"", ""));
 			implementation.setLocation(values.getString(2).replace("\"", ""));
-			implementation.setFixity(new Fixity());
-			implementation.getFixity().setChecksum(values.getString(3).replace("\"", ""));
-			implementation.getFixity().setAlgorithm(values.getString(4).replace("\"", ""));
+			implementation.setChecksum(values.getString(3).replace("\"", ""));			
 
 			return implementation;
 
@@ -65,7 +62,7 @@ public class JSONParser {
 			inputSlot.setId(uri);
 			inputSlot.setName(values.getString(0).replace("\"", ""));
 			inputSlot.setDescription(values.getString(1).replace("\"", ""));
-			inputSlot.setType(values.getString(2).replace("\"", ""));
+			inputSlot.setDataType(values.getString(2).replace("\"", ""));
 			if (values.getString(3).replace("\"", "").equals("true"))
 				inputSlot.setOptional(true);
 			else
@@ -86,7 +83,7 @@ public class JSONParser {
 			outputSlot.setId(uri);
 			outputSlot.setName(values.getString(0).replace("\"", ""));
 			outputSlot.setDescription(values.getString(1).replace("\"", ""));
-			outputSlot.setType(values.getString(2).replace("\"", ""));
+			outputSlot.setDataType(values.getString(2).replace("\"", ""));
 
 			return outputSlot;
 

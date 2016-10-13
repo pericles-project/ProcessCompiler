@@ -83,8 +83,8 @@ public class WebComponentTests extends JerseyTest {
 		ValidateImplementationRequest vImplementationRequest = new ValidateImplementationRequest();
 		vImplementationRequest.ermr = service;
 		vImplementationRequest.store = repository;
-		vImplementationRequest.id = "<http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD>";
-		vImplementationRequest.implementation = "<http://www.pericles-project.eu/ns/ecosystem#impEncapsulateDOMD>";
+		vImplementationRequest.id = "<http://www.pericles-project.eu/ns/ingest-scenario#atpEncapsulateDOMD>";
+		vImplementationRequest.implementation = "<http://www.pericles-project.eu/ns/ingest-scenario#impEncapsulateDOMD>";
 		
 		Response response = target("validate_implementation").request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(vImplementationRequest));
 		assertEquals(200, response.getStatus());
@@ -120,7 +120,7 @@ public class WebComponentTests extends JerseyTest {
 		assertEquals(200, response.getStatus());
 		ValidateImplementationResult vImplementationResult = response.readEntity(ValidateImplementationResult.class);
 		assertFalse(vImplementationResult.valid);
-		assertEquals("OK\nINVALID IMPLEMENTATION: Slot <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF> is wrong or missing in the BPMN file", vImplementationResult.message);
+		assertEquals("OK\nINVALID IMPLEMENTATION: Slot <http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDPF> is wrong or missing in the BPMN file", vImplementationResult.message);
 	}
 	
 	@Test
@@ -128,7 +128,7 @@ public class WebComponentTests extends JerseyTest {
 		ValidateAggregationRequest vAggregationRequest = new ValidateAggregationRequest();
 		vAggregationRequest.ermr = service;
 		vAggregationRequest.store = repository;
-		vAggregationRequest.id = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
+		vAggregationRequest.id = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
 		
 		Response response = target("validate_aggregation").request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(vAggregationRequest));
 		assertEquals(200, response.getStatus());
@@ -162,7 +162,7 @@ public class WebComponentTests extends JerseyTest {
 		assertEquals(200, response.getStatus());
 		ValidateAggregationResult vAggregationResult = response.readEntity(ValidateAggregationResult.class);
 		assertFalse(vAggregationResult.valid);
-		assertEquals("OK\nINVALID AGGREGATION: Invalid data type in connection (<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>,<http://www.pericles-project.eu/ns/ecosystem#isExtractMDDO>)", vAggregationResult.message);
+		assertEquals("OK\nINVALID AGGREGATION: Invalid data type in connection (<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWPF>,<http://www.pericles-project.eu/ns/ingest-scenario#isExtractMDDO>)", vAggregationResult.message);
 	}
 
 	@Test
@@ -170,7 +170,7 @@ public class WebComponentTests extends JerseyTest {
 		CompileRequest compileRequest = new CompileRequest();
 		compileRequest.ermr = service;
 		compileRequest.store = repository;
-		compileRequest.id = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
+		compileRequest.id = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
 
 		Response response = target("compile").request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(compileRequest));
 		assertEquals(200, response.getStatus());

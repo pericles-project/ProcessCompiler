@@ -133,8 +133,8 @@ public class ERMRCommunications {
 		return JSONParser.parseGetURIResponse(validateResponse(response));
 	}
 
-	public String getDataTypeURI(String repository, String uri) throws ERMRClientException {
-		Response response = client.query(repository, SPARQLQuery.createQueryGetDataTypeURI(uri));
+	public String getSlotDataTypeURI(String repository, String uri) throws ERMRClientException {
+		Response response = client.query(repository, SPARQLQuery.createQueryGetSlotDataTypeURI(uri));
 		return JSONParser.parseGetURIResponse(validateResponse(response));
 	}
 

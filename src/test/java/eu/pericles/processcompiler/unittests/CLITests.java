@@ -107,7 +107,7 @@ public class CLITests {
 	
 	@Test
 	public void validateImplementationByIDTest() {
-		String command = baseArgs + "validate_implementation <http://www.pericles-project.eu/ns/ecosystem#atpEncapsulateDOMD> <http://www.pericles-project.eu/ns/ecosystem#impEncapsulateDOMD>";
+		String command = baseArgs + "validate_implementation <http://www.pericles-project.eu/ns/ingest-scenario#atpEncapsulateDOMD> <http://www.pericles-project.eu/ns/ingest-scenario#impEncapsulateDOMD>";
 		String[] args = command.split(" ");
 		assertCall(args, 0);
 		
@@ -124,7 +124,7 @@ public class CLITests {
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
-		assertEquals("200 OK\nINVALID IMPLEMENTATION: Slot <http://www.pericles-project.eu/ns/ecosystem#isEncapsulateDOMDPF> is wrong or missing in the BPMN file\n",result);
+		assertEquals("200 OK\nINVALID IMPLEMENTATION: Slot <http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDPF> is wrong or missing in the BPMN file\n",result);
 	}
 	
 	@Test
@@ -140,7 +140,7 @@ public class CLITests {
 	
 	@Test
 	public void validateAggregationByIDTest() {
-		String command = baseArgs + "validate_aggregation <http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
+		String command = baseArgs + "validate_aggregation <http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
 		String[] args = command.split(" ");
 		assertCall(args, 0);
 		
@@ -157,7 +157,7 @@ public class CLITests {
 		
 		String result = outputStream.toString();
 		defaultOutputStream.println(result);
-		assertEquals("200 OK\nINVALID AGGREGATION: Invalid data type in connection (<http://www.pericles-project.eu/ns/ecosystem#isIngestAWSWPF>,<http://www.pericles-project.eu/ns/ecosystem#isExtractMDDO>)\n",result);
+		assertEquals("200 OK\nINVALID AGGREGATION: Invalid data type in connection (<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWPF>,<http://www.pericles-project.eu/ns/ingest-scenario#isExtractMDDO>)\n",result);
 	}
 
 	@Test
@@ -173,7 +173,7 @@ public class CLITests {
 	
 	@Test
 	public void compileAggregatedProcessByIDTest() {
-		String command = baseArgs + "compile -o " + testPath + "output.bpmn <http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
+		String command = baseArgs + "compile -o " + testPath + "output.bpmn <http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
 		String[] args = command.split(" ");
 		assertCall(args, 0);
 		

@@ -143,7 +143,7 @@ public class ProcessCompiler {
 		for (TDataObject dataObject : bpmnProcess.getDataObjects()) {
 			TItemDefinition item = bpmnProcess.findItemDefinitionByName(dataObject.getItemSubjectRef());
 			String dataObjectType = item.getStructureRef().getNamespaceURI() + item.getStructureRef().getLocalPart();
-			if ((slot.getId().contains(dataObject.getId())) && (slot.getType().contains(dataObjectType)))
+			if ((slot.getId().contains(dataObject.getId())) && (slot.getDataType().contains(dataObjectType)))
 				valid = true;
 		}
 		return valid;
@@ -209,8 +209,8 @@ public class ProcessCompiler {
 		for (PCDataConnection connection : pcAggProcess.getDataConnections()) {
 			Slot source = processes.get(connection.getSourceProcess()).findSlotByID(connection.getSourceSlot());
 			Slot target = processes.get(connection.getTargetProcess()).findSlotByID(connection.getTargetSlot());
-			String sourceType = ermrCommunications.getDataTypeURI(repository, source.getId());
-			String targetType = ermrCommunications.getDataTypeURI(repository, target.getId());
+			String sourceType = ermrCommunications.getSlotDataTypeURI(repository, source.getId());
+			String targetType = ermrCommunications.getSlotDataTypeURI(repository, target.getId());
 			if (!ermrCommunications.isSubclass(repository, targetType, sourceType))
 				throw new PCException("Invalid data type in connection (" + source.getId() + "," + target.getId() + ")");
 		}
@@ -247,7 +247,7 @@ public class ProcessCompiler {
 			compiledProcess.getSubprocesses().add(new PCSubprocess(pcProcess.getBpmnProcess().getId()));
 		// Add input and output data objects
 		for (Slot slot : pcAggProcess.getSlots()) {
-			PCDataObject dataObject = new PCDataObject(getLocalName(slot.getId()), slot.getName(), getLocalName(slot.getType()));
+			PCDataObject dataObject = new PCDataObject(getLocalName(slot.getId()), slot.getName(), getLocalName(slot.getDataType()));
 			compiledProcess.getDataObjects().add(dataObject);
 			dataMap.put(new PCPair(agpStep, slot.getId()), dataObject);
 		}
@@ -256,7 +256,7 @@ public class ProcessCompiler {
 			if (!dataMap.containsKey(connection.getSource()) && !dataMap.containsKey(connection.getTarget())) {
 				Slot slot = pcAggProcess.getSubprocesses().get(connection.getSourceProcess()).findSlotByID(connection.getSourceSlot());
 				PCDataObject dataObject = new PCDataObject(getRandomId(getLocalName(slot.getId())), slot.getName(),
-						getLocalName(slot.getType()));
+						getLocalName(slot.getDataType()));
 				compiledProcess.getDataObjects().add(dataObject);
 				dataMap.put(connection.getSource(), dataObject);
 			}

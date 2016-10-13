@@ -4,7 +4,7 @@
 		xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
 		xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
 		xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
-		xmlns:tns="http://www.pericles-project.eu/ns/ecosystem#" 
+		xmlns:tns="http://www.pericles-project.eu/ns/ingest-scenario#" 
 		xmlns="http://www.jboss.org/drools" 
 		xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd" 
 		id="ingestSBA_EncapsulateDOMD" 

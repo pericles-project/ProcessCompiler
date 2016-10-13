@@ -127,7 +127,7 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 	@Test
 	public void testCompiledBPMNFile() {
 		try {
-			String uri = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
+			String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
 			String outputFile = "src/test/resources/jbpm/output_IngestAWSW.bpmn";
 			AggregatedProcess aggregatedProcess = new ERMRCommunications().getAggregatedProcessEntity(repository, uri);
 			String result = new ProcessCompiler(service).compile(repository, aggregatedProcess);

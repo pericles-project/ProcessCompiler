@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 
-import eu.pericles.processcompiler.ecosystem.Fixity;
 import eu.pericles.processcompiler.ecosystem.Implementation;
 import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
@@ -23,11 +22,9 @@ public class Utils {
 		Implementation implementation = new Implementation();
 		implementation.setId(values.get(0));
 		implementation.setVersion(values.get(1));
-		implementation.setType(values.get(2));
+		implementation.setImplementationType(values.get(2));
 		implementation.setLocation(values.get(3));
-		implementation.setFixity(new Fixity());
-		implementation.getFixity().setAlgorithm(values.get(4));
-		implementation.getFixity().setChecksum(values.get(5));
+		implementation.setChecksum(values.get(4));
 		
 		return implementation;
 	}
@@ -37,7 +34,7 @@ public class Utils {
 		inputSlot.setId(values.get(0));
 		inputSlot.setName(values.get(1));
 		inputSlot.setDescription(values.get(2));
-		inputSlot.setType(values.get(3));
+		inputSlot.setDataType(values.get(3));
 		inputSlot.setOptional(optional);
 		
 		return inputSlot;
@@ -48,7 +45,7 @@ public class Utils {
 		outputSlot.setId(values.get(0));
 		outputSlot.setName(values.get(1));
 		outputSlot.setDescription(values.get(2));
-		outputSlot.setType(values.get(3));
+		outputSlot.setDataType(values.get(3));
 		
 		return outputSlot;
 	}

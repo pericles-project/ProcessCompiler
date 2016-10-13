@@ -18,98 +18,92 @@ public class SPARQLQuery {
 	//--------------------------- GET ENTITIES --------------------------------//
 	
 	public static String createQueryGetProcessAttributes(String process) throws ERMRClientException {
-		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
+		String query = "PREFIX dem:<http://www.pericles-project.eu/ns/dem#> " 
 				+ " SELECT DISTINCT ?name ?description ?version WHERE {"
-				+ process + " ecosystem:name ?name . "
-				+ process + " ecosystem:description ?description . "
-				+ process + " ecosystem:version ?version . "
+				+ process + " dem:name ?name . "
+				+ process + " dem:description ?description . "
+				+ process + " dem:version ?version . "
 				+ " }";
 		return encode(query);
 	}
 
 	public static String createQueryGetImplementationEntity(String implementation) throws ERMRClientException {
-		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
-			   + " SELECT DISTINCT ?version ?type ?location ?checksum ?algorithm WHERE { "
-			   + implementation + " ecosystem:version ?version . "
-			   + implementation + " ecosystem:type ?type . "
-			   + implementation + " ecosystem:location ?location . "
-			   + implementation + " ecosystem:hasFixity ?fixity . "
-			   + "?fixity ecosystem:checksum ?checksum . "
-			   + "?fixity ecosystem:algorithm ?algorithm . "
+		String query = "PREFIX dem:<http://www.pericles-project.eu/ns/dem#> " 
+			   + " SELECT DISTINCT ?version ?type ?location ?checksum WHERE { "
+			   + implementation + " dem:version ?version . "
+			   + implementation + " dem:implementationType ?type . "
+			   + implementation + " dem:location ?location . "
+			   + implementation + " dem:checksum ?checksum . "
 			   + " }";
 		return encode(query);
 	}
 
 	public static String createQueryGetInputSlotEntity(String inputSlot) throws ERMRClientException {
-		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
+		String query = "PREFIX dem:<http://www.pericles-project.eu/ns/dem#> " 
 				+ "SELECT DISTINCT ?name ?description ?type ?optional WHERE {"
-				+ inputSlot + " ecosystem:name ?name . "
-				+ inputSlot + " ecosystem:description ?description . "
-				+ inputSlot + " ecosystem:type ?type . "
-				+ inputSlot + " ecosystem:isOptional ?optional . "
+				+ inputSlot + " dem:name ?name . "
+				+ inputSlot + " dem:description ?description . "
+				+ inputSlot + " dem:dataType ?type . "
+				+ inputSlot + " dem:isOptional ?optional . "
 				+ " }";
 		return encode(query);
 	}
 	
 	public static String createQueryGetOutputSlotEntity(String outputSlot) throws ERMRClientException {
-		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
+		String query = "PREFIX dem:<http://www.pericles-project.eu/ns/dem#> " 
 				+ "SELECT DISTINCT ?name ?description ?type WHERE {"
-				+ outputSlot + " ecosystem:name ?name . "
-				+ outputSlot + " ecosystem:description ?description . "
-				+ outputSlot + " ecosystem:type ?type . "
+				+ outputSlot + " dem:name ?name . "
+				+ outputSlot + " dem:description ?description . "
+				+ outputSlot + " dem:dataType ?type . "
 				+ " }";
 		return encode(query);
 	}
 	
 	public static String createQueryGetSequenceEntity(String sequence) throws ERMRClientException {
-		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
+		String query = "PREFIX dem:<http://www.pericles-project.eu/ns/dem#> " 
 				+ "SELECT DISTINCT ?processFlow ?dataFlow WHERE {"
-				+ sequence + " ecosystem:processFlow ?processFlow . "
-				+ sequence + " ecosystem:dataFlow ?dataFlow . "
+				+ sequence + " dem:processFlow ?processFlow . "
+				+ sequence + " dem:dataFlow ?dataFlow . "
 				+ " }";
 	return encode(query);
 	}
 	
 	public static String createQueryGetDataFlow(String process) throws ERMRClientException {
-		return createQueryGetURI(process, "ecosystem:dataFlow");
+		return createQueryGetURI(process, "dem:dataFlow");
 	}
 
 	public static String createQueryGetProcessFlow(String process) throws ERMRClientException {
-		return createQueryGetURI(process, "ecosystem:processFlow");
+		return createQueryGetURI(process, "dem:processFlow");
 	}
 	
 	//--------------------------- GET URIs --------------------------------//
 
 	public static String createQueryGetInputSlotURIList(String process) throws ERMRClientException {
-		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> "
+		String query = "PREFIX dem:<http://www.pericles-project.eu/ns/dem#> "
 				+ " SELECT DISTINCT ?inputs WHERE { "
-				+ process + " ecosystem:hasInputSlot ?inputs  . "
+				+ process + " dem:hasInputSlot ?inputs  . "
 				+ " }";
 		return encode(query);
 	}
 
 	public static String createQueryGetOutputSlotURIList(String process) throws ERMRClientException {
-		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> "
+		String query = "PREFIX dem:<http://www.pericles-project.eu/ns/dem#> "
 				+ " SELECT DISTINCT ?outputs WHERE { "
-				+ process + " ecosystem:hasOutputSlot ?outputs  . "
+				+ process + " dem:hasOutputSlot ?outputs  . "
 				+ " }";
 		return encode(query);
 	}
 
 	public static String createQueryGetImplementationURI(String process) throws ERMRClientException {
-		return createQueryGetURI(process, "ecosystem:hasImplementation");
+		return createQueryGetURI(process, "dem:hasImplementation");
 	}
 	
-	public static String createQueryGetSequenceURI(String process) throws ERMRClientException {
-		return createQueryGetURI(process, "ecosystem:hasSequence");
-	}
-
 	public static String createQueryGetEntityTypeURI(String entity) throws ERMRClientException {
 		return createQueryGetURI(entity, "<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>");
 	}
 
-	public static String createQueryGetDataTypeURI(String entity) throws ERMRClientException {
-		return createQueryGetURI(entity, "ecosystem:type");
+	public static String createQueryGetSlotDataTypeURI(String entity) throws ERMRClientException {
+		return createQueryGetURI(entity, "dem:dataType");
 	}
 
 	public static String createQueryGetParentEntityURI(String childEntity) throws ERMRClientException {
@@ -117,7 +111,7 @@ public class SPARQLQuery {
 	}
 	
 	public static String createQueryGetURI(String subject, String predicate) throws ERMRClientException {
-		String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
+		String query = "PREFIX dem:<http://www.pericles-project.eu/ns/dem#> " 
 				+ "SELECT DISTINCT ?uri WHERE {"
 				+ subject + " " + predicate + " ?uri . "
 				+ " }";
@@ -127,7 +121,7 @@ public class SPARQLQuery {
 
 /**
  * QUERY TEMPLATE
- *  String query = "PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> " 
+ *  String query = "PREFIX dem:<http://www.pericles-project.eu/ns/dem#> " 
 				+ "SELECT DISTINCT WHERE {"
 				+ " }";
 	return encode(query);

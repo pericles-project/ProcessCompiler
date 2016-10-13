@@ -5,7 +5,7 @@ public abstract class Slot {
 	private String id;
 	private String name;
 	private String description;
-	private String type;
+	private String dataType;
 	
 	//--------------- GETTERS AND SETTERS ----------------//
 	
@@ -27,11 +27,11 @@ public abstract class Slot {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getType() {
-		return type;
+	public String getDataType() {
+		return dataType;
 	}
-	public void setType(String type) {
-		this.type = type;
+	public void setDataType(String type) {
+		this.dataType = type;
 	}
 	
 	//--------------- HASHCODE AND EQUALS ----------------//
@@ -43,7 +43,7 @@ public abstract class Slot {
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((dataType == null) ? 0 : dataType.hashCode());
 		return result;
 	}
 	
@@ -71,10 +71,10 @@ public abstract class Slot {
 				return false;
 		} else if (!name.equals(other.name))
 			return false;
-		if (type == null) {
-			if (other.type != null)
+		if (dataType == null) {
+			if (other.dataType != null)
 				return false;
-		} else if (!type.equals(other.type))
+		} else if (!dataType.equals(other.dataType))
 			return false;
 		return true;
 	}
