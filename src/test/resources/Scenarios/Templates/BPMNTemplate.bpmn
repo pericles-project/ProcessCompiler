@@ -1,0 +1,75 @@
+<bpmn2:definitions
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL"
+		xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+		xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+		xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+		xmlns:dem="http://www.pericles-project.eu/ns/dem#"
+		xmlns="http://www.jboss.org/drools"
+		xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd"
+		expressionLanguage="http://www.mvel.org/2.0"
+		targetNamespace="http://www.jboss.org/drools"
+		typeLanguage="http://www.java.com/javaTypes"
+		id="${bpmn_process_id}" >
+
+  <!--    ITEM DEFINITIONS
+	Add so many item definitions as needed. Specify:
+	 	- id
+		- structure type
+	For example:
+		<bpmn2:itemDefinition id="itemDefDO" structureRef="tns:DigitalObject" />
+		<bpmn2:itemDefinition id="itemDefMD" structureRef="tns:Metadata" />
+  -->
+  <bpmn2:itemDefinition id="${item_id}" structureRef="${structure_type}" />
+
+  <!--    PROCESS
+	Add a process. Specify:
+		- id: the reference used externally to call the process
+		- name
+	For example:
+		<bpmn2:process id="extractMD" name="Extract Metadata" isExecutable="true" processType="Private" >
+  -->
+  <bpmn2:process id="${process_id}" name="${process_name}" isExecutable="true" processType="Private" >
+
+		<!--    DATA OBJECTS
+		Add so many data objects as needed. Any external input/output data (and also intermediate data)
+		have to be associated to a data object. Specify:
+			- id: the reference used externally to assign values to input and output data
+			- item definition: reference to an item definition that specifies the data type
+			- name
+		For example:
+			<bpmn2:dataObject id="dataDO" name="Digital Object" itemSubjectRef="itemDefDO" />
+			<bpmn2:dataObject id="dataMD" name="Metadata" itemSubjectRef="itemDefMD" />
+	  -->
+    <bpmn2:dataObject id="${data_object_id}" name="${data_object_id}" itemSubjectRef="${item_id}" />
+
+		<!--    FLOW ELEMENTS
+		Add so many flow elements as needed, i.e. Start/Intermediate/End Events, Gateways, Tasks, etc.
+		For example:
+			<bpmn2:startEvent id="startEvent"  />
+			<bpmn2:scriptTask id="extractMDTask" name="Extract Metadata Task" scriptFormat="http://www.java.com/java">
+				<bpmn2:script>
+					System.out.println("Executing Extract Metadata process to: " + kcontext.getVariable("dataDO"));
+					kcontext.setVariable("dataMD", "newMetadata");
+					System.out.println("Metadata created: " + kcontext.getVariable("dataMD"));
+				</bpmn2:script>
+			</bpmn2:scriptTask>
+			<bpmn2:endEvent id="endEvent" />
+	  -->
+    <bpmn2:startEvent id="${flow_element_id}"  />
+    <bpmn2:userTask id="${flow_element_id}" name="${flow_element_name}" />
+    <bpmn2:endEvent id="${flow_element_id}" />
+
+		<!--    SEQUENCE FLOW ELEMENTS
+		Add so many item definitions as needed. Specify:
+		 	- id
+			- source: the id of the source flow element
+			- target: the id of the target flow element
+		For example:
+			<bpmn2:sequenceFlow id="seq_1" sourceRef="startEvent" targetRef="extractMDTask"/>
+			<bpmn2:sequenceFlow id="seq_2" sourceRef="extractMDTask" targetRef="endEvent"/>
+	  -->
+    <bpmn2:sequenceFlow id="${sequence_element_id}" sourceRef="${flow_element_id}" targetRef="${flow_element_id}"/>
+
+  </bpmn2:process>
+</bpmn2:definitions>

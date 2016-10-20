@@ -1,0 +1,51 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dem: <http://www.pericles-project.eu/ns/dem#> .
+@prefix ${scenario}: <http://www.pericles-project.eu/ns/${scenario}#> .
+
+#### Aggregated Process ####
+${scenario}:${process_id} a dem:AggregatedProcess ;
+  dem:name "${process_name}" ;
+  dem:description "${process_description}" ;
+  dem:version "${process_version}" ;
+  dem:hasInputSlot ${input_slot_id}, ${input_slot_id}, ..., ${input_slot_id} ;
+  dem:hasOutputSlot ${output_slot_id}, ${output_slot_id}, ..., ${output_slot_id} ;
+  dem:processFlow "${process_id} ${process_id} ... ${process_id} ";
+  dem:dataFlow '[{"sourceProcess": ${process_step}, "sourceSlot": "${process_id}", "targetProcess": ${process_step}, "targetSlot": "${process_id}"}, ..., {"sourceProcess": ${process_step}, "sourceSlot": "${process_id}", "targetProcess": ${process_step}, "targetSlot": "${process_id}"}]' .
+
+#### Atomic Process ####
+${scenario}:${process_id} a dem:AtomicProcess ;
+  dem:name "${process_name}" ;
+  dem:description "${process_description}" ;
+  dem:version "${process_version}" ;
+  dem:hasInputSlot ${input_slot_id}, ${input_slot_id}, ..., ${input_slot_id} ;
+  dem:hasOutputSlot ${output_slot_id}, ${output_slot_id}, ..., ${output_slot_id} ;
+  dem:hasImplementation ${implementation_id} .
+
+#### Input Slot ####
+${scenario}:${slot_id} a dem:InputSlot ;
+  dem:name "${slot_name}" ;
+  dem:description "${slot_description}" ;
+  dem:version "${slot_version}" ;
+  dem:dataType ${entity_id} ;
+  dem:isOptional "${boolean}" .
+
+#### Output Slot ####
+${scenario}:${slot_id} a dem:OutputSlot ;
+  dem:name "${slot_name}" ;
+  dem:description "${slot_description}" ;
+  dem:version "${slot_version}" ;
+  dem:dataType ${entity_id} .
+
+### Implementation ###
+${scenario}:${implementation_id} a dem:Implementation ;
+  dem:version "${implementation_version}" ;
+  dem:implementationType "${implementation_type}" ;
+  dem:location "${implementation_location}" ;
+  dem:checksum "${checksum_string}".
+
+### Classes and Subclasses ###
+${scenario}:${class_name} a owl:Class .
+${scenario}:${class_name} rdfs:subClassOf ${scenario}:${class_name} .

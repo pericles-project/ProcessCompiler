@@ -1,0 +1,132 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dem: <http://www.pericles-project.eu/ns/dem#> .
+@prefix ingest-scenario: <http://www.pericles-project.eu/ns/ingest-scenario#> .
+
+#### Ingest Artwork Software - Aggregated Process ####
+
+ingest-scenario:agpIngestAWSW a dem:AggregatedProcess ;
+  dem:name "Ingest Artwork Software" ;
+  dem:description "Aggregated process that ingest an artwork software by doing the following: check for viruses, extract the metadata and encapsulate the artwork together with it" ;
+  dem:version "1" ;
+  dem:hasInputSlot ingest-scenario:isIngestAWSWAW, ingest-scenario:isIngestAWSWPF ;
+  dem:hasOutputSlot ingest-scenario:osIngestAWSWP ;
+  dem:processFlow "<http://www.pericles-project.eu/ns/ingest-scenario#atpVirusCheck> <http://www.pericles-project.eu/ns/ingest-scenario#atpExtractMD> <http://www.pericles-project.eu/ns/ingest-scenario#atpEncapsulateDOMD>";
+  dem:dataFlow '[{"sourceProcess": 3, "sourceSlot": "<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWAW>", "targetProcess": 0, "targetSlot": "<http://www.pericles-project.eu/ns/ingest-scenario#isVirusCheckDO>"} , {"sourceProcess": 3, "sourceSlot": "<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWAW>", "targetProcess": 1, "targetSlot": "<http://www.pericles-project.eu/ns/ingest-scenario#isExtractMDDO>"}, {"sourceProcess": 3, "sourceSlot": "<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWAW>", "targetProcess": 2, "targetSlot": "<http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDDO>"} ,{"sourceProcess": 3, "sourceSlot": "<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWPF>", "targetProcess": 2, "targetSlot": "<http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDPF>"} , {"sourceProcess": 1, "sourceSlot": "<http://www.pericles-project.eu/ns/ingest-scenario#osExtractMDMD>", "targetProcess": 2, "targetSlot": "<http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDMD>"} , {"sourceProcess": 2, "sourceSlot": "<http://www.pericles-project.eu/ns/ingest-scenario#osEncapsulateDOMDP>", "targetProcess": 3, "targetSlot": "<http://www.pericles-project.eu/ns/ingest-scenario#osIngestAWSWP>"}]' .
+
+ingest-scenario:isIngestAWSWAW a dem:InputSlot ;
+  dem:name "InputSlot Artwork Software" ;
+  dem:description "Input slot corresponding to the Artwork Software entity for the aggregated process Ingest Artwork Software" ;
+  dem:dataType ingest-scenario:ArtworkSoftware ;
+  dem:isOptional "false" .
+
+ingest-scenario:isIngestAWSWPF a dem:InputSlot ;
+  dem:name "InputSlot Package Format" ;
+  dem:description "Input slot corresponding to the Package Format entity for the aggregated process Ingest Artwork Software" ;
+  dem:dataType ingest-scenario:PackageFormat ;
+  dem:isOptional "false" .
+
+ingest-scenario:osIngestAWSWP a dem:OutputSlot ;
+  dem:name "OutputSlot Package" ;
+  dem:description "Output slot corresponding to the Package entity created as the result of the aggregated process Ingest Artwork Software" ;
+  dem:dataType ingest-scenario:Package .
+
+#### Virus Check - Atomic Process ####
+
+ingest-scenario:atpVirusCheck a dem:AtomicProcess ;
+  dem:name "Virus Check" ;
+  dem:description "Atomic process that check for viruses a digital material" ;
+  dem:version "1" ;
+  dem:hasInputSlot ingest-scenario:isVirusCheckDO ;
+  dem:hasImplementation ingest-scenario:impVirusCheck .
+
+ingest-scenario:isVirusCheckDO a dem:InputSlot ;
+  dem:name "InputSlot Digital Object" ;
+  dem:description "Input slot corresponding to the digital object to be checked for viruses" ;
+  dem:dataType ingest-scenario:DigitalObject ;
+  dem:isOptional "false" .
+
+ingest-scenario:impVirusCheck a dem:Implementation ;
+  dem:version "1" ;
+  dem:implementationType "BPMN" ;
+  dem:location "PCCollection/IngestSBA/VirusCheck.bpmn" ;
+  dem:checksum "" .
+
+#### Extract Metadata - Atomic Process ####
+
+ingest-scenario:atpExtractMD a dem:AtomicProcess ;
+  dem:name "Extract Metadata" ;
+  dem:description "Atomic process that extract the metadata of a digital object" ;
+  dem:version "1" ;
+  dem:hasInputSlot ingest-scenario:isExtractMDDO ;
+  dem:hasOutputSlot ingest-scenario:osExtractMDMD ;
+  dem:hasImplementation ingest-scenario:impExtractMD .
+
+ingest-scenario:isExtractMDDO a dem:InputSlot ;
+  dem:name "InputSlot Digital Material" ;
+  dem:description "Input slot corresponding to the digital material from which metadata is extracted" ;
+  dem:dataType ingest-scenario:DigitalObject ;
+  dem:isOptional "false" .
+
+ingest-scenario:osExtractMDMD a dem:OutputSlot ;
+  dem:name "OutputSlot Metadata" ;
+  dem:description "Output slot corresponding to the extracted metadata" ;
+  dem:dataType ingest-scenario:Metadata .
+
+ingest-scenario:impExtractMD a dem:Implementation ;
+  dem:version "1" ;
+  dem:implementationType "BPMN" ;
+  dem:location "PCCollection/IngestSBA/ExtractMD.bpmn" ;
+  dem:checksum "" .
+
+#### Encapsulate Metadata and Digital Material - Atomic Process ####
+
+ingest-scenario:atpEncapsulateDOMD a dem:AtomicProcess ;
+  dem:name "Encapsulate Digital Object and its Metadata" ;
+  dem:description "Atomic process that encapsulate a digital object and its metadata together in a package of a specific format" ;
+  dem:version "1" ;
+  dem:hasInputSlot ingest-scenario:isEncapsulateDOMDDO, ingest-scenario:isEncapsulateDOMDMD, ingest-scenario:isEncapsulateDOMDPF ;
+  dem:hasOutputSlot ingest-scenario:osEncapsulateDOMDP ;
+  dem:hasImplementation ingest-scenario:impEncapsulateDOMD .
+
+ingest-scenario:isEncapsulateDOMDDO a dem:InputSlot ;
+  dem:name "InputSlot Digital Object" ;
+  dem:description "Input slot corresponding to the digital object" ;
+  dem:dataType ingest-scenario:DigitalObject ;
+  dem:isOptional "false" .
+
+ingest-scenario:isEncapsulateDOMDMD a dem:InputSlot ;
+  dem:name "InputSlot Metadata" ;
+  dem:description "Input slot corresponding to the metadata" ;
+  dem:dataType ingest-scenario:Metadata ;
+  dem:isOptional "false" .
+
+ingest-scenario:isEncapsulateDOMDPF a dem:InputSlot ;
+  dem:name "InputSlot Package Format" ;
+  dem:description "Input slot corresponding to the package format used to encapsulate the digital object and its metadata" ;
+  dem:dataType ingest-scenario:PackageFormat ;
+  dem:isOptional "false" .
+
+ingest-scenario:osEncapsulateDOMDP a dem:OutputSlot ;
+  dem:name "OutputSlot Package" ;
+  dem:description "Output slot corresponding to the package resulting of encapsulate a digital object and its metadata" ;
+  dem:dataType ingest-scenario:Package .
+
+ingest-scenario:impEncapsulateDOMD a dem:Implementation ;
+  dem:version "1" ;
+  dem:implementationType "BPMN" ;
+  dem:location "PCCollection/IngestSBA/EncapsulateDOMD.bpmn" ;
+  dem:checksum "" .
+
+### Classes and Subclasses ###
+
+ingest-scenario:DigitalObject a owl:Class .
+ingest-scenario:Metadata a owl:Class .
+ingest-scenario:Format a owl:Class .
+
+ingest-scenario:ArtworkSoftware rdfs:subClassOf ingest-scenario:DigitalObject .
+ingest-scenario:File rdfs:subClassOf ingest-scenario:DigitalObject .
+ingest-scenario:Package rdfs:subClassOf ingest-scenario:DigitalObject .
+ingest-scenario:PackageFormat rdfs:subClassOf ingest-scenario:Format .

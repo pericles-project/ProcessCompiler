@@ -2,7 +2,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix owl:  <http://www.w3.org/2002/07/owl#> .
 @prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
-@prefix dem:  <http://www.pericles-project.eu/ns/ecosystem#> .
+@prefix dem:  <http://www.pericles-project.eu/ns/dem#> .
 @prefix dva:  <http://www.pericles-project.eu/ns/dva#> .
 @prefix nar2: <http://www.pericles-project.eu/ns/narrative2#> .
 
@@ -14,54 +14,38 @@ nar2:agpGetAllMD a dem:AggregatedProcess ;
   dem:description "Aggregated process that extract metadata from video artwork files and combine it with additional metadata (from TMS records)" ;
   dem:version "1" ;
   dem:hasInputSlot nar2:isGetAllMD_DVA, nar2:isGetAllMD_Opt, nar2:isGetAllMD_ID ;
-  dem:hasOutputSlot nar2:osGetAllMD_URI ;
-  dem:hasSequence nar2:seqGetAllMD ;
-  dem:hasImplementation nar2:impGetAllMD .
+  dem:hasOutputSlot nar2:osGetAllMD_MD ;
+  dem:processFlow "<http://www.pericles-project.eu/ns/nar2#atpExtractMD> <http://www.pericles-project.eu/ns/nar2#atpGetMD> <http://www.pericles-project.eu/ns/nar2#atpUpdateMD>" ;
+  dem:dataFlow '[{"sourceProcess":3 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#isGetAllMD_DVA>", "targetProcess":0 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isExtractMD_DVA>"} , {"sourceProcess":3 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#isGetAllMD_Opt>", "targetProcess":0 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isExtractMD_Opt>"} , {"sourceProcess":3 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#isGetAllMD_ID", "targetProcess":1 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isGetMD_ID>"} , {"sourceProcess":0 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osExtractMD_MD>", "targetProcess":2 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isUpdateMD_oldMD>"} , {"sourceProcess":1 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osGetMD_MD>", "targetProcess":2 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isUpdateMD_newMD>"} , {"sourceProcess":2 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osUpdateMD_MD>", "targetProcess": 3, "targetSlot": "<http://www.pericles-project.eu/ns/nar2#osGetAllMD_MD>"}]' .
 
 # Input & Output Slots
 nar2:isGetAllMD_DVA a dem:InputSlot ;
   dem:name "InputSlot Digital Video Artwork" ;
   dem:description "Input slot of the aggregated process Get All Metadata corresponding to the digital video artwork" ;
   dem:version "1" ;
-  dem:type dva:DigitalVideoArtwork ;
+  dem:dataType nar2:DigitalVideoArtwork ;
   dem:isOptional "false" .
-  
+
  nar2:isGetAllMD_ID a dem:InputSlot ;
   dem:name "InputSlot Identifier" ;
   dem:description "Input slot of the aggregated process Get All Metadata corresponding to the metadata identifier at TMS" ;
   dem:version "1" ;
-  dem:type dva:ID ;
+  dem:dataType nar2:ID ;
   dem:isOptional "false" .
-  
+
 nar2:isGetAllMD_Opt a dem:InputSlot ;
   dem:name "InputSlot Options" ;
   dem:description "Input slot of the aggregated process Get All Metadata corresponding to the extraction options" ;
   dem:version "1" ;
-  dem:type xsd:string ;
-  dem:isOptional "false" .
-  
-nar2:osGetAllMD_URI a dem:OutputSlot ;
-  dem:name "OutputSlot Location" ;
-  dem:description "Output slot of the aggregated process Get All Metadata corresponding to the location where the metadata is stored" ;
-  dem:version "1" ;
-  dem:type dva:URI .
-    
-# Sequence
-nar2:seqGetAllMD a dem:Sequence ;
-  dem:processFlow  "<http://www.pericles-project.eu/ns/nar2#atpExtractMD> <http://www.pericles-project.eu/ns/nar2#atpGetMD> <http://www.pericles-project.eu/ns/nar2#atpUpdateMD> <http://www.pericles-project.eu/ns/nar2#atpStoreMD>" ;
-  dem:dataFlow "{[<http://www.pericles-project.eu/ns/nar2#isExtractMD_DVA> <http://www.pericles-project.eu/ns/nar2#isGetAllMD_DVA>] [<http://www.pericles-project.eu/ns/nar2#isExtractMD_Opt> <http://www.pericles-project.eu/ns/nar2#isGetAllMD_Opt>]} {[<http://www.pericles-project.eu/ns/nar2#isGetMD_ID> <http://www.pericles-project.eu/ns/nar2#isGetAllMD_ID>]} {[<http://www.pericles-project.eu/ns/nar2#isUpdateMD_oldMD> <http://www.pericles-project.eu/ns/nar2#osExtractMD_MD>] [<http://www.pericles-project.eu/ns/nar2#isUpdateMD_newMD> <http://www.pericles-project.eu/ns/nar2#osGetMD_MD>]} {[<http://www.pericles-project.eu/ns/nar2#isStoreMD_MD> <http://www.pericles-project.eu/ns/nar2#osUpdateMD_MD>] [<http://www.pericles-project.eu/ns/nar2#osGetAllMD_URI> <http://www.pericles-project.eu/ns/nar2#osStoreMD_URI>]}" .
+  dem:dataType nar2:Options ;
+  dem:isOptional "true" .
 
-# Implementation
-nar2:impGetAllMD a dem:Implementation ;
+nar2:osGetAllMD_MD a dem:OutputSlot ;
+  dem:name "OutputSlot Metadata" ;
+  dem:description "Output slot of the aggregated process Get All Metadata corresponding to the metadata" ;
   dem:version "1" ;
-  dem:type "" ;
-  dem:location "" ;
-  dem:hasFixity nar2:fixGetAllMD .
-
-nar2:fixGetAllMD a dem:Fixity ;  
-  dem:checksum "" ;
-  dem:algorithm "" .
-####
+  dem:dataType nar2:Metadata .
+###
 
 ############ ATOMIC PROCESSES ###############
 
@@ -79,35 +63,30 @@ nar2:isExtractMD_DVA a dem:InputSlot ;
   dem:name "InputSlot Digital Video Artwork" ;
   dem:description "Input slot of the atomic process Extract Metadata corresponding to the digital video artwork from which metadata is extracted" ;
   dem:version "1" ;
-  dem:type dva:DigitalVideoArtwork ;
+  dem:dataType nar2:DigitalVideoArtwork ;
   dem:isOptional "false" .
-  
+
 nar2:isExtractMD_Opt a dem:InputSlot ;
   dem:name "InputSlot Options" ;
   dem:description "Input slot of the atomic process Extract Metadata corresponding to the extraction options" ;
   dem:version "1" ;
-  dem:type xsd:string ;
-  dem:isOptional "false" .
-  
+  dem:dataType nar2:Options ;
+  dem:isOptional "true" .
+
 nar2:osExtractMD_MD a dem:OutputSlot ;
   dem:name "OutputSlot Metadata" ;
   dem:description "Output slot of the atomic process Extract Metadata corresponding to the extracted metadata" ;
   dem:version "1" ;
-  dem:type dva:Metadata .
+  dem:dataType nar2:Metadata .
 
 # Implementation
 nar2:impExtractMD a dem:Implementation ;
   dem:version "1" ;
-  dem:type "BPMN" ;
+  dem:implementationType "BPMN" ;
   dem:location "NoaCollection/Narrative2/ExtractMD.bpmn2" ;
-  dem:hasFixity nar2:fixExtractMD .
+  dem:checksum "" .
+####
 
-# Fixity
-nar2:fixExtractMD a dem:Fixity ;
-  dem:checksum "" ;
-  dem:algorithm "sha256" .
-####  
-  
 #### Get Metadata ####
 nar2:atpGetMD a dem:AtomicProcess ;
   dem:name "Get Metadata" ;
@@ -122,28 +101,23 @@ nar2:isGetMD_ID a dem:InputSlot ;
   dem:name "InputSlot Identifier" ;
   dem:description "Input slot of the atomic process Get Metadata corresponding to the Identifier of the metadata record at TMS" ;
   dem:version "1" ;
-  dem:type dva:ID ;
+  dem:dataType nar2:ID ;
   dem:isOptional "false" .
-  
+
 nar2:osGetMD_MD a dem:OutputSlot ;
   dem:name "OutputSlot Metadata" ;
   dem:description "Output slot of the atomic process Get Metadata corresponding to the metadata retrieved from TMS" ;
   dem:version "1" ;
-  dem:type dva:Metadata .
+  dem:dataType nar2:Metadata .
 
 # Implementation
 nar2:impGetMD a dem:Implementation ;
   dem:version "1" ;
-  dem:type "BPMN" ;
+  dem:implementationType "BPMN" ;
   dem:location "NoaCollection/Narrative2/GetMD.bpmn2" ;
-  dem:hasFixity nar2:fixGetMD .
+  dem:checksum "" .
+####
 
-# Fixity
-nar2:fixGetMD a dem:Fixity ;
-  dem:checksum "" ;
-  dem:algorithm "sha256" .
-####  
-  
 #### Update Metadata ####
 nar2:atpUpdateMD a dem:AtomicProcess ;
   dem:name "Update Metadata" ;
@@ -158,69 +132,26 @@ nar2:isUpdateMD_oldMD a dem:InputSlot ;
   dem:name "InputSlot old Metadata" ;
   dem:description "Input slot of the atomic process Update Metadata corresponding to the old metadata" ;
   dem:version "1" ;
-  dem:type dva:Metadata ;
+  dem:dataType nar2:Metadata ;
   dem:isOptional "false" .
-  
+
 nar2:isUpdateMD_newMD a dem:InputSlot ;
   dem:name "InputSlot new Metadata" ;
   dem:description "Input slot of the atomic process Update Metadata corresponding to the new metadata" ;
   dem:version "1" ;
-  dem:type dva:Metadata ;
+  dem:dataType nar2:Metadata ;
   dem:isOptional "false" .
-  
+
 nar2:osUpdateMD_updatedMD a dem:OutputSlot ;
   dem:name "OutputSlot Metadata" ;
   dem:description "Output slot of the atomic process Update Metadata corresponding to the updated metadata" ;
   dem:version "1" ;
-  dem:type dva:Metadata .
+  dem:dataType nar2:Metadata .
 
 # Implementation
 nar2:impUpdateMD a dem:Implementation ;
   dem:version "1" ;
-  dem:type "BPMN" ;
+  dem:implementationType "BPMN" ;
   dem:location "NoaCollection/Narrative2/UpdateMD.bpmn2" ;
-  dem:hasFixity nar2:fixUpdateMD .
-
-# Fixity
-nar2:fixUpdateMD a dem:Fixity ;
-  dem:checksum "" ;
-  dem:algorithm "sha256" .
-####  
-  
-#### Store Metadata ####
-nar2:atpStoreMD a dem:AtomicProcess ;
-  dem:name "Store Metadata" ;
-  dem:description "Atomic process that store the metadata of a digital video artwork" ;
-  dem:version "1" ;
-  dem:hasInputSlot nar2:isStoreMD_MD ;
-  dem:hasOutputSlot nar2:osStoreMD_URI ;
-  dem:hasImplementation nar2:impStoreMD .
-
-# Input & Output Slots
-nar2:isStoreMD_MD a dem:InputSlot ;
-  dem:name "InputSlot Metadata" ;
-  dem:description "Input slot of the atomic process Store Metadata corresponding to the metadata to be stored" ;
-  dem:version "1" ;
-  dem:type dva:Metadata ;
-  dem:isOptional "false" .
-  
-nar2:osStoreMD_URI a dem:OutputSlot ;
-  dem:name "OutputSlot Location" ;
-  dem:description "Output slot of the atomic process Store Metadata corresponding to the location of the stored metadata" ;
-  dem:version "1" ;
-  dem:type dva:URI .
-
-# Implementation
-nar2:impStoreMD a dem:Implementation ;
-  dem:version "1" ;
-  dem:type "BPMN" ;
-  dem:location "NoaCollection/Narrative2/StoreMD.bpmn2" ;
-  dem:hasFixity nar2:fixStoreMD .
-
-# Fixity
-nar2:fixStoreMD a dem:Fixity ;
-  dem:checksum "" ;
-  dem:algorithm "sha256" .
-####  
-
-  
+  dem:checksum "" .
+####
