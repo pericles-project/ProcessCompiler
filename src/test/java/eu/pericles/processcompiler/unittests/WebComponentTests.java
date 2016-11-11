@@ -23,6 +23,7 @@ import eu.pericles.processcompiler.web.ApiApplication;
 import eu.pericles.processcompiler.web.ApiApplication.ERMRConfig;
 import eu.pericles.processcompiler.web.resources.CompilerResource.CompileRequest;
 import eu.pericles.processcompiler.web.resources.CompilerResource.CompileResult;
+import eu.pericles.processcompiler.web.resources.ExecuteResource.ExecuteRequest;
 import eu.pericles.processcompiler.web.resources.ValidateAggregationResource.ValidateAggregationRequest;
 import eu.pericles.processcompiler.web.resources.ValidateAggregationResource.ValidateAggregationResult;
 import eu.pericles.processcompiler.web.resources.ValidateImplementationResource.ValidateImplementationRequest;
@@ -200,5 +201,20 @@ public class WebComponentTests extends JerseyTest {
 
 		Response response = target("compile").request(MediaType.APPLICATION_JSON_TYPE).put(Entity.json(compileRequest));
 		assertEquals(400, response.getStatus());
+	}
+	
+	@Test
+	public void executeByIDTest() {
+		ExecuteRequest execRequest = new ExecuteRequest();
+		execRequest.ermr = service;
+		execRequest.store = repository;
+		execRequest.id = "<http://www.pericles-project.eu/ns/ecosystem#agpIngestAWSW>";
+		execRequest.parameters.put("isIngestAWSWAW", "inputFile");
+		execRequest.parameters.put("isIngestAWSWPF", "inputFormat");
+		
+		Response response = target("execute").request(MediaType.TEXT_PLAIN).post(Entity.json(execRequest));
+		assertEquals(200, response.getStatus());
+		String result = response.readEntity(String.class);
+		assertNotNull(result);
 	}
 }

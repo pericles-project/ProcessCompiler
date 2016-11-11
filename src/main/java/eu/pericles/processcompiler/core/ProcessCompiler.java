@@ -1,6 +1,7 @@
 package eu.pericles.processcompiler.core;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.camunda.bpm.model.bpmn.Bpmn;
 import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.impl.instance.DataInputRefs;
@@ -27,6 +29,7 @@ import org.camunda.bpm.model.bpmn.instance.DataOutput;
 import org.camunda.bpm.model.bpmn.instance.DataOutputAssociation;
 import org.camunda.bpm.model.bpmn.instance.Definitions;
 import org.camunda.bpm.model.bpmn.instance.EndEvent;
+import org.camunda.bpm.model.bpmn.instance.ExtensionElements;
 import org.camunda.bpm.model.bpmn.instance.FlowNode;
 import org.camunda.bpm.model.bpmn.instance.InputSet;
 import org.camunda.bpm.model.bpmn.instance.IoSpecification;
@@ -35,8 +38,11 @@ import org.camunda.bpm.model.bpmn.instance.OutputSet;
 import org.camunda.bpm.model.bpmn.instance.Process;
 import org.camunda.bpm.model.bpmn.instance.SequenceFlow;
 import org.camunda.bpm.model.bpmn.instance.StartEvent;
+import org.camunda.bpm.model.xml.instance.ModelElementInstance;
 import org.omg.spec.bpmn._20100524.model.TDataObject;
 import org.omg.spec.bpmn._20100524.model.TItemDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -47,6 +53,7 @@ import eu.pericles.processcompiler.ecosystem.InputSlot;
 import eu.pericles.processcompiler.ecosystem.OutputSlot;
 import eu.pericles.processcompiler.ecosystem.ProcessBase;
 import eu.pericles.processcompiler.ecosystem.Slot;
+import eu.pericles.processcompiler.ermr.ERMRComm;
 import eu.pericles.processcompiler.ermr.ERMRCommunications;
 import eu.pericles.processcompiler.exceptions.BPMNParserException;
 import eu.pericles.processcompiler.exceptions.ERMRClientException;
@@ -57,22 +64,20 @@ import eu.pericles.processcompiler.exceptions.PCException;
  * Create a new BPMN process out of several reusable sub-processes, a sequence
  * flow and an input/output mapping.
  * 
- * - Collect sequence flow and input/output from ERMR
- * - Remember available inputs, required outputs
- * - Fetch all sub-processes from ERMR
- * - Extract the process ID
- * - Extract data input, data output and their names and types
- * - Create start/end and data input/output nodes in the new aggregated process.
- * - Follow the sequence of sub-processes defined in the model
- * - Insert CallActivity node
- * - Populate ioSpecification with data mappings, checking for inconsistencies
- * at the same time.
- * - Generate BPMN
+ * - Collect sequence flow and input/output from ERMR - Remember available
+ * inputs, required outputs - Fetch all sub-processes from ERMR - Extract the
+ * process ID - Extract data input, data output and their names and types -
+ * Create start/end and data input/output nodes in the new aggregated process. -
+ * Follow the sequence of sub-processes defined in the model - Insert
+ * CallActivity node - Populate ioSpecification with data mappings, checking for
+ * inconsistencies at the same time. - Generate BPMN
  *
  */
 public class ProcessCompiler {
 
-	private ERMRCommunications ermrCommunications;
+	static Logger log = LoggerFactory.getLogger(ProcessCompiler.class);
+
+	private ERMRComm ermrCommunications;
 	private BpmnModelInstance model;
 	private Definitions definitions;
 	private Process process;
@@ -107,8 +112,13 @@ public class ProcessCompiler {
 	public ProcessCompiler(String service) throws ERMRClientException {
 		ermrCommunications = new ERMRCommunications(service);
 	}
+	
+	public ProcessCompiler(ERMRComm service) throws ERMRClientException {
+		ermrCommunications = service;
+	}
 
-	public AggregatedProcess getAggregatedProcess(String repository, String uri) throws ERMRClientException, JSONParserException {
+	public AggregatedProcess getAggregatedProcess(String repository, String uri)
+			throws ERMRClientException, JSONParserException {
 		return ermrCommunications.getAggregatedProcessEntity(repository, uri);
 	}
 
@@ -116,9 +126,10 @@ public class ProcessCompiler {
 		return ermrCommunications.getProcessEntity(repository, uri);
 	}
 
-	public BPMNProcess getBPMNProcess(String repository, String uri) throws ERMRClientException, JSONParserException, BPMNParserException {
-		return new BPMNParser().parse(ermrCommunications.getImplementationFile(ermrCommunications.getImplementationEntity(repository, uri)
-				.getLocation()));
+	public BPMNProcess getBPMNProcess(String repository, String uri)
+			throws ERMRClientException, JSONParserException, BPMNParserException {
+		return new BPMNParser().parse(ermrCommunications
+				.getImplementationFile(ermrCommunications.getImplementationEntity(repository, uri).getLocation()));
 	}
 
 	public ValidationResult validateImplementation(ProcessBase process, BPMNProcess bpmnProcess) {
@@ -149,7 +160,8 @@ public class ProcessCompiler {
 		return valid;
 	}
 
-	public ValidationResult validateAggregation(String repository, AggregatedProcess aggregatedProcess) throws ERMRClientException {
+	public ValidationResult validateAggregation(String repository, AggregatedProcess aggregatedProcess)
+			throws ERMRClientException {
 		try {
 			PCAggregatedProcess pcAggProcess = createPCAggregatedProcess(repository, aggregatedProcess);
 			validatePCAggregatedProcess(repository, pcAggProcess);
@@ -162,7 +174,7 @@ public class ProcessCompiler {
 	private PCAggregatedProcess createPCAggregatedProcess(String repository, AggregatedProcess aggregatedProcess)
 			throws ERMRClientException, PCException {
 		PCAggregatedProcess pcAggProcess = (PCAggregatedProcess) new PCAggregatedProcess().copy(aggregatedProcess);
-		List<String> subprocessIDs = Arrays.asList(aggregatedProcess.getProcessFlow().split("\\s\\s*"));
+		List<String> subprocessIDs = Arrays.asList(aggregatedProcess.getProcessFlow().split("\\s+"));
 		if (subprocessIDs.isEmpty())
 			throw new PCException("Process flow is empty");
 		try {
@@ -170,8 +182,8 @@ public class ProcessCompiler {
 				ProcessBase process = ermrCommunications.getProcessEntity(repository, subprocessID);
 				pcAggProcess.getSubprocesses().add(createPCProcess(repository, process));
 			}
-			List<PCDataConnection> connections = mapper.readValue(aggregatedProcess.getDataFlow(), mapper.getTypeFactory()
-					.constructCollectionType(List.class, PCDataConnection.class));
+			List<PCDataConnection> connections = mapper.readValue(aggregatedProcess.getDataFlow(),
+					mapper.getTypeFactory().constructCollectionType(List.class, PCDataConnection.class));
 			pcAggProcess.setDataConnections(connections);
 			return pcAggProcess;
 		} catch (IOException e) {
@@ -184,8 +196,8 @@ public class ProcessCompiler {
 	private PCProcess createPCProcess(String repository, ProcessBase process) throws ERMRClientException, PCException {
 		PCProcess pcProcess = new PCProcess().copy(process);
 		try {
-			BPMNProcess bpmnProcess = new BPMNParser().parse(ermrCommunications.getImplementationFile(process.getImplementation()
-					.getLocation()));
+			BPMNProcess bpmnProcess = new BPMNParser()
+					.parse(ermrCommunications.getImplementationFile(process.getImplementation().getLocation()));
 			pcProcess.setBpmnProcess(bpmnProcess);
 			return pcProcess;
 		} catch (BPMNParserException | JSONParserException e) {
@@ -193,14 +205,15 @@ public class ProcessCompiler {
 		}
 	}
 
-	private void validatePCAggregatedProcess(String repository, PCAggregatedProcess pcAggProcess) throws ERMRClientException,
-			PCException {
+	private void validatePCAggregatedProcess(String repository, PCAggregatedProcess pcAggProcess)
+			throws ERMRClientException, PCException {
 		for (PCProcess pcProcess : pcAggProcess.getSubprocesses())
 			validatePCProcess(pcProcess);
 		validateDataConnections(repository, pcAggProcess);
 	}
 
-	private void validateDataConnections(String repository, PCAggregatedProcess pcAggProcess) throws ERMRClientException, PCException {
+	private void validateDataConnections(String repository, PCAggregatedProcess pcAggProcess)
+			throws ERMRClientException, PCException {
 		agpStep = pcAggProcess.getSubprocesses().size();
 		List<PCProcess> processes = new ArrayList<PCProcess>();
 		processes.addAll(pcAggProcess.getSubprocesses());
@@ -212,7 +225,8 @@ public class ProcessCompiler {
 			String sourceType = ermrCommunications.getSlotDataTypeURI(repository, source.getId());
 			String targetType = ermrCommunications.getSlotDataTypeURI(repository, target.getId());
 			if (!ermrCommunications.isSubclass(repository, targetType, sourceType))
-				throw new PCException("Invalid data type in connection (" + source.getId() + "," + target.getId() + ")");
+				throw new PCException(
+						"Invalid data type in connection (" + source.getId() + "," + target.getId() + ")");
 		}
 		// Check data flow is consistent (resources are already available)
 		List<PCPair> availableResources = new ArrayList<PCPair>();
@@ -221,24 +235,57 @@ public class ProcessCompiler {
 		for (int step = 0; step <= agpStep; step++) {
 			for (PCDataConnection connection : pcAggProcess.getDataConnectionsByTarget(step))
 				if (!availableResources.contains(new PCPair(connection.getSourceProcess(), connection.getSourceSlot())))
-					throw new PCException("Not available source (" + connection.getSourceProcess() + "," + connection.getSourceSlot() + ")");
+					throw new PCException("Not available source (" + connection.getSourceProcess() + ","
+							+ connection.getSourceSlot() + ")");
 
 			for (OutputSlot outputSlot : processes.get(step).getOutputSlots())
 				availableResources.add(new PCPair(step, outputSlot.getId()));
 		}
 	}
 
-	public String compile(String repository, AggregatedProcess aggregatedProcess) throws ERMRClientException, PCException {
+	public String compile(String repository, AggregatedProcess aggregatedProcess)
+			throws ERMRClientException, PCException {
 		try {
-			CompiledProcess compiledProcess = createCompiledProcess(repository, createPCAggregatedProcess(repository, aggregatedProcess));
+			CompiledProcess compiledProcess = createCompiledProcess(repository,
+					createPCAggregatedProcess(repository, aggregatedProcess));
 			return compile(compiledProcess);
 		} catch (BPMNParserException | IOException e) {
 			throw new PCException(e.getMessage());
 		}
 	}
 
-	private CompiledProcess createCompiledProcess(String repository, PCAggregatedProcess pcAggProcess) throws ERMRClientException,
-			BPMNParserException, PCException {
+	public Map<String, String> compileRecursively(String repository, String processId)
+			throws ERMRClientException, JSONParserException, PCException, BPMNParserException, IOException {
+		Map<String, String> results = new HashMap<>();
+		compileRecursively(repository, processId, results);
+		return results;
+	}
+
+	private void compileRecursively(String repository, String processId, Map<String, String> compilation)
+			throws ERMRClientException, JSONParserException, IOException, PCException, BPMNParserException {
+
+		String id = getLocalName(processId);
+		if (compilation.containsKey(id))
+			return;
+
+		if (ermrCommunications.isAggregatedProcess(repository, processId)) {
+			AggregatedProcess ap = getAggregatedProcess(repository, processId);
+			CompiledProcess cp = createCompiledProcess(repository, createPCAggregatedProcess(repository, ap));
+			log.info("Compiling (recusrively): {} from {}", id, processId);
+			compilation.put(id, compile(cp));
+			for (String sub : ap.getProcessFlow().split("\\s+")) {
+				compileRecursively(repository, sub, compilation);
+			}
+		} else {
+			ProcessBase p = getProcess(repository, processId);
+			log.info("Compiling: {} from {}", id, processId);
+			InputStream impl = ermrCommunications.getImplementationFile(p.getImplementation().getLocation());
+			compilation.put(id, IOUtils.toString(impl));
+		}
+	}
+
+	private CompiledProcess createCompiledProcess(String repository, PCAggregatedProcess pcAggProcess)
+			throws ERMRClientException, BPMNParserException, PCException {
 		validatePCAggregatedProcess(repository, pcAggProcess);
 		CompiledProcess compiledProcess = new CompiledProcess();
 		compiledProcess.setId(getLocalName(pcAggProcess.getId()));
@@ -254,7 +301,8 @@ public class ProcessCompiler {
 		// Add intermediate data objects
 		for (PCDataConnection connection : pcAggProcess.getDataConnections()) {
 			if (!dataMap.containsKey(connection.getSource()) && !dataMap.containsKey(connection.getTarget())) {
-				Slot slot = pcAggProcess.getSubprocesses().get(connection.getSourceProcess()).findSlotByID(connection.getSourceSlot());
+				Slot slot = pcAggProcess.getSubprocesses().get(connection.getSourceProcess())
+						.findSlotByID(connection.getSourceSlot());
 				PCDataObject dataObject = new PCDataObject(getRandomId(getLocalName(slot.getId())), slot.getName(),
 						getLocalName(slot.getDataType()));
 				compiledProcess.getDataObjects().add(dataObject);
@@ -291,7 +339,7 @@ public class ProcessCompiler {
 
 	private void createProcessFramework(CompiledProcess compiledProcess) {
 		model = Bpmn.createEmptyModel();
-
+		
 		definitions = model.newInstance(Definitions.class);
 		definitions.setTargetNamespace("http://camunda.org/examples");
 		definitions.setId(getRandomId(Definitions.class));
@@ -300,6 +348,13 @@ public class ProcessCompiler {
 		process = addElement(definitions, compiledProcess.getId(), Process.class);
 		process.setName(compiledProcess.getName());
 		process.setAttributeValue("processType", "Private");
+		
+		// 
+		ExtensionElements ext = model.newInstance(ExtensionElements.class);
+		process.addChildElement(ext);
+		ModelElementInstance exte = ext.addExtensionElement("http://www.jboss.org/drools", "global");
+		exte.setAttributeValue("identifier", "log");
+		exte.setAttributeValue("type", "java.io.PrintStream");
 
 		startEvent = addElement(process, StartEvent.class);
 		endEvent = addElement(process, EndEvent.class);
@@ -324,7 +379,8 @@ public class ProcessCompiler {
 		mapData(callActivity, pcSubprocess.getDataInputMap(), pcSubprocess.getDataOutputMap());
 	}
 
-	private void mapData(CallActivity callActivity, HashMap<String, String> dataInputMap, HashMap<String, String> dataOutputMap) {
+	private void mapData(CallActivity callActivity, HashMap<String, String> dataInputMap,
+			HashMap<String, String> dataOutputMap) {
 		if (callActivity.getIoSpecification() == null)
 			addElement(callActivity, IoSpecification.class);
 		InputSet inputSet = addElement(callActivity.getIoSpecification(), InputSet.class);
@@ -367,7 +423,8 @@ public class ProcessCompiler {
 		return sequenceFlow;
 	}
 
-	private <T extends BpmnModelElementInstance> T addElement(BpmnModelElementInstance parentElement, String id, Class<T> elementClass) {
+	private <T extends BpmnModelElementInstance> T addElement(BpmnModelElementInstance parentElement, String id,
+			Class<T> elementClass) {
 		T element = model.newInstance(elementClass);
 		if (id != null)
 			element.setAttributeValue("id", id, true);
@@ -375,7 +432,8 @@ public class ProcessCompiler {
 		return element;
 	}
 
-	private <T extends BpmnModelElementInstance> T addElement(BpmnModelElementInstance parentElement, Class<T> elementClass) {
+	private <T extends BpmnModelElementInstance> T addElement(BpmnModelElementInstance parentElement,
+			Class<T> elementClass) {
 		return addElement(parentElement, getRandomId(elementClass), elementClass);
 	}
 
@@ -387,7 +445,7 @@ public class ProcessCompiler {
 		return id + "_" + String.valueOf(idCounter.getAndIncrement());
 	}
 
-	private String getLocalName(String fullName) throws PCException {
+	public String getLocalName(String fullName) throws PCException {
 		Pattern word = Pattern.compile("#(.*?)>");
 		Matcher match = word.matcher(fullName);
 		if (match.find())

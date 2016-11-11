@@ -1,0 +1,8 @@
+.CodeMirror {
+    height: 500px;
+    border:1px solid #ddd;
+}
+
+.file-link {
+	padding: .1em 1em !important;
+}

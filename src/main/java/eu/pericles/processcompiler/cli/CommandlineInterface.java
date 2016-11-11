@@ -137,29 +137,9 @@ public class CommandlineInterface {
 	}
 
 	private int startServer(Namespace ns) {
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        Server jettyServer = new Server(ns.getInt("p"));
-        jettyServer.setHandler(context);
-
-        context.setContextPath("/");
-        context.setResourceBase(getClass().getClassLoader().getResource("WEB-INF").toExternalForm());
-        ServletHolder x = context.addServlet(DefaultServlet.class, "/demo/*");
-        x.setInitParameter("pathInfoOnly", "true");
-        
         ERMRConfig ermrc = new ERMRConfig(ermr.toString(), repo);
-        ApiApplication rest = new ApiApplication(ermrc);
-        ServletContainer jerseyc = new ServletContainer(rest);
-        context.addServlet(new ServletHolder(jerseyc),  "/*");
- 
-        try {
-            jettyServer.start();
-            jettyServer.join();
-        } catch (Exception e) {
-        	e.printStackTrace();
-        	return 1;
-        } finally {
-            jettyServer.destroy();
-        }
+        int port = ns.getInt("p");
+        ApiApplication.startServer(port, ermrc);
         return 0;
 	}
 	
