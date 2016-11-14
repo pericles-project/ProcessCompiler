@@ -14,8 +14,8 @@ nar2:agpAddMF a dem:AggregatedProcess ;
   dem:description "Aggregated process that add a new media file to the system" ;
   dem:version "1" ;
   dem:hasInputSlot nar2:isAddMF_MF ;
-  dem:processFlow "<http://www.pericles-project.eu/ns/nar2#atpEditMF> <http://www.pericles-project.eu/ns/nar2#atpExtractMD> <http://www.pericles-project.eu/ns/nar2#atpCreateRDF> <http://www.pericles-project.eu/ns/nar2#atpCreateDelta> <http://www.pericles-project.eu/ns/nar2#atpBuildDM> <http://www.pericles-project.eu/ns/nar2#atpVisualiseDM>" ;
-  dem:dataFlow '[{"sourceProcess":6 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#isAddMF_MF>", "targetProcess":0 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isEditMF_MF>"} , {"sourceProcess":6 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#isAddMF_MF>", "targetProcess":1 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isExtractMD_MF>"} , {"sourceProcess":0 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osEditMF_MD", "targetProcess":2 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isCreateRDF_editedMD>"} , {"sourceProcess":1 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osExtractMD_MD>", "targetProcess":2 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isCreateRDF_extractedMD>"} , {"sourceProcess":2 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osCreateRDF_RDF>", "targetProcess":3 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isCreateDelta_RDF>"} , {"sourceProcess":3 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osCreateDelta_Delta>", "targetProcess": 4, "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isBuildDM_Delta>"} , {"sourceProcess":4 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osBuildDM_DM>", "targetProcess": 5, "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isVisualiseDM_DM>"}]' .
+  dem:processFlow "<http://www.pericles-project.eu/ns/narrative2#atpEditMF> <http://www.pericles-project.eu/ns/narrative2#atpExtractMD> <http://www.pericles-project.eu/ns/narrative2#atpCreateRDF> <http://www.pericles-project.eu/ns/narrative2#atpCreateDelta> <http://www.pericles-project.eu/ns/narrative2#atpBuildDM> <http://www.pericles-project.eu/ns/narrative2#atpVisualiseDM>" ;
+  dem:dataFlow '[{"sourceProcess":6 , "sourceSlot": "<http://www.pericles-project.eu/ns/narrative2#isAddMF_MF>", "targetProcess":0 , "targetSlot": "<http://www.pericles-project.eu/ns/narrative2#isEditMF_MF>"} , {"sourceProcess":6 , "sourceSlot": "<http://www.pericles-project.eu/ns/narrative2#isAddMF_MF>", "targetProcess":1 , "targetSlot": "<http://www.pericles-project.eu/ns/narrative2#isExtractMD_MF>"} , {"sourceProcess":0 , "sourceSlot": "<http://www.pericles-project.eu/ns/narrative2#osEditMF_MD>", "targetProcess":2 , "targetSlot": "<http://www.pericles-project.eu/ns/narrative2#isCreateRDF_editedMD>"} , {"sourceProcess":1 , "sourceSlot": "<http://www.pericles-project.eu/ns/narrative2#osExtractMD_MD>", "targetProcess":2 , "targetSlot": "<http://www.pericles-project.eu/ns/narrative2#isCreateRDF_extractedMD>"} , {"sourceProcess":2 , "sourceSlot": "<http://www.pericles-project.eu/ns/narrative2#osCreateRDF_RDF>", "targetProcess":3 , "targetSlot": "<http://www.pericles-project.eu/ns/narrative2#isCreateDelta_RDF>"} , {"sourceProcess":3 , "sourceSlot": "<http://www.pericles-project.eu/ns/narrative2#osCreateDelta_Delta>", "targetProcess": 4, "targetSlot": "<http://www.pericles-project.eu/ns/narrative2#isBuildDM_Delta>"} , {"sourceProcess":4 , "sourceSlot": "<http://www.pericles-project.eu/ns/narrative2#osBuildDM_DM>", "targetProcess": 5, "targetSlot": "<http://www.pericles-project.eu/ns/narrative2#isVisualiseDM_DM>"}]' .
 
 # Input & Output Slots
 nar2:isAddMF_MF a dem:InputSlot ;
@@ -56,7 +56,7 @@ nar2:osEditMF_MD a dem:OutputSlot ;
 nar2:impEditMF a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "NoaCollection/Narrative2/EditMF.bpmn" ;
+  dem:location "PCCollection/Narrative2/EditMF.bpmn" ;
   dem:checksum "" .
 ####
 
@@ -65,7 +65,7 @@ nar2:atpExtractMD a dem:AtomicProcess ;
   dem:name "Extract Metadata" ;
   dem:description "Atomic process that extract the metadata of a media file" ;
   dem:version "1" ;
-  dem:hasInputSlot nar2:isExtractMD_MF, nar2:isExtractMD_Opt ;
+  dem:hasInputSlot nar2:isExtractMD_MF ;
   dem:hasOutputSlot nar2:osExtractMD_MD ;
   dem:hasImplementation nar2:impExtractMD .
 
@@ -77,13 +77,6 @@ nar2:isExtractMD_MF a dem:InputSlot ;
   dem:dataType nar2:MediaFile ;
   dem:isOptional "false" .
 
-nar2:isExtractMD_Opt a dem:InputSlot ;
-  dem:name "InputSlot Options" ;
-  dem:description "Input slot of the atomic process Extract Metadata corresponding to the extraction options" ;
-  dem:version "1" ;
-  dem:dataType nar2:Options ;
-  dem:isOptional "true" .
-
 nar2:osExtractMD_MD a dem:OutputSlot ;
   dem:name "OutputSlot Metadata" ;
   dem:description "Output slot of the atomic process Extract Metadata corresponding to the extracted metadata" ;
@@ -94,7 +87,7 @@ nar2:osExtractMD_MD a dem:OutputSlot ;
 nar2:impExtractMD a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "NoaCollection/Narrative2/ExtractMD.bpmn" ;
+  dem:location "PCCollection/Narrative2/ExtractMD.bpmn" ;
   dem:checksum "" .
 ####
 
@@ -105,7 +98,7 @@ nar2:atpCreateRDF a dem:AtomicProcess ;
   dem:version "1" ;
   dem:hasInputSlot nar2:isCreateRDF_extractedMD, nar2:isCreateRDF_editedMD ;
   dem:hasOutputSlot nar2:osCreateRDF_RDF ;
-  dem:hasImplementation nar2:impCreateRDFTriples .
+  dem:hasImplementation nar2:impCreateRDF .
 
 # Input & Output Slots
 nar2:isCreateRDF_extractedMD a dem:InputSlot ;
@@ -132,7 +125,7 @@ nar2:osCreateRDF_RDF a dem:OutputSlot ;
 nar2:impCreateRDF a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "NoaCollection/Narrative2/CreateRDF.bpmn" ;
+  dem:location "PCCollection/Narrative2/CreateRDF.bpmn" ;
   dem:checksum "" .
 ####
 
@@ -143,7 +136,7 @@ nar2:atpCreateDelta a dem:AtomicProcess ;
   dem:version "1" ;
   dem:hasInputSlot nar2:isCreateDelta_RDF ;
   dem:hasOutputSlot nar2:osCreateDelta_Delta ;
-  dem:hasImplementation nar2:impCreateLRMDelta .
+  dem:hasImplementation nar2:impCreateDelta .
 
 # Input & Output Slots
 nar2:isCreateDelta_RDF a dem:InputSlot ;
@@ -163,7 +156,7 @@ nar2:osCreateDelta_Delta a dem:OutputSlot ;
 nar2:impCreateDelta a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "NoaCollection/Narrative2/CreateLRMDelta.bpmn" ;
+  dem:location "PCCollection/Narrative2/CreateDelta.bpmn" ;
   dem:checksum "" .
 ####
 
@@ -194,7 +187,7 @@ nar2:osBuildDM_DM a dem:OutputSlot ;
 nar2:impBuildDM a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "NoaCollection/Narrative2/BuildDM.bpmn" ;
+  dem:location "PCCollection/Narrative2/BuildDM.bpmn" ;
   dem:checksum "" .
 ####
 
@@ -218,7 +211,7 @@ nar2:isVisualiseDM_DM a dem:InputSlot ;
 nar2:impVisualiseDM a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "NoaCollection/Narrative2/VisualiseDM.bpmn" ;
+  dem:location "PCCollection/Narrative2/VisualiseDM.bpmn" ;
   dem:checksum "" .
 ####
 
