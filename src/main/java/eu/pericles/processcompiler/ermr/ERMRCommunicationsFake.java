@@ -1,15 +1,13 @@
 package eu.pericles.processcompiler.ermr;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-import javax.ws.rs.core.Response;
-
-import org.apache.jena.atlas.logging.Log;
+import java.util.Map;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -18,6 +16,7 @@ import com.hp.hpl.jena.query.QueryFactory;
 import com.hp.hpl.jena.query.QuerySolution;
 import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
 
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.Implementation;
@@ -30,23 +29,53 @@ import eu.pericles.processcompiler.exceptions.JSONParserException;
 public class ERMRCommunicationsFake implements ERMRComm {
 
 	private Model model;
-	private Path path;
+	private Map<String, byte[]> files = new HashMap<>();
 
-	public ERMRCommunicationsFake(Model model, Path folder) throws ERMRClientException {
+	public ERMRCommunicationsFake() {
+		this(ModelFactory.createDefaultModel());
+	}
+
+	public ERMRCommunicationsFake(Model model) {
 		this.model = model;
-		this.path = folder.toAbsolutePath();
+	}
+
+	public void importModel(Model other) {
+		this.model.add(other);
+	}
+
+	public void importModel(InputStream in, String format) {
+		this.model.read(in, null, format);
+	}
+
+	public void importModel(String in, String format) {
+		try (InputStream is = new ByteArrayInputStream(in.getBytes("UTF-8"))) {
+			this.model.read(is, null, format);
+		} catch (IOException e) {
+			throw new AssertionError(e);
+		}
+	}
+
+	public void importImplementation(String id, String content) {
+		try {
+			files.put(id, content.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			throw new AssertionError(e);
+		}
 	}
 
 	// ------- GET ENTITIES ---------//
 
-	ArrayList<QuerySolution> query(String sparql) {
+	public ArrayList<QuerySolution> query(String sparql) {
+		System.out.println(sparql);
 		Query query = QueryFactory.create(sparql);
 		QueryExecution qexec = QueryExecutionFactory.create(query, model);
 		ResultSet x = qexec.execSelect();
 		try {
 			ArrayList<QuerySolution> r = new ArrayList<>();
-			while (x.hasNext())
+			while (x.hasNext()) {
 				r.add(x.next());
+				System.out.println(r.get(r.size() - 1));
+			}
 			return r;
 		} finally {
 			qexec.close();
@@ -109,7 +138,7 @@ public class ERMRCommunicationsFake implements ERMRComm {
 			process.setVersion(x.getLiteral("version").getString());
 			return process;
 		}
-		return null;
+		throw new ERMRClientException("Process definition not found: "+uri);
 	}
 
 	@Override
@@ -130,7 +159,7 @@ public class ERMRCommunicationsFake implements ERMRComm {
 			inputSlot.setId(uri);
 			inputSlot.setName(x.getLiteral("name").getString());
 			inputSlot.setDescription(x.getLiteral("description").getString());
-			inputSlot.setDataType(x.getLiteral("type").getString());
+			inputSlot.setDataType("<" + x.getResource("type").getURI() + ">");
 			inputSlot.setOptional(x.getLiteral("optional").getString().equals("true"));
 			return inputSlot;
 		}
@@ -156,7 +185,7 @@ public class ERMRCommunicationsFake implements ERMRComm {
 			outputSlot.setId(uri);
 			outputSlot.setName(x.getLiteral("name").getString());
 			outputSlot.setDescription(x.getLiteral("description").getString());
-			outputSlot.setDataType(x.getLiteral("type").getString());
+			outputSlot.setDataType("<"+x.getResource("type").getURI()+">");
 			return outputSlot;
 		}
 		return null;
@@ -180,8 +209,10 @@ public class ERMRCommunicationsFake implements ERMRComm {
 			implementation.setImplementationType(x.getLiteral("type").getString());
 			implementation.setLocation(x.getLiteral("location").getString());
 			implementation.setChecksum(x.getLiteral("checksum").getString());
+			return implementation;
 		}
-		return null;
+		
+		throw new ERMRClientException("Implementation entity not found:" + uri);
 	}
 
 	@Override
@@ -192,20 +223,10 @@ public class ERMRCommunicationsFake implements ERMRComm {
 
 	@Override
 	public InputStream getImplementationFile(String uri) throws ERMRClientException, JSONParserException {
-		if (uri.startsWith("http:") || uri.startsWith("https:")) {
-			Log.warn("Location of implementation is URL: {}", uri);
-			return null;
-		}
-
-		Path rq = path.resolve(uri).toAbsolutePath();
-		if (!rq.startsWith(path)) {
-			Log.warn("Got relative path: {}", uri);
-			return null;
-		}
-		try {
-			return Files.newInputStream(rq);
-		} catch (IOException e) {
-			throw new ERMRClientException("Not found: " + uri);
+		if (files.containsKey(uri)) {
+			return new ByteArrayInputStream(files.get(uri));
+		} else {
+			throw new ERMRClientException("Missing implementation: " + uri);
 		}
 	}
 
@@ -215,7 +236,7 @@ public class ERMRCommunicationsFake implements ERMRComm {
 	public List<String> getInputSlotURIList(String repository, String uri) throws ERMRClientException {
 		List<String> uriList = new ArrayList<String>();
 		for (QuerySolution x : query(SPARQLQuery.createQueryGetInputSlotURIList(uri))) {
-			uriList.add(x.getLiteral("inputs").getString());
+			uriList.add("<" + x.getResource("inputs").getURI() + ">");
 		}
 		return uriList;
 	}
@@ -225,7 +246,7 @@ public class ERMRCommunicationsFake implements ERMRComm {
 		List<String> uriList = new ArrayList<String>();
 		for (QuerySolution x : query(SPARQLQuery.createQueryGetOutputSlotURIList(uri))) {
 			// ?outputs
-			uriList.add(x.getLiteral("outputs").getString());
+			uriList.add("<" + x.getResource("outputs").getURI() + ">");
 		}
 		return uriList;
 	}
@@ -233,7 +254,7 @@ public class ERMRCommunicationsFake implements ERMRComm {
 	@Override
 	public String getImplementationURI(String repository, String uri) throws ERMRClientException {
 		for (QuerySolution x : query(SPARQLQuery.createQueryGetImplementationURI(uri))) {
-			return x.getLiteral("uri").toString();
+			return "<" + x.getResource("uri").getURI() + ">";
 		}
 		return null;
 	}
@@ -241,7 +262,7 @@ public class ERMRCommunicationsFake implements ERMRComm {
 	@Override
 	public String getParentEntityURI(String repository, String uri) throws ERMRClientException {
 		for (QuerySolution x : query(SPARQLQuery.createQueryGetParentEntityURI(uri))) {
-			return x.getLiteral("uri").toString();
+			return "<" + x.getResource("uri").getURI() + ">";
 		}
 		return null;
 	}
@@ -253,7 +274,7 @@ public class ERMRCommunicationsFake implements ERMRComm {
 	@Override
 	public String getEntityTypeURI(String repository, String uri) throws ERMRClientException {
 		for (QuerySolution x : query(SPARQLQuery.createQueryGetEntityTypeURI(uri))) {
-			return x.getLiteral("uri").toString();
+			return "<" + x.getResource("uri").getURI() + ">";
 		}
 		return null;
 	}
@@ -261,7 +282,7 @@ public class ERMRCommunicationsFake implements ERMRComm {
 	@Override
 	public String getSlotDataTypeURI(String repository, String uri) throws ERMRClientException {
 		for (QuerySolution x : query(SPARQLQuery.createQueryGetSlotDataTypeURI(uri))) {
-			return x.getLiteral("uri").toString();
+			return "<" + x.getResource("uri").getURI() + ">";
 		}
 		return null;
 	}
@@ -281,6 +302,10 @@ public class ERMRCommunicationsFake implements ERMRComm {
 	@Override
 	public ERMRClientAPI getClient() {
 		return null;
+	}
+
+	public Model getModel() {
+		return model;
 	}
 
 }

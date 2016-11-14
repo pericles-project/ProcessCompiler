@@ -2,7 +2,9 @@ package eu.pericles.processcompiler.ermr;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -121,6 +123,12 @@ public class ERMRClientAPI {
 	}
 
 	public Response query(String repository, String query) {
+		try {
+			query = URLEncoder.encode(query, "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new AssertionError(e);
+		}
+		
 		return getClient().target(tripleStore.toString() + "/" + repository + "?query=" + query).request()
 				.accept(MediaType.APPLICATION_JSON).get();
 	}

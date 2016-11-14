@@ -1,5 +1,6 @@
 package eu.pericles.processcompiler.core;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -88,6 +89,8 @@ public class ProcessCompiler {
 	private HashMap<PCPair, PCDataObject> dataMap = new HashMap<PCPair, PCDataObject>();
 	private int agpStep;
 
+	private Map<String, String> intermediateCompileResults = new HashMap<>();
+
 	private AtomicInteger idCounter = new AtomicInteger(1);
 	static ObjectMapper mapper = new ObjectMapper();
 
@@ -112,7 +115,7 @@ public class ProcessCompiler {
 	public ProcessCompiler(String service) throws ERMRClientException {
 		ermrCommunications = new ERMRCommunications(service);
 	}
-	
+
 	public ProcessCompiler(ERMRComm service) throws ERMRClientException {
 		ermrCommunications = service;
 	}
@@ -195,9 +198,14 @@ public class ProcessCompiler {
 
 	private PCProcess createPCProcess(String repository, ProcessBase process) throws ERMRClientException, PCException {
 		PCProcess pcProcess = new PCProcess().copy(process);
+		BPMNProcess bpmnProcess;
 		try {
-			BPMNProcess bpmnProcess = new BPMNParser()
-					.parse(ermrCommunications.getImplementationFile(process.getImplementation().getLocation()));
+			if (intermediateCompileResults.containsKey(process.getId()))
+				bpmnProcess = new BPMNParser()
+						.parse(new ByteArrayInputStream(intermediateCompileResults.get(process.getId()).getBytes()));
+			else
+				bpmnProcess = new BPMNParser()
+						.parse(ermrCommunications.getImplementationFile(process.getImplementation().getLocation()));
 			pcProcess.setBpmnProcess(bpmnProcess);
 			return pcProcess;
 		} catch (BPMNParserException | JSONParserException e) {
@@ -294,7 +302,8 @@ public class ProcessCompiler {
 			compiledProcess.getSubprocesses().add(new PCSubprocess(pcProcess.getBpmnProcess().getId()));
 		// Add input and output data objects
 		for (Slot slot : pcAggProcess.getSlots()) {
-			PCDataObject dataObject = new PCDataObject(getLocalName(slot.getId()), slot.getName(), getLocalName(slot.getDataType()));
+			PCDataObject dataObject = new PCDataObject(getLocalName(slot.getId()), slot.getName(),
+					getLocalName(slot.getDataType()));
 			compiledProcess.getDataObjects().add(dataObject);
 			dataMap.put(new PCPair(agpStep, slot.getId()), dataObject);
 		}
@@ -323,6 +332,7 @@ public class ProcessCompiler {
 			compiledProcess.getSubprocesses().get(connection.getSourceProcess()).getDataOutputMap()
 					.put(getLocalName(connection.getTargetSlot()), getLocalName(connection.getSourceSlot()));
 		}
+
 		return compiledProcess;
 	}
 
@@ -334,12 +344,14 @@ public class ProcessCompiler {
 			addSubprocess(pcSubprocess);
 		addSequenceFlow(process, previousElement, endEvent);
 
-		return Bpmn.convertToString(model);
+		String bpmn = Bpmn.convertToString(model);
+		intermediateCompileResults.put(compiledProcess.getId(), bpmn);
+		return bpmn;
 	}
 
 	private void createProcessFramework(CompiledProcess compiledProcess) {
 		model = Bpmn.createEmptyModel();
-		
+
 		definitions = model.newInstance(Definitions.class);
 		definitions.setTargetNamespace("http://camunda.org/examples");
 		definitions.setId(getRandomId(Definitions.class));
@@ -348,8 +360,8 @@ public class ProcessCompiler {
 		process = addElement(definitions, compiledProcess.getId(), Process.class);
 		process.setName(compiledProcess.getName());
 		process.setAttributeValue("processType", "Private");
-		
-		// 
+
+		//
 		ExtensionElements ext = model.newInstance(ExtensionElements.class);
 		process.addChildElement(ext);
 		ModelElementInstance exte = ext.addExtensionElement("http://www.jboss.org/drools", "global");

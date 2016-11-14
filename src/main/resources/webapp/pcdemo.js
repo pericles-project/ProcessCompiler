@@ -2,6 +2,7 @@ $(function() {
 
 	console.log(scenario);
 	var linkNodes = {};
+	var save_to=null;
 
 	var editor = CodeMirror.fromTextArea(code, {
 		lineNumbers : true,
@@ -21,13 +22,20 @@ $(function() {
 		foldGutter : true,
 		gutters : [ "CodeMirror-linenumbers", "CodeMirror-foldgutter" ]
 	});
+	
+	editor.on("change", function(editor, changeEvent){
+		if(save_to && changeEvent.origin != "setValue") {
+			scenario.files[save_to].text = editor.getValue();
+		}
+	})
 
 	var desc_node = $('#file-desc')
-
+	
 	var select_file = function(name) {
 		var file = scenario.files[name];
 		var linkNode = linkNodes[name];
 		editor.setValue(file.text);
+		save_to = name;
 		if (name.match(/\.ttl$/)) {
 			editor.setOption("mode", "text/turtle");
 		} else if (name.match(/\.bpmn2?$/)) {
@@ -76,22 +84,22 @@ $(function() {
 				url : "/demo/" + action,
 				data : JSON.stringify(scenario),
 				contentType : "application/json; charset=utf-8",
-				dataType : "json",
-				success : function(data) {
-					$.each(data.files, function(key, value) {
-						if (scenario.files[key] === undefined
-								|| scenario.files[key].text != value.text) {
-							scenario.files[key] = value;
-							update(key);
-						}
-					});
-					$('#output-file-links > a.nav-link:first').click();
-				},
-				failure : function(errMsg) {
-					console.log(errMsg);
-				}
+				dataType : "json"
+			}).done(function(data) {
+				$.each(data.files, function(key, value) {
+					if (scenario.files[key] === undefined
+							|| scenario.files[key].text != value.text) {
+						scenario.files[key] = value;
+						update(key);
+					}
+				});
+				$('#output-file-links > a.nav-link:first').click();
+			}).fail(function(response){
+				if(response.responseJSON)
+					alert(response.responseJSON.error.message);
+				else
+					alert(response.responseText);
 			})
-			console.log(action);
 		})
 	})
 
