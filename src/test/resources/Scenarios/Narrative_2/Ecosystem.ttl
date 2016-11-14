@@ -8,62 +8,73 @@
 
 ############ AGGREGATED PROCESSES ###############
 
-#### Get All Metadata ####
-nar2:agpGetAllMD a dem:AggregatedProcess ;
-  dem:name "AggregatedProcess Get All Metadata" ;
-  dem:description "Aggregated process that extract metadata from video artwork files and combine it with additional metadata (from TMS records)" ;
+#### Add Media File ####
+nar2:agpAddMF a dem:AggregatedProcess ;
+  dem:name "AggregatedProcess Add Media File" ;
+  dem:description "Aggregated process that add a new media file to the system" ;
   dem:version "1" ;
-  dem:hasInputSlot nar2:isGetAllMD_DVA, nar2:isGetAllMD_Opt, nar2:isGetAllMD_ID ;
-  dem:hasOutputSlot nar2:osGetAllMD_MD ;
-  dem:processFlow "<http://www.pericles-project.eu/ns/nar2#atpExtractMD> <http://www.pericles-project.eu/ns/nar2#atpGetMD> <http://www.pericles-project.eu/ns/nar2#atpUpdateMD>" ;
-  dem:dataFlow '[{"sourceProcess":3 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#isGetAllMD_DVA>", "targetProcess":0 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isExtractMD_DVA>"} , {"sourceProcess":3 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#isGetAllMD_Opt>", "targetProcess":0 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isExtractMD_Opt>"} , {"sourceProcess":3 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#isGetAllMD_ID", "targetProcess":1 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isGetMD_ID>"} , {"sourceProcess":0 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osExtractMD_MD>", "targetProcess":2 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isUpdateMD_oldMD>"} , {"sourceProcess":1 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osGetMD_MD>", "targetProcess":2 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isUpdateMD_newMD>"} , {"sourceProcess":2 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osUpdateMD_MD>", "targetProcess": 3, "targetSlot": "<http://www.pericles-project.eu/ns/nar2#osGetAllMD_MD>"}]' .
+  dem:hasInputSlot nar2:isAddMF_MF ;
+  dem:processFlow "<http://www.pericles-project.eu/ns/nar2#atpEditMF> <http://www.pericles-project.eu/ns/nar2#atpExtractMD> <http://www.pericles-project.eu/ns/nar2#atpCreateRDF> <http://www.pericles-project.eu/ns/nar2#atpCreateDelta> <http://www.pericles-project.eu/ns/nar2#atpBuildDM> <http://www.pericles-project.eu/ns/nar2#atpVisualiseDM>" ;
+  dem:dataFlow '[{"sourceProcess":6 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#isAddMF_MF>", "targetProcess":0 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isEditMF_MF>"} , {"sourceProcess":6 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#isAddMF_MF>", "targetProcess":1 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isExtractMD_MF>"} , {"sourceProcess":0 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osEditMF_MD", "targetProcess":2 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isCreateRDF_editedMD>"} , {"sourceProcess":1 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osExtractMD_MD>", "targetProcess":2 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isCreateRDF_extractedMD>"} , {"sourceProcess":2 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osCreateRDF_RDF>", "targetProcess":3 , "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isCreateDelta_RDF>"} , {"sourceProcess":3 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osCreateDelta_Delta>", "targetProcess": 4, "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isBuildDM_Delta>"} , {"sourceProcess":4 , "sourceSlot": "<http://www.pericles-project.eu/ns/nar2#osBuildDM_DM>", "targetProcess": 5, "targetSlot": "<http://www.pericles-project.eu/ns/nar2#isVisualiseDM_DM>"}]' .
 
 # Input & Output Slots
-nar2:isGetAllMD_DVA a dem:InputSlot ;
-  dem:name "InputSlot Digital Video Artwork" ;
-  dem:description "Input slot of the aggregated process Get All Metadata corresponding to the digital video artwork" ;
+nar2:isAddMF_MF a dem:InputSlot ;
+  dem:name "InputSlot Media File" ;
+  dem:description "Input slot of the aggregated process Add Media File corresponding to the media file" ;
   dem:version "1" ;
-  dem:dataType nar2:DigitalVideoArtwork ;
+  dem:dataType nar2:MediaFile ;
   dem:isOptional "false" .
 
- nar2:isGetAllMD_ID a dem:InputSlot ;
-  dem:name "InputSlot Identifier" ;
-  dem:description "Input slot of the aggregated process Get All Metadata corresponding to the metadata identifier at TMS" ;
-  dem:version "1" ;
-  dem:dataType nar2:ID ;
-  dem:isOptional "false" .
-
-nar2:isGetAllMD_Opt a dem:InputSlot ;
-  dem:name "InputSlot Options" ;
-  dem:description "Input slot of the aggregated process Get All Metadata corresponding to the extraction options" ;
-  dem:version "1" ;
-  dem:dataType nar2:Options ;
-  dem:isOptional "true" .
-
-nar2:osGetAllMD_MD a dem:OutputSlot ;
-  dem:name "OutputSlot Metadata" ;
-  dem:description "Output slot of the aggregated process Get All Metadata corresponding to the metadata" ;
-  dem:version "1" ;
-  dem:dataType nar2:Metadata .
 ###
 
 ############ ATOMIC PROCESSES ###############
 
+#### Edit Media File ####
+nar2:atpEditMF a dem:AtomicProcess ;
+  dem:name "Edit Media File" ;
+  dem:description "Atomic process that edit a media file entity" ;
+  dem:version "1" ;
+  dem:hasInputSlot nar2:isEditMF_MF ;
+  dem:hasOutputSlot nar2:osEditMF_MD ;
+  dem:hasImplementation nar2:impEditMF .
+
+# Input & Output Slots
+nar2:isEditMF_MF a dem:InputSlot ;
+  dem:name "InputSlot Media File" ;
+  dem:description "Input slot of the atomic process Edit Media File corresponding to the media file" ;
+  dem:version "1" ;
+  dem:dataType nar2:MediaFile ;
+  dem:isOptional "false" .
+
+nar2:osEditMF_MD a dem:OutputSlot ;
+  dem:name "OutputSlot Metadata" ;
+  dem:description "Output slot of the atomic process Edit Media File corresponding to the edited metadata" ;
+  dem:version "1" ;
+  dem:dataType nar2:Metadata .
+
+# Implementation
+nar2:impEditMF a dem:Implementation ;
+  dem:version "1" ;
+  dem:implementationType "BPMN" ;
+  dem:location "NoaCollection/Narrative2/EditMF.bpmn" ;
+  dem:checksum "" .
+####
+
 #### Extract Metadata ####
 nar2:atpExtractMD a dem:AtomicProcess ;
   dem:name "Extract Metadata" ;
-  dem:description "Atomic process that extract the metadata of a digital video artwork" ;
+  dem:description "Atomic process that extract the metadata of a media file" ;
   dem:version "1" ;
-  dem:hasInputSlot nar2:isExtractMD_DVA, nar2:isExtractMD_Opt ;
+  dem:hasInputSlot nar2:isExtractMD_MF, nar2:isExtractMD_Opt ;
   dem:hasOutputSlot nar2:osExtractMD_MD ;
   dem:hasImplementation nar2:impExtractMD .
 
 # Input & Output Slots
-nar2:isExtractMD_DVA a dem:InputSlot ;
-  dem:name "InputSlot Digital Video Artwork" ;
-  dem:description "Input slot of the atomic process Extract Metadata corresponding to the digital video artwork from which metadata is extracted" ;
+nar2:isExtractMD_MF a dem:InputSlot ;
+  dem:name "InputSlot Media File" ;
+  dem:description "Input slot of the atomic process Extract Metadata corresponding to the media file from which metadata is extracted" ;
   dem:version "1" ;
-  dem:dataType nar2:DigitalVideoArtwork ;
+  dem:dataType nar2:MediaFile ;
   dem:isOptional "false" .
 
 nar2:isExtractMD_Opt a dem:InputSlot ;
@@ -83,75 +94,143 @@ nar2:osExtractMD_MD a dem:OutputSlot ;
 nar2:impExtractMD a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "NoaCollection/Narrative2/ExtractMD.bpmn2" ;
+  dem:location "NoaCollection/Narrative2/ExtractMD.bpmn" ;
   dem:checksum "" .
 ####
 
-#### Get Metadata ####
-nar2:atpGetMD a dem:AtomicProcess ;
-  dem:name "Get Metadata" ;
-  dem:description "Atomic process that get a metadata record from TMS" ;
+#### Create RDF Triples ####
+nar2:atpCreateRDF a dem:AtomicProcess ;
+  dem:name "Create RDF Triples" ;
+  dem:description "Atomic process that creates the RDF triples corresponding to the media file metadata" ;
   dem:version "1" ;
-  dem:hasInputSlot nar2:isGetMD_ID ;
-  dem:hasOutputSlot nar2:osGetMD_MD ;
-  dem:hasImplementation nar2:impGetMD .
+  dem:hasInputSlot nar2:isCreateRDF_extractedMD, nar2:isCreateRDF_editedMD ;
+  dem:hasOutputSlot nar2:osCreateRDF_RDF ;
+  dem:hasImplementation nar2:impCreateRDFTriples .
 
 # Input & Output Slots
-nar2:isGetMD_ID a dem:InputSlot ;
-  dem:name "InputSlot Identifier" ;
-  dem:description "Input slot of the atomic process Get Metadata corresponding to the Identifier of the metadata record at TMS" ;
-  dem:version "1" ;
-  dem:dataType nar2:ID ;
-  dem:isOptional "false" .
-
-nar2:osGetMD_MD a dem:OutputSlot ;
-  dem:name "OutputSlot Metadata" ;
-  dem:description "Output slot of the atomic process Get Metadata corresponding to the metadata retrieved from TMS" ;
-  dem:version "1" ;
-  dem:dataType nar2:Metadata .
-
-# Implementation
-nar2:impGetMD a dem:Implementation ;
-  dem:version "1" ;
-  dem:implementationType "BPMN" ;
-  dem:location "NoaCollection/Narrative2/GetMD.bpmn2" ;
-  dem:checksum "" .
-####
-
-#### Update Metadata ####
-nar2:atpUpdateMD a dem:AtomicProcess ;
-  dem:name "Update Metadata" ;
-  dem:description "Atomic process that Update a metadata entity with new metadata info" ;
-  dem:version "1" ;
-  dem:hasInputSlot nar2:isUpdateMD_oldMD, nar2:isUpdateMD_newMD ;
-  dem:hasOutputSlot nar2:osUpdateMD_updatedMD ;
-  dem:hasImplementation nar2:impUpdateMD .
-
-# Input & Output Slots
-nar2:isUpdateMD_oldMD a dem:InputSlot ;
-  dem:name "InputSlot old Metadata" ;
-  dem:description "Input slot of the atomic process Update Metadata corresponding to the old metadata" ;
+nar2:isCreateRDF_extractedMD a dem:InputSlot ;
+  dem:name "InputSlot Extracted Metadata" ;
+  dem:description "Input slot of the atomic process Create RDF Triples corresponding to the extracted metadata" ;
   dem:version "1" ;
   dem:dataType nar2:Metadata ;
   dem:isOptional "false" .
 
-nar2:isUpdateMD_newMD a dem:InputSlot ;
-  dem:name "InputSlot new Metadata" ;
-  dem:description "Input slot of the atomic process Update Metadata corresponding to the new metadata" ;
+nar2:isCreateRDF_editedMD a dem:InputSlot ;
+  dem:name "InputSlot Edited Metadata" ;
+  dem:description "Input slot of the atomic process Create RDF Triples corresponding to the edited metadata" ;
   dem:version "1" ;
   dem:dataType nar2:Metadata ;
   dem:isOptional "false" .
 
-nar2:osUpdateMD_updatedMD a dem:OutputSlot ;
+nar2:osCreateRDF_RDF a dem:OutputSlot ;
   dem:name "OutputSlot Metadata" ;
-  dem:description "Output slot of the atomic process Update Metadata corresponding to the updated metadata" ;
+  dem:description "Output slot of the atomic process Create RDF Triples corresponding to the created RDF triples" ;
   dem:version "1" ;
-  dem:dataType nar2:Metadata .
+  dem:dataType nar2:RDFTriples .
 
 # Implementation
-nar2:impUpdateMD a dem:Implementation ;
+nar2:impCreateRDF a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "NoaCollection/Narrative2/UpdateMD.bpmn2" ;
+  dem:location "NoaCollection/Narrative2/CreateRDF.bpmn" ;
   dem:checksum "" .
 ####
+
+#### Create LRM Delta ####
+nar2:atpCreateDelta a dem:AtomicProcess ;
+  dem:name "Create Delta" ;
+  dem:description "Atomic process that creates an LRM delta" ;
+  dem:version "1" ;
+  dem:hasInputSlot nar2:isCreateDelta_RDF ;
+  dem:hasOutputSlot nar2:osCreateDelta_Delta ;
+  dem:hasImplementation nar2:impCreateLRMDelta .
+
+# Input & Output Slots
+nar2:isCreateDelta_RDF a dem:InputSlot ;
+  dem:name "InputSlot RDF Triples" ;
+  dem:description "Input slot of the atomic process Create Delta corresponding to the RDF triples" ;
+  dem:version "1" ;
+  dem:dataType nar2:RDFTriples ;
+  dem:isOptional "false" .
+
+nar2:osCreateDelta_Delta a dem:OutputSlot ;
+  dem:name "OutputSlot Delta" ;
+  dem:description "Output slot of the atomic process Create Delta corresponding to the LRM delta" ;
+  dem:version "1" ;
+  dem:dataType nar2:LRMDelta .
+
+# Implementation
+nar2:impCreateDelta a dem:Implementation ;
+  dem:version "1" ;
+  dem:implementationType "BPMN" ;
+  dem:location "NoaCollection/Narrative2/CreateLRMDelta.bpmn" ;
+  dem:checksum "" .
+####
+
+#### Build Dependency Model ####
+nar2:atpBuildDM a dem:AtomicProcess ;
+  dem:name "Build Dependency Model" ;
+  dem:description "Atomic process that builds a dependency model" ;
+  dem:version "1" ;
+  dem:hasInputSlot nar2:isBuildDM_Delta ;
+  dem:hasOutputSlot nar2:osBuildDM_DM ;
+  dem:hasImplementation nar2:impBuildDM .
+
+# Input & Output Slots
+nar2:isBuildDM_Delta a dem:InputSlot ;
+  dem:name "InputSlot Delta" ;
+  dem:description "Input slot of the atomic process Build Dependency Model corresponding to the LRM delta" ;
+  dem:version "1" ;
+  dem:dataType nar2:LRMDelta ;
+  dem:isOptional "false" .
+
+nar2:osBuildDM_DM a dem:OutputSlot ;
+  dem:name "OutputSlot Dependency Model" ;
+  dem:description "Output slot of the atomic process Build Dependency Model corresponding to the dependency model" ;
+  dem:version "1" ;
+  dem:dataType nar2:DependencyModel .
+
+# Implementation
+nar2:impBuildDM a dem:Implementation ;
+  dem:version "1" ;
+  dem:implementationType "BPMN" ;
+  dem:location "NoaCollection/Narrative2/BuildDM.bpmn" ;
+  dem:checksum "" .
+####
+
+#### Visualise Model ####
+nar2:atpVisualiseDM a dem:AtomicProcess ;
+  dem:name "Visualise Dependency Model" ;
+  dem:description "Atomic process that populates a dependency model to visualise it" ;
+  dem:version "1" ;
+  dem:hasInputSlot nar2:isVisualiseDM_DM ;
+  dem:hasImplementation nar2:impVisualiseDM .
+
+# Input & Output Slots
+nar2:isVisualiseDM_DM a dem:InputSlot ;
+  dem:name "InputSlot Dependency Model" ;
+  dem:description "Input slot of the atomic process Visualise Dependency Model corresponding to the dependency model" ;
+  dem:version "1" ;
+  dem:dataType nar2:DependencyModel ;
+  dem:isOptional "false" .
+
+# Implementation
+nar2:impVisualiseDM a dem:Implementation ;
+  dem:version "1" ;
+  dem:implementationType "BPMN" ;
+  dem:location "NoaCollection/Narrative2/VisualiseDM.bpmn" ;
+  dem:checksum "" .
+####
+
+### Classes and Subclasses ###
+
+nar2:DigitalObject a owl:Class .
+nar2:Metadata a owl:Class .
+nar2:Model a owl:Class .
+nar2:Graph a owl:Class .
+
+nar2:MediaFile rdfs:subClassOf nar2:DigitalObject .
+nar2:RDFTriples rdfs:subClassOf nar2:DigitalObject .
+nar2:LRMDelta rdfs:subClassOf nar2:Delta .
+nar2:DependencyModel rdfs:subClassOf nar2:Model .
+nar2:Model rdfs:subClassOf nar2:Graph .

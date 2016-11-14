@@ -11,24 +11,24 @@
 		expressionLanguage="http://www.mvel.org/2.0"
 		targetNamespace="http://www.jboss.org/drools"
 		typeLanguage="http://www.java.com/javaTypes"
-		id="ExtractMD" >
+		id="CreateDelta" >
 
-		<bpmn2:itemDefinition id="itemDefMF" structureRef="sce:MediaFile" />
-		<bpmn2:itemDefinition id="itemDefMD" structureRef="sce:Metadata" />
+		<bpmn2:itemDefinition id="itemDefRDF" structureRef="sce:RDFTriples" />
+		<bpmn2:itemDefinition id="itemDefDelta" structureRef="sce:LRMDelta" />
 
 		<!--    process    -->
-		<bpmn2:process id="atpExtractMD" name="Extract Metadata" isExecutable="true" processType="Private" >
+		<bpmn2:process id="atpCreateDelta" name="Create LRM Delta" isExecutable="true" processType="Private" >
 
-				<bpmn2:dataObject id="isExtractMD_MF" name="Media File" itemSubjectRef="itemDefMF" />
-				<bpmn2:dataObject id="osExtractMD_MD" name="Metadata" itemSubjectRef="itemDefMD" />
+				<bpmn2:dataObject id="isCreateDelta_RDF" name="RDF Triples" itemSubjectRef="itemDefRDF" />
+				<bpmn2:dataObject id="osCreateDelta_Delta" name="LRM Delta" itemSubjectRef="itemDefDelta" />
 
 				<bpmn2:startEvent id="startEvent" />
 
-				<bpmn2:scriptTask id="scriptTask" name="Extract MD Task" scriptFormat="http://www.java.com/java">
+				<bpmn2:scriptTask id="scriptTask" name="Create LRM Delta Task" scriptFormat="http://www.java.com/java">
 					<bpmn2:script>
-						System.out.println("Extracting metadata to: " + kcontext.getVariable("isExtractMD_MF"));
-						kcontext.setVariable("osExtractMD_MD", "NEW METADATA");
-						System.out.println("Extracted Metadata: " + kcontext.getVariable("osExtractMD_MD"));
+						System.out.println("Creating LRM Delta from the RDF Triples: " + kcontext.getVariable("isCreateDelta_RDF") );
+						kcontext.setVariable("osCreateDelta_Delta", "NEW LRM DELTA");
+						System.out.println("Created LRM Delta: " + kcontext.getVariable("osCreateDelta_Delta"));
 					</bpmn2:script>
 				</bpmn2:scriptTask>
 

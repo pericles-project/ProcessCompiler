@@ -11,24 +11,24 @@
 		expressionLanguage="http://www.mvel.org/2.0"
 		targetNamespace="http://www.jboss.org/drools"
 		typeLanguage="http://www.java.com/javaTypes"
-		id="ExtractMD" >
+		id="BuildDM" >
 
-		<bpmn2:itemDefinition id="itemDefMF" structureRef="sce:MediaFile" />
-		<bpmn2:itemDefinition id="itemDefMD" structureRef="sce:Metadata" />
+		<bpmn2:itemDefinition id="itemDefDM" structureRef="sce:DependencyModel" />
+		<bpmn2:itemDefinition id="itemDefDelta" structureRef="sce:LRMDelta" />
 
 		<!--    process    -->
-		<bpmn2:process id="atpExtractMD" name="Extract Metadata" isExecutable="true" processType="Private" >
+		<bpmn2:process id="atpBuildDM" name="Build Dependency Model" isExecutable="true" processType="Private" >
 
-				<bpmn2:dataObject id="isExtractMD_MF" name="Media File" itemSubjectRef="itemDefMF" />
-				<bpmn2:dataObject id="osExtractMD_MD" name="Metadata" itemSubjectRef="itemDefMD" />
+				<bpmn2:dataObject id="isBuildDM_Delta" name="LRM Delta" itemSubjectRef="itemDefDelta" />
+				<bpmn2:dataObject id="osBuildDM_DM" name="Dependency Model" itemSubjectRef="itemDefDM" />
 
 				<bpmn2:startEvent id="startEvent" />
 
-				<bpmn2:scriptTask id="scriptTask" name="Extract MD Task" scriptFormat="http://www.java.com/java">
+				<bpmn2:scriptTask id="scriptTask" name="Build Dependency Model" scriptFormat="http://www.java.com/java">
 					<bpmn2:script>
-						System.out.println("Extracting metadata to: " + kcontext.getVariable("isExtractMD_MF"));
-						kcontext.setVariable("osExtractMD_MD", "NEW METADATA");
-						System.out.println("Extracted Metadata: " + kcontext.getVariable("osExtractMD_MD"));
+						System.out.println("Building the Dependency Model with the LRM Delta: " + kcontext.getVariable("isBuildDM_Delta") );
+						kcontext.setVariable("osBuildDM_DM", "NEW DEPENDENCY MODEL");
+						System.out.println("Created Dependency Model: " + kcontext.getVariable("osBuildDM_DM"));
 					</bpmn2:script>
 				</bpmn2:scriptTask>
 

@@ -20,8 +20,8 @@
 
   <bpmn2:process id="atpQACheck" name="QA Check" isExecutable="true" processType="Private" >
 
-    <bpmn2:dataObject id="isQACheckEntity" name="Entity" itemSubjectRef="itemDefEntity" />
-    <bpmn2:dataObject id="osQACheckLog" name="Log File" itemSubjectRef="itemDefFile" />
+    <bpmn2:dataObject id="isQACEntity" name="Entity" itemSubjectRef="itemDefEntity" />
+    <bpmn2:dataObject id="osQACLog" name="Log File" itemSubjectRef="itemDefFile" />
 
 		<bpmn2:startEvent id="startEvent" />
 
@@ -39,3 +39,5 @@
     <bpmn2:sequenceFlow id="seqFlow_2" sourceRef="scriptTask" targetRef="endEvent"/>
 
   </bpmn2:process>
+
+</bpmn2:definitions>

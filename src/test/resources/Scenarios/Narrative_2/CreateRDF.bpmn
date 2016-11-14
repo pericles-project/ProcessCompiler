@@ -11,24 +11,25 @@
 		expressionLanguage="http://www.mvel.org/2.0"
 		targetNamespace="http://www.jboss.org/drools"
 		typeLanguage="http://www.java.com/javaTypes"
-		id="ExtractMD" >
+		id="CreateRDF" >
 
-		<bpmn2:itemDefinition id="itemDefMF" structureRef="sce:MediaFile" />
+		<bpmn2:itemDefinition id="itemDefRDF" structureRef="sce:RDFTriples" />
 		<bpmn2:itemDefinition id="itemDefMD" structureRef="sce:Metadata" />
 
 		<!--    process    -->
-		<bpmn2:process id="atpExtractMD" name="Extract Metadata" isExecutable="true" processType="Private" >
+		<bpmn2:process id="atpCreateRDF" name="Create RDF Triples" isExecutable="true" processType="Private" >
 
-				<bpmn2:dataObject id="isExtractMD_MF" name="Media File" itemSubjectRef="itemDefMF" />
-				<bpmn2:dataObject id="osExtractMD_MD" name="Metadata" itemSubjectRef="itemDefMD" />
+				<bpmn2:dataObject id="isCreateRDF_editedMD" name="Edited Metadata" itemSubjectRef="itemDefMD" />
+				<bpmn2:dataObject id="isCreateRDF_extractedMD" name="Extracted Metadata" itemSubjectRef="itemDefMD" />
+				<bpmn2:dataObject id="osCreateRDF_RDF" name="RDF Triples" itemSubjectRef="itemDefRDF" />
 
 				<bpmn2:startEvent id="startEvent" />
 
-				<bpmn2:scriptTask id="scriptTask" name="Extract MD Task" scriptFormat="http://www.java.com/java">
+				<bpmn2:scriptTask id="scriptTask" name="Create RDF Triples Task" scriptFormat="http://www.java.com/java">
 					<bpmn2:script>
-						System.out.println("Extracting metadata to: " + kcontext.getVariable("isExtractMD_MF"));
-						kcontext.setVariable("osExtractMD_MD", "NEW METADATA");
-						System.out.println("Extracted Metadata: " + kcontext.getVariable("osExtractMD_MD"));
+						System.out.println("Creating RDF Triples from Metadata: " + kcontext.getVariable("isCreateRDF_editedMD") + " and " + kcontext.getVariable("isCreateRDF_extractedMD") );
+						kcontext.setVariable("osCreateRDF_RDF", "NEW RDF TRIPLES");
+						System.out.println("Created RDF Triples: " + kcontext.getVariable("osCreateRDF_RDF"));
 					</bpmn2:script>
 				</bpmn2:scriptTask>
 

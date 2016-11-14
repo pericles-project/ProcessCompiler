@@ -11,24 +11,25 @@
 		expressionLanguage="http://www.mvel.org/2.0"
 		targetNamespace="http://www.jboss.org/drools"
 		typeLanguage="http://www.java.com/javaTypes"
-		id="ExtractMD" >
+		id="EditMF" >
 
 		<bpmn2:itemDefinition id="itemDefMF" structureRef="sce:MediaFile" />
 		<bpmn2:itemDefinition id="itemDefMD" structureRef="sce:Metadata" />
 
 		<!--    process    -->
-		<bpmn2:process id="atpExtractMD" name="Extract Metadata" isExecutable="true" processType="Private" >
 
-				<bpmn2:dataObject id="isExtractMD_MF" name="Media File" itemSubjectRef="itemDefMF" />
-				<bpmn2:dataObject id="osExtractMD_MD" name="Metadata" itemSubjectRef="itemDefMD" />
+		<bpmn2:process id="atpEditMF" name="Edit Media File" isExecutable="true" processType="Private" >
+
+				<bpmn2:dataObject id="isEditMF_MF" name="Media File" itemSubjectRef="itemDefMF" />
+				<bpmn2:dataObject id="osEditMF_MD" name="Metadata" itemSubjectRef="itemDefMD" />
 
 				<bpmn2:startEvent id="startEvent" />
 
-				<bpmn2:scriptTask id="scriptTask" name="Extract MD Task" scriptFormat="http://www.java.com/java">
+				<bpmn2:scriptTask id="scriptTask" name="Edition Task" scriptFormat="http://www.java.com/java">
 					<bpmn2:script>
-						System.out.println("Extracting metadata to: " + kcontext.getVariable("isExtractMD_MF"));
-						kcontext.setVariable("osExtractMD_MD", "NEW METADATA");
-						System.out.println("Extracted Metadata: " + kcontext.getVariable("osExtractMD_MD"));
+						System.out.println("Editing media file to: " + kcontext.getVariable("isEditMF_MF"));
+						kcontext.setVariable("osEditMF_MD", "NEW MEDIA FILE");
+						System.out.println("Edited Metadata: " + kcontext.getVariable("osEditMF_MD"));
 					</bpmn2:script>
 				</bpmn2:scriptTask>
 

@@ -38,3 +38,5 @@
     <bpmn2:sequenceFlow id="seqFlow_2" sourceRef="scriptTask" targetRef="endEvent"/>
 
   </bpmn2:process>
+	
+</bpmn2:definitions>

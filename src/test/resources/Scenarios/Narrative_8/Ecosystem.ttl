@@ -14,7 +14,7 @@ nar8:agpValidatePA a dem:AggregatedProcess ;
   dem:hasInputSlot nar8:isVPAEntity ;
   dem:hasOutputSlot nar8:osVPALog ;
   dem:processFlow "<http://www.pericles-project.eu/ns/narrative8#atpPA> <http://www.pericles-project.eu/ns/narrative8#atpQACheck>";
-  dem:dataFlow '[{"sourceProcess": 2, "sourceSlot": "<http://www.pericles-project.eu/ns/narrative8#isVPAEntity>", "targetProcess": 0, "targetSlot": "<http://www.pericles-project.eu/ns/narrative8#isPAEntity>"} , {"sourceProcess": 0, "sourceSlot": "<http://www.pericles-project.eu/ns/narrative8#osPAEntity>", "targetProcess": 1, "targetSlot": "<http://www.pericles-project.eu/ns/narrative8#isQACheckEntity>"} , {"sourceProcess": 1, "sourceSlot": "<http://www.pericles-project.eu/ns/narrative8#osQACheckLog>", "targetProcess": 2, "targetSlot": "<http://www.pericles-project.eu/ns/narrative8#osVPALog>"}]' .
+  dem:dataFlow '[{"sourceProcess": 2, "sourceSlot": "<http://www.pericles-project.eu/ns/narrative8#isVPAEntity>", "targetProcess": 0, "targetSlot": "<http://www.pericles-project.eu/ns/narrative8#isPAEntity>"} , {"sourceProcess": 0, "sourceSlot": "<http://www.pericles-project.eu/ns/narrative8#osPAEntity>", "targetProcess": 1, "targetSlot": "<http://www.pericles-project.eu/ns/narrative8#isQACEntity>"} , {"sourceProcess": 1, "sourceSlot": "<http://www.pericles-project.eu/ns/narrative8#osQACLog>", "targetProcess": 2, "targetSlot": "<http://www.pericles-project.eu/ns/narrative8#osVPALog>"}]' .
 
 nar8:isVPAEntity a dem:InputSlot ;
   dem:name "InputSlot Entity" ;
@@ -64,18 +64,18 @@ nar8:atpQACheck a dem:AtomicProcess ;
   dem:name "QA Check" ;
   dem:description "Atomic process that checks if an entity " ;
   dem:version "1" ;
-  dem:hasInputSlot nar8:isQACheckEntity ;
-  dem:hasOutputSlot nar8:isQACheckLog ;
+  dem:hasInputSlot nar8:isQACEntity ;
+  dem:hasOutputSlot nar8:osQACLog ;
   dem:hasImplementation nar8:impQACheck .
 
-nar8:isQACheckEntity a dem:InputSlot ;
+nar8:isQACEntity a dem:InputSlot ;
   dem:name "InputSlot Entity" ;
   dem:description "Input slot corresponding to the entity to which the quality assurance test is applied" ;
   dem:version "1" ;
   dem:dataType nar8:Entity ;
   dem:isOptional "false" .
 
-nar8:isQACheckLog a dem:OutputSlot ;
+nar8:osQACLog a dem:OutputSlot ;
   dem:name "OutputSlot Log File" ;
   dem:description "Output slot corresponding to the log file where the result of the QA check is output" ;
   dem:version "1" ;

@@ -5,6 +5,7 @@
 		xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
 		xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
 		xmlns:dem="http://www.pericles-project.eu/ns/dem#"
+		xmlns:sce="http://www.pericles-project.eu/ns/${scenario}#"
 		xmlns="http://www.jboss.org/drools"
 		xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd"
 		expressionLanguage="http://www.mvel.org/2.0"
