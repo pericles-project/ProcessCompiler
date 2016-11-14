@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions id="Definitions_2" targetNamespace="http://camunda.org/examples" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+
+  <itemDefinition id="ItemDefinition_5" structureRef="Entity"/>
+  <itemDefinition id="ItemDefinition_7" structureRef="File"/>
+  <itemDefinition id="ItemDefinition_9" structureRef="Entity"/>
+
+  <process id="agpValidatePA" name="Validate Preservation Action" processType="Private">
+
+    <dataObject id="isVPAEntity" itemSubjectRef="ItemDefinition_5" name="InputSlot Entity"/>
+    <dataObject id="osVPALog" itemSubjectRef="ItemDefinition_7" name="OutputSlot Log File"/>
+    <dataObject id="osPAEntity_1" itemSubjectRef="ItemDefinition_9" name="OutputSlot Entity"/>
+
+    <startEvent id="StartEvent_3">
+      <outgoing>StartEvent_3-CallActivity_11</outgoing>
+    </startEvent>
+
+    <callActivity calledElement="atpPA" id="CallActivity_11">
+      <incoming>StartEvent_3-CallActivity_11</incoming>
+      <outgoing>CallActivity_11-CallActivity_19</outgoing>
+      <ioSpecification id="IoSpecification_12">
+        <dataInput id="DataInput_15" itemSubjectRef="ItemDefinition_5" name="isPAEntity"/>
+        <dataOutput id="DataOutput_17" itemSubjectRef="ItemDefinition_9" name="osPAEntity"/>
+        <inputSet id="InputSet_13">
+          <dataInputRefs>DataInput_15</dataInputRefs>
+        </inputSet>
+        <outputSet id="OutputSet_14">
+          <dataOutputRefs>DataOutput_17</dataOutputRefs>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation id="DataInputAssociation_16">
+        <sourceRef>isVPAEntity</sourceRef>
+        <targetRef>DataInput_15</targetRef>
+      </dataInputAssociation>
+      <dataOutputAssociation id="DataOutputAssociation_18">
+        <sourceRef>DataOutput_17</sourceRef>
+        <targetRef>osPAEntity_1</targetRef>
+      </dataOutputAssociation>
+    </callActivity>
+
+    <sequenceFlow id="StartEvent_3-CallActivity_11" sourceRef="StartEvent_3" targetRef="CallActivity_11"/>
+
+    <callActivity calledElement="atpQACheck" id="CallActivity_19">
+      <incoming>CallActivity_11-CallActivity_19</incoming>
+      <outgoing>CallActivity_19-EndEvent_4</outgoing>
+      <ioSpecification id="IoSpecification_20">
+        <dataInput id="DataInput_23" itemSubjectRef="ItemDefinition_9" name="isQACEntity"/>
+        <dataOutput id="DataOutput_25" itemSubjectRef="ItemDefinition_7" name="osQACLog"/>
+        <inputSet id="InputSet_21">
+          <dataInputRefs>DataInput_23</dataInputRefs>
+        </inputSet>
+        <outputSet id="OutputSet_22">
+          <dataOutputRefs>DataOutput_25</dataOutputRefs>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation id="DataInputAssociation_24">
+        <sourceRef>osPAEntity_1</sourceRef>
+        <targetRef>DataInput_23</targetRef>
+      </dataInputAssociation>
+      <dataOutputAssociation id="DataOutputAssociation_26">
+        <sourceRef>DataOutput_25</sourceRef>        
+        <targetRef>osVPALog</targetRef>
+      </dataOutputAssociation>
+    </callActivity>
+
+    <sequenceFlow id="CallActivity_11-CallActivity_19" sourceRef="CallActivity_11" targetRef="CallActivity_19"/>
+
+    <endEvent id="EndEvent_4">
+      <incoming>CallActivity_19-EndEvent_4</incoming>
+    </endEvent>
+
+    <sequenceFlow id="CallActivity_19-EndEvent_4" sourceRef="CallActivity_19" targetRef="EndEvent_4"/>
+
+  </process>
+
+</definitions>

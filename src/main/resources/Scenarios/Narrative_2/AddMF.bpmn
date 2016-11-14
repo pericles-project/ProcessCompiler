@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions id="Definitions_6" targetNamespace="http://camunda.org/examples" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+
+<itemDefinition id="ItemDefinition_9" structureRef="MediaFile"/>
+<itemDefinition id="ItemDefinition_11" structureRef="Metadata"/>
+<itemDefinition id="ItemDefinition_13" structureRef="Metadata"/>
+<itemDefinition id="ItemDefinition_15" structureRef="RDFTriples"/>
+<itemDefinition id="ItemDefinition_17" structureRef="LRMDelta"/>
+<itemDefinition id="ItemDefinition_19" structureRef="DependencyModel"/>
+
+<process id="agpAddMF" name="AggregatedProcess Add Media File" processType="Private">
+
+  <dataObject id="isAddMF_MF" itemSubjectRef="ItemDefinition_9" name="InputSlot Media File"/>
+  <dataObject id="osEditMF_MD_1" itemSubjectRef="ItemDefinition_11" name="OutputSlot Metadata"/>
+  <dataObject id="osExtractMD_MD_2" itemSubjectRef="ItemDefinition_13" name="OutputSlot Metadata"/>
+  <dataObject id="osCreateRDF_RDF_3" itemSubjectRef="ItemDefinition_15" name="OutputSlot Metadata"/>
+  <dataObject id="osCreateDelta_Delta_4" itemSubjectRef="ItemDefinition_17" name="OutputSlot Delta"/>
+  <dataObject id="osBuildDM_DM_5" itemSubjectRef="ItemDefinition_19" name="OutputSlot Dependency Model"/>
+
+  <startEvent id="StartEvent_7">
+    <outgoing>StartEvent_7-CallActivity_21</outgoing>
+  </startEvent>
+
+  <callActivity calledElement="atpEditMF" id="CallActivity_21">
+    <incoming>StartEvent_7-CallActivity_21</incoming>
+    <outgoing>CallActivity_21-CallActivity_29</outgoing>
+    <ioSpecification id="IoSpecification_22">
+      <dataInput id="DataInput_25" itemSubjectRef="ItemDefinition_9" name="isEditMF_MF"/>
+      <dataOutput id="DataOutput_27" itemSubjectRef="ItemDefinition_11" name="osEditMF_MD"/>
+      <inputSet id="InputSet_23">
+          <dataInputRefs>DataInput_25</dataInputRefs>
+      </inputSet>
+      <outputSet id="OutputSet_24">
+          <dataOutputRefs>DataOutput_27</dataOutputRefs>
+      </outputSet>
+    </ioSpecification>
+    <dataInputAssociation id="DataInputAssociation_26">
+      <sourceRef>isAddMF_MF</sourceRef>
+      <targetRef>DataInput_25</targetRef>
+    </dataInputAssociation>
+    <dataOutputAssociation id="DataOutputAssociation_28">
+      <sourceRef>DataOutput_27</sourceRef>
+      <targetRef>osEditMF_MD_1</targetRef>
+    </dataOutputAssociation>
+  </callActivity>
+
+  <sequenceFlow id="StartEvent_7-CallActivity_21" sourceRef="StartEvent_7" targetRef="CallActivity_21"/>
+
+  <callActivity calledElement="atpExtractMD" id="CallActivity_29">
+    <incoming>CallActivity_21-CallActivity_29</incoming>
+    <outgoing>CallActivity_29-CallActivity_37</outgoing>
+    <ioSpecification id="IoSpecification_30">
+      <dataInput id="DataInput_33" itemSubjectRef="ItemDefinition_9" name="isExtractMD_MF"/>
+      <dataOutput id="DataOutput_35" itemSubjectRef="ItemDefinition_13" name="osExtractMD_MD"/>
+      <inputSet id="InputSet_31">
+        <dataInputRefs>DataInput_33</dataInputRefs>
+      </inputSet>
+      <outputSet id="OutputSet_32">
+       <dataOutputRefs>DataOutput_35</dataOutputRefs>
+      </outputSet>
+    </ioSpecification>
+    <dataInputAssociation id="DataInputAssociation_34">
+     <sourceRef>isAddMF_MF</sourceRef>
+     <targetRef>DataInput_33</targetRef>
+    </dataInputAssociation>
+    <dataOutputAssociation id="DataOutputAssociation_36">
+     <sourceRef>DataOutput_35</sourceRef>
+     <targetRef>osExtractMD_MD_2</targetRef>
+   </dataOutputAssociation>
+ </callActivity>
+
+ <sequenceFlow id="CallActivity_21-CallActivity_29" sourceRef="CallActivity_21" targetRef="CallActivity_29"/>
+
+ <callActivity calledElement="atpCreateRDF" id="CallActivity_37">
+   <incoming>CallActivity_29-CallActivity_37</incoming>
+   <outgoing>CallActivity_37-CallActivity_47</outgoing>
+   <ioSpecification id="IoSpecification_38">
+     <dataInput id="DataInput_41" itemSubjectRef="ItemDefinition_13" name="isCreateRDF_extractedMD"/>
+     <dataInput id="DataInput_43" itemSubjectRef="ItemDefinition_11" name="isCreateRDF_editedMD"/>
+     <dataOutput id="DataOutput_45" itemSubjectRef="ItemDefinition_15" name="osCreateRDF_RDF"/>
+     <inputSet id="InputSet_39">
+       <dataInputRefs>DataInput_41</dataInputRefs>
+     <dataInputRefs>DataInput_43</dataInputRefs>
+    </inputSet>
+      <outputSet id="OutputSet_40">
+        <dataOutputRefs>DataOutput_45</dataOutputRefs>
+      </outputSet>
+    </ioSpecification>
+    <dataInputAssociation id="DataInputAssociation_42">
+     <sourceRef>osExtractMD_MD_2</sourceRef>
+     <targetRef>DataInput_41</targetRef>
+   </dataInputAssociation>
+    <dataInputAssociation id="DataInputAssociation_44">
+     <sourceRef>osEditMF_MD_1</sourceRef>
+     <targetRef>DataInput_43</targetRef>
+   </dataInputAssociation>
+    <dataOutputAssociation id="DataOutputAssociation_46">
+     <sourceRef>DataOutput_45</sourceRef>
+     <targetRef>osCreateRDF_RDF_3</targetRef>
+   </dataOutputAssociation>
+  </callActivity>
+
+ <sequenceFlow id="CallActivity_29-CallActivity_37" sourceRef="CallActivity_29" targetRef="CallActivity_37"/>
+
+ <callActivity calledElement="atpCreateDelta" id="CallActivity_47">
+   <incoming>CallActivity_37-CallActivity_47</incoming>
+   <outgoing>CallActivity_47-CallActivity_55</outgoing>
+   <ioSpecification id="IoSpecification_48">
+      <dataInput id="DataInput_51" itemSubjectRef="ItemDefinition_15" name="isCreateDelta_RDF"/>
+      <dataOutput id="DataOutput_53" itemSubjectRef="ItemDefinition_17" name="osCreateDelta_Delta"/>
+      <inputSet id="InputSet_49">
+        <dataInputRefs>DataInput_51</dataInputRefs>
+      </inputSet>
+      <outputSet id="OutputSet_50">
+        <dataOutputRefs>DataOutput_53</dataOutputRefs>
+      </outputSet>
+   </ioSpecification>
+   <dataInputAssociation id="DataInputAssociation_52">
+      <sourceRef>osCreateRDF_RDF_3</sourceRef>
+      <targetRef>DataInput_51</targetRef>
+    </dataInputAssociation>
+    <dataOutputAssociation id="DataOutputAssociation_54">
+      <sourceRef>DataOutput_53</sourceRef>
+      <targetRef>osCreateDelta_Delta_4</targetRef>
+    </dataOutputAssociation>
+  </callActivity>
+
+  <sequenceFlow id="CallActivity_37-CallActivity_47" sourceRef="CallActivity_37" targetRef="CallActivity_47"/>
+
+  <callActivity calledElement="atpBuildDM" id="CallActivity_55">
+    <incoming>CallActivity_47-CallActivity_55</incoming>
+    <outgoing>CallActivity_55-CallActivity_63</outgoing>
+    <ioSpecification id="IoSpecification_56">
+      <dataInput id="DataInput_59" itemSubjectRef="ItemDefinition_17" name="isBuildDM_Delta"/>
+      <dataOutput id="DataOutput_61" itemSubjectRef="ItemDefinition_19" name="osBuildDM_DM"/>
+      <inputSet id="InputSet_57">
+        <dataInputRefs>DataInput_59</dataInputRefs>
+      </inputSet>
+      <outputSet id="OutputSet_58">
+        <dataOutputRefs>DataOutput_61</dataOutputRefs>
+      </outputSet>
+    </ioSpecification>
+    <dataInputAssociation id="DataInputAssociation_60">
+      <sourceRef>osCreateDelta_Delta_4</sourceRef>
+      <targetRef>DataInput_59</targetRef>
+    </dataInputAssociation>
+    <dataOutputAssociation id="DataOutputAssociation_62">
+      <sourceRef>DataOutput_61</sourceRef>
+      <targetRef>osBuildDM_DM_5</targetRef>
+    </dataOutputAssociation>
+  </callActivity>
+
+  <sequenceFlow id="CallActivity_47-CallActivity_55" sourceRef="CallActivity_47" targetRef="CallActivity_55"/>
+
+  <callActivity calledElement="atpVisualiseDM" id="CallActivity_63">
+    <incoming>CallActivity_55-CallActivity_63</incoming>
+    <outgoing>CallActivity_63-EndEvent_8</outgoing>
+    <ioSpecification id="IoSpecification_64">
+      <dataInput id="DataInput_67" itemSubjectRef="ItemDefinition_19" name="isVisualiseDM_DM"/>
+        <inputSet id="InputSet_65">
+          <dataInputRefs>DataInput_67</dataInputRefs>
+        </inputSet>
+      <outputSet id="OutputSet_66"/>
+    </ioSpecification>
+    <dataInputAssociation id="DataInputAssociation_68">
+      <sourceRef>osBuildDM_DM_5</sourceRef>
+      <targetRef>DataInput_67</targetRef>
+    </dataInputAssociation>
+  </callActivity>
+
+  <sequenceFlow id="CallActivity_55-CallActivity_63" sourceRef="CallActivity_55" targetRef="CallActivity_63"/>
+
+  <endEvent id="EndEvent_8">
+    <incoming>CallActivity_63-EndEvent_8</incoming>
+  </endEvent>
+  
+  <sequenceFlow id="CallActivity_63-EndEvent_8" sourceRef="CallActivity_63" targetRef="EndEvent_8"/>
+
+</process>
+
+</definitions>
