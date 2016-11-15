@@ -52,7 +52,7 @@ public class DemoResource extends BaseResource {
 
 	public static final Charset UTF8 = Charset.forName("UTF-8");
 
-	private static final String SCENARIO_PATH = "/webapp/Scenarios/";
+	private static final String SCENARIO_PATH = "/Scenarios/";
 	public static final List<String> scenarios = new ArrayList<>();
 
 	static List<String> findScenarios() throws IOException {
