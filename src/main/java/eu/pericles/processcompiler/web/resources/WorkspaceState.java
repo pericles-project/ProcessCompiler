@@ -15,11 +15,13 @@ public class WorkspaceState {
 	public static class WSFile {
 		public String text = "";
 		public String desc = "";
+		public String image;
 		public boolean output = false;
 	}
 
 	public String ermrURI;
 	public String repoName;
+	public String name;
 	public Map<String, WSFile> files = new HashMap<>();
 
 	public WorkspaceState() {

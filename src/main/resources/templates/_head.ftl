@@ -20,15 +20,11 @@
   <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
     <a class="navbar-brand" href="#">Pericles - ProcessCompiler DEMO</a>
     <ul class="nav navbar-nav">
+      <#list scenarios as scenario >
       <li class="nav-item">
-        <a class="nav-link" href="#">Scenario 1</a>
+        <a class="nav-link" href="/demo/${scenario?url}">${scenario}</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Scenario 2</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Scenario 3</a>
-      </li>
+      </#list>
     </ul>
   </div>
 </nav>

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
 import eu.pericles.processcompiler.ecosystem.ProcessBase;
@@ -21,6 +22,10 @@ import eu.pericles.processcompiler.web.ApiException;
 
 public class BaseResource {
 	static ObjectMapper om = new ObjectMapper();
+	static {
+		om.enable(SerializationFeature.INDENT_OUTPUT);
+	}
+	
 	static final Logger log = LoggerFactory.getLogger(BaseResource.class);
 
 	public static class ConfigBean {

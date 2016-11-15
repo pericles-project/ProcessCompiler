@@ -42,6 +42,7 @@ public class ApiApplication extends ResourceConfig {
 		tplconfig.setObjectWrapper(new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_23).build());
 		tplconfig.loadBuiltInEncodingMap();
 		tplconfig.setDefaultEncoding("utf-8");
+		tplconfig.setURLEscapingCharset("utf-8");
 		tplconfig.setClassForTemplateLoading(getClass(), "/templates");
 
 		register(new AbstractBinder() {

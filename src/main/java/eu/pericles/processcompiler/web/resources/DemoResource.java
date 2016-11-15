@@ -1,19 +1,18 @@
 package eu.pericles.processcompiler.web.resources;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -24,11 +23,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -53,46 +50,98 @@ import eu.pericles.processcompiler.web.resources.WorkspaceState.WSFile;
 @Produces(MediaType.TEXT_HTML)
 public class DemoResource extends BaseResource {
 
+	public static final Charset UTF8 = Charset.forName("UTF-8");
+
+	private static final String SCENARIO_PATH = "/webapp/Scenarios/";
+	public static final List<String> scenarios = new ArrayList<>();
+
+	static List<String> findScenarios() throws IOException {
+		if (scenarios.isEmpty()) {
+			synchronized (scenarios) {
+				scenarios.clear();
+				URI uri = URI.create(DemoResource.class.getResource(SCENARIO_PATH).toString());
+				try (FileSystem fileSystem = (uri.getScheme().equals("jar")
+						? FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap()) : null);
+						DirectoryStream<java.nio.file.Path> ds = Files.newDirectoryStream(Paths.get(uri))) {
+					for (java.nio.file.Path p : ds) {
+						if (!Files.isDirectory(p))
+							continue;
+						scenarios.add(p.getFileName().toString());
+					}
+				}
+			}
+		}
+		return scenarios;
+	}
+
+	static WorkspaceState loadScenario(String name) throws IOException {
+		WorkspaceState workspace = new WorkspaceState();
+		workspace.name = name;
+		URI uri = URI.create(DemoResource.class.getResource(SCENARIO_PATH).toString());
+
+		try (FileSystem fileSystem = (uri.getScheme().equals("jar")
+				? FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap()) : null);
+				DirectoryStream<java.nio.file.Path> ds = Files.newDirectoryStream(Paths.get(uri).resolve(name))) {
+			for (java.nio.file.Path p : ds) {
+				if (Files.isDirectory(p))
+					continue;
+
+				String filename = p.getFileName().toString();
+
+				if (filename.endsWith(".ttl") || filename.endsWith(".bpmn")) {
+					WSFile wsf = new WSFile();
+					wsf.text = new String(Files.readAllBytes(p), UTF8);
+
+					java.nio.file.Path desc = p.resolveSibling(filename + ".txt");
+					wsf.desc = Files.exists(desc) ? new String(Files.readAllBytes(desc), UTF8) : null;
+					if(Files.exists(p.resolveSibling(filename + ".png")))
+						wsf.image = filename + ".png";
+					if(Files.exists(p.resolveSibling(filename + ".jpg")))
+						wsf.image = filename + ".jpg";
+					workspace.files.put(filename, wsf);
+				} else {
+					continue;
+				}
+			}
+		}
+		return workspace;
+	}
+
 	@GET
 	public Template index() throws IOException, URISyntaxException {
-		return editor("Narrative_2");
+		return new Template("index.ftlh").put("scenarios", findScenarios());
 	}
-	
+
 	@GET
 	@Path("{scenario}")
 	public Template editor(@PathParam("scenario") String scenario) throws IOException, URISyntaxException {
-		WorkspaceState workspace = new WorkspaceState();
-		ObjectNode json = om.createObjectNode();
-		ObjectNode files = json.putObject("files");
-		
-		URI uri = getClass().getResource("/webapp/Scenarios/").toURI();
-		
-        try (FileSystem fileSystem = (uri.getScheme().equals("jar") ? FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap()) : null)) {
-            java.nio.file.Path myPath = Paths.get(uri).resolve(scenario);
-            for(java.nio.file.Path p: Files.newDirectoryStream(myPath)) {
-            	if(Files.isDirectory(p)) continue;
+		String sjson = om.writeValueAsString(loadScenario(scenario));
+		return new Template("edit.ftlh").put("filesJson", sjson).put("scenarios", findScenarios());
+	}
 
-    			InputStream io = Files.newInputStream(p);
-    			java.nio.file.Path desc = p.resolveSibling(p.getFileName().toString()+".txt");
-    			InputStream iodesc = Files.exists(desc) ? Files.newInputStream(desc) : null;
+	@GET
+	@Path("{scenario}/_files/{filename}")
+	public Response getFile(@PathParam("scenario") String scenario, @PathParam("filename") String filename)
+			throws IOException, URISyntaxException {
+		URI baseuri = URI.create(DemoResource.class.getResource(SCENARIO_PATH).toString());
+		URI uri = baseuri.resolve(scenario+"/").resolve(filename).normalize();
+		if (!uri.toString().startsWith(baseuri.toString()))
+			return Response.status(Status.NOT_FOUND).build();
 
-    			WSFile wsf = new WSFile();
-    			wsf.text = IOUtils.toString(io);
-    			wsf.desc = iodesc == null ? null : IOUtils.toString(iodesc);
-    			workspace.files.put(p.getFileName().toString(), wsf);
-    			IOUtils.closeQuietly(io);
-    			IOUtils.closeQuietly(iodesc);            	
-            }
-        }
-		
-		
-		for (String name : new String[] { "Ecosystem.ttl", "EncapsulateDOMD.bpmn", "ExtractMD.bpmn", "VirusCheck.bpmn",
-				"IngestAWSW.bpmn" }) {
+		try (FileSystem fileSystem = (uri.getScheme().equals("jar")
+				? FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap()) : null)) {
+			java.nio.file.Path path = java.nio.file.Paths.get(uri);
+			if (!Files.exists(path) || !Files.isRegularFile(path))
+				return Response.status(Status.NOT_FOUND).build();
+
+			if (filename.endsWith(".jpg")) {
+				return Response.ok(Files.newInputStream(path), "image/jpeg").build();
+			} else if (filename.endsWith(".png")) {
+				return Response.ok(Files.newInputStream(path), "image/png").build();
+			}
 		}
 
-		String sjson = om.writeValueAsString(workspace);
-
-		return new Template("index.ftlh").put("filesJson", sjson);
+		return Response.status(Status.NOT_FOUND).build();
 	}
 
 	public static void main(String[] args) {
@@ -138,12 +187,11 @@ public class DemoResource extends BaseResource {
 				doRun(state, comm);
 			else
 				throw new ApiException(404, "Action not implemented");
-			
+
 		} catch (ERMRClientException e) {
 			throw new ApiException(400, e.getMessage());
 		}
 		return state;
-
 
 	}
 
@@ -152,26 +200,26 @@ public class DemoResource extends BaseResource {
 
 	private void doCompile(WorkspaceState state, ERMRCommunicationsFake comm) throws ERMRClientException {
 		ProcessCompiler pc = new ProcessCompiler(comm);
-		
+
 		Map<String, String> results = new HashMap<>();
 
 		for (QuerySolution qs : comm.query(
 				"SELECT DISTINCT ?uri WHERE { ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.pericles-project.eu/ns/dem#AggregatedProcess> . }")) {
 			String ag = qs.get("uri").asResource().getURI();
 			try {
-				results.putAll(pc.compileRecursively("", "<"+ag+">"));
+				results.putAll(pc.compileRecursively("", "<" + ag + ">"));
 			} catch (JSONParserException | PCException | BPMNParserException | IOException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		for(Entry<String, String> r: results.entrySet()) {
+
+		for (Entry<String, String> r : results.entrySet()) {
 			WSFile newFile = new WSFile();
 			newFile.output = true;
 			newFile.text = r.getValue();
 			newFile.desc = "DESC";
 			state.files.put(r.getKey(), newFile);
-			
+
 		}
 
 		// pc.compileRecursively(repository, processId)

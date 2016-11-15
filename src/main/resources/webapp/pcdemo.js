@@ -44,6 +44,11 @@ $(function() {
 			editor.setOption("mode", "text/plain");
 		}
 		desc_node.text(file.desc ? file.desc : "");
+		if(file.image) {
+			$('#file-img').attr('src', '/demo/'+scenario.name+'/_files/'+file.image).show();
+		} else {
+			$('#file-img').hide()
+		}
 		$('a.file-link').removeClass('active');
 		linkNode.addClass('active');
 	}
