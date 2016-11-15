@@ -2,15 +2,10 @@
 
   <div class="row">
     <div class="col-xl-2 col-md-3 col-sm-4">
-		<h2>Input files:</h2>
 		<nav class="nav nav-pills nav-stacked" id="input-file-links"></nav>
 
-		<h2 class="m-t-2">Operation:</h2>
-        <button type="button" class="btn btn-outline-primary btn-block" id="action-validate">Validate</button>
-	    <button type="button" class="btn btn-outline-primary btn-block" id="action-compile">Compile</button>
-    	<button type="button" class="btn btn-outline-primary btn-block" id="action-run">Compile & Run</button>
+	    <button type="button" class="m-y-2 btn btn-outline-primary btn-block" id="action-compile">Compile</button>
     	
-		<h2 class="m-t-2">Results:</h2>
 		<nav class="nav nav-pills nav-stacked" id="output-file-links"></nav>
     </div>
     <div class="col-xl-10 col-md-9 col-sm-8" style="padding-left:1em">

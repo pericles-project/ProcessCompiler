@@ -188,7 +188,7 @@ public class DemoResource extends BaseResource {
 			else
 				throw new ApiException(404, "Action not implemented");
 
-		} catch (ERMRClientException e) {
+		} catch (ERMRClientException | JSONParserException | PCException | BPMNParserException e) {
 			throw new ApiException(400, e.getMessage());
 		}
 		return state;
@@ -198,7 +198,7 @@ public class DemoResource extends BaseResource {
 	private void doValidate(WorkspaceState state, ERMRCommunicationsFake comm) {
 	}
 
-	private void doCompile(WorkspaceState state, ERMRCommunicationsFake comm) throws ERMRClientException {
+	private void doCompile(WorkspaceState state, ERMRCommunicationsFake comm) throws ERMRClientException, JSONParserException, PCException, BPMNParserException, IOException {
 		ProcessCompiler pc = new ProcessCompiler(comm);
 
 		Map<String, String> results = new HashMap<>();
@@ -206,11 +206,7 @@ public class DemoResource extends BaseResource {
 		for (QuerySolution qs : comm.query(
 				"SELECT DISTINCT ?uri WHERE { ?uri <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.pericles-project.eu/ns/dem#AggregatedProcess> . }")) {
 			String ag = qs.get("uri").asResource().getURI();
-			try {
-				results.putAll(pc.compileRecursively("", "<" + ag + ">"));
-			} catch (JSONParserException | PCException | BPMNParserException | IOException e) {
-				e.printStackTrace();
-			}
+			results.putAll(pc.compileRecursively("", "<" + ag + ">"));
 		}
 
 		for (Entry<String, String> r : results.entrySet()) {
@@ -218,7 +214,7 @@ public class DemoResource extends BaseResource {
 			newFile.output = true;
 			newFile.text = r.getValue();
 			newFile.desc = "DESC";
-			state.files.put(r.getKey(), newFile);
+			state.files.put(r.getKey()+".bpmn", newFile);
 
 		}
 
