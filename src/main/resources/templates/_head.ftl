@@ -18,7 +18,7 @@
     &#9776;
   </button>
   <div class="collapse navbar-toggleable-xs" id="exCollapsingNavbar2">
-    <a class="navbar-brand" href="#">Pericles - ProcessCompiler DEMO</a>
+    <a class="navbar-brand" href="/demo/">PERICLES - ProcessCompiler DEMO</a>
     <ul class="nav navbar-nav">
       <#list scenarios as scenario >
       <li class="nav-item">

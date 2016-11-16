@@ -1,6 +1,5 @@
 $(function() {
 
-	console.log(scenario);
 	var linkNodes = {};
 	var save_to=null;
 
@@ -34,23 +33,30 @@ $(function() {
 	var select_file = function(name) {
 		var file = scenario.files[name];
 		var linkNode = linkNodes[name];
-		editor.setValue(file.text);
-		save_to = name;
-		if (name.match(/\.ttl$/)) {
-			editor.setOption("mode", "text/turtle");
-		} else if (name.match(/\.bpmn2?$/)) {
-			editor.setOption("mode", "application/xml");
-		} else {
-			editor.setOption("mode", "text/plain");
-		}
-		desc_node.text(file.desc ? file.desc : "");
-		if(file.image) {
-			$('#file-img').attr('src', '/demo/'+scenario.name+'/_files/'+file.image).show();
-		} else {
-			$('#file-img').hide()
-		}
+		
+		// Highlight file link
 		$('a.file-link').removeClass('active');
 		linkNode.addClass('active');
+
+		if(file.binary) {
+			// Show image
+			$(editor.getWrapperElement()).hide();
+			$('#file-img').attr('src', '/demo/'+scenario.name+'/_files/'+name).show();
+		} else {
+			// Show editor
+			$('#file-img').hide();
+			editor.setValue(file.text);
+			save_to = name;
+			if (name.match(/\.ttl$/)) {
+				editor.setOption("mode", "text/turtle");
+			} else if (name.match(/\.bpmn2?$/)) {
+				editor.setOption("mode", "application/xml");
+			} else {
+				editor.setOption("mode", "text/plain");
+			}
+			$(editor.getWrapperElement()).show();
+		}
+		desc_node.text(file.desc ? file.desc : "");
 	}
 
 	var update = function(name) {
@@ -73,10 +79,9 @@ $(function() {
 		}
 	}
 
-	for ( var key in scenario.files) {
-		if (scenario.files.hasOwnProperty(key)) {
-			update(key);
-		}
+	var names = Object.keys(scenario.files).sort();
+	for (var i = 0; i < names.length; i++) {
+		update(names[i]);
 	}
 
 	$('#input-file-links > a.nav-link:first').click();

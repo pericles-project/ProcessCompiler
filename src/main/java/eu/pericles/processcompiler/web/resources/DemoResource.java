@@ -82,22 +82,25 @@ public class DemoResource extends BaseResource {
 		try (FileSystem fileSystem = (uri.getScheme().equals("jar")
 				? FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap()) : null);
 				DirectoryStream<java.nio.file.Path> ds = Files.newDirectoryStream(Paths.get(uri).resolve(name))) {
+			
 			for (java.nio.file.Path p : ds) {
 				if (Files.isDirectory(p))
 					continue;
 
 				String filename = p.getFileName().toString();
 
+				// TODO: Add images as separate files
 				if (filename.endsWith(".ttl") || filename.endsWith(".bpmn")) {
 					WSFile wsf = new WSFile();
 					wsf.text = new String(Files.readAllBytes(p), UTF8);
-
 					java.nio.file.Path desc = p.resolveSibling(filename + ".txt");
 					wsf.desc = Files.exists(desc) ? new String(Files.readAllBytes(desc), UTF8) : null;
-					if(Files.exists(p.resolveSibling(filename + ".png")))
-						wsf.image = filename + ".png";
-					if(Files.exists(p.resolveSibling(filename + ".jpg")))
-						wsf.image = filename + ".jpg";
+					workspace.files.put(filename, wsf);
+				} else if(filename.endsWith(".jpg") || filename.endsWith(".png")) {
+					WSFile wsf = new WSFile();
+					wsf.binary = true;
+					java.nio.file.Path desc = p.resolveSibling(filename + ".txt");
+					wsf.desc = Files.exists(desc) ? new String(Files.readAllBytes(desc), UTF8) : null;
 					workspace.files.put(filename, wsf);
 				} else {
 					continue;
@@ -215,6 +218,7 @@ public class DemoResource extends BaseResource {
 			newFile.text = r.getValue();
 			newFile.desc = "DESC";
 			state.files.put(r.getKey()+".bpmn", newFile);
+			// TODO: Look for txt and jpg and png files.
 
 		}
 

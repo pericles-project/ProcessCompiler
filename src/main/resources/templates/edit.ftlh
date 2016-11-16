@@ -10,8 +10,8 @@
     </div>
     <div class="col-xl-10 col-md-9 col-sm-8" style="padding-left:1em">
       <textarea id="code" name="code" style="height:auto"></textarea>
-      <p id="file-desc" class="text-muted"></p>
       <img id="file-img" class="hidden" />
+      <p id="file-desc" class="text-muted"></p>
     </div>
   </div>
   <div class="text-xs-center">
