@@ -37,24 +37,21 @@ import eu.pericles.processcompiler.web.ApiApplication.ERMRConfig;
 public class CommandlineInterface {
 
 	static ObjectMapper om = new ObjectMapper();
-	private URL ermr;
-	private String repo;
-	private ProcessCompiler compiler;
 
 	public static enum Cmd {
-		COMPILE, VALIDATE_IMPL, VALIDATE_AGGR, SERVER
+		COMPILE, VALIDATE_IMPL, VALIDATE_AGGR, SERVER, DEMO
 	}
 
 	public static class ConfigBean {
 		public ConfigBean() {
 		}
-		
+
 		@JsonProperty("process")
 		public ProcessBase process;
 
 		@JsonProperty("aggregated_process")
 		public AggregatedProcess aggregatedProcess;
-		
+
 		@JsonAnySetter
 		public void set(String key, Object value) {
 			System.err.println("Unknown property: " + key);
@@ -73,9 +70,9 @@ public class CommandlineInterface {
 		ArgumentParser parser = ArgumentParsers.newArgumentParser("modelcompiler").defaultHelp(true)
 				.description("Compile or validate aggregated processes.");
 
-		parser.addArgument("-s").metavar("URL").required(true).type(URL.class)
+		parser.addArgument("-s").metavar("URL").type(URL.class)
 				.help("URL (including credentials) to the ERMR");
-		parser.addArgument("-r").metavar("REPO").required(true).help("Repository name");
+		parser.addArgument("-r").metavar("REPO").help("Repository name");
 
 		Subparser cmdParser = parser.addSubparsers().addParser("compile").help("Compile an aggregated process")
 				.setDefault("cmd", Cmd.COMPILE);
@@ -85,8 +82,9 @@ public class CommandlineInterface {
 
 		Subparser srvParser = parser.addSubparsers().addParser("server").help("Start a server process")
 				.setDefault("cmd", Cmd.SERVER);
-		srvParser.addArgument("-p").metavar("PORT").setDefault(8080).type(Integer.class).help("Network port (always localhost)");
-		
+		srvParser.addArgument("-p").metavar("PORT").setDefault(8080).type(Integer.class)
+				.help("Network port (always localhost)");
+
 		Subparser vaParser = parser.addSubparsers().addParser("validate_aggregation").help("Validate an aggregation")
 				.setDefault("cmd", Cmd.VALIDATE_AGGR);
 		vaParser.addArgument("APROC")
@@ -94,10 +92,8 @@ public class CommandlineInterface {
 
 		Subparser viParser = parser.addSubparsers().addParser("validate_implementation")
 				.help("Validate an implementation").setDefault("cmd", Cmd.VALIDATE_IMPL);
-		viParser.addArgument("PROC")
-				.help("Either a json file on disk or the ID of an already defined process.");
-		viParser.addArgument("IMPL")
-				.help("Either a json file on disk or the ID of an already defined process.");
+		viParser.addArgument("PROC").help("Either a json file on disk or the ID of an already defined process.");
+		viParser.addArgument("IMPL").help("Either a json file on disk or the ID of an already defined process.");
 
 		Namespace ns = null;
 		try {
@@ -110,17 +106,6 @@ public class CommandlineInterface {
 		/*
 		 * Parse general parameters
 		 */
-
-		ermr = ns.<URL>get("s");
-		repo = ns.<String>get("r");
-
-		try {
-			compiler = new ProcessCompiler(ermr.toString());
-		} catch (ERMRClientException e) {
-			System.out.println("500 Internal Server Error");
-			System.out.println("ERMR (Triplestore) is not available: " + e.getMessage());
-			return 2;
-		}
 
 		switch (ns.<Cmd>get("cmd")) {
 		case COMPILE:
@@ -137,14 +122,16 @@ public class CommandlineInterface {
 	}
 
 	private int startServer(Namespace ns) {
-        ERMRConfig ermrc = new ERMRConfig(ermr.toString(), repo);
-        int port = ns.getInt("p");
-        ApiApplication.startServer(port, ermrc);
-        return 0;
+		ERMRConfig ermrc = new ERMRConfig(ns.getString("s"), ns.getString("r"));
+		int port = ns.getInt("p");
+		ApiApplication.startServer(port, ermrc);
+		return 0;
 	}
 	
 	private int validateAggregation(Namespace ns) {
 		try {
+			ProcessCompiler compiler = new ProcessCompiler(ns.getString("s"));
+			String repo = ns.getString("r");
 			String input = ns.getString("APROC");
 			AggregatedProcess aggregatedProcess;
 			if (new File(input).exists()) {
@@ -154,12 +141,12 @@ public class CommandlineInterface {
 				aggregatedProcess = compiler.getAggregatedProcess(repo, input);
 
 			ValidationResult result = compiler.validateAggregation(repo, aggregatedProcess);
-			
+
 			System.out.println("200 OK");
 			System.out.println(result.getMessage());
-			if (result.isValid()) 
+			if (result.isValid())
 				return 0;
-			else 
+			else
 				return 1;
 		} catch (ERMRClientException e) {
 			System.out.println("500 Internal Server Error");
@@ -167,12 +154,14 @@ public class CommandlineInterface {
 		} catch (IOException | JSONParserException e) {
 			System.out.println("400 Bad Request");
 			System.out.println(e.getMessage());
-		} 
+		}
 		return 2;
 	}
 
 	private int validateImplementation(Namespace ns) {
 		try {
+			ProcessCompiler compiler = new ProcessCompiler(ns.getString("s"));
+			String repo = ns.getString("r");
 			String proc = ns.getString("PROC");
 			String impl = ns.getString("IMPL");
 			ProcessBase process;
@@ -193,9 +182,9 @@ public class CommandlineInterface {
 
 			System.out.println("200 OK");
 			System.out.println(result.getMessage());
-			if (result.isValid()) 
+			if (result.isValid())
 				return 0;
-			else 
+			else
 				return 1;
 		} catch (ERMRClientException e) {
 			System.out.println("500 Internal Server Error");
@@ -203,12 +192,14 @@ public class CommandlineInterface {
 		} catch (BPMNParserException | IOException | JSONParserException e) {
 			System.out.println("400 Bad Request");
 			System.out.println(e.getMessage());
-		} 
+		}
 		return 2;
 	}
 
 	private int compile(Namespace ns) {
 		try {
+			ProcessCompiler compiler = new ProcessCompiler(ns.getString("s"));
+			String repo = ns.getString("r");
 			String input = ns.getString("APROC");
 			AggregatedProcess aggregatedProcess;
 			if (new File(input).exists()) {
@@ -218,7 +209,7 @@ public class CommandlineInterface {
 				aggregatedProcess = compiler.getAggregatedProcess(repo, input);
 
 			String result = compiler.compile(repo, aggregatedProcess);
-			
+
 			String file = ns.<String>get("o");
 			if (file != null)
 				FileUtils.writeStringToFile(new File(file), result);
@@ -237,10 +228,10 @@ public class CommandlineInterface {
 		} catch (PCException | JSONParserException e) {
 			System.out.println("400 Bad Request");
 			System.out.println("Error when compiling process: " + e.getMessage());
-		} 
+		}
 		return 1;
 	}
-	
+
 	private ConfigBean parseConfig(File src) throws IOException {
 		return om.readValue(src, ConfigBean.class);
 	}

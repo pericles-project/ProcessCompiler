@@ -56,7 +56,6 @@ public class ApiApplication extends ResourceConfig {
 		packages(getClass().getPackage().getName());
 		register(JacksonJsonProvider.class);
 		property(ServerProperties.BV_SEND_ERROR_IN_RESPONSE, true);
-
 		
 		for (Class<?> cls : getClasses())
 			log.debug("Loaded class:", cls);
