@@ -123,10 +123,10 @@ ingest-scenario:impEncapsulateDOMD a dem:Implementation ;
 ### Classes and Subclasses ###
 
 ingest-scenario:DigitalObject a owl:Class .
-ingest-scenario:Metadata a owl:Class .
 ingest-scenario:Format a owl:Class .
 
 ingest-scenario:ArtworkSoftware rdfs:subClassOf ingest-scenario:DigitalObject .
 ingest-scenario:File rdfs:subClassOf ingest-scenario:DigitalObject .
 ingest-scenario:Package rdfs:subClassOf ingest-scenario:DigitalObject .
+ingest-scenario:Metadata rdfs:subClassOf ingest-scenario:DigitalObject .
 ingest-scenario:PackageFormat rdfs:subClassOf ingest-scenario:Format .

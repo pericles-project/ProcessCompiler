@@ -218,12 +218,11 @@ nar2:impVisualiseDM a dem:Implementation ;
 ### Classes and Subclasses ###
 
 nar2:DigitalObject a owl:Class .
-nar2:Metadata a owl:Class .
-nar2:Model a owl:Class .
 nar2:Graph a owl:Class .
+nar2:LRMDelta a owl:Class .
 
 nar2:MediaFile rdfs:subClassOf nar2:DigitalObject .
 nar2:RDFTriples rdfs:subClassOf nar2:DigitalObject .
-nar2:LRMDelta rdfs:subClassOf nar2:Delta .
+nar2:Metadata rdfs:subClassOf nar2:DigitalObject .
 nar2:DependencyModel rdfs:subClassOf nar2:Model .
 nar2:Model rdfs:subClassOf nar2:Graph .
