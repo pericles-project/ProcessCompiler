@@ -51,7 +51,7 @@ ingest-scenario:isVirusCheckDO a dem:InputSlot ;
 ingest-scenario:impVirusCheck a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "PCCollection/IngestSBA/VirusCheck.bpmn" ;
+  dem:location "VirusCheck.bpmn" ;
   dem:checksum "" .
 
 #### Extract Metadata - Atomic Process ####
@@ -78,7 +78,7 @@ ingest-scenario:osExtractMDMD a dem:OutputSlot ;
 ingest-scenario:impExtractMD a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "PCCollection/IngestSBA/ExtractMD.bpmn" ;
+  dem:location "ExtractMD.bpmn" ;
   dem:checksum "" .
 
 #### Encapsulate Metadata and Digital Material - Atomic Process ####
@@ -117,7 +117,7 @@ ingest-scenario:osEncapsulateDOMDP a dem:OutputSlot ;
 ingest-scenario:impEncapsulateDOMD a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "PCCollection/IngestSBA/EncapsulateDOMD.bpmn" ;
+  dem:location "EncapsulateDOMD.bpmn" ;
   dem:checksum "" .
 
 ### Classes and Subclasses ###

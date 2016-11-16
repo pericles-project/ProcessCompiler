@@ -55,7 +55,7 @@ nar8:osPAEntity a dem:OutputSlot ;
 nar8:impPA a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "PCCollection/Narrative8/PreservationAction.bpmn" ;
+  dem:location "PreservationAction.bpmn" ;
   dem:checksum "".
 
 #### QA Check - Atomic Process ####
@@ -84,7 +84,7 @@ nar8:osQACLog a dem:OutputSlot ;
 nar8:impQACheck a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "PCCollection/Narrative8/QACheck.bpmn" ;
+  dem:location "QACheck.bpmn" ;
   dem:checksum "" .
 
 ### Classes and Subclasses ###

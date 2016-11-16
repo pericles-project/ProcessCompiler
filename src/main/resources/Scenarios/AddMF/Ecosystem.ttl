@@ -56,7 +56,7 @@ nar2:osEditMF_MD a dem:OutputSlot ;
 nar2:impEditMF a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "PCCollection/Narrative2/EditMF.bpmn" ;
+  dem:location "EditMF.bpmn" ;
   dem:checksum "" .
 ####
 
@@ -87,7 +87,7 @@ nar2:osExtractMD_MD a dem:OutputSlot ;
 nar2:impExtractMD a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "PCCollection/Narrative2/ExtractMD.bpmn" ;
+  dem:location "ExtractMD.bpmn" ;
   dem:checksum "" .
 ####
 
@@ -125,7 +125,7 @@ nar2:osCreateRDF_RDF a dem:OutputSlot ;
 nar2:impCreateRDF a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "PCCollection/Narrative2/CreateRDF.bpmn" ;
+  dem:location "CreateRDF.bpmn" ;
   dem:checksum "" .
 ####
 
@@ -156,7 +156,7 @@ nar2:osCreateDelta_Delta a dem:OutputSlot ;
 nar2:impCreateDelta a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "PCCollection/Narrative2/CreateDelta.bpmn" ;
+  dem:location "CreateDelta.bpmn" ;
   dem:checksum "" .
 ####
 
@@ -187,7 +187,7 @@ nar2:osBuildDM_DM a dem:OutputSlot ;
 nar2:impBuildDM a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "PCCollection/Narrative2/BuildDM.bpmn" ;
+  dem:location "BuildDM.bpmn" ;
   dem:checksum "" .
 ####
 
@@ -211,7 +211,7 @@ nar2:isVisualiseDM_DM a dem:InputSlot ;
 nar2:impVisualiseDM a dem:Implementation ;
   dem:version "1" ;
   dem:implementationType "BPMN" ;
-  dem:location "PCCollection/Narrative2/VisualiseDM.bpmn" ;
+  dem:location "VisualiseDM.bpmn" ;
   dem:checksum "" .
 ####
 
