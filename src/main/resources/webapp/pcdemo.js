@@ -7,8 +7,10 @@ $(function() {
 		lineNumbers : true,
 		lineWrapping : false,
 		extraKeys : {
-			"Ctrl-Q" : function(cm) {
+			"Ctrl-H" : function(cm) {
 				cm.foldCode(cm.getCursor());
+			},
+			"Ctrl-S" : function(cm) {
 			},
 			"F11" : function(cm) {
 				cm.setOption("fullScreen", !cm.getOption("fullScreen"));
@@ -41,6 +43,7 @@ $(function() {
 		if(typeof file.text == "string") {
 			// Show editor
 			$('#file-img').hide();
+			$(editor.getWrapperElement()).show();
 			editor.setValue(file.text);
 			save_to = name;
 			if (name.match(/\.ttl$/)) {
@@ -50,7 +53,6 @@ $(function() {
 			} else {
 				editor.setOption("mode", "text/plain");
 			}
-			$(editor.getWrapperElement()).show();
 		} else if(/\.(jpg|png)/.test(name)) {
 			// Show image
 			$(editor.getWrapperElement()).hide();
