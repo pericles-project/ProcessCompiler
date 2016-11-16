@@ -33,16 +33,12 @@ $(function() {
 	var select_file = function(name) {
 		var file = scenario.files[name];
 		var linkNode = linkNodes[name];
-		
+
 		// Highlight file link
 		$('a.file-link').removeClass('active');
 		linkNode.addClass('active');
 
-		if(file.binary) {
-			// Show image
-			$(editor.getWrapperElement()).hide();
-			$('#file-img').attr('src', '/demo/'+scenario.name+'/_files/'+name).show();
-		} else {
+		if(typeof file.text == "string") {
 			// Show editor
 			$('#file-img').hide();
 			editor.setValue(file.text);
@@ -55,6 +51,10 @@ $(function() {
 				editor.setOption("mode", "text/plain");
 			}
 			$(editor.getWrapperElement()).show();
+		} else if(/\.(jpg|png)/.test(name)) {
+			// Show image
+			$(editor.getWrapperElement()).hide();
+			$('#file-img').attr('src', '/demo/'+scenario.name+'/_files/'+name).show();
 		}
 		desc_node.text(file.desc ? file.desc : "");
 	}

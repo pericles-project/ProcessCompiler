@@ -15,7 +15,6 @@ public class WorkspaceState {
 	public static class WSFile {
 		public String text = "";
 		public String desc = "";
-		public boolean binary;
 		public boolean output = false;
 	}
 

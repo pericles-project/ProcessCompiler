@@ -97,7 +97,7 @@ public class DemoResource extends BaseResource {
 					workspace.files.put(filename, wsf);
 				} else if(filename.endsWith(".jpg") || filename.endsWith(".png")) {
 					WSFile wsf = new WSFile();
-					wsf.binary = true;
+					wsf.text = null;
 					java.nio.file.Path desc = p.resolveSibling(filename + ".txt");
 					wsf.desc = Files.exists(desc) ? new String(Files.readAllBytes(desc), UTF8) : null;
 					workspace.files.put(filename, wsf);
@@ -157,15 +157,16 @@ public class DemoResource extends BaseResource {
 		for (Entry<String, WSFile> f : state.files.entrySet()) {
 			String name = f.getKey();
 			WSFile file = f.getValue();
+			if(file.output)
+				continue;
 
 			if (name.endsWith(".ttl")) {
 				comm.importModel(file.text, "TTL");
-			} else {
-				comm.importImplementation(name, file.text);
+			} else if (name.endsWith(".bpmn")) {
+				comm.importImplementation(name, file.text != null ? file.text : "");
 			}
 		}
 
-		state.files.clear();
 		try {
 			if ("compile".equals(action))
 				doCompile(state, comm);
@@ -192,9 +193,9 @@ public class DemoResource extends BaseResource {
 
 		for (Entry<String, String> r : results.entrySet()) {
 			WSFile newFile = new WSFile();
-			newFile.output = true;
 			newFile.text = r.getValue();
-			newFile.desc = "DESC";
+			newFile.desc = "";
+			newFile.output = true;
 			state.files.put(r.getKey()+".bpmn", newFile);
 		}
 	}

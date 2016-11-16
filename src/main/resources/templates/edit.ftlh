@@ -2,7 +2,7 @@
 
   <div class="row">
     <div class="col-xl-2 col-md-3 col-sm-4">
-		<nav class="nav nav-pills nav-stacked" id="input-file-links"></nav>
+		<nav class="m-t-2 nav nav-pills nav-stacked" id="input-file-links"></nav>
 
 	    <button type="button" class="m-y-2 btn btn-outline-primary btn-block" id="action-compile">Compile</button>
     	
