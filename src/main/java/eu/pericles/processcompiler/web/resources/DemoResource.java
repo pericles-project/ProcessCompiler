@@ -89,7 +89,6 @@ public class DemoResource extends BaseResource {
 
 				String filename = p.getFileName().toString();
 
-				// TODO: Add images as separate files
 				if (filename.endsWith(".ttl") || filename.endsWith(".bpmn")) {
 					WSFile wsf = new WSFile();
 					wsf.text = new String(Files.readAllBytes(p), UTF8);
@@ -147,20 +146,6 @@ public class DemoResource extends BaseResource {
 		return Response.status(Status.NOT_FOUND).build();
 	}
 
-	public static void main(String[] args) {
-		Model model = ModelFactory.createDefaultModel();
-		model.read(WorkspaceState.class.getClassLoader().getResourceAsStream("webapp/demo/Ecosystem.ttl"), "", "TTL");
-		Query query = QueryFactory.create("PREFIX ecosystem:<http://www.pericles-project.eu/ns/ecosystem#> "
-				+ " SELECT DISTINCT ?name ?description ?version WHERE {"
-				+ "ecosystem:agpIngestAWSW ecosystem:name ?name . "
-				+ "ecosystem:agpIngestAWSW ecosystem:description ?description . "
-				+ "ecosystem:agpIngestAWSW ecosystem:version ?version . " + " }");
-		QueryExecution qexec = QueryExecutionFactory.create(query, model);
-		ResultSet x = qexec.execSelect();
-		System.out.println(x.next());
-		qexec.close();
-	}
-
 	@POST
 	@Path("{action}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -182,12 +167,8 @@ public class DemoResource extends BaseResource {
 
 		state.files.clear();
 		try {
-			if ("validate".equals(action))
-				doValidate(state, comm);
-			else if ("compile".equals(action))
+			if ("compile".equals(action))
 				doCompile(state, comm);
-			else if ("run".equals(action))
-				doRun(state, comm);
 			else
 				throw new ApiException(404, "Action not implemented");
 
@@ -196,9 +177,6 @@ public class DemoResource extends BaseResource {
 		}
 		return state;
 
-	}
-
-	private void doValidate(WorkspaceState state, ERMRCommunicationsFake comm) {
 	}
 
 	private void doCompile(WorkspaceState state, ERMRCommunicationsFake comm) throws ERMRClientException, JSONParserException, PCException, BPMNParserException, IOException {
@@ -218,15 +196,7 @@ public class DemoResource extends BaseResource {
 			newFile.text = r.getValue();
 			newFile.desc = "DESC";
 			state.files.put(r.getKey()+".bpmn", newFile);
-			// TODO: Look for txt and jpg and png files.
-
 		}
-
-		// pc.compileRecursively(repository, processId)
-
-	}
-
-	private void doRun(WorkspaceState state, ERMRCommunicationsFake comm) {
 	}
 
 }
