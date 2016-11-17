@@ -3,6 +3,7 @@ package eu.pericles.processcompiler.web.resources;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
@@ -25,6 +26,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import org.apache.commons.io.IOUtils;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -125,11 +128,14 @@ public class DemoResource extends BaseResource {
 	@Path("{scenario}/_files/{filename}")
 	public Response getFile(@PathParam("scenario") String scenario, @PathParam("filename") String filename)
 			throws IOException, URISyntaxException {
-		URI baseuri = URI.create(DemoResource.class.getResource(SCENARIO_PATH).toString());
-		URI uri = baseuri.resolve(scenario+"/").resolve(filename).normalize();
-		if (!uri.toString().startsWith(baseuri.toString()))
+		if(scenario.contains("/") || filename.contains("/"))
 			return Response.status(Status.NOT_FOUND).build();
 
+		URL rs = DemoResource.class.getResource(SCENARIO_PATH+scenario+"/"+filename);
+		if(rs == null)
+			return Response.status(Status.NOT_FOUND).build();
+		URI uri = rs.toURI();
+				
 		try (FileSystem fileSystem = (uri.getScheme().equals("jar")
 				? FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap()) : null)) {
 			java.nio.file.Path path = java.nio.file.Paths.get(uri);
@@ -137,9 +143,9 @@ public class DemoResource extends BaseResource {
 				return Response.status(Status.NOT_FOUND).build();
 
 			if (filename.endsWith(".jpg")) {
-				return Response.ok(Files.newInputStream(path), "image/jpeg").build();
+				return Response.ok(IOUtils.toByteArray(Files.newInputStream(path)), "image/jpeg").build();
 			} else if (filename.endsWith(".png")) {
-				return Response.ok(Files.newInputStream(path), "image/png").build();
+				return Response.ok(IOUtils.toByteArray(Files.newInputStream(path)), "image/png").build();
 			}
 		}
 
