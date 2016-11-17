@@ -73,6 +73,7 @@ public class DemoResource extends BaseResource {
 					}
 				}
 			}
+			Collections.sort(scenarios);
 		}
 		return scenarios;
 	}
