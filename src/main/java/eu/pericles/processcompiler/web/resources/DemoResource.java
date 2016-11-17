@@ -66,7 +66,7 @@ public class DemoResource extends BaseResource {
 					for (java.nio.file.Path p : ds) {
 						if (!Files.isDirectory(p))
 							continue;
-						scenarios.add(p.getFileName().toString());
+						scenarios.add(p.getFileName().toString().replace(p.getFileSystem().getSeparator(), ""));
 					}
 				}
 			}
