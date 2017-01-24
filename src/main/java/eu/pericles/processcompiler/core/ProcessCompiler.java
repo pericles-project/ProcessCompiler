@@ -182,8 +182,13 @@ public class ProcessCompiler {
 			throw new PCException("Process flow is empty");
 		try {
 			for (String subprocessID : subprocessIDs) {
-				ProcessBase process = ermrCommunications.getProcessEntity(repository, subprocessID);
-				pcAggProcess.getSubprocesses().add(createPCProcess(repository, process));
+				if(ermrCommunications.isAggregatedProcess(repository, subprocessID)) {
+					AggregatedProcess process = getAggregatedProcess(repository, subprocessID);
+					pcAggProcess.getSubprocesses().add(createPCAggregatedProcess(repository, process));
+				} else {
+					ProcessBase process = getProcess(repository, subprocessID);
+					pcAggProcess.getSubprocesses().add(createPCProcess(repository, process));
+				}
 			}
 			List<PCDataConnection> connections = mapper.readValue(aggregatedProcess.getDataFlow(),
 					mapper.getTypeFactory().constructCollectionType(List.class, PCDataConnection.class));
@@ -215,8 +220,12 @@ public class ProcessCompiler {
 
 	private void validatePCAggregatedProcess(String repository, PCAggregatedProcess pcAggProcess)
 			throws ERMRClientException, PCException {
-		for (PCProcess pcProcess : pcAggProcess.getSubprocesses())
-			validatePCProcess(pcProcess);
+		for (PCProcess pcProcess : pcAggProcess.getSubprocesses()) {
+			if(pcProcess instanceof PCAggregatedProcess)
+				validatePCAggregatedProcess(repository, (PCAggregatedProcess) pcProcess);
+			else
+				validatePCProcess(pcProcess);
+		}
 		validateDataConnections(repository, pcAggProcess);
 	}
 
@@ -278,9 +287,11 @@ public class ProcessCompiler {
 
 		if (ermrCommunications.isAggregatedProcess(repository, processId)) {
 			AggregatedProcess ap = getAggregatedProcess(repository, processId);
+		
 			for (String sub : ap.getProcessFlow().split("\\s+")) {
 				compileRecursively(repository, sub, compilation);
 			}
+			
 			CompiledProcess cp = createCompiledProcess(repository, createPCAggregatedProcess(repository, ap));
 			log.info("Compiling (recusrively): {} from {}", id, processId);
 			compilation.put(id, compile(cp));
@@ -298,8 +309,14 @@ public class ProcessCompiler {
 		CompiledProcess compiledProcess = new CompiledProcess();
 		compiledProcess.setId(getLocalName(pcAggProcess.getId()));
 		compiledProcess.setName(pcAggProcess.getName());
-		for (PCProcess pcProcess : pcAggProcess.getSubprocesses())
+		for (PCProcess pcProcess : pcAggProcess.getSubprocesses()) {
+			if(pcProcess.getBpmnProcess() == null) {
+				BPMNProcess bpmn = new BPMNParser()
+						.parse(new ByteArrayInputStream(intermediateCompileResults.get(process.getId()).getBytes()));
+				pcProcess.setBpmnProcess(bpmn);
+			}
 			compiledProcess.getSubprocesses().add(new PCSubprocess(pcProcess.getBpmnProcess().getId()));
+		}
 		// Add input and output data objects
 		for (Slot slot : pcAggProcess.getSlots()) {
 			PCDataObject dataObject = new PCDataObject(getLocalName(slot.getId()), slot.getName(),
