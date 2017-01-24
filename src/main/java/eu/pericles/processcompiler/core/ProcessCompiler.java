@@ -278,12 +278,12 @@ public class ProcessCompiler {
 
 		if (ermrCommunications.isAggregatedProcess(repository, processId)) {
 			AggregatedProcess ap = getAggregatedProcess(repository, processId);
-			CompiledProcess cp = createCompiledProcess(repository, createPCAggregatedProcess(repository, ap));
-			log.info("Compiling (recusrively): {} from {}", id, processId);
-			compilation.put(id, compile(cp));
 			for (String sub : ap.getProcessFlow().split("\\s+")) {
 				compileRecursively(repository, sub, compilation);
 			}
+			CompiledProcess cp = createCompiledProcess(repository, createPCAggregatedProcess(repository, ap));
+			log.info("Compiling (recusrively): {} from {}", id, processId);
+			compilation.put(id, compile(cp));
 		} else {
 			ProcessBase p = getProcess(repository, processId);
 			log.info("Compiling: {} from {}", id, processId);

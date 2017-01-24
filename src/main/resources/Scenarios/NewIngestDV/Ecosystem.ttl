@@ -1,0 +1,147 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dem:  <http://www.pericles-project.eu/ns/dem#> .
+@prefix idv: <http://www.pericles-project.eu/ns/idv#> .
+
+#### New Ingest Digital Video - Aggregated Process: ingest digital video + backup ####
+
+idv:agpNewIngest a dem:AggregatedProcess ;
+  dem:name "New Ingest Digital Video" ;
+  dem:description "Aggregated process that ingest a digital video" ;
+  dem:version "1" ;
+  dem:hasInputSlot idv:isNewIngestDV, idv:isNewIngestRepo, idv:isNewIngestBackup ;
+  dem:processFlow "<http://www.pericles-project.eu/ns/idv#agpIngest> <http://www.pericles-project.eu/ns/idv#atpBackup>";
+  dem:dataFlow '[{"sourceProcess": 2, "sourceSlot": "<http://www.pericles-project.eu/ns/idv#isNewIngestDV>", "targetProcess": 0, "targetSlot": "<http://www.pericles-project.eu/ns/idv#isIngestDV>"} , {"sourceProcess": 2, "sourceSlot": "<http://www.pericles-project.eu/ns/idv#isNewIngestRepo>", "targetProcess": 0, "targetSlot": "<http://www.pericles-project.eu/ns/idv#isIngestRepo>"} , {"sourceProcess": 2, "sourceSlot": "<http://www.pericles-project.eu/ns/idv#isNewIngestDV>", "targetProcess": 1, "targetSlot": "<http://www.pericles-project.eu/ns/idv#isBackupDO>"} , {"sourceProcess": 2, "sourceSlot": "<http://www.pericles-project.eu/ns/idv#isNewIngestBackup>", "targetProcess": 1, "targetSlot": "<http://www.pericles-project.eu/ns/idv#isBackupRepo>"} ]' .
+
+idv:isNewIngestDV a dem:InputSlot ;
+  dem:name "InputSlot Digital Video" ;
+  dem:description "Input slot corresponding to the digital video to be ingested" ;
+  dem:version "1" ;
+  dem:dataType idv:DigitalVideo ;
+  dem:isOptional "false" .
+
+idv:isNewIngestRepo a dem:InputSlot ;
+  dem:name "InputSlot Repository" ;
+  dem:description "Input slot corresponding to the repository where the digital video is stored" ;
+  dem:version "1" ;
+  dem:dataType idv:Repository ;
+  dem:isOptional "false" .
+
+idv:isNewIngestBackup a dem:InputSlot ;
+  dem:name "InputSlot Backup Repository" ;
+  dem:description "Input slot corresponding to the repository where the digital video is backuped" ;
+  dem:version "1" ;
+  dem:dataType idv:Repository ;
+  dem:isOptional "false" .
+
+#### Ingest Digital Video - Aggregated Process: transcode video + store ####
+
+idv:agpIngest a dem:AggregatedProcess ;
+  dem:name "Ingest Digital Video" ;
+  dem:description "Aggregated process that ingest a digital video" ;
+  dem:version "1" ;
+  dem:hasInputSlot idv:isIngestDV, idv:isIngestRepo ;
+  dem:processFlow "<http://www.pericles-project.eu/ns/idv#atpTranscode> <http://www.pericles-project.eu/ns/idv#atpStore>";
+  dem:dataFlow '[{"sourceProcess": 2, "sourceSlot": "<http://www.pericles-project.eu/ns/idv#isIngestDV>", "targetProcess": 0, "targetSlot": "<http://www.pericles-project.eu/ns/idv#isTranscodeDV>"} , {"sourceProcess": 2, "sourceSlot": "<http://www.pericles-project.eu/ns/idv#isIngestDV>", "targetProcess": 1, "targetSlot": "<http://www.pericles-project.eu/ns/idv#isStoreDO>"} , {"sourceProcess": 2, "sourceSlot": "<http://www.pericles-project.eu/ns/idv#isIngestRepo>", "targetProcess": 1, "targetSlot": "<http://www.pericles-project.eu/ns/idv#isStoreRepo>"}]' .
+
+idv:isIngestDV a dem:InputSlot ;
+  dem:name "InputSlot Digital Video" ;
+  dem:description "Input slot corresponding to the digital video to be ingested" ;
+  dem:version "1" ;
+  dem:dataType idv:DigitalVideo ;
+  dem:isOptional "false" .
+
+idv:isIngestRepo a dem:InputSlot ;
+  dem:name "InputSlot Repository" ;
+  dem:description "Input slot corresponding to the repository where the digital video is stored" ;
+  dem:version "1" ;
+  dem:dataType idv:Repository ;
+  dem:isOptional "false" .
+
+#### Transcode - Atomic Process ####
+
+idv:atpTranscode a dem:AtomicProcess ;
+  dem:name "Transcode Digital Video" ;
+  dem:description "Atomic process that transcode a digital video to a specific codec format" ;
+  dem:version "1" ;
+  dem:hasInputSlot idv:isTranscodeDV ;
+  dem:hasImplementation idv:impTranscode .
+
+idv:isTranscodeDV a dem:InputSlot ;
+  dem:name "InputSlot Input Digital Video" ;
+  dem:description "Input slot corresponding to the digital video to be transcoded" ;
+  dem:version "1" ;
+  dem:dataType idv:DigitalVideo ;
+  dem:isOptional "false" .
+
+idv:impTranscode a dem:Implementation ;
+  dem:version "1" ;
+  dem:implementationType "BPMN" ;
+  dem:location "Transcode.bpmn" ;
+  dem:checksum "".
+
+#### Store - Atomic Process ####
+
+idv:atpStore a dem:AtomicProcess ;
+  dem:name "Store Digital Object" ;
+  dem:description "Atomic process that stores a digital object" ;
+  dem:version "1" ;
+  dem:hasInputSlot idv:isStoreDO, idv:isStoreRepo ;
+  dem:hasImplementation idv:impStore .
+
+idv:isStoreDO a dem:InputSlot ;
+  dem:name "InputSlot Digital Object" ;
+  dem:description "Input slot corresponding to the digital object to be stored" ;
+  dem:version "1" ;
+  dem:dataType idv:DigitalObject ;
+  dem:isOptional "false" .
+
+idv:isStoreRepo a dem:InputSlot ;
+  dem:name "InputSlot Repository" ;
+  dem:description "Input slot corresponding to the repository where the digital object is stored" ;
+  dem:version "1" ;
+  dem:dataType idv:Repository ;
+  dem:isOptional "false" .
+
+idv:impStore a dem:Implementation ;
+  dem:version "1" ;
+  dem:implementationType "BPMN" ;
+  dem:location "Store.bpmn" ;
+  dem:checksum "" .
+
+#### Backup - Atomic Process ####
+
+idv:atpBackup a dem:AtomicProcess ;
+  dem:name "Backup Digital Object" ;
+  dem:description "Atomic process that backups a digital object" ;
+  dem:version "1" ;
+  dem:hasInputSlot idv:isBackupDO, idv:isBackupRepo ;
+  dem:hasImplementation idv:impBackup .
+
+idv:isBackupDO a dem:InputSlot ;
+  dem:name "InputSlot Digital Object" ;
+  dem:description "Input slot corresponding to the digital object to be backuped" ;
+  dem:version "1" ;
+  dem:dataType idv:DigitalObject ;
+  dem:isOptional "false" .
+
+idv:isBackupRepo a dem:InputSlot ;
+  dem:name "InputSlot Repository" ;
+  dem:description "Input slot corresponding to the repository where the digital object is backuped" ;
+  dem:version "1" ;
+  dem:dataType idv:Repository ;
+  dem:isOptional "false" .
+
+idv:impBackup a dem:Implementation ;
+  dem:version "1" ;
+  dem:implementationType "BPMN" ;
+  dem:location "Backup.bpmn" ;
+  dem:checksum "" .
+
+### Classes and Subclasses ###
+
+idv:DigitalObject a dem:DigitalObject .
+idv:DigitalVideo rdfs:subClassOf idv:DigitalObject .
+idv:Repository rdfs:subClassOf dem:TechnicalService .
