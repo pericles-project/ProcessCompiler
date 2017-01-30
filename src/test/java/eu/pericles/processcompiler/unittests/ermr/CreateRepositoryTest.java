@@ -14,7 +14,8 @@ public class CreateRepositoryTest {
 
 	@Test
 	public void createRepository() throws ERMRClientException  {
-		Response response = new ERMRClientAPI().createRepository(repository);
+		String service = System.getenv("ERMR_URL");
+		Response response = new ERMRClientAPI(service).createRepository(repository);
 		System.out.println("Create Repository: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(201, response.getStatus());
 	}

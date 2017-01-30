@@ -14,7 +14,8 @@ public class DeleteDigitalObjectTest {
 
 	@Test
 	public void deleteDigitalObject() throws ERMRClientException {
-		Response response = new ERMRClientAPI().deleteDigitalObject(digitalObjectPath);
+		String service = System.getenv("ERMR_URL");
+		Response response = new ERMRClientAPI(service).deleteDigitalObject(digitalObjectPath);
 		System.out.println("Delete Digital Object: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(204, response.getStatus());
 	}

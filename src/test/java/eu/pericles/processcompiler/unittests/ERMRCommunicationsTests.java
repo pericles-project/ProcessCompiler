@@ -31,7 +31,6 @@ import eu.pericles.processcompiler.testutils.Utils;
 
 public class ERMRCommunicationsTests {
 
-	static String service = "https://pericles1:PASSWORD@141.5.100.67/api";
 	static String collection = "NoaCollection/Test/";
 	static String repository = "NoaRepositoryTest";
 	static String ecosystem = "src/test/resources/ingest_sba/Ecosystem.ttl";
@@ -41,17 +40,19 @@ public class ERMRCommunicationsTests {
 
 	private String[] digObjects = { "VirusCheck.bpmn", "ExtractMD.bpmn", "EncapsulateDOMD.bpmn" };
 
+	private String service;
 	private AggregatedProcess expectedAggregatedProcess;
 	private ProcessBase expectedProcess;
 
 	@Before
 	public void setRepository() {
 		try {
+			service = System.getenv("ERMR_URL");
 			ERMRClientAPI client = new ERMRClientAPI(service);
 			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
 			assertEquals(201, response.getStatus());
 			for (int i = 0; i < digObjects.length; i++) {
-				response = new ERMRClientAPI().createDigitalObject(collection + digObjects[i], doPath + digObjects[i], doMediaType);
+				response = new ERMRClientAPI(service).createDigitalObject(collection + digObjects[i], doPath + digObjects[i], doMediaType);
 				assertEquals(201, response.getStatus());
 			}
 		} catch (ERMRClientException e) {
@@ -66,7 +67,7 @@ public class ERMRCommunicationsTests {
 			Response response = client.deleteTriples(repository);
 			assertEquals(204, response.getStatus());
 			for (int i = 0; i < digObjects.length; i++) {
-				response = new ERMRClientAPI().deleteDigitalObject(collection + digObjects[i]);
+				response = new ERMRClientAPI(service).deleteDigitalObject(collection + digObjects[i]);
 				assertEquals(204, response.getStatus());
 			}
 		} catch (ERMRClientException e) {
@@ -86,7 +87,7 @@ public class ERMRCommunicationsTests {
 	public void getImplementationEntity() {
 		String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#impExtractMD>";
 		try {
-			Implementation implementation = new ERMRCommunications().getImplementationEntity(repository, uri);
+			Implementation implementation = new ERMRCommunications(service).getImplementationEntity(repository, uri);
 			assertEquals(expectedProcess.getImplementation(), implementation);
 		} catch (Exception e) {
 			fail("getImplementation(): " + e.getMessage());
@@ -97,7 +98,7 @@ public class ERMRCommunicationsTests {
 	public void getInputSlotEntity() {
 		String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWAW>";
 		try {
-			InputSlot inputSlot = new ERMRCommunications().getInputSlotEntity(repository, uri);
+			InputSlot inputSlot = new ERMRCommunications(service).getInputSlotEntity(repository, uri);
 			assertEquals(expectedAggregatedProcess.getInputSlots().get(0), inputSlot);
 		} catch (Exception e) {
 			fail("getInputSlot(): " + e.getMessage());
@@ -108,7 +109,7 @@ public class ERMRCommunicationsTests {
 	public void getOutputSlotEntity() {
 		String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#osIngestAWSWP>";
 		try {
-			OutputSlot outputSlot = new ERMRCommunications().getOutputSlotEntity(repository, uri);
+			OutputSlot outputSlot = new ERMRCommunications(service).getOutputSlotEntity(repository, uri);
 			assertEquals(expectedAggregatedProcess.getOutputSlots().get(0), outputSlot);
 		} catch (Exception e) {
 			fail("getOutputSlot(): " + e.getMessage());
@@ -119,7 +120,7 @@ public class ERMRCommunicationsTests {
 	public void getInputSlotURIList() {
 		String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
 		try {
-			List<String> inputSlotURIList = new ERMRCommunications().getInputSlotURIList(repository, uri);
+			List<String> inputSlotURIList = new ERMRCommunications(service).getInputSlotURIList(repository, uri);
 			assertEquals("<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWAW>", inputSlotURIList.get(0));
 			assertEquals("<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWPF>", inputSlotURIList.get(1));
 		} catch (Exception e) {
@@ -131,7 +132,7 @@ public class ERMRCommunicationsTests {
 	public void getOutputSlotURIList() {
 		String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
 		try {
-			List<String> outputSlotURIList = new ERMRCommunications().getOutputSlotURIList(repository, uri);
+			List<String> outputSlotURIList = new ERMRCommunications(service).getOutputSlotURIList(repository, uri);
 			assertEquals("<http://www.pericles-project.eu/ns/ingest-scenario#osIngestAWSWP>", outputSlotURIList.get(0));
 		} catch (Exception e) {
 			fail("getOutputSlotURIs(): " + e.getMessage());
@@ -142,7 +143,7 @@ public class ERMRCommunicationsTests {
 	public void getImplementationURI() {
 		String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#atpExtractMD>";
 		try {
-			String implementationURI = new ERMRCommunications().getImplementationURI(repository, uri);
+			String implementationURI = new ERMRCommunications(service).getImplementationURI(repository, uri);
 			assertEquals(expectedProcess.getImplementation().getId(), implementationURI);
 		} catch (Exception e) {
 			fail("getImplementationURI(): " + e.getMessage());
@@ -153,7 +154,7 @@ public class ERMRCommunicationsTests {
 	public void getProcessAttributes() {
 		String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
 		try {
-			ProcessBase process = new ERMRCommunications().getProcessAttributes(repository, uri);
+			ProcessBase process = new ERMRCommunications(service).getProcessAttributes(repository, uri);
 			assertEquals(expectedAggregatedProcess.getId(), process.getId());
 			assertEquals(expectedAggregatedProcess.getName(), process.getName());
 			assertEquals(expectedAggregatedProcess.getDescription(), process.getDescription());
@@ -167,7 +168,7 @@ public class ERMRCommunicationsTests {
 	public void getProcessEntity() {
 		String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#atpExtractMD>";
 		try {
-			ProcessBase process = new ERMRCommunications().getProcessEntity(repository, uri);
+			ProcessBase process = new ERMRCommunications(service).getProcessEntity(repository, uri);
 			assertEquals(expectedProcess, process);
 		} catch (Exception e) {
 			fail("getProcessEntity(): " + e.getMessage());
@@ -178,7 +179,7 @@ public class ERMRCommunicationsTests {
 	public void getProcessFlow() {
 		String uriAGP = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
 		try {
-			String type = new ERMRCommunications().getProcessFlow(repository, uriAGP);
+			String type = new ERMRCommunications(service).getProcessFlow(repository, uriAGP);
 			assertEquals(expectedAggregatedProcess.getProcessFlow(), type);
 		} catch (Exception e) {
 			fail("getProcessType(): " + e.getMessage());
@@ -189,7 +190,7 @@ public class ERMRCommunicationsTests {
 	public void getDataFlow() {
 		String uriAGP = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
 		try {
-			String type = new ERMRCommunications().getDataFlow(repository, uriAGP);
+			String type = new ERMRCommunications(service).getDataFlow(repository, uriAGP);
 			assertEquals(expectedAggregatedProcess.getDataFlow(), type);
 		} catch (Exception e) {
 			fail("getProcessType(): " + e.getMessage());
@@ -200,7 +201,7 @@ public class ERMRCommunicationsTests {
 	public void getAggregatedProcessEntity() {
 		String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
 		try {
-			AggregatedProcess process = new ERMRCommunications().getAggregatedProcessEntity(repository, uri);
+			AggregatedProcess process = new ERMRCommunications(service).getAggregatedProcessEntity(repository, uri);
 			assertEquals(expectedAggregatedProcess, process);
 		} catch (Exception e) {
 			fail("getAggregatedProcessEntity(): " + e.getMessage());
@@ -211,7 +212,7 @@ public class ERMRCommunicationsTests {
 	public void getImplementationFile() {
 		String uri = collection + "VirusCheck.bpmn";
 		try {
-			InputStream inputStream = new ERMRCommunications().getImplementationFile(uri);
+			InputStream inputStream = new ERMRCommunications(service).getImplementationFile(uri);
 			InputStream expectedStream = new FileInputStream(new File("src/test/resources/ingest_sba/VirusCheck.bpmn"));
 			assertTrue(IOUtils.contentEquals(expectedStream, inputStream));
 		} catch (Exception e) {

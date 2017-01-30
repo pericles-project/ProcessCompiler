@@ -1,6 +1,5 @@
 package eu.pericles.processcompiler.web.resources;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -12,10 +11,9 @@ import javax.ws.rs.Produces;
 import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.core.ProcessCompiler.ValidationResult;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
-import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.exceptions.BaseException;
+import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.web.ApiException;
-import eu.pericles.processcompiler.web.resources.BaseResource.BaseRequestBean;
 
 @Path("/validate_aggregation")
 @Consumes("application/json")

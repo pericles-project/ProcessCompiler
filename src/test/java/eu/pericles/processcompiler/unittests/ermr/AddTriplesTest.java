@@ -16,7 +16,8 @@ public class AddTriplesTest {
 
 	@Test
 	public void addTriples() throws ERMRClientException   {
-		Response response = new ERMRClientAPI().addTriples(repository, triples, mediaType);
+		String service = System.getenv("ERMR_URL");
+		Response response = new ERMRClientAPI(service).addTriples(repository, triples, mediaType);
 		System.out.println("Add Triples: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(201, response.getStatus());
 		if (response.getStatus() != 201)

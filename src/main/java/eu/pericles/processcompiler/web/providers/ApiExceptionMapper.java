@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.pericles.processcompiler.web.ApiException;
-import eu.pericles.processcompiler.web.resources.BaseResource;
 
 @Provider
 public class ApiExceptionMapper implements ExceptionMapper<ApiException> {

@@ -34,7 +34,7 @@ public class ERMRClientAPITests {
 	static String rdfTriples = "src/test/resources/ermr/RDFTriples.ttl";
 	static String expectedTriples = "src/test/resources/ermr/ExpectedTriples.txt";
 	static String expectedQueryResult = "src/test/resources/ermr/ExpectedQueryResult.txt";
-	static String query = "select%20?s%20?p%20?o%20%7B?s%20?p%20?o%7D";
+	static String query = "SELECT DISTINCT ?p ?o WHERE {<http://www.pericles-project.eu/ns/ecosystem#fixHelloWorld> ?p ?o . }";//"select%20?s%20?p%20?o%20%7B?s%20?p%20?o%7D";
 	static String doType = MediaType.APPLICATION_XML;
 	static String textPlain = MediaType.TEXT_PLAIN;
 	static String ttl = "text/turtle";

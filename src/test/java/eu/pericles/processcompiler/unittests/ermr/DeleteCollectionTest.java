@@ -14,7 +14,8 @@ public class DeleteCollectionTest {
 
 	@Test
 	public void deleteCollection() throws ERMRClientException  {
-		Response response = new ERMRClientAPI().deleteCollection(collection);
+		String service = System.getenv("ERMR_URL");
+		Response response = new ERMRClientAPI(service).deleteCollection(collection);
 		System.out.println("Delete Collection: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(204, response.getStatus());
 	}

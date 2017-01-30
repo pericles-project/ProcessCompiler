@@ -14,7 +14,8 @@ public class GetRepositoryTest {
 
 	@Test
 	public void getRepository() throws ERMRClientException {
-		Response response = new ERMRClientAPI().getRepository(repository);
+		String service = System.getenv("ERMR_URL");
+		Response response = new ERMRClientAPI(service).getRepository(repository);
 		System.out.println("Get Repository: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(200, response.getStatus());
 		if (response.getStatus() != 200)

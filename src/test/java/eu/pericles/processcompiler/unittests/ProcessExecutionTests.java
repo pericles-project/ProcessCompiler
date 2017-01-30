@@ -46,7 +46,6 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 	private RuntimeEngine engine;
 	private RuntimeManager manager;
 
-	private String service = "https://pericles1:PASSWORD@141.5.100.67/api";
 	static String collection = "NoaCollection/Test/";
 	static String repository = "NoaRepositoryTest";
 	static String ecosystem = "src/test/resources/ingest_sba/Ecosystem.ttl";
@@ -55,15 +54,17 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 	static String doPath = "src/test/resources/ingest_sba/";
 	
 	private String[] digObjects = {"VirusCheck.bpmn", "ExtractMD.bpmn", "EncapsulateDOMD.bpmn"};
+	private String service;
 
 	@Before
 	public void setRepository() {
 		try {
+			service = System.getenv("ERMR_URL");
 			ERMRClientAPI client = new ERMRClientAPI(service);
 			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
 			assertEquals(201, response.getStatus());
 			for (int i=0; i<digObjects.length; i++) {
-				response = new ERMRClientAPI().createDigitalObject(collection + digObjects[i], doPath + digObjects[i], doMediaType);
+				response = new ERMRClientAPI(service).createDigitalObject(collection + digObjects[i], doPath + digObjects[i], doMediaType);
 				assertEquals(201, response.getStatus());
 			}
 		} catch (ERMRClientException e) {
@@ -78,7 +79,7 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 			Response response = client.deleteTriples(repository);
 			assertEquals(204, response.getStatus());
 			for (int i=0; i<digObjects.length; i++) {
-			response = new ERMRClientAPI().deleteDigitalObject(collection + digObjects[i]);
+			response = new ERMRClientAPI(service).deleteDigitalObject(collection + digObjects[i]);
 			assertEquals(204, response.getStatus());
 			}
 		} catch (ERMRClientException e) {
@@ -129,7 +130,7 @@ public class ProcessExecutionTests extends JbpmJUnitBaseTestCase {
 		try {
 			String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
 			String outputFile = "src/test/resources/jbpm/output_IngestAWSW.bpmn";
-			AggregatedProcess aggregatedProcess = new ERMRCommunications().getAggregatedProcessEntity(repository, uri);
+			AggregatedProcess aggregatedProcess = new ERMRCommunications(service).getAggregatedProcessEntity(repository, uri);
 			String result = new ProcessCompiler(service).compile(repository, aggregatedProcess);
 			FileUtils.writeStringToFile(new File(outputFile), result);
 

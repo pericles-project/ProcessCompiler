@@ -61,5 +61,7 @@ public interface ERMRComm {
 	boolean isSubclass(String repository, String parentClass, String childClass) throws ERMRClientException;
 
 	boolean isAggregatedProcess(String repository, String processId) throws ERMRClientException;
+	
+	boolean existsEntity(String repository, String entityId);
 
 }

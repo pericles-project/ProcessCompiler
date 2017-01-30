@@ -8,13 +8,10 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import com.google.inject.Inject;
-
 import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
-import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.exceptions.BaseException;
-import eu.pericles.processcompiler.web.ApiApplication.ERMRConfig;
+import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.web.ApiException;
 
 @Path("/compile")

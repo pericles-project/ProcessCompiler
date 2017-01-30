@@ -19,7 +19,8 @@ public class GetDigitalObjectTest {
 
 	@Test
 	public void getDigitalObject() throws IOException, ERMRClientException {
-		Response response = new ERMRClientAPI().getDigitalObject(digitalObjectPath);
+		String service = System.getenv("ERMR_URL");
+		Response response = new ERMRClientAPI(service).getDigitalObject(digitalObjectPath);
 		System.out.println("Get Digital Object: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(200, response.getStatus());
 		assertEquals(FileUtils.readFileToString(new File(digitalObject)), response.readEntity(String.class));

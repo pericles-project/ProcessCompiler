@@ -20,8 +20,9 @@ public class QueryRepositoryTest {
 
 	@Test
 	public void query() throws ERMRClientException, IOException  {
-		Response response = new ERMRClientAPI().query(repository, query);
-		System.out.println("Query: " + response.getStatus() + " " + response.getStatusInfo());
+		String service = System.getenv("ERMR_URL");
+		Response response = new ERMRClientAPI(service).query(repository, query);
+		System.out.println("Query Response: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(200, response.getStatus());
 		assertEquals(FileUtils.readFileToString(new File(expectedResult)), response.readEntity(String.class));
 		if (response.getStatus() != 200)

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<definitions id="Definitions_2" targetNamespace="http://camunda.org/examples" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+<definitions xmlns:ns0="http://www.jboss.org/drools" id="Definitions_2" targetNamespace="http://camunda.org/examples" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
   <process id="agpIngestAWSW" name="Ingest Artwork Software" processType="Private">
+    <extensionElements>
+      <ns0:global identifier="log" type="java.io.PrintStream"/>
+    </extensionElements>
     <startEvent id="StartEvent_3">
       <outgoing>StartEvent_3-CallActivity_13</outgoing>
     </startEvent>
@@ -55,8 +58,8 @@
       <outgoing>CallActivity_27-EndEvent_4</outgoing>
       <ioSpecification id="IoSpecification_28">
         <dataInput id="DataInput_31" itemSubjectRef="ItemDefinition_11" name="isEncapsulateDOMDMD"/>
-        <dataInput id="DataInput_33" itemSubjectRef="ItemDefinition_7" name="isEncapsulateDOMDPF"/>
-        <dataInput id="DataInput_35" itemSubjectRef="ItemDefinition_5" name="isEncapsulateDOMDDO"/>
+        <dataInput id="DataInput_33" itemSubjectRef="ItemDefinition_5" name="isEncapsulateDOMDDO"/>
+        <dataInput id="DataInput_35" itemSubjectRef="ItemDefinition_7" name="isEncapsulateDOMDPF"/>
         <dataOutput id="DataOutput_37" itemSubjectRef="ItemDefinition_9" name="osEncapsulateDOMDP"/>
         <inputSet id="InputSet_29">
           <dataInputRefs>DataInput_31</dataInputRefs>
@@ -72,11 +75,11 @@
         <targetRef>DataInput_31</targetRef>
       </dataInputAssociation>
       <dataInputAssociation id="DataInputAssociation_34">
-        <sourceRef>isIngestAWSWPF</sourceRef>
+        <sourceRef>isIngestAWSWAW</sourceRef>
         <targetRef>DataInput_33</targetRef>
       </dataInputAssociation>
       <dataInputAssociation id="DataInputAssociation_36">
-        <sourceRef>isIngestAWSWAW</sourceRef>
+        <sourceRef>isIngestAWSWPF</sourceRef>
         <targetRef>DataInput_35</targetRef>
       </dataInputAssociation>
       <dataOutputAssociation id="DataOutputAssociation_38">

@@ -14,7 +14,8 @@ public class GetCollectionTest {
 
 	@Test
 	public void getCollection() throws ERMRClientException  {
-		Response response = new ERMRClientAPI().getCollection(collection);
+		String service = System.getenv("ERMR_URL");
+		Response response = new ERMRClientAPI(service).getCollection(collection);
 		System.out.println("Get Collection: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(200, response.getStatus());
 	}

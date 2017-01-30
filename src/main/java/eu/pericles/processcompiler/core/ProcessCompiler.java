@@ -182,7 +182,9 @@ public class ProcessCompiler {
 			throw new PCException("Process flow is empty");
 		try {
 			for (String subprocessID : subprocessIDs) {
-				if(ermrCommunications.isAggregatedProcess(repository, subprocessID)) {
+				if (!ermrCommunications.existsEntity(repository, subprocessID))
+					throw new PCException("Process " + subprocessID + " is bad defined or missing");				
+				if (ermrCommunications.isAggregatedProcess(repository, subprocessID)) {
 					AggregatedProcess process = getAggregatedProcess(repository, subprocessID);
 					pcAggProcess.getSubprocesses().add(createPCAggregatedProcess(repository, process));
 				} else {
@@ -293,7 +295,7 @@ public class ProcessCompiler {
 			}
 			
 			CompiledProcess cp = createCompiledProcess(repository, createPCAggregatedProcess(repository, ap));
-			log.info("Compiling (recusrively): {} from {}", id, processId);
+			log.info("Compiling (recursively): {} from {}", id, processId);
 			compilation.put(id, compile(cp));
 		} else {
 			ProcessBase p = getProcess(repository, processId);

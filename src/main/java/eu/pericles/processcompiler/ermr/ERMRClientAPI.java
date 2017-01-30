@@ -27,10 +27,13 @@ import eu.pericles.processcompiler.exceptions.ERMRClientException;
 public class ERMRClientAPI {
 
 	Client client;
-	private URI tripleStore = URI.create("https://pericles1:PASSWORD@141.5.100.67/api/triple");
-	private URI objectStore = URI.create("https://pericles1:PASSWORD@141.5.100.67/api/cdmi");
+	private URI tripleStore;
+	private URI objectStore;
 
-	public ERMRClientAPI() throws ERMRClientException {
+	public ERMRClientAPI(String service) throws ERMRClientException {
+		this.tripleStore = URI.create(service + "/triple");
+		this.objectStore = URI.create(service + "/cdmi");
+
 		client = createClient();
 	}
 
@@ -41,13 +44,6 @@ public class ERMRClientAPI {
 		} catch (Exception e) {
 			throw new ERMRClientException("Error when creating the ERMR client API: " + e.getMessage());
 		}
-	}
-
-	public ERMRClientAPI(String service) throws ERMRClientException {
-		this.tripleStore = URI.create(service + "/triple");
-		this.objectStore = URI.create(service + "/cdmi");
-
-		client = createClient();
 	}
 
 	public Builder getTripleStoreBuilder(URI target, String path) {

@@ -25,7 +25,7 @@ public class CLITests {
 	private PrintStream defaultErrorStream;
 	private ByteArrayOutputStream errorStream;
 	
-	private String baseArgs = "-s https://pericles1:PASSWORD@141.5.100.67/api -r NoaRepositoryTest ";
+	//private String baseArgs = "-s https://pericles1:PASSWORD@141.5.100.67/api -r NoaRepositoryTest ";
 	
 	static String collection = "NoaCollection/Test/";
 	static String repository = "NoaRepositoryTest";
@@ -37,14 +37,19 @@ public class CLITests {
 	
 	private String[] digObjects = {"VirusCheck.bpmn", "ExtractMD.bpmn", "EncapsulateDOMD.bpmn"};
 
+	private String service;
+	private String baseArgs;
+
 	@Before
 	public void setRepository() {
 		try {
-			ERMRClientAPI client = new ERMRClientAPI();
+			service = System.getenv("ERMR_URL");
+			baseArgs = "-s " + service + " -r NoaRepositoryTest ";
+			ERMRClientAPI client = new ERMRClientAPI(service);
 			Response response = client.addTriples(repository, ecosystem, triplesMediaType);
 			assertEquals(201, response.getStatus());
-			for (int i=0; i<digObjects.length; i++) {
-				response = new ERMRClientAPI().createDigitalObject(collection + digObjects[i], doPath + digObjects[i], doMediaType);
+			for (int i = 0; i < digObjects.length; i++) {
+				response = new ERMRClientAPI(service).createDigitalObject(collection + digObjects[i], doPath + digObjects[i], doMediaType);
 				assertEquals(201, response.getStatus());
 			}
 		} catch (ERMRClientException e) {
@@ -55,12 +60,12 @@ public class CLITests {
 	@After
 	public void deleteRepository() {
 		try {
-			ERMRClientAPI client = new ERMRClientAPI();
+			ERMRClientAPI client = new ERMRClientAPI(service);
 			Response response = client.deleteTriples(repository);
 			assertEquals(204, response.getStatus());
-			for (int i=0; i<digObjects.length; i++) {
-			response = new ERMRClientAPI().deleteDigitalObject(collection + digObjects[i]);
-			assertEquals(204, response.getStatus());
+			for (int i = 0; i < digObjects.length; i++) {
+				response = new ERMRClientAPI(service).deleteDigitalObject(collection + digObjects[i]);
+				assertEquals(204, response.getStatus());
 			}
 		} catch (ERMRClientException e) {
 			fail("deleteRepository(): " + e.getMessage());
@@ -91,7 +96,7 @@ public class CLITests {
 		
 		String result = errorStream.toString();
 		defaultErrorStream.println(result);
-		assertEquals("usage: modelcompiler -s URL -r REPO validate_implementation [-h] PROC IMPL\nmodelcompiler: error: too few arguments\n",result);
+		assertEquals("usage: modelcompiler validate_implementation [-h] PROC IMPL\nmodelcompiler: error: too few arguments\n",result);
 	}
 
 	@Test

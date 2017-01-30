@@ -14,7 +14,8 @@ public class CreateCollectionTest {
 
 	@Test
 	public void createCollection() throws ERMRClientException {
-		Response response = new ERMRClientAPI().createCollection(collection);
+		String service = System.getenv("ERMR_URL");
+		Response response = new ERMRClientAPI(service).createCollection(collection);
 		System.out.println("Create Collection: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(201, response.getStatus());
 	}

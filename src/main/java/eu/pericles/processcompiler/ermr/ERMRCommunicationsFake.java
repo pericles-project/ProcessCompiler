@@ -267,10 +267,6 @@ public class ERMRCommunicationsFake implements ERMRComm {
 		return null;
 	}
 
-	public boolean isAggregatedProcess(String repository, String uri) throws ERMRClientException {
-		return getEntityTypeURI(repository, uri).contains("AggregatedProcess");
-	}
-
 	@Override
 	public String getEntityTypeURI(String repository, String uri) throws ERMRClientException {
 		for (QuerySolution x : query(SPARQLQuery.createQueryGetEntityTypeURI(uri))) {
@@ -297,6 +293,22 @@ public class ERMRCommunicationsFake implements ERMRComm {
 			childClass = getParentEntityURI(repository, childClass);
 		}
 		return false;
+	}
+
+	public boolean isAggregatedProcess(String repository, String uri) throws ERMRClientException {
+		return getEntityTypeURI(repository, uri).contains("AggregatedProcess");
+	}
+	
+	@Override
+	public boolean existsEntity(String repository, String entityId) {
+		try {
+			if (getEntityTypeURI(repository, entityId) != null)
+				return true;
+			else
+				return false;
+		} catch (ERMRClientException e) {
+			return false;
+		}
 	}
 
 	@Override

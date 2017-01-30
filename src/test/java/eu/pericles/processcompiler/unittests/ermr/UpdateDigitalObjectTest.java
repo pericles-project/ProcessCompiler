@@ -17,7 +17,8 @@ public class UpdateDigitalObjectTest {
 
 	@Test
 	public void updateDigitalObject() throws ERMRClientException  {
-		Response response = new ERMRClientAPI().updateDigitalObject(digitalObjectPath, digitalObject, mediaType);
+		String service = System.getenv("ERMR_URL");
+		Response response = new ERMRClientAPI(service).updateDigitalObject(digitalObjectPath, digitalObject, mediaType);
 		System.out.println("Update Digital Object: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(204, response.getStatus());
 	}

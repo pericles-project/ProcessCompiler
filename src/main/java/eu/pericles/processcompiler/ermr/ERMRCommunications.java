@@ -18,10 +18,6 @@ public class ERMRCommunications implements ERMRComm {
 
 	private ERMRClientAPI client;
 
-	public ERMRCommunications() throws ERMRClientException {
-		client = new ERMRClientAPI();
-	}
-
 	public ERMRCommunications(String service) throws ERMRClientException {
 		client = new ERMRClientAPI(service);
 	}
@@ -243,9 +239,27 @@ public class ERMRCommunications implements ERMRComm {
 		return response;
 	}
 
+	/* (non-Javadoc)
+	 * @see eu.pericles.processcompiler.ermr.ERMRComm#isAggregatedProcess(java.lang.String, java.lang.String, java.lang.String)
+	 */
 	@Override
 	public boolean isAggregatedProcess(String repository, String processId) throws ERMRClientException {
 		return getEntityTypeURI(repository, processId).contains("AggregatedProcess");
+	}
+	
+	/* (non-Javadoc)
+	 * @see eu.pericles.processcompiler.ermr.ERMRComm#existsEntity(java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public boolean existsEntity(String repository, String entityId) {
+		try {
+			if (getEntityTypeURI(repository, entityId) != null)
+				return true;
+			else
+				return false;
+		} catch (ERMRClientException e) {
+			return false;
+		}
 	}
 
 }

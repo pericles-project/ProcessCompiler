@@ -13,9 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
-import eu.pericles.processcompiler.web.ApiApplication.ERMRConfig;
-import eu.pericles.processcompiler.web.providers.TemplateBodyWriter;
-import eu.pericles.processcompiler.web.resources.BaseResource;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapperBuilder;
 

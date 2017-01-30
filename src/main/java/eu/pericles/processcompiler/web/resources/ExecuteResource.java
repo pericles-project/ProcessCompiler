@@ -4,22 +4,17 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 import org.kie.api.KieBase;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.process.ProcessInstance;
 import org.kie.internal.utils.KieHelper;
-import org.slf4j.Logger;
 
 import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.ecosystem.AggregatedProcess;
@@ -76,7 +71,7 @@ public class ExecuteResource extends BaseResource {
 			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 			PrintStream printer = new PrintStream(buffer);
 			kieSession.setGlobal("log", printer);
-			ProcessInstance i = kieSession.startProcess(compiler.getLocalName(request.id), params);
+			kieSession.startProcess(compiler.getLocalName(request.id), params);
 			printer.flush();
 			return buffer.toByteArray();
 

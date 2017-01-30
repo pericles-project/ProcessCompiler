@@ -14,7 +14,8 @@ public class DeleteTriplesTest {
 
 	@Test
 	public void deleteTriples() throws ERMRClientException  {
-		Response response = new ERMRClientAPI().deleteTriples(repository);
+		String service = System.getenv("ERMR_URL");
+		Response response = new ERMRClientAPI(service).deleteTriples(repository);
 		System.out.println("Delete Triples: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(204, response.getStatus());
 	}

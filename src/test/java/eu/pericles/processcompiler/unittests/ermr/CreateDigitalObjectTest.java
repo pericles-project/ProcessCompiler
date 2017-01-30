@@ -18,7 +18,8 @@ public class CreateDigitalObjectTest {
 
 	@Test
 	public void createDigitalObject() throws IOException, ERMRClientException {
-		Response response = new ERMRClientAPI().createDigitalObject(digitalObjectPath, digitalObject, mediaType);
+		String service = System.getenv("ERMR_URL");
+		Response response = new ERMRClientAPI(service).createDigitalObject(digitalObjectPath, digitalObject, mediaType);
 		System.out.println("Create Digital Object: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(201, response.getStatus());
 	}

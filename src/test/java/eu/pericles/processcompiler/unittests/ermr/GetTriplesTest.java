@@ -19,7 +19,8 @@ public class GetTriplesTest {
 
 	@Test
 	public void getTriples() throws  IOException, ERMRClientException {
-		Response response = new ERMRClientAPI().getTriples(repository);
+		String service = System.getenv("ERMR_URL");
+		Response response = new ERMRClientAPI(service).getTriples(repository);
 		System.out.println("Get Triples: " + response.getStatus() + " " + response.getStatusInfo());
 		assertEquals(200, response.getStatus());
 		assertEquals(FileUtils.readFileToString(new File(triples)), response.readEntity(String.class));

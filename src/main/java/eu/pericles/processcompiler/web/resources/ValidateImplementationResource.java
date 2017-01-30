@@ -14,10 +14,9 @@ import eu.pericles.processcompiler.bpmn.BPMNProcess;
 import eu.pericles.processcompiler.core.ProcessCompiler;
 import eu.pericles.processcompiler.core.ProcessCompiler.ValidationResult;
 import eu.pericles.processcompiler.ecosystem.ProcessBase;
-import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.exceptions.BaseException;
+import eu.pericles.processcompiler.exceptions.ERMRClientException;
 import eu.pericles.processcompiler.web.ApiException;
-import eu.pericles.processcompiler.web.resources.BaseResource.BaseRequestBean;
 
 @Path("/validate_implementation")
 @Consumes("application/json")

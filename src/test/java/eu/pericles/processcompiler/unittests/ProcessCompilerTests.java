@@ -24,7 +24,6 @@ import eu.pericles.processcompiler.exceptions.ERMRClientException;
 
 public class ProcessCompilerTests {
 
-	static String service = "https://pericles1:PASSWORD@141.5.100.67/api";
 	static String collection = "NoaCollection/Test/";
 	static String repository = "NoaRepositoryTest";
 	static String scenario = "src/test/resources/ingest_sba/Ecosystem.ttl";
@@ -33,15 +32,17 @@ public class ProcessCompilerTests {
 	static String doPath = "src/test/resources/ingest_sba/";
 
 	private String[] digObjects = { "VirusCheck.bpmn", "ExtractMD.bpmn", "EncapsulateDOMD.bpmn" };
+	private String service;
 
 	@Before
 	public void setRepository() {
 		try {
+			service = System.getenv("ERMR_URL");
 			ERMRClientAPI client = new ERMRClientAPI(service);
 			Response response = client.addTriples(repository, scenario, triplesMediaType);
 			assertEquals(201, response.getStatus());
 			for (int i = 0; i < digObjects.length; i++) {
-				response = new ERMRClientAPI().createDigitalObject(collection + digObjects[i], doPath + digObjects[i], doMediaType);
+				response = new ERMRClientAPI(service).createDigitalObject(collection + digObjects[i], doPath + digObjects[i], doMediaType);
 				assertEquals(201, response.getStatus());
 			}
 		} catch (ERMRClientException e) {
@@ -56,7 +57,7 @@ public class ProcessCompilerTests {
 			Response response = client.deleteTriples(repository);
 			assertEquals(204, response.getStatus());
 			for (int i = 0; i < digObjects.length; i++) {
-				response = new ERMRClientAPI().deleteDigitalObject(collection + digObjects[i]);
+				response = new ERMRClientAPI(service).deleteDigitalObject(collection + digObjects[i]);
 				assertEquals(204, response.getStatus());
 			}
 		} catch (ERMRClientException e) {
@@ -85,7 +86,7 @@ public class ProcessCompilerTests {
 	public void vimp_slotMissing() {
 		try {
 			String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#atpEncapsulateDOMD>";
-			ProcessBase process = new ERMRCommunications().getProcessEntity(repository, uri);
+			ProcessBase process = new ERMRCommunications(service).getProcessEntity(repository, uri);
 			BPMNProcess bpmnProcess = new BPMNParser().parse(new ERMRCommunications(service).getImplementationFile(process
 					.getImplementation().getLocation()));
 			process.getInputSlots().get(0).setId("<http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDXX>");
@@ -103,7 +104,7 @@ public class ProcessCompilerTests {
 	public void vimp_slotDifferentType() {
 		try {
 			String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#atpEncapsulateDOMD>";
-			ProcessBase process = new ERMRCommunications().getProcessEntity(repository, uri);
+			ProcessBase process = new ERMRCommunications(service).getProcessEntity(repository, uri);
 			BPMNProcess bpmnProcess = new BPMNParser().parse(new ERMRCommunications(service).getImplementationFile(process
 					.getImplementation().getLocation()));
 			process.getInputSlots().get(1).setDataType("<http://www.pericles-project.eu/ns/ingest-scenario#File>");
@@ -121,7 +122,7 @@ public class ProcessCompilerTests {
 	public void vagg_valid() {
 		try {
 			String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
-			AggregatedProcess aggregatedProcess = new ERMRCommunications().getAggregatedProcessEntity(repository, uri);
+			AggregatedProcess aggregatedProcess = new ERMRCommunications(service).getAggregatedProcessEntity(repository, uri);
 			ValidationResult validationResult = new ProcessCompiler(service).validateAggregation(repository, aggregatedProcess);
 			System.out.println(aggregatedProcess.getDataFlow());
 			System.out.println(validationResult.getMessage());
@@ -136,7 +137,7 @@ public class ProcessCompilerTests {
 	public void vagg_subprocessMissing() {
 		try {
 			String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
-			AggregatedProcess aggregatedProcess = new ERMRCommunications().getAggregatedProcessEntity(repository, uri);
+			AggregatedProcess aggregatedProcess = new ERMRCommunications(service).getAggregatedProcessEntity(repository, uri);
 			aggregatedProcess.setProcessFlow("<http://www.pericles-project.eu/ns/ingest-scenario#atpVirusCheck> <http://www.pericles-project.eu/ns/ingest-scenario#atpExtractMD> <http://www.pericles-project.eu/ns/ingest-scenario#atpStoreFile>");
 			ValidationResult validationResult = new ProcessCompiler(service).validateAggregation(repository, aggregatedProcess);
 			assertFalse(validationResult.isValid());
@@ -150,7 +151,7 @@ public class ProcessCompilerTests {
 	public void vagg_slotMissing() {
 		try {
 			String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
-			AggregatedProcess aggregatedProcess = new ERMRCommunications().getAggregatedProcessEntity(repository, uri);
+			AggregatedProcess aggregatedProcess = new ERMRCommunications(service).getAggregatedProcessEntity(repository, uri);
 			aggregatedProcess.setDataFlow("[{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWAW>\", \"targetProcess\": 0, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isVirusCheckFile>\"} , {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWAW>\", \"targetProcess\": 1, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isExtractMDDO>\"}, {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWAW>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDDO>\"} ,{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWPF>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDPF>\"} , {\"sourceProcess\": 1, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#osExtractMDMD>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDMD>\"} , {\"sourceProcess\": 2, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#osEncapsulateDOMDP>\", \"targetProcess\": 3, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#osIngestAWSWP>\"}]");
 			ValidationResult validationResult = new ProcessCompiler(service).validateAggregation(repository, aggregatedProcess);
 			assertFalse(validationResult.isValid());
@@ -164,7 +165,7 @@ public class ProcessCompilerTests {
 	public void vagg_resourceNotAvailable() {
 		try {
 			String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
-			AggregatedProcess aggregatedProcess = new ERMRCommunications().getAggregatedProcessEntity(repository, uri);
+			AggregatedProcess aggregatedProcess = new ERMRCommunications(service).getAggregatedProcessEntity(repository, uri);
 			aggregatedProcess.setProcessFlow("<http://www.pericles-project.eu/ns/ingest-scenario#atpVirusCheck> <http://www.pericles-project.eu/ns/ingest-scenario#atpEncapsulateDOMD> <http://www.pericles-project.eu/ns/ingest-scenario#atpExtractMD>");
 			aggregatedProcess.setDataFlow("[{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWAW>\", \"targetProcess\": 0, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isVirusCheckDO>\"} , {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWAW>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isExtractMDDO>\"}, {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWAW>\", \"targetProcess\": 1, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDDO>\"} ,{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWPF>\", \"targetProcess\": 1, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDPF>\"} , {\"sourceProcess\": 2, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#osExtractMDMD>\", \"targetProcess\": 1, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDMD>\"} , {\"sourceProcess\": 1, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#osEncapsulateDOMDP>\", \"targetProcess\": 3, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#osIngestAWSWP>\"}]");
 			ValidationResult validationResult = new ProcessCompiler(service).validateAggregation(repository, aggregatedProcess);
@@ -179,7 +180,7 @@ public class ProcessCompilerTests {
 	public void vagg_incompatibleConnection() {
 		try {
 			String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
-			AggregatedProcess aggregatedProcess = new ERMRCommunications().getAggregatedProcessEntity(repository, uri);
+			AggregatedProcess aggregatedProcess = new ERMRCommunications(service).getAggregatedProcessEntity(repository, uri);
 			aggregatedProcess.setDataFlow("[{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWAW>\", \"targetProcess\": 0, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isVirusCheckDO>\"} , {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWAW>\", \"targetProcess\": 1, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isExtractMDDO>\"}, {\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWAW>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDMD>\"} ,{\"sourceProcess\": 3, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isIngestAWSWPF>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDPF>\"} , {\"sourceProcess\": 1, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#osExtractMDMD>\", \"targetProcess\": 2, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#isEncapsulateDOMDDO>\"} , {\"sourceProcess\": 2, \"sourceSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#osEncapsulateDOMDP>\", \"targetProcess\": 3, \"targetSlot\": \"<http://www.pericles-project.eu/ns/ingest-scenario#osIngestAWSWP>\"}]");
 			ValidationResult validationResult = new ProcessCompiler(service).validateAggregation(repository, aggregatedProcess);
 			assertFalse(validationResult.isValid());
@@ -193,7 +194,7 @@ public class ProcessCompilerTests {
 	public void compile_valid() {
 		try {
 			String uri = "<http://www.pericles-project.eu/ns/ingest-scenario#agpIngestAWSW>";
-			AggregatedProcess aggregatedProcess = new ERMRCommunications().getAggregatedProcessEntity(repository, uri);
+			AggregatedProcess aggregatedProcess = new ERMRCommunications(service).getAggregatedProcessEntity(repository, uri);
 			String result = new ProcessCompiler(service).compile(repository, aggregatedProcess);
 			System.out.println(result);
 			assertTrue(result.isEmpty()==false);
