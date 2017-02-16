@@ -66,6 +66,11 @@ $(function() {
 		var linkNode = linkNodes[name];
 
 		if (linkNode === undefined) {
+			if (scenario.name != "Templates") {
+			 if (!file.output && name.match(/\.bpmn2?$/)) 
+				 return;
+			}
+			
 			linkNode = linkNodes[name] = $('<a href="#"/>').click(function(key) {
 				return function(e) {
 					e.preventDefault();

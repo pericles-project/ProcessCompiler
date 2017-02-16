@@ -63,6 +63,16 @@
 			<version>6.1.0.Final</version>
 		</dependency>
 		<dependency>
+           <groupId>org.jbpm</groupId>
+           <artifactId>jbpm-workitems</artifactId>
+           <version>6.1.0.Final</version>
+       </dependency>
+       <dependency>
+           <groupId>org.json</groupId>
+           <artifactId>json</artifactId>
+           <version>20140107</version>
+       </dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.6.6</version>

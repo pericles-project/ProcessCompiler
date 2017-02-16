@@ -14,20 +14,18 @@
 		id="Store" >
 
   <bpmn2:itemDefinition id="itemDef_DigitalObject" structureRef="sce:DigitalObject" />
-  <bpmn2:itemDefinition id="itemDef_Repository" structureRef="sce:Repository" />
 
   <!--    process    -->
 
   <bpmn2:process id="atpStore" name="Store Digital Object" isExecutable="true" processType="Private" >
 
     <bpmn2:dataObject id="isStoreDO" name="Digital Object" itemSubjectRef="itemDef_DigitalObject" />
-    <bpmn2:dataObject id="isStoreRepo" name="Repository" itemSubjectRef="itemDef_Repository" />
 
 		<bpmn2:startEvent id="startEvent" />
 
     <bpmn2:scriptTask id="scriptTask" name="Store Task" scriptFormat="http://www.java.com/java">
       <bpmn2:script>
-      		System.out.println("Storing digital object: " + kcontext.getVariable("isStoreDO") + " in the repository: " + kcontext.getVariable("isStoreRepo"));
+      		System.out.println("Storing digital object: " + kcontext.getVariable("isStoreDO"));
       		System.out.println("Done.");
       </bpmn2:script>
     </bpmn2:scriptTask>

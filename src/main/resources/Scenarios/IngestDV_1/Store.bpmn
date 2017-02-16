@@ -11,24 +11,22 @@
 		expressionLanguage="http://www.mvel.org/2.0"
 		targetNamespace="http://www.jboss.org/drools"
 		typeLanguage="http://www.java.com/javaTypes"
-		id="Backup" >
+		id="Store" >
 
-	<bpmn2:itemDefinition id="itemDef_DigitalObject" structureRef="sce:DigitalObject" />
-	<bpmn2:itemDefinition id="itemDef_Repository" structureRef="sce:Repository" />
+  <bpmn2:itemDefinition id="itemDef_DigitalObject" structureRef="sce:DigitalObject" />
 
   <!--    process    -->
 
-  <bpmn2:process id="atpBackup" name="Backup Digital Object" isExecutable="true" processType="Private" >
+  <bpmn2:process id="atpStore" name="Store Digital Object" isExecutable="true" processType="Private" >
 
-		<bpmn2:dataObject id="isBackupDO" name="Digital Object" itemSubjectRef="itemDef_DigitalObject" />
-    <bpmn2:dataObject id="isBackupRepo" name="Repository" itemSubjectRef="itemDef_Repository" />
+    <bpmn2:dataObject id="isStoreDO" name="Digital Object" itemSubjectRef="itemDef_DigitalObject" />
 
 		<bpmn2:startEvent id="startEvent" />
 
-    <bpmn2:scriptTask id="scriptTask" name="Backup Task" scriptFormat="http://www.java.com/java">
+    <bpmn2:scriptTask id="scriptTask" name="Store Task" scriptFormat="http://www.java.com/java">
       <bpmn2:script>
-				System.out.println("Backuping digital object: " + kcontext.getVariable("isBackupDO") + " in the repository: " + kcontext.getVariable("isBackupRepo"));
-				System.out.println("Done.");
+      		System.out.println("Storing digital object: " + kcontext.getVariable("isStoreDO"));
+      		System.out.println("Done.");
       </bpmn2:script>
     </bpmn2:scriptTask>
 

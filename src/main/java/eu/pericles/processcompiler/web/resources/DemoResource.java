@@ -86,7 +86,7 @@ public class DemoResource extends BaseResource {
 
 				String filename = p.getFileName().toString();
 
-				if (filename.endsWith(".ttl") || filename.endsWith(".bpmn")) {
+				if (filename.endsWith(".ttl") || filename.endsWith(".bpmn")) { 
 					WSFile wsf = new WSFile();
 					wsf.text = new String(Files.readAllBytes(p), UTF8);
 					java.nio.file.Path desc = p.resolveSibling(filename + ".txt");
